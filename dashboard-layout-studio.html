@@ -189,7 +189,7 @@
   .sel-row:hover{background:var(--panel-2);}
   .sel-row .sr-t{flex:1;font-size:.76rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .sel-row .sr-m{font-family:var(--mono);font-size:.6rem;color:var(--faint);}
-  .sg-selall{margin-top:4px;font-size:.68rem;padding:5px;}
+  .sg-selall{margin-top:9px;}
   .stack-card .sc-head b{color:var(--text);}
   .stack-list{display:flex;flex-direction:column;gap:5px;}
   .stack-row{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:7px;border:1px solid var(--border);
@@ -959,7 +959,7 @@
     <div class="modal-body" style="display:flex;flex-direction:column;gap:10px">
       <p id="hubConnectErrorMsg" style="margin:0;line-height:1.6"></p>
       <button class="btn ghost" id="hubConnectErrorMore" style="width:auto;align-self:flex-start;padding:6px 12px" type="button">More</button>
-      <pre id="hubConnectErrorDetails" style="display:none;max-height:260px;margin:0;font-size:.68rem;white-space:pre-wrap;word-break:break-word"></pre>
+      <pre id="hubConnectErrorDetails" style="display:none;max-height:260px;margin:0;white-space:pre-wrap;word-break:break-word"></pre>
     </div>
     <div class="modal-foot"><button class="btn primary" id="hubConnectErrorClose">OK</button></div>
   </div>
@@ -1101,7 +1101,7 @@
         <label class="chk" id="tileSizePushLayoutLabel" title="Push or collapse the surrounding layout; automatically preserves spacing within the selected resize set"><input type="checkbox" id="tileSizePushLayout" /> <span id="tileSizePushLayoutText">Push layout to make room</span></label>
       </div>
       <p class="hint" id="tileSizeLayoutHint" style="display:none;margin:0"></p>
-      <p class="hint" id="tileSizeConflictWarn" style="margin:8px 0 0;display:none;border:1px solid rgba(251,191,36,.45);background:rgba(251,191,36,.10);color:#fbbf24;border-radius:8px;padding:7px 9px;line-height:1.45"></p>
+      <p class="hint" id="tileSizeConflictWarn" style="margin:8px 0 0;display:none;border:1px solid rgba(251,191,36,.45);background:rgba(251,191,36,.10);color:var(--amber-2);border-radius:8px;padding:7px 9px;line-height:1.45"></p>
       <p class="hint" id="tileSizeErr" style="color:var(--danger);margin:8px 0 0;display:none"></p>
     </div>
     <div class="modal-foot">
@@ -1119,7 +1119,7 @@
         <span style="font-size:2rem">🎉</span>
         <div>
           <div style="font-size:.95rem;font-weight:600;color:var(--text)" id="updateVersionLine">A new version is available</div>
-          <div style="font-size:.8rem;color:var(--muted);margin-top:2px" id="updateCurrentLine">You are running <span id="updateCurrentBuild"></span></div>
+          <div style="font-size:.82rem;color:var(--muted);margin-top:2px" id="updateCurrentLine">You are running <span id="updateCurrentBuild"></span></div>
         </div>
       </div>
       <p class="hint" style="margin:0">To update Dashboard Layout Studio:</p>
@@ -1132,7 +1132,7 @@
       <div style="margin-top:4px">
         <a id="updateDownloadLink" href="#" target="_blank" class="btn primary" style="display:inline-block;text-decoration:none">Download latest version</a>
       </div>
-      <label class="chk" style="margin-top:4px;font-size:.8rem;color:var(--muted)">
+      <label class="chk" style="margin-top:4px">
         <input type="checkbox" id="updateSkipCheck" /> Don't remind me again for this version
       </label>
     </div>
@@ -1149,8 +1149,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v194";
-const APP_VERSION = "0.9.194";
+const BUILD = "v197";
+const APP_VERSION = "0.9.197";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -3313,7 +3313,7 @@ function renderSelCard(){
     // Only show "select whole cluster" if some members aren't selected yet
     const allSelected = info.indices.length === info.size;
     html+=allSelected ? `</div></div>` :
-      `<button class="btn ghost sg-selall" data-cluster-sel="${cid}">Select whole cluster (${info.size})</button></div></div>`;
+      `<button class="btn ghost sg-selall" data-cluster-sel="${cid}">Select cluster (${info.size} tiles)</button></div></div>`;
   }
   // independent selected tiles
   if(singles.length){
@@ -3867,7 +3867,7 @@ function updateTileSizeConflictNotice(){
   const tiles=preview.ids?preview.ids.size:0;
   warn.style.borderColor="rgba(251,191,36,.55)";
   warn.style.background="rgba(251,191,36,.10)";
-  warn.style.color="#fbbf24";
+  warn.style.color="var(--amber-2)";
   warn.textContent=`⚠ Tile size will create ${n} overlap${n===1?"":"s"} involving ${tiles} tile${tiles===1?"":"s"}.`;
   warn.style.display="";
 }
