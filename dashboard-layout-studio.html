@@ -380,6 +380,11 @@
   .tile-resize-handle:hover{background:rgba(103,232,249,.9);box-shadow:0 0 0 2px rgba(103,232,249,.4);}
   .tile.resize-active{outline:2px solid rgba(103,232,249,.8)!important;
     box-shadow:0 0 0 3px rgba(103,232,249,.25)!important;}
+  .tile.info-focus{outline:3px solid var(--ok)!important;outline-offset:-1px;
+    box-shadow:0 0 0 4px rgba(52,211,153,.34),0 0 20px rgba(52,211,153,.62),0 6px 16px rgba(0,0,0,.5)!important;}
+  .sel-row.info-focus,.stack-row.info-focus{background:rgba(52,211,153,.18)!important;
+    outline:1px solid rgba(52,211,153,.68);box-shadow:inset 3px 0 0 var(--ok);}
+  .stack-row.info-focus .t1,.sel-row.info-focus .sr-t{color:var(--ok);}
   .ctxmenu{position:fixed;z-index:10500;min-width:180px;background:var(--panel);border:1px solid var(--border);
     border-radius:10px;box-shadow:var(--shadow);padding:5px;font-size:.82rem;}
   .ctxmenu.hidden{display:none;}
@@ -484,7 +489,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.192">0.9.192</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.201">0.9.201</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Toggle sidebar">
@@ -548,7 +553,7 @@
     <div class="sect" id="stackSection" style="display:none">
       <div class="slabel collapsible" data-target="bodyStack">Stack at clicked cell<span class="chev">▾</span></div>
       <div class="sect-body" id="bodyStack">
-        <div class="stack-card" id="stackCard"><p class="hint">Click a tile on the map. If tiles are layered, every tile under the cursor is listed here top → bottom — click one to select it directly.</p></div>
+        <div class="stack-card" id="stackCard"><p class="hint">Click a tile on the map. If tiles are layered, every tile under the cursor is listed here top → bottom — click one to focus/highlight it without changing the current selection.</p></div>
       </div>
     </div>
   </aside>
@@ -826,7 +831,7 @@
           <h4>Toolbar buttons</h4>
           <p>The first toolbar group in the top row contains actions that operate on the current selection: tiles, rows, columns, or selected areas. The next top-row group contains whole-layout actions such as Trim and Spacing.</p>
           <div class="help-grid">
-            <div class="k">Info</div><div class="v">Shows tile id, position, size, template/device details, and tile-scoped custom CSS for the selected tile.</div>
+            <div class="k">Info</div><div class="v">Shows tile id, position, size, hub device name when available, template/device details, and tile-scoped custom CSS for the selected tile.</div>
             <div class="k">Insert</div><div class="v">For row/column selections, inserts rows or columns before the selected line range and shifts affected tiles.</div>
             <div class="k">Delete</div><div class="v">Deletes selected rows/columns and shifts later tiles to close the gap. For tile selections, use Clear to remove without shifting.</div>
             <div class="k">Clear</div><div class="v">Removes selected tiles or tiles in the selected area without shifting other tiles.</div>
@@ -1149,8 +1154,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v197";
-const APP_VERSION = "0.9.197";
+const BUILD = "v201";
+const APP_VERSION = "0.9.200";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -1164,6 +1169,8 @@ const State = {
   savedSnapshot:null,             // compact serialized layout snapshot used to detect unsaved changes
   customCSS:"",                  // dashboard customCSS (drives z-index overrides)
   zMap:{tile:{}, cls:{}},        // parsed z-index: by tile id, by template class
+  deviceNames:new Map(),          // hub device id -> preferred device name (displayName, fallback name)
+  deviceNamesAvailable:false,     // true only after a live hub device list is fetched successfully
   tiles:[],                      // working layout; array order = tiebreak within same z
   selKind:null,                  // 'col'|'row' — set automatically by what you click; drives col/row ops
   selMode:"default",             // 'default'|'include_partial'|'exclude_partial'|'only_partial' (per spec)
@@ -1182,6 +1189,7 @@ const State = {
   tileDrag:null,                 // {ids,anchorRow,anchorCol,offsetRow,offsetCol,curRow,curCol,savedOverlaps,hasConflict}
   lastTileDragEnd:false,
   resizeDrag:null,               // {selIds,tileId,origTiles,savedOverlaps,startEndRow,startEndCol}         // suppress click after a tile drag
+  focusTileId:null,              // tile id currently focused from Tile Info / left pane; highlighted on map + side panes
   pendingRemoval:null,           // {removedIds, commitFn, preview} during CSS-review
   buffer:null,                   // {tiles:[full snapshots], css, sourceId, mode:'cut'|'copy', cutIds:Set}
   bufferUsed:false,              // whether the current (cut) buffer has been pasted once
@@ -1338,6 +1346,34 @@ function showHubConnectionError(err){
   resetModalPosition("hubConnectErrorModal");
   modal.classList.remove("hidden");
 }
+function hubRoot(){
+  return `http://${State.conn.ip}`;
+}
+function hubDevicesUrl(){
+  return `${hubRoot()}/device/listJson?capability=capability.*`;
+}
+async function loadHubDeviceNames(){
+  resetDeviceNames();
+  if(!State.hubAvailable || State.conn.mode!=="live" || !State.conn.ip) return 0;
+  const url=hubDevicesUrl();
+  trace("GET device list",url);
+  try{
+    const res=await fetch(url,{credentials:"same-origin"});
+    trace(`device list → ${res.status}`,null,res.ok?"ok":"err");
+    if(!res.ok) return 0;
+    const text=await res.text();
+    let list;
+    try{ list=JSON.parse(text); }
+    catch(_){ trace("device list → not JSON",null,"err"); return 0; }
+    const count=setDeviceNamesFromList(list);
+    trace(`device names loaded: ${count}`,null,count?"ok":"err");
+    return count;
+  }catch(e){
+    trace(`device list failed: ${e.message}`,null,"err");
+    resetDeviceNames();
+    return 0;
+  }
+}
 const Hub = {
   base(){return `http://${State.conn.ip}/apps/api`;},
   async discover(){
@@ -1345,6 +1381,7 @@ const Hub = {
     if(!ip||!appId||!token){ resetConnectButton(); toast("Fill in IP, app number, and token.","err"); return; }
     const url=`${this.base()}/${appId}/menu?access_token=${token}&local=true`;
     State.dashboards=[];
+    resetDeviceNames();
     renderDashList();
     setConnectProgress("Connecting…");
     trace("GET menu",url);
@@ -1442,6 +1479,7 @@ const Hub = {
       State.loadPin = pin || null;        // remember pin (if any) for save reuse
       State.lastLayoutUrl = successUrl;   // the URL that worked for load → reuse for save
       State.lastDashUrl = href;           // dashboard page URL → used to refresh requestToken if save fails
+      await loadHubDeviceNames();
       adoptLayout(meta,loaded);
       toast(`Loaded "${meta.label}".`,"ok");
     }catch(e){
@@ -1791,6 +1829,79 @@ function fam(tpl){
   return "other";
 }
 function tileLabel(t){ return t.label || t.template || `#${t.id}`; }
+function normalizeDeviceId(v){
+  if(v==null) return null;
+  const s=String(v).trim();
+  if(!s || s==="0") return null;
+  const n=Number(s);
+  return Number.isFinite(n) ? n : s;
+}
+function preferredDeviceName(d){
+  if(!d) return "";
+  const display=(d.displayName==null?"":String(d.displayName).trim());
+  if(display) return display;
+  const name=(d.name==null?"":String(d.name).trim());
+  return name;
+}
+function resetDeviceNames(){
+  State.deviceNames=new Map();
+  State.deviceNamesAvailable=false;
+}
+function setDeviceNamesFromList(list){
+  const map=new Map();
+  if(Array.isArray(list)){
+    for(const d of list){
+      const id=normalizeDeviceId(d&&d.id);
+      const nm=preferredDeviceName(d);
+      if(id!=null && nm) map.set(id,nm);
+    }
+  }
+  State.deviceNames=map;
+  State.deviceNamesAvailable=map.size>0;
+  return map.size;
+}
+function deviceNameForTile(t){
+  if(!State.deviceNamesAvailable || !t) return "";
+  const raw=t._raw||{};
+  const id=normalizeDeviceId(raw.device);
+  return id==null ? "" : (State.deviceNames.get(id)||"");
+}
+function deviceNameInfoValue(t){
+  return deviceNameForTile(t) || "N/A";
+}
+function tileDisplayLabel(t){
+  return deviceNameForTile(t) || tileLabel(t);
+}
+function tileLeftPaneMeta(t){
+  const nm=deviceNameForTile(t);
+  const base=`#${t.id} · r${t.row},c${t.col}`;
+  return nm ? `${base} · ${nm}` : base;
+}
+function scrollTileIntoView(tileId){
+  const t=State.tiles.find(x=>Number(x.id)===Number(tileId));
+  const wrap=document.getElementById("canvasWrap");
+  const frame=document.getElementById("mapFrame");
+  if(!t||!wrap||!frame||frame.style.display==="none") return;
+  const Z=State.zoom||9;
+  const cx=frame.offsetLeft+((t.col-1)*Z)+(t.colSpan*Z/2);
+  const cy=frame.offsetTop+((t.row-1)*Z)+(t.rowSpan*Z/2);
+  const left=Math.max(0,cx-wrap.clientWidth/2);
+  const top=Math.max(0,cy-wrap.clientHeight/2);
+  try{ wrap.scrollTo({left,top,behavior:"smooth"}); }
+  catch(_){ wrap.scrollLeft=left; wrap.scrollTop=top; }
+}
+function setFocusedTile(tileId,opts={}){
+  const t=State.tiles.find(x=>Number(x.id)===Number(tileId));
+  if(!t) return;
+  State.focusTileId=Number(t.id);
+  if(opts.updateStack!==false) State.stackInfo={row:t.row,col:t.col};
+  if(opts.render!==false) render();
+  if(opts.scroll!==false) setTimeout(()=>scrollTileIntoView(t.id),0);
+}
+function isInfoModalOpen(){
+  const m=document.getElementById("infoModal");
+  return !!m && !m.classList.contains("hidden");
+}
 
 /* ============================================================
    DTU CSS ENGINE — faithful JS port of css_ops.py (verified byte-identical
@@ -2366,6 +2477,7 @@ function render(){
     if(State.conflictHighlight&&State.conflictHighlight.has(t.id)) el.classList.add("conflict");
     if((State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.includes(t.id))
       el.classList.add(State.sel.ids.length>1?"grouped":"sel");
+    if(State.focusTileId!=null&&Number(t.id)===Number(State.focusTileId)) el.classList.add("info-focus");
     if(State.selKind==="col"&&State.sel.type==="line"&&lineSelIds.has(t.id)) el.classList.add("line-sel");
     if(State.selKind==="row"&&State.sel.type==="line"&&lineSelIds.has(t.id)) el.classList.add("line-sel");
     if(State.pending&&State.pending.action==="move"&&lineHit(t,State.pending.indices,State.pending.kind)) el.classList.add("moving");
@@ -2374,9 +2486,9 @@ function render(){
     if(State.buffer&&State.buffer.mode==="cut"&&!State.bufferUsed&&State.buffer.sourceId===(State.active&&State.active.id)&&State.buffer.cutIds.has(Number(t.id))) el.classList.add("cut-pending");
     if(State.tileDrag&&State.tileDrag.ids&&State.tileDrag.ids.includes(t.id)) el.classList.add("drag-src");
     if(showText && t.colSpan*Z>=26 && t.rowSpan*Z>=16){
-      el.innerHTML=`<span class="t-id">#${t.id}</span><span class="t-name">${esc(tileLabel(t))}</span>`;
+      el.innerHTML=`<span class="t-id">#${t.id}</span><span class="t-name">${esc(tileDisplayLabel(t))}</span>`;
     }
-    el.title=`#${t.id} ${tileLabel(t)} — col ${t.col}-${t.col+t.colSpan-1}, row ${t.row}-${t.row+t.rowSpan-1} (z ${effZ(t)})`;
+    el.title=`#${t.id} ${tileDisplayLabel(t)} — col ${t.col}-${t.col+t.colSpan-1}, row ${t.row}-${t.row+t.rowSpan-1} (z ${effZ(t)})`;
     // Resize handle — visible when tile is selected, hidden during drag/pending
     if((State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.includes(t.id)
         &&!State.tileDrag&&!State.pending&&!State.resizeDrag){
@@ -3001,7 +3113,8 @@ function copySelectionToLine(kind,line){ const k=kind==="colHeader"?"col":"row";
 function insertAt(kind,line){ const k=kind==="colHeader"?"col":"row"; State.selKind=k; State.sel={type:"line",lines:[line],ids:[],rect:null}; doInsert(); }
 
 function showTileInfo(tileId){
-  const t=State.tiles.find(x=>x.id===tileId); if(!t) return;
+  const t=State.tiles.find(x=>Number(x.id)===Number(tileId)); if(!t) return;
+  setFocusedTile(t.id,{render:true,scroll:true,updateStack:true});
   // selection list for prev/next paging through Info
   const selList = (State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.length>1 ? [...State.sel.ids] : [tileId];
   State.infoNav={ ids:selList, pos:Math.max(0,selList.indexOf(tileId)) };
@@ -3019,13 +3132,13 @@ function showTileInfo(tileId){
   if(rules.length) css+=rules.map(r=>`${r.selector} {\n  ${r.body.trim()}\n}`).join("\n\n");
   if(comments.length) css+=(css?"\n\n":"")+comments.map(c=>c.text).join("\n");
   const kv=[
-    ["id",t.id],["label",tileLabel(t)],["template",t.template||"—"],
+    ["id",t.id],["label",tileLabel(t)],["device name",deviceNameInfoValue(t)],["template",t.template||"—"],
     ["device",raw.device!=null?raw.device:"—"],
     ["position",`row ${t.row}, col ${t.col}`],["span",`${t.colSpan} × ${t.rowSpan} (w×h)`],
     ["placement",placement],["z-index",effZ(t)],["CSS rules",`${rules.length} rule(s), ${comments.length} comment(s)`],
   ];
   const posLabel = State.infoNav.ids.length>1 ? ` (${State.infoNav.pos+1} of ${State.infoNav.ids.length})` : "";
-  document.getElementById("infoTitle").textContent=`Tile #${t.id} — ${tileLabel(t)}${posLabel}`;
+  document.getElementById("infoTitle").textContent=`Tile #${t.id} — ${tileDisplayLabel(t)}${posLabel}`;
   document.getElementById("infoBody").innerHTML=
     `<div class="kv">${kv.map(([k,v])=>`<div class="k">${esc(k)}</div><div>${esc(String(v))}</div>`).join("")}</div>`+
     (css?`<div class="k" style="font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-bottom:6px">scoped customCSS</div><pre>${esc(css)}</pre>`:`<p class="hint">No tile-scoped CSS for this tile.</p>`);
@@ -3068,7 +3181,7 @@ function onGridClick(e){
   else{ State.stackCycle={key,idx:0}; }
   selectTile(State.tiles[topDown[State.stackCycle.idx]].id);
 }
-function selectTile(id){ clearConflictHighlight(); State.sel={type:"tile",ids:[id],lines:[],rect:null}; updateActionButtons(); render(); }
+function selectTile(id){ clearConflictHighlight(); State.focusTileId=Number(id); State.sel={type:"tile",ids:[id],lines:[],rect:null}; updateActionButtons(); render(); }
 function selectTileIds(ids){ clearConflictHighlight(); State.sel={type:"tile",ids:[...ids],lines:[],rect:null}; State.selKind=null; updateActionButtons(); }
 function selectGroupAt(row,col){
   clearConflictHighlight();
@@ -3076,7 +3189,7 @@ function selectGroupAt(row,col){
   State.sel={type:"tile",ids,lines:[],rect:null};
   updateActionButtons(); render();
 }
-function clearTileSel(){ clearConflictHighlight(); State.sel={type:null,ids:[],lines:[],rect:null}; updateActionButtons(); }
+function clearTileSel(){ clearConflictHighlight(); State.focusTileId=null; State.sel={type:null,ids:[],lines:[],rect:null}; updateActionButtons(); }
 
 /* ---------- header gestures (col/row) — selKind set automatically ---------- */
 function onHeaderMouseDown(kind,idx,e){
@@ -3308,7 +3421,7 @@ function renderSelCard(){
       </div>
       <div class="sg-body">`;
     info.indices.forEach(i=>{ const t=State.tiles[i];
-      html+=`<button class="sel-row" data-tile="${t.id}"><span class="pl pl-${placeMap.get(i)?.placement||"cluster"}">${(placeMap.get(i)?.placement||"")[0]||"·"}</span><span class="sr-t">${esc(tileLabel(t))}</span><span class="sr-m">#${t.id} · r${t.row},c${t.col}</span></button>`;
+      html+=`<button class="sel-row ${Number(t.id)===Number(State.focusTileId)?"info-focus":""}" data-tile="${t.id}"><span class="pl pl-${placeMap.get(i)?.placement||"cluster"}">${(placeMap.get(i)?.placement||"")[0]||"·"}</span><span class="sr-t">${esc(tileDisplayLabel(t))}</span><span class="sr-m">${esc(tileLeftPaneMeta(t))}</span></button>`;
     });
     // Only show "select whole cluster" if some members aren't selected yet
     const allSelected = info.indices.length === info.size;
@@ -3319,7 +3432,7 @@ function renderSelCard(){
   if(singles.length){
     html+=`<div class="sel-group"><div class="sg-head static"><span class="sg-title">Independent</span><span class="sg-badge">${singles.length}</span></div><div class="sg-body">`;
     singles.forEach(i=>{ const t=State.tiles[i];
-      html+=`<button class="sel-row" data-tile="${t.id}"><span class="pl pl-independent">·</span><span class="sr-t">${esc(tileLabel(t))}</span><span class="sr-m">#${t.id} · r${t.row},c${t.col}</span></button>`;
+      html+=`<button class="sel-row ${Number(t.id)===Number(State.focusTileId)?"info-focus":""}" data-tile="${t.id}"><span class="pl pl-independent">·</span><span class="sr-t">${esc(tileDisplayLabel(t))}</span><span class="sr-m">${esc(tileLeftPaneMeta(t))}</span></button>`;
     });
     html+=`</div></div>`;
   }
@@ -3336,9 +3449,9 @@ function renderSelCard(){
       if(ids.length) selectTileIds(ids); else clearTileSel();
       render();
     } else {
-      // Single click: keep selection, just update the stack info for this tile
-      State.stackInfo = (()=>{ const t=State.tiles.find(x=>x.id===tid); return t?{row:t.row,col:t.col}:State.stackInfo; })();
-      renderStackCard();
+      // Single click: keep the multi-selection, but focus/highlight this tile on the map and side panes.
+      if(isInfoModalOpen()) showTileInfo(tid);
+      else setFocusedTile(tid,{render:true,scroll:true,updateStack:true});
     }
   }));
   card.querySelectorAll("[data-cluster-sel]").forEach(b=>b.addEventListener("click",()=>{
@@ -3352,7 +3465,7 @@ function renderSelCard(){
 function renderStackCard(){
   const card=document.getElementById("stackCard");
   const info=State.stackInfo;
-  if(!info){ card.innerHTML=`<p class="hint">Click a tile on the map. Layered tiles are listed here top → bottom.</p>`; return; }
+  if(!info){ card.innerHTML=`<p class="hint">Click a tile on the map. Layered tiles are listed here top → bottom. Click a stack row to focus/highlight it without changing the current selection.</p>`; return; }
   const stack=tilesAtCell(info.row,info.col);
   if(!stack.length){ card.innerHTML=`<div class="sc-head">No tiles at <b>r${info.row}, c${info.col}</b>.</div>`; return; }
   const topDown=stackOrder(stack).reverse();
@@ -3368,9 +3481,9 @@ function renderStackCard(){
     const lyr=k===0?"TOP":k===topDown.length-1?"BTM":`L${topDown.length-k}`;
     const color={switch:"rgba(103,232,249,.6)",dim:"rgba(245,166,35,.7)",mode:"rgba(167,139,250,.7)",sensor:"rgba(239,68,68,.6)",button:"rgba(52,211,153,.6)",text:"rgba(120,135,160,.5)",other:"rgba(148,163,184,.6)"}[fam(t.template)];
     const pl=placeMap.get(ti)?.placement||"independent";
-    html+=`<button class="stack-row ${t.id===curId?"active":""}" data-tile="${t.id}">
+    html+=`<button class="stack-row ${t.id===curId?"active":""} ${Number(t.id)===Number(State.focusTileId)?"info-focus":""}" data-tile="${t.id}">
       <span class="lyr">${lyr} · z${effZ(t)}</span><span class="sw" style="background:${color}"></span>
-      <span class="info"><span class="t1">${esc(tileLabel(t))}</span><span class="t2">#${t.id} · ${t.colSpan}×${t.rowSpan} @ r${t.row},c${t.col} · <span class="pl pl-${pl}">${pl}</span></span></span>
+      <span class="info"><span class="t1">${esc(tileDisplayLabel(t))}</span><span class="t2">#${t.id} · ${t.colSpan}×${t.rowSpan} @ r${t.row},c${t.col}${deviceNameForTile(t)?` · ${esc(deviceNameForTile(t))}`:""} · <span class="pl pl-${pl}">${pl}</span></span></span>
     </button>`;
   });
   html+=`</div>`;
@@ -3381,7 +3494,11 @@ function renderStackCard(){
   card.querySelectorAll("[data-tile]").forEach(b=>b.addEventListener("click",()=>{
     const id=+b.dataset.tile; const tIdx=State.tiles.findIndex(t=>t.id===id);
     State.stackCycle={key:`${info.row},${info.col}`, idx:Math.max(0,topDown.indexOf(tIdx))};
-    selectTile(id);
+    // Stack-row clicks should focus/highlight the chosen layer without replacing
+    // the current tile/row/column/rectangle selection. This lets the stack
+    // inspector identify a buried tile while preserving the active selection.
+    if(isInfoModalOpen()) showTileInfo(id);
+    else setFocusedTile(id,{render:true,scroll:true,updateStack:false});
   }));
   const g=card.querySelector("#scGroup");
   if(g) g.addEventListener("click",()=>{
@@ -3416,7 +3533,7 @@ function clearSelection(){
     State.overlaps=saved||State.overlaps;
     const overlapsSel=document.getElementById("overlaps"); if(overlapsSel) overlapsSel.value=State.overlaps;
   }
-  State.sel={type:null,ids:[],lines:[],rect:null}; State.pending=null; State.anchor=null; State.drag=null; State.selKind=null;
+  State.sel={type:null,ids:[],lines:[],rect:null}; State.focusTileId=null; State.pending=null; State.anchor=null; State.drag=null; State.selKind=null;
   updateActionButtons();
 }
 
@@ -5762,6 +5879,7 @@ function normalizeLoadedJson(data){
 }
 function loadOfflineLayout(data, sourceLabel){
   data=normalizeLoadedJson(data);
+  resetDeviceNames();
   // "offline" mode: no hub connection; save-to-hub is disabled but file/clipboard work
   State.conn.mode="offline";
   State.lastLayoutUrl=null;
