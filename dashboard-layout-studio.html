@@ -448,6 +448,11 @@
   .modal-body pre{font-family:var(--mono);font-size:.7rem;color:var(--muted);background:var(--bg);padding:12px;border-radius:8px;overflow:auto;line-height:1.5;border:1px solid var(--border);}
   .modal-foot{padding:13px 18px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
   .modal-foot .btn{width:auto;padding:9px 18px;}
+  /* update dialog step states */
+  .update-step{transition:opacity .3s, color .3s;}
+  .update-step.step-active{color:var(--text) !important;font-weight:500;}
+  .update-step.step-active b{color:var(--accent) !important;}
+  .update-step.step-done{opacity:.35;}
   .json-modebar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 10px;}
   .json-modebar .btn{width:auto;padding:6px 10px;}
   .json-modebar .btn.active{border-color:var(--accent);color:var(--accent);background:rgba(103,232,249,.09);box-shadow:inset 0 0 0 1px rgba(103,232,249,.18);}
@@ -707,6 +712,9 @@
       <label class="pp-row"><span>Tile opacity <span id="tileOpacityVal">100%</span></span>
         <input type="range" id="prefTileOpacity" min="20" max="100" value="100" /></label>
       <p class="hint" style="margin:8px 0 0">Auto-connect runs Discover automatically when the page loads, using saved connection settings.</p>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+        <button class="btn ghost" id="prefCheckUpdate" style="width:100%">Check for updates</button>
+      </div>
     </div>
 
     <div class="statusbar">
@@ -1116,10 +1124,10 @@
       </div>
       <p class="hint" style="margin:0">To update Dashboard Layout Studio:</p>
       <ol style="margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px;font-size:.82rem;color:var(--muted);line-height:1.5">
-        <li>Click <b style="color:var(--text)">Download latest version</b> below to download the new file.</li>
-        <li>On your Hubitat hub, go to <b style="color:var(--text)">Settings → File Manager</b>.</li>
-        <li>Select the downloaded file and click <b style="color:var(--text)">Upload</b> — it will overwrite the existing file.</li>
-        <li>Reload this page.</li>
+        <li id="updateStep1" class="update-step step-active">Click <b>Download latest version</b> below to download the new file.</li>
+        <li id="updateStep2" class="update-step">On your Hubitat hub, go to <b style="color:var(--text)">Settings → File Manager</b>.</li>
+        <li id="updateStep3" class="update-step">Select the downloaded file and click <b style="color:var(--text)">Upload</b> — it will overwrite the existing file.</li>
+        <li id="updateStep4" class="update-step">Reload this page.</li>
       </ol>
       <div style="margin-top:4px">
         <a id="updateDownloadLink" href="#" target="_blank" class="btn primary" style="display:inline-block;text-decoration:none">Download latest version</a>
@@ -1141,8 +1149,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v193";
-const APP_VERSION = "0.9.193";
+const BUILD = "v194";
+const APP_VERSION = "0.9.194";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -6251,27 +6259,56 @@ function restoreConn(){
 }
 
 /* ---------- version check ---------- */
-async function checkForUpdate(){
+function showUpdateDialog(latest, releaseUrl, isMock){
+  const el = id => document.getElementById(id);
+  if(el("updateCurrentBuild")) el("updateCurrentBuild").textContent = BUILD;
+  if(el("updateVersionLine")) el("updateVersionLine").textContent = isMock
+    ? `${latest} is available  (test mode)`
+    : `Version ${latest} is available`;
+  if(el("updateDownloadLink")) el("updateDownloadLink").href = releaseUrl || "#";
+  if(el("updateSkipCheck")) el("updateSkipCheck").checked = false;
+  // reset step states to initial: step 1 active, rest neutral
+  ["updateStep1","updateStep2","updateStep3","updateStep4"].forEach((id,i)=>{
+    const s=el(id); if(!s) return;
+    s.classList.toggle("step-active", i===0);
+    s.classList.remove("step-done");
+  });
+  if(el("updateDownloadLink")) el("updateDownloadLink").textContent = "Download latest version";
+  const modal = el("updateModal");
+  if(modal) modal.classList.remove("hidden");
+}
+
+async function checkForUpdate(force=false){
   if(!VERSION_CHECK_URL) return;
+  const el = id => document.getElementById(id);
+  const btnCheck = el("prefCheckUpdate");
+  if(btnCheck){ btnCheck.textContent="Checking…"; btnCheck.disabled=true; }
   try{
     const res = await fetch(VERSION_CHECK_URL, {cache:"no-store"});
-    if(!res.ok) return;
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const latest = (data.version||"").trim();
-    if(!latest || latest === BUILD) return;
-    // check if user dismissed this version
-    let skipped = "";
-    try{ skipped = localStorage.getItem(VERSION_SKIP_KEY)||""; }catch(_){}
-    if(skipped === latest) return;
-    // populate and show the dialog
-    const el = id => document.getElementById(id);
-    if(el("updateCurrentBuild")) el("updateCurrentBuild").textContent = BUILD;
-    if(el("updateVersionLine")) el("updateVersionLine").textContent = `Version ${latest} is available`;
-    if(el("updateDownloadLink") && data.releaseUrl) el("updateDownloadLink").href = data.releaseUrl;
-    if(el("updateSkipCheck")) el("updateSkipCheck").checked = false;
-    const modal = el("updateModal");
-    if(modal) modal.classList.remove("hidden");
-  }catch(_){}
+    if(!latest){
+      if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }
+      return;
+    }
+    if(latest === BUILD){
+      if(btnCheck){ btnCheck.textContent="Up to date ✓"; btnCheck.disabled=false; setTimeout(()=>{ if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }},2500); }
+      return;
+    }
+    if(!force){
+      let skipped="";
+      try{ skipped=localStorage.getItem(VERSION_SKIP_KEY)||""; }catch(_){}
+      if(skipped===latest){
+        if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }
+        return;
+      }
+    }
+    if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }
+    showUpdateDialog(latest, data.releaseUrl, false);
+  }catch(e){
+    if(btnCheck){ btnCheck.textContent="Check failed"; btnCheck.disabled=false; setTimeout(()=>{ if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }},2500); }
+  }
 }
 
 function wireUpdateModal(){
@@ -6279,12 +6316,44 @@ function wireUpdateModal(){
   if(!modal) return;
   document.getElementById("updateClose")?.addEventListener("click", ()=>{
     if(document.getElementById("updateSkipCheck")?.checked){
-      const latest = (document.getElementById("updateVersionLine")?.textContent||"").replace("Version ","").replace(" is available","").trim();
+      const latest = (document.getElementById("updateVersionLine")?.textContent||"")
+        .replace("Version ","").replace(" is available","").replace("(test mode)","").trim();
       try{ if(latest) localStorage.setItem(VERSION_SKIP_KEY, latest); }catch(_){}
     }
     modal.classList.add("hidden");
   });
   modal.addEventListener("click", e=>{ if(e.target===modal) modal.classList.add("hidden"); });
+
+  // On download: fade step 1, highlight steps 2-4, relabel button
+  document.getElementById("updateDownloadLink")?.addEventListener("click", ()=>{
+    const el = id => document.getElementById(id);
+    el("updateStep1")?.classList.replace("step-active","step-done");
+    ["updateStep2","updateStep3","updateStep4"].forEach(id=>{
+      const s=el(id); if(!s) return;
+      s.classList.add("step-active");
+      s.classList.remove("step-done");
+    });
+    const btn = el("updateDownloadLink");
+    if(btn) btn.textContent = "Download again";
+  });
+
+  // Hidden trigger: 5 rapid clicks on the version number shows test dialog
+  const brandVer = document.getElementById("brandVersion");
+  if(brandVer){
+    let clickCount=0, clickTimer=null;
+    brandVer.style.cursor="default";
+    brandVer.addEventListener("click", ()=>{
+      clickCount++;
+      clearTimeout(clickTimer);
+      if(clickCount>=5){
+        clickCount=0;
+        const nextMinor = BUILD.replace(/\d+$/, n => String(+n+1));
+        showUpdateDialog(nextMinor, "#", true);
+      } else {
+        clickTimer=setTimeout(()=>{ clickCount=0; }, 1500);
+      }
+    });
+  }
 }
 
 function wire(){
@@ -6312,6 +6381,7 @@ function wire(){
     applyTileOpacity(+e.target.value); saveConn();
   });
   document.getElementById("pushBufInput").addEventListener("change",saveConn);
+  document.getElementById("prefCheckUpdate")?.addEventListener("click", ()=>checkForUpdate(true));
   // Hub detection: live Hubitat fetch/save only works when this page is hosted from
   // a hub/local origin. From file:// or other origins, hide hub connection settings
   // and leave the offline JSON workflows available.
