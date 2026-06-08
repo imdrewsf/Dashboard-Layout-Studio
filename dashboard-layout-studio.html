@@ -185,10 +185,13 @@
   .sg-title{flex:1;color:var(--text);}
   .sg-badge{font-family:var(--mono);font-size:.6rem;color:var(--accent);background:rgba(103,232,249,.12);padding:1px 6px;border-radius:4px;}
   .sg-body{display:flex;flex-direction:column;gap:3px;padding:6px;}
-  .sel-row{display:flex;align-items:center;gap:7px;padding:5px 7px;border-radius:5px;cursor:pointer;background:none;border:none;text-align:left;color:var(--text);width:100%;}
+  .sel-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:flex-start;gap:8px;padding:7px 8px;border-radius:7px;cursor:pointer;background:none;border:none;text-align:left;color:var(--text);width:100%;}
   .sel-row:hover{background:var(--panel-2);}
-  .sel-row .sr-t{flex:1;font-size:.76rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .sel-row .sr-m{font-family:var(--mono);font-size:.6rem;color:var(--faint);}
+  .sel-row .pl{margin-top:1px;}
+  .sel-row .sr-lines{display:flex;flex-direction:column;gap:2px;min-width:0;}
+  .sel-row .sr-t{display:block;font-size:.76rem;font-weight:650;line-height:1.18;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sel-row .sr-m,.sel-row .sr-p{display:block;font-family:var(--mono);font-size:.58rem;line-height:1.28;color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sel-row .sr-p{color:var(--muted);}
   .sg-selall{margin-top:9px;}
   .stack-card .sc-head b{color:var(--text);}
   .stack-list{display:flex;flex-direction:column;gap:5px;}
@@ -263,7 +266,11 @@
   .holdmenu .hm-head{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:5px 10px 2px;pointer-events:none;}
   .holdmenu .hm-sep{height:1px;background:var(--border);margin:3px 5px;}
   .hb{position:relative;}
-  .hb .hb-chev{font-size:.7rem;margin-left:3px;opacity:.7;vertical-align:middle;}
+  .hb .hb-chev{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:5px;
+    border-radius:5px;border:1px solid rgba(103,232,249,.38);background:rgba(103,232,249,.12);
+    color:var(--accent);font-size:.95rem;font-weight:800;line-height:1;opacity:1;vertical-align:middle;
+    box-shadow:inset 0 0 0 1px rgba(103,232,249,.08),0 0 8px rgba(103,232,249,.10);} 
+  .tool:hover:not(:disabled) .hb-chev{background:rgba(103,232,249,.20);border-color:rgba(103,232,249,.58);color:#fff;}
   .tool.push-mode{border-color:var(--amber-2)!important;box-shadow:0 0 0 2px rgba(245,166,35,.4)!important;}
   select.push-mode{border-color:var(--amber-2)!important;}
   .prefs-panel{position:fixed;right:14px;top:54px;z-index:300;width:280px;background:var(--panel);
@@ -489,7 +496,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.201">0.9.201</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.209">0.9.209</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Toggle sidebar">
@@ -550,12 +557,6 @@
         <div class="sel-card" id="selCard"><p class="hint">Selected tiles appear here, grouped by cluster. Ctrl-click tiles on the map to build a multi-tile selection.</p></div>
       </div>
     </div>
-    <div class="sect" id="stackSection" style="display:none">
-      <div class="slabel collapsible" data-target="bodyStack">Stack at clicked cell<span class="chev">▾</span></div>
-      <div class="sect-body" id="bodyStack">
-        <div class="stack-card" id="stackCard"><p class="hint">Click a tile on the map. If tiles are layered, every tile under the cursor is listed here top → bottom — click one to focus/highlight it without changing the current selection.</p></div>
-      </div>
-    </div>
   </aside>
 
   <section class="stage">
@@ -572,9 +573,11 @@
           <button class="tool danger" data-action="delete" disabled title="Delete: remove tiles in target rows/cols and shift to close the gap">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>Delete
           </button>
+          <span class="toolbar-divider" aria-hidden="true"></span>
           <button class="tool" data-action="clear" disabled title="Clear: remove selected tiles, leaving empty space (no shift)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" stroke-dasharray="3 2"/></svg>Clear
           </button>
+          <span class="toolbar-divider" aria-hidden="true"></span>
           <div class="holdwrap">
             <button class="tool hb" id="btnMoveTo" disabled title="Move selection to a destination — then click destination (hold for push option)">
               <svg id="moveIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg><span id="moveBtnLabel">Move to</span><span class="hb-chev" id="moveChev">▾</span>
@@ -599,6 +602,10 @@
           </button>
         </div>
         <div class="tgroup">
+          <button class="tool" id="btnSelectAll" disabled title="Select all tiles (Ctrl/Cmd+A)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8v8H8z" stroke-dasharray="3 2"/></svg>Select
+          </button>
+          <span class="toolbar-divider" aria-hidden="true"></span>
           <div class="holdwrap">
             <button class="tool hb" id="btnTrim" disabled title="Trim blank rows/cols above and left of the tiles (hold for Top/Left options)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12a2 2 0 002 2h12M6 9h12M9 6l-3 3 3 3"/></svg>Trim<span class="hb-chev">▾</span>
@@ -610,32 +617,13 @@
             </div>
           </div>
           <span class="toolbar-divider" aria-hidden="true"></span>
-          <label class="msel" title="Value used by spacing buttons — non-negative for Set; positive increases spacing, negative decreases spacing"><span>Spacing:</span>
-            <input type="number" id="spacingValInput" min="-99" max="999" value="1" class="modesel" style="width:42px;text-align:center"/>
-          </label>
-          <div class="holdwrap">
-            <button class="tool hb" id="btnSpacingSet" disabled title="Set spacing between all clusters to exactly this value (hold for rows/cols only)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/><line x1="3" y1="12" x2="21" y2="12"/></svg>Set<span class="hb-chev">▾</span>
-            </button>
-            <div class="holdmenu hidden" id="spacingSetMenu">
-              <div class="hm-head">Set spacing to value</div>
-              <button class="hm-item" id="spacingSetAll">Set all</button>
-              <button class="hm-item" id="spacingSetUnstackAll" title="Break overlapping stacks apart while setting spacing between every tile">Unstack and Set All</button>
-              <button class="hm-item" id="spacingSetRows">Set rows only</button>
-              <button class="hm-item" id="spacingSetCols">Set cols only</button>
-            </div>
-          </div>
-          <div class="holdwrap">
-            <button class="tool hb" id="btnSpacingInc" disabled title="Increase/decrease spacing between all clusters by this value (hold for rows/cols only)">
-              <svg id="spacingDeltaIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span id="spacingDeltaBtnLabel">Inc</span><span class="hb-chev">▾</span>
-            </button>
-            <div class="holdmenu hidden" id="spacingIncMenu">
-              <div class="hm-head" id="spacingDeltaMenuHead">Increase/decrease spacing by value</div>
-              <button class="hm-item" id="spacingIncAll">Inc all</button>
-              <button class="hm-item" id="spacingIncRows">Inc rows only</button>
-              <button class="hm-item" id="spacingIncCols">Inc cols only</button>
-            </div>
-          </div>
+          <button class="tool" id="btnSpacing" disabled title="Open spacing tools: set spacing, unstack, increase, or decrease rows/columns/all">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/><line x1="3" y1="12" x2="21" y2="12"/></svg>Spacing
+          </button>
+          <span class="toolbar-divider" aria-hidden="true"></span>
+          <button class="tool" id="btnLayoutScale" disabled title="Enl/Rdc: enlarge or reduce the entire layout by row/column deltas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10V4h6"/><path d="M20 14v6h-6"/><path d="M4 4l6 6"/><path d="M20 20l-6-6"/><path d="M16 4h4v4"/><path d="M8 20H4v-4"/></svg>Enl/Rdc
+          </button>
         </div>
       </div><!-- /toolbar-row 1 -->
       <button class="tbar-arrow right" data-row="0" aria-label="Scroll right">›</button>
@@ -831,6 +819,7 @@
           <h4>Toolbar buttons</h4>
           <p>The first toolbar group in the top row contains actions that operate on the current selection: tiles, rows, columns, or selected areas. The next top-row group contains whole-layout actions such as Trim and Spacing.</p>
           <div class="help-grid">
+            <div class="k">Select</div><div class="v">Selects all tiles in the layout. This is the toolbar equivalent of Ctrl/Cmd+A.</div>
             <div class="k">Info</div><div class="v">Shows tile id, position, size, hub device name when available, template/device details, and tile-scoped custom CSS for the selected tile.</div>
             <div class="k">Insert</div><div class="v">For row/column selections, inserts rows or columns before the selected line range and shifts affected tiles.</div>
             <div class="k">Delete</div><div class="v">Deletes selected rows/columns and shifts later tiles to close the gap. For tile selections, use Clear to remove without shifting.</div>
@@ -839,9 +828,10 @@
             <div class="k">Copy to</div><div class="v">Starts a placement operation that duplicates the selection to a clicked destination.</div>
             <div class="k">Trim</div><div class="v">Whole-layout action that removes blank space above and/or left of the current layout. Hold the button for top-only or left-only choices.</div>
             <div class="k">Resize</div><div class="v">Selection-action button that sets selected tiles to an exact height and width. Options can preserve spacing between resized tiles and/or push the surrounding layout out of the way. When Overlaps is set to push, or Shift is held, the Resize button glows and the dialog opens with Preserve spacing between resized tiles and Push layout to make room enabled.</div>
-            <div class="k">Spacing Set</div><div class="v">Whole-layout action that sets spacing between connected clusters to the entered value. Hold for all, rows only, columns only, or Unstack and Set All.</div>
+            <div class="k">Spacing</div><div class="v">Opens a dialog with all spacing actions: Set all, Set rows only, Set columns only, Unstack and Set All, Inc/Dec all, Inc/Dec rows only, and Inc/Dec columns only.</div>
+            <div class="k">Enl/Rdc</div><div class="v">Opens the Enlarge / Reduce dialog for enlarging or reducing the entire layout by row and column amounts. Positive rows/columns enlarge tiles; negative rows/columns reduce them. This is equivalent to selecting all tiles and dragging the lower-right resize handle.</div>
             <div class="k">Unstack and Set All</div><div class="v">Set-menu option that is enabled only when tiles overlap. It breaks overlap stacks apart and sets spacing between individual tiles.</div>
-            <div class="k">Spacing Inc/Dec</div><div class="v">Whole-layout action that adds the entered spacing value to current spacing. Positive values show Inc; negative values show Dec; zero disables the button.</div>
+            <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
             <div class="k">Cut / Copy / Paste</div><div class="v">Uses an internal tile buffer. Cut keeps tiles visible until the first paste, which behaves as a move; later pastes create copies.</div>
             <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded.</div>
             <div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
@@ -865,7 +855,7 @@
           <h5>Spacing and unstacking</h5>
           <p>Spacing Set normally treats touching or overlapping tiles as connected clusters, so spacing is adjusted between clusters without breaking them apart. <b>Unstack and Set All</b> is available only when the layout has actual overlapping tiles. It treats every tile as its own unit, moves tiles as needed, and sets the requested spacing while removing overlaps. This is the GUI equivalent of using spacing set with overlap removal for all tiles.</p>
           <h5>Dragging and resizing</h5>
-          <p>Drag selected tiles directly on the grid to move them. Drag the resize handle at the bottom-right of a selected tile to resize the selection. Mouse resizing grows from the upper-left corner and adjusts neighboring selected tiles to avoid growing over each other. The Resize dialog does the same kind of spacing-aware resize, but uses an exact height and width entered by the user.</p><p><b>Resize dialog options:</b> <b>Preserve spacing between resized tiles</b> preserves the original spacing between the selected tiles while their sizes change. If the target size is larger than the selected tiles, the layout option is <b>Push layout to make room</b>: it automatically enables Preserve spacing between resized tiles and moves affected surrounding tiles to make room, using the same push buffer and overlap behavior as Move to, Copy to, and Paste. If the target size is smaller than the selected tiles, the option changes to <b>Pull layout to close gaps</b>. When Pull layout to close gaps is unchecked, unselected tiles do not move; only the selected tiles resize, though Preserve spacing between resized tiles can still move selected tiles relative to each other to preserve their internal gaps. When Pull layout to close gaps is checked, every row/column band freed by the shrink is removed from downstream tiles, so the collapse continues through the full layout rather than stopping at the first nearby row or column. When multiple selected tiles form one adjacent cluster with no unselected tiles between them, their internal spacing is preserved regardless of gap size, and the surrounding layout is pushed or pulled using the resized cluster's combined outside footprint. If an unselected tile sits between selected tiles, Resize Push/Pull is blocked instead of treating the selection as separate pieces. Without Push/Pull layout, conflicts are handled by the Overlaps setting: warn, allow, or skip. If the entered size enlarges any selected tile and would create overlaps, the Resize dialog shows a live warning. With Overlaps set to allow, the warning indicates that overlaps will be allowed. With Overlaps set to warn, pressing Resize opens a confirmation so the user can cancel or deliberately proceed creating the overlaps.</p>
+          <p>Drag selected tiles directly on the grid to move them. Drag the resize handle at the bottom-right of a selected tile to resize the selection. Mouse resizing grows from the upper-left corner and adjusts neighboring selected tiles to avoid growing over each other. The Resize dialog does the same kind of spacing-aware resize, but uses an exact height and width entered by the user. The Enl/Rdc (Enlarge / Reduce) dialog applies that same resize-drag behavior to the full layout by treating every tile as selected and applying row/column deltas.</p><p><b>Resize dialog options:</b> <b>Preserve spacing between resized tiles</b> preserves the original spacing between the selected tiles while their sizes change. If the target size is larger than the selected tiles, the layout option is <b>Push layout to make room</b>: it automatically enables Preserve spacing between resized tiles and moves affected surrounding tiles to make room, using the same push buffer and overlap behavior as Move to, Copy to, and Paste. If the target size is smaller than the selected tiles, the option changes to <b>Pull layout to close gaps</b>. When Pull layout to close gaps is unchecked, unselected tiles do not move; only the selected tiles resize, though Preserve spacing between resized tiles can still move selected tiles relative to each other to preserve their internal gaps. When Pull layout to close gaps is checked, every row/column band freed by the shrink is removed from downstream tiles, so the collapse continues through the full layout rather than stopping at the first nearby row or column. When multiple selected tiles form one adjacent cluster with no unselected tiles between them, their internal spacing is preserved regardless of gap size, and the surrounding layout is pushed or pulled using the resized cluster's combined outside footprint. If an unselected tile sits between selected tiles, Resize Push/Pull is blocked instead of treating the selection as separate pieces. Without Push/Pull layout, conflicts are handled by the Overlaps setting: warn, allow, or skip. If the entered size enlarges any selected tile and would create overlaps, the Resize dialog shows a live warning. With Overlaps set to allow, the warning indicates that overlaps will be allowed. With Overlaps set to warn, pressing Resize opens a confirmation so the user can cancel or deliberately proceed creating the overlaps.</p>
         </section>
 
         <section class="help-pane" id="helpJsonCss">
@@ -1116,6 +1106,56 @@
   </div>
 </div>
 
+<div class="modal-back hidden" id="spacingModal">
+  <div class="modal" style="width:520px">
+    <div class="modal-head"><h3>Spacing</h3></div>
+    <div class="modal-body">
+      <p class="hint" style="margin:0 0 12px">Adjust spacing for the whole layout. Set uses a non-negative value. Inc/Dec changes spacing by the value entered below; use a negative value to decrease spacing.</p>
+      <div class="field"><label>Spacing value</label><input type="number" id="spacingValInput" min="-99" max="999" value="1" class="input" style="max-width:120px;text-align:center;font-family:var(--mono)" /></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+        <div style="border:1px solid var(--border);border-radius:10px;padding:10px;background:rgba(255,255,255,.03)">
+          <div style="font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">Set spacing to value</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button class="btn ghost" id="spacingSetAll" type="button">Set all</button>
+            <button class="btn ghost" id="spacingSetRows" type="button">Set rows only</button>
+            <button class="btn ghost" id="spacingSetCols" type="button">Set cols only</button>
+            <button class="btn ghost" id="spacingSetUnstackAll" type="button" title="Break overlapping stacks apart while setting spacing between every tile">Unstack and Set All</button>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:10px;background:rgba(255,255,255,.03)">
+          <div style="font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:8px" id="spacingDeltaMenuHead">Increase/decrease spacing by value</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button class="btn ghost" id="spacingIncAll" type="button">Inc all</button>
+            <button class="btn ghost" id="spacingIncRows" type="button">Inc rows only</button>
+            <button class="btn ghost" id="spacingIncCols" type="button">Inc cols only</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint" id="spacingDialogHint" style="margin:10px 0 0"></p>
+    </div>
+    <div class="modal-foot"><button class="btn" id="spacingClose" type="button">Close</button></div>
+  </div>
+</div>
+
+<div class="modal-back hidden" id="layoutScaleModal">
+  <div class="modal" style="width:460px">
+    <div class="modal-head"><h3>Enlarge / Reduce Layout</h3></div>
+    <div class="modal-body">
+      <p class="hint" style="margin:0 0 12px">Enter positive numbers to enlarge every tile, or negative numbers to reduce every tile. This uses the same spacing-preserving resize behavior as selecting all tiles and dragging the lower-right resize handle.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field"><label>Rows (+/−)</label><input class="input" id="layoutScaleRows" type="number" min="-999" max="999" step="1" value="0" style="text-align:center;font-family:var(--mono)" /></div>
+        <div class="field"><label>Columns (+/−)</label><input class="input" id="layoutScaleCols" type="number" min="-999" max="999" step="1" value="0" style="text-align:center;font-family:var(--mono)" /></div>
+      </div>
+      <p class="hint" id="layoutScaleHint" style="margin:8px 0 0"></p>
+      <p class="hint" id="layoutScaleErr" style="color:var(--danger);margin:8px 0 0;display:none"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="layoutScaleCancel" type="button">Cancel</button>
+      <button class="btn primary" id="layoutScaleApply" type="button">Apply</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-back hidden" id="updateModal">
   <div class="modal" style="width:480px">
     <div class="modal-head"><h3>Update Available</h3></div>
@@ -1154,8 +1194,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v201";
-const APP_VERSION = "0.9.200";
+const BUILD = "v209";
+const APP_VERSION = "0.9.209";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -1802,7 +1842,6 @@ function finishAdopt(meta){
   State.history=[]; State.future=[];
   document.getElementById("emptyStage").style.display="none";
   document.getElementById("mapFrame").style.display="inline-block";
-  document.getElementById("stackSection").style.display="block";
   document.getElementById("selSection").style.display="block";
   document.getElementById("crumb").innerHTML=`<b>${esc(meta.label)}</b>`;
   setHubSettingsOpen(false);
@@ -1872,10 +1911,25 @@ function deviceNameInfoValue(t){
 function tileDisplayLabel(t){
   return deviceNameForTile(t) || tileLabel(t);
 }
-function tileLeftPaneMeta(t){
-  const nm=deviceNameForTile(t);
-  const base=`#${t.id} · r${t.row},c${t.col}`;
-  return nm ? `${base} · ${nm}` : base;
+function tileDeviceIdForSelection(t){
+  if(!State.deviceNamesAvailable || !t) return "N/A";
+  const raw=t._raw||{};
+  const id=normalizeDeviceId(raw.device);
+  return id==null ? "N/A" : String(id);
+}
+function tileTemplateForSelection(t){
+  return (t&&t.template) ? String(t.template) : "—";
+}
+function tileSelectionHtml(t, placement){
+  const pl=placement||"independent";
+  const plText=pl[0]||"·";
+  const main=tileDisplayLabel(t);
+  const meta=`Tile #${t.id} · Device ${tileDeviceIdForSelection(t)} · ${tileTemplateForSelection(t)}`;
+  const pos=`r${t.row},c${t.col} · ${t.colSpan}×${t.rowSpan} · ${pl}`;
+  return `<button class="sel-row ${Number(t.id)===Number(State.focusTileId)?"info-focus":""}" data-tile="${esc(t.id)}">`+
+    `<span class="pl pl-${esc(pl)}">${esc(plText)}</span>`+
+    `<span class="sr-lines"><span class="sr-t">${esc(main)}</span><span class="sr-m">${esc(meta)}</span><span class="sr-p">${esc(pos)}</span></span>`+
+    `</button>`;
 }
 function scrollTileIntoView(tileId){
   const t=State.tiles.find(x=>Number(x.id)===Number(tileId));
@@ -3183,6 +3237,14 @@ function onGridClick(e){
 }
 function selectTile(id){ clearConflictHighlight(); State.focusTileId=Number(id); State.sel={type:"tile",ids:[id],lines:[],rect:null}; updateActionButtons(); render(); }
 function selectTileIds(ids){ clearConflictHighlight(); State.sel={type:"tile",ids:[...ids],lines:[],rect:null}; State.selKind=null; updateActionButtons(); }
+function selectAllTiles(){
+  if(State.active&&State.tiles.length){
+    State.focusTileId=null;
+    selectTileIds(State.tiles.map(t=>t.id));
+    render();
+    status(`Selected all ${State.tiles.length} tiles.`);
+  }
+}
 function selectGroupAt(row,col){
   clearConflictHighlight();
   const ids=clusterIdsAt(row,col); if(!ids.length) return;
@@ -3421,7 +3483,7 @@ function renderSelCard(){
       </div>
       <div class="sg-body">`;
     info.indices.forEach(i=>{ const t=State.tiles[i];
-      html+=`<button class="sel-row ${Number(t.id)===Number(State.focusTileId)?"info-focus":""}" data-tile="${t.id}"><span class="pl pl-${placeMap.get(i)?.placement||"cluster"}">${(placeMap.get(i)?.placement||"")[0]||"·"}</span><span class="sr-t">${esc(tileDisplayLabel(t))}</span><span class="sr-m">${esc(tileLeftPaneMeta(t))}</span></button>`;
+      html+=tileSelectionHtml(t, placeMap.get(i)?.placement||"cluster");
     });
     // Only show "select whole cluster" if some members aren't selected yet
     const allSelected = info.indices.length === info.size;
@@ -3432,7 +3494,7 @@ function renderSelCard(){
   if(singles.length){
     html+=`<div class="sel-group"><div class="sg-head static"><span class="sg-title">Independent</span><span class="sg-badge">${singles.length}</span></div><div class="sg-body">`;
     singles.forEach(i=>{ const t=State.tiles[i];
-      html+=`<button class="sel-row ${Number(t.id)===Number(State.focusTileId)?"info-focus":""}" data-tile="${t.id}"><span class="pl pl-independent">·</span><span class="sr-t">${esc(tileDisplayLabel(t))}</span><span class="sr-m">${esc(tileLeftPaneMeta(t))}</span></button>`;
+      html+=tileSelectionHtml(t, "independent");
     });
     html+=`</div></div>`;
   }
@@ -3463,7 +3525,10 @@ function renderSelCard(){
   }));
 }
 function renderStackCard(){
+  // Stack-at-clicked-cell left-pane section removed in v202.
+  // Keep this no-op so existing map click/stack-cycle internals remain safe.
   const card=document.getElementById("stackCard");
+  if(!card) return;
   const info=State.stackInfo;
   if(!info){ card.innerHTML=`<p class="hint">Click a tile on the map. Layered tiles are listed here top → bottom. Click a stack row to focus/highlight it without changing the current selection.</p>`; return; }
   const stack=tilesAtCell(info.row,info.col);
@@ -3803,7 +3868,12 @@ function updateActionButtons(){
     pasteBtn.title=State.buffer?`Paste ${State.buffer.tiles.length} tile(s) — click destination${pastePushOk?" (hold for push)":""}`:`Buffer empty`;
   }
   syncPushAvailability();
-  // Trim is available whenever a dashboard is loaded
+  // Select all is the toolbar equivalent of Ctrl/Cmd+A. Trim is available whenever a dashboard is loaded.
+  const selectAllBtn=document.getElementById("btnSelectAll");
+  if(selectAllBtn){
+    selectAllBtn.disabled=!State.active||!State.tiles.length;
+    selectAllBtn.title=State.active&&State.tiles.length?"Select all tiles (Ctrl/Cmd+A)":"Load a dashboard before selecting all tiles.";
+  }
   const trimBtn=document.getElementById("btnTrim");
   if(trimBtn) trimBtn.disabled=!State.active||State.pending;
   updateSpacingControls();
@@ -5471,35 +5541,134 @@ function updateSpacingSetButton(){
 function updateSpacingControls(){
   updateSpacingSetButton();
   updateSpacingDeltaButton();
+  updateLayoutScaleControls();
 }
 
 function updateSpacingDeltaButton(){
-  const btn=document.getElementById("btnSpacingInc");
-  if(!btn) return;
   const val=_spacingGetVal();
   const isDec=val<0;
   const label=isDec?"Dec":"Inc";
   const absVal=Math.abs(val);
   const loaded=!!State.active && State.tiles.length>0;
-  btn.disabled=!loaded || !!State.pending || val===0;
-  btn.title=val===0
-    ? "Enter a positive value to increase spacing or a negative value to decrease spacing."
-    : `${isDec?"Decrease":"Increase"} spacing between all clusters by ${absVal} (hold for rows/cols only)`;
+  const pending=!!State.pending;
 
-  const lbl=document.getElementById("spacingDeltaBtnLabel");
-  if(lbl) lbl.textContent=label;
+  const mainBtn=document.getElementById("btnSpacing");
+  if(mainBtn){
+    mainBtn.disabled=!loaded || pending;
+    mainBtn.title=!loaded
+      ? "Load a dashboard before using spacing tools."
+      : pending
+        ? "Finish or cancel the pending action before using spacing tools."
+        : "Open spacing tools: set spacing, unstack, increase, or decrease rows/columns/all.";
+  }
+
   const head=document.getElementById("spacingDeltaMenuHead");
   if(head) head.textContent=(val===0?"Increase/decrease":(isDec?"Decrease":"Increase"))+" spacing by value";
-  const all=document.getElementById("spacingIncAll"); if(all) all.textContent=`${label} all`;
-  const rows=document.getElementById("spacingIncRows"); if(rows) rows.textContent=`${label} rows only`;
-  const cols=document.getElementById("spacingIncCols"); if(cols) cols.textContent=`${label} cols only`;
+  const all=document.getElementById("spacingIncAll"); if(all){ all.textContent=`${label} all`; all.disabled=!loaded || pending || val===0; }
+  const rows=document.getElementById("spacingIncRows"); if(rows){ rows.textContent=`${label} rows only`; rows.disabled=!loaded || pending || val===0; }
+  const cols=document.getElementById("spacingIncCols"); if(cols){ cols.textContent=`${label} cols only`; cols.disabled=!loaded || pending || val===0; }
 
-  const icon=document.getElementById("spacingDeltaIcon");
-  if(icon){
-    icon.innerHTML=isDec
-      ? '<line x1="5" y1="12" x2="19" y2="12"/>'
-      : '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>';
+  const setAll=document.getElementById("spacingSetAll"); if(setAll) setAll.disabled=!loaded || pending || val<0;
+  const setRows=document.getElementById("spacingSetRows"); if(setRows) setRows.disabled=!loaded || pending || val<0;
+  const setCols=document.getElementById("spacingSetCols"); if(setCols) setCols.disabled=!loaded || pending || val<0;
+
+  const hint=document.getElementById("spacingDialogHint");
+  if(hint){
+    if(!loaded) hint.textContent="Load a dashboard before using spacing tools.";
+    else if(pending) hint.textContent="Finish or cancel the pending action before using spacing tools.";
+    else if(val<0) hint.textContent=`Value ${val}: Set options are disabled because Set requires 0 or greater. ${label} options will decrease spacing by ${absVal}.`;
+    else if(val===0) hint.textContent="Value 0: Set options are available; Inc/Dec options are disabled.";
+    else hint.textContent=`Value ${val}: Set options set exact spacing. Inc options increase current spacing by ${absVal}.`;
   }
+}
+
+function openSpacingModal(){
+  updateSpacingControls();
+  const modal=document.getElementById("spacingModal");
+  if(modal) modal.classList.remove("hidden");
+  setTimeout(()=>document.getElementById("spacingValInput")?.focus(),0);
+}
+function closeSpacingModal(){
+  document.getElementById("spacingModal")?.classList.add("hidden");
+}
+
+function _layoutScaleGetDeltas(){
+  const dr=parseInt(document.getElementById("layoutScaleRows")?.value,10);
+  const dc=parseInt(document.getElementById("layoutScaleCols")?.value,10);
+  return {dRow:Number.isFinite(dr)?dr:0, dCol:Number.isFinite(dc)?dc:0};
+}
+
+function updateLayoutScaleControls(){
+  const loaded=!!State.active && State.tiles.length>0;
+  const pending=!!State.pending;
+  const btn=document.getElementById("btnLayoutScale");
+  if(btn){
+    btn.disabled=!loaded || pending;
+    btn.title=!loaded
+      ? "Load a dashboard before enlarging or reducing the layout."
+      : pending
+        ? "Finish or cancel the pending action before enlarging or reducing the layout."
+        : "Enl/Rdc: enlarge or reduce the entire layout by row/column deltas.";
+  }
+  const {dRow,dCol}=_layoutScaleGetDeltas();
+  const apply=document.getElementById("layoutScaleApply");
+  if(apply) apply.disabled=!loaded || pending || (!dRow && !dCol);
+  const hint=document.getElementById("layoutScaleHint");
+  if(hint){
+    if(!loaded) hint.textContent="Load a dashboard before using Enl/Rdc.";
+    else if(pending) hint.textContent="Finish or cancel the pending action before using Enl/Rdc.";
+    else if(!dRow && !dCol) hint.textContent="Enter rows and/or columns other than 0.";
+    else {
+      const rowWord=dRow===0?"no row change":`${dRow>0?"enlarge":"reduce"} rows by ${Math.abs(dRow)}`;
+      const colWord=dCol===0?"no column change":`${dCol>0?"enlarge":"reduce"} columns by ${Math.abs(dCol)}`;
+      hint.textContent=`This will ${rowWord} and ${colWord} for the entire layout.`;
+    }
+  }
+}
+
+function openLayoutScaleModal(){
+  updateLayoutScaleControls();
+  const err=document.getElementById("layoutScaleErr");
+  if(err){ err.textContent=""; err.style.display="none"; }
+  const modal=document.getElementById("layoutScaleModal");
+  if(modal) modal.classList.remove("hidden");
+  setTimeout(()=>document.getElementById("layoutScaleRows")?.focus(),0);
+}
+function closeLayoutScaleModal(){
+  document.getElementById("layoutScaleModal")?.classList.add("hidden");
+}
+
+function applyLayoutScale(){
+  clearConflictHighlight();
+  const err=document.getElementById("layoutScaleErr");
+  const fail=msg=>{ if(err){ err.textContent=msg; err.style.display=""; } else toast(msg,"err"); };
+  if(!State.tiles.length){ fail("No layout is loaded."); return; }
+  if(State.pending){ fail("Finish or cancel the pending action first."); return; }
+  const rowRaw=document.getElementById("layoutScaleRows")?.value ?? "0";
+  const colRaw=document.getElementById("layoutScaleCols")?.value ?? "0";
+  const dRow=parseInt(rowRaw,10), dCol=parseInt(colRaw,10);
+  if(!Number.isFinite(dRow)||!Number.isFinite(dCol)){ fail("Rows and columns must be whole numbers."); return; }
+  if(!dRow && !dCol){ fail("Enter rows and/or columns other than 0."); return; }
+  const selIds=State.tiles.map(t=>Number(t.id));
+  const origTiles=State.tiles.map(t=>({...t}));
+  const resized=applyResizeToSelection(origTiles.map(t=>({...t})), selIds, dRow, dCol);
+  const changed=resized.some(t=>{
+    const o=origTiles.find(x=>Number(x.id)===Number(t.id));
+    return o&&(t.row!==o.row||t.col!==o.col||t.rowSpan!==o.rowSpan||t.colSpan!==o.colSpan);
+  });
+  if(!changed){ closeLayoutScaleModal(); toast("Layout size did not change.","ok"); return; }
+  pushHistory();
+  State.tiles=resized.map(t=>({...t}));
+  for(const t of State.tiles){
+    if(t._raw){ t._raw.row=t.row; t._raw.col=t.col; t._raw.rowSpan=t.rowSpan; t._raw.colSpan=t.colSpan; }
+  }
+  closeLayoutScaleModal();
+  render();
+  updateActionButtons();
+  const parts=[];
+  if(dRow) parts.push(`${dRow>0?"enlarged":"reduced"} rows by ${Math.abs(dRow)}`);
+  if(dCol) parts.push(`${dCol>0?"enlarged":"reduced"} columns by ${Math.abs(dCol)}`);
+  status(`Layout ${parts.join(" and ")}.`);
 }
 
 function doSpacingAdd(mode){
@@ -5688,7 +5857,7 @@ function renderDashList(){
     el.appendChild(b);
   });
 }
-function enableTools(on){ document.querySelectorAll("#btnJson,#btnSave,#btnTrim,#btnSpacingSet,#btnSpacingInc,#btnSetTileSize").forEach(b=>b.disabled=!on); updateActionButtons(); updateSaveHubState(); updateSpacingControls(); }
+function enableTools(on){ document.querySelectorAll("#btnJson,#btnSave,#btnSelectAll,#btnTrim,#btnSpacing,#btnLayoutScale,#btnSetTileSize").forEach(b=>b.disabled=!on); updateActionButtons(); updateSaveHubState(); updateSpacingControls(); }
 function status(msg,busy){ document.getElementById("statusMsg").innerHTML=(busy?`<span class="pip"></span>`:"")+esc(msg); }
 function setConn(mode,label){ const d=document.getElementById("connDot"),l=document.getElementById("connLabel");
   d.className="conn-dot "+(mode==="live"?"live":mode==="offline"?"demo":"");
@@ -6672,25 +6841,33 @@ function wire(){
   document.getElementById("copyNormal").addEventListener("click",()=>{ document.getElementById("copyHoldMenu").classList.add("hidden"); beginCopy(false); });
   document.getElementById("copyPush").addEventListener("click",()=>{ document.getElementById("copyHoldMenu").classList.add("hidden"); beginCopy(true); });
 
+  document.getElementById("btnSelectAll")?.addEventListener("click",selectAllTiles);
+
   wireHoldButton("btnTrim","trimHoldMenu",()=>doTrim(true,true));
   document.getElementById("trimBoth").addEventListener("click",()=>{ document.getElementById("trimHoldMenu").classList.add("hidden"); doTrim(true,true); });
   document.getElementById("trimTop").addEventListener("click",()=>{ document.getElementById("trimHoldMenu").classList.add("hidden"); doTrim(true,false); });
   document.getElementById("trimLeft").addEventListener("click",()=>{ document.getElementById("trimHoldMenu").classList.add("hidden"); doTrim(false,true); });
 
-  wireHoldButton("btnSpacingSet","spacingSetMenu",()=>doSpacingSet("all"));
-  const _spHideSet=()=>document.getElementById("spacingSetMenu").classList.add("hidden");
-  document.getElementById("spacingSetAll").addEventListener("click",()=>{ _spHideSet(); doSpacingSet("all"); });
-  document.getElementById("spacingSetUnstackAll").addEventListener("click",e=>{ if(e.currentTarget.disabled) return; _spHideSet(); doSpacingSetUnstackAll(); });
-  document.getElementById("spacingSetRows").addEventListener("click",()=>{ _spHideSet(); doSpacingSet("rows"); });
-  document.getElementById("spacingSetCols").addEventListener("click",()=>{ _spHideSet(); doSpacingSet("cols"); });
-
-  wireHoldButton("btnSpacingInc","spacingIncMenu",()=>doSpacingAdd("all"));
-  const _spHideInc=()=>document.getElementById("spacingIncMenu").classList.add("hidden");
-  document.getElementById("spacingIncAll").addEventListener("click",()=>{ _spHideInc(); doSpacingAdd("all"); });
-  document.getElementById("spacingIncRows").addEventListener("click",()=>{ _spHideInc(); doSpacingAdd("rows"); });
-  document.getElementById("spacingIncCols").addEventListener("click",()=>{ _spHideInc(); doSpacingAdd("cols"); });
-  document.getElementById("spacingValInput").addEventListener("input",updateSpacingControls);
-  document.getElementById("spacingValInput").addEventListener("change",updateSpacingControls);
+  document.getElementById("btnSpacing")?.addEventListener("click",openSpacingModal);
+  document.getElementById("spacingClose")?.addEventListener("click",closeSpacingModal);
+  document.getElementById("spacingModal")?.addEventListener("click",e=>{ if(e.target.id==="spacingModal") closeSpacingModal(); });
+  document.getElementById("spacingSetAll")?.addEventListener("click",()=>doSpacingSet("all"));
+  document.getElementById("spacingSetUnstackAll")?.addEventListener("click",e=>{ if(e.currentTarget.disabled) return; doSpacingSetUnstackAll(); });
+  document.getElementById("spacingSetRows")?.addEventListener("click",()=>doSpacingSet("rows"));
+  document.getElementById("spacingSetCols")?.addEventListener("click",()=>doSpacingSet("cols"));
+  document.getElementById("spacingIncAll")?.addEventListener("click",e=>{ if(e.currentTarget.disabled) return; doSpacingAdd("all"); });
+  document.getElementById("spacingIncRows")?.addEventListener("click",e=>{ if(e.currentTarget.disabled) return; doSpacingAdd("rows"); });
+  document.getElementById("spacingIncCols")?.addEventListener("click",e=>{ if(e.currentTarget.disabled) return; doSpacingAdd("cols"); });
+  document.getElementById("spacingValInput")?.addEventListener("input",updateSpacingControls);
+  document.getElementById("spacingValInput")?.addEventListener("change",updateSpacingControls);
+  document.getElementById("btnLayoutScale")?.addEventListener("click",openLayoutScaleModal);
+  document.getElementById("layoutScaleCancel")?.addEventListener("click",closeLayoutScaleModal);
+  document.getElementById("layoutScaleApply")?.addEventListener("click",applyLayoutScale);
+  document.getElementById("layoutScaleModal")?.addEventListener("click",e=>{ if(e.target.id==="layoutScaleModal") closeLayoutScaleModal(); });
+  document.getElementById("layoutScaleRows")?.addEventListener("input",updateLayoutScaleControls);
+  document.getElementById("layoutScaleCols")?.addEventListener("input",updateLayoutScaleControls);
+  document.getElementById("layoutScaleRows")?.addEventListener("keydown",e=>{ if(e.key==="Enter") applyLayoutScale(); });
+  document.getElementById("layoutScaleCols")?.addEventListener("keydown",e=>{ if(e.key==="Enter") applyLayoutScale(); });
   updateSpacingControls();
 
   document.getElementById("btnSetTileSize").addEventListener("click",openTileSizeModal);
@@ -6852,7 +7029,7 @@ function wire(){
     if((e.ctrlKey||e.metaKey)&&(e.key==="y"||(e.shiftKey&&e.key==="z"))){ if(!typing){ e.preventDefault(); redo(); } return; }
     if(typing||modalOpen) return;
     // Ctrl-A: select all tiles
-    if((e.ctrlKey||e.metaKey)&&e.key==="a"){ if(State.active&&State.tiles.length){ e.preventDefault(); selectTileIds(State.tiles.map(t=>t.id)); render(); status(`Selected all ${State.tiles.length} tiles.`); } return; }
+    if((e.ctrlKey||e.metaKey)&&e.key==="a"){ if(State.active&&State.tiles.length){ e.preventDefault(); selectAllTiles(); } return; }
     const hasSel = (State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.length
                 || State.sel.type==="line"&&State.sel.lines.length;
     if((e.ctrlKey||e.metaKey)&&e.key==="c"){ if(hasSel&&!State.pending){ e.preventDefault(); copyToBuffer(); } return; }
