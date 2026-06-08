@@ -88,8 +88,13 @@
     color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .14s;flex:none;}
   .icon-btn:hover{color:var(--text);border-color:var(--border-2);}
   .icon-btn svg{width:16px;height:16px;}
+  .side-toggle-arrow{font-size:1.55rem;line-height:1;font-weight:900;color:var(--accent);transform:translateY(-1px);}
   .crumb{font-family:var(--mono);font-size:.78rem;color:var(--muted);}
   .crumb b{color:var(--text);}
+  .jump-btn{display:none;align-items:center;justify-content:center;width:30px;height:28px;padding:0;border-radius:7px;border:1px solid rgba(103,232,249,.28);background:rgba(103,232,249,.08);color:var(--accent);cursor:pointer;transition:all .14s;white-space:nowrap;}
+  .jump-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(103,232,249,.16);color:var(--text);}
+  .jump-btn:disabled{opacity:.42;cursor:not-allowed;color:var(--faint);}
+  .jump-btn .jump-icon{width:15px;height:15px;stroke-width:2.2;}
   .topbar .spacer{flex:1;}
   .conn-dot{width:8px;height:8px;border-radius:50%;background:var(--faint);}
   .conn-dot.live{background:var(--ok);box-shadow:0 0 9px rgba(52,211,153,.7);}
@@ -496,13 +501,20 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.209">0.9.209</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.215">0.9.215</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
-    <button class="icon-btn" id="btnToggleSide" title="Toggle sidebar">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
+      <span class="side-toggle-arrow" id="sideToggleArrow" aria-hidden="true">‹</span>
     </button>
     <span class="crumb" id="crumb">No dashboard loaded</span>
+    <button class="jump-btn" id="btnOpenDashboard" disabled title="Load a hub dashboard before opening it" aria-label="Open dashboard in new window">
+      <svg class="jump-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 3h7v7"></path>
+        <path d="M10 14 21 3"></path>
+        <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"></path>
+      </svg>
+    </button>
     <span class="orphan-ind" id="orphanInd" style="display:none" title="Review orphaned CSS">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
       <span class="oi-txt">CSS Orphans</span>
@@ -1194,8 +1206,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v209";
-const APP_VERSION = "0.9.209";
+const BUILD = "v215";
+const APP_VERSION = "0.9.215";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -1844,6 +1856,7 @@ function finishAdopt(meta){
   document.getElementById("mapFrame").style.display="inline-block";
   document.getElementById("selSection").style.display="block";
   document.getElementById("crumb").innerHTML=`<b>${esc(meta.label)}</b>`;
+  updateDashboardJumpState();
   setHubSettingsOpen(false);
   collapseSection("sectConn", true);   // fold Layout Source once any layout is loaded
   collapseSection("sectDash", true);   // fold the dashboard list once one is loaded
@@ -3844,7 +3857,8 @@ function updateActionButtons(){
     }
   }
 
-  const bInfo=document.getElementById("btnInfo"); if(bInfo) bInfo.disabled=!(State.sel.ids&&State.sel.ids.length);
+  const bInfo=document.getElementById("btnInfo");
+  if(bInfo) bInfo.disabled=currentSelectionTileIds().length===0||!!State.pending;
   const bSize=document.getElementById("btnSetTileSize"); if(bSize) bSize.disabled=currentSelectionTileIds().length===0||!!State.pending;
   document.querySelector('.tool[data-action="cut"]').disabled=!anySel||State.pending;
   document.querySelector('.tool[data-action="copybuf"]').disabled=!anySel||State.pending;
@@ -5814,6 +5828,7 @@ function updateDirtyIndicator(){
   }
   const baseTitle="Dashboard Layout Studio";
   document.title=(dirty?"* ":"")+baseTitle;
+  updateDashboardJumpState();
 }
 function confirmUnsavedLayoutChange(actionLabel, onProceed){
   if(!hasUnsavedChanges()){ onProceed(); return; }
@@ -5861,7 +5876,43 @@ function enableTools(on){ document.querySelectorAll("#btnJson,#btnSave,#btnSelec
 function status(msg,busy){ document.getElementById("statusMsg").innerHTML=(busy?`<span class="pip"></span>`:"")+esc(msg); }
 function setConn(mode,label){ const d=document.getElementById("connDot"),l=document.getElementById("connLabel");
   d.className="conn-dot "+(mode==="live"?"live":mode==="offline"?"demo":"");
-  l.textContent=mode==="live"?"live · "+label:mode==="offline"?"offline (pasted)":"disconnected"; }
+  l.textContent=mode==="live"?"live · "+label:mode==="offline"?"offline (pasted)":"disconnected";
+  updateDashboardJumpState();
+}
+function currentDashboardUrl(){
+  if(!(State.conn.mode==="live" && State.active)) return null;
+  if(State.lastDashUrl) return State.lastDashUrl;
+  if(State.active.id && State.active.accessToken){
+    let url=`${Hub.base()}/${State.active.id}/dashboard/${State.active.id}?access_token=${State.active.accessToken}&local=true`;
+    if(State.loadPin) url+=`&pin=${encodeURIComponent(State.loadPin)}`;
+    return url;
+  }
+  return null;
+}
+function updateDashboardJumpState(){
+  const b=document.getElementById("btnOpenDashboard");
+  if(!b) return;
+  const url=currentDashboardUrl();
+  b.style.display=State.active?"inline-flex":"none";
+  b.disabled=!url;
+  b.title=url ? "Open the current dashboard in a new window." : "Open in new window is available only for hub-loaded dashboards.";
+}
+function openCurrentDashboard(){
+  const url=currentDashboardUrl();
+  if(!url){ toast("Open in new window is available only for hub-loaded dashboards.","err"); return; }
+  const w=window.open(url,"_blank","noopener");
+  if(!w) toast("The browser blocked the dashboard window.","err");
+}
+function updateSideToggleIcon(){
+  const shell=document.getElementById("shell");
+  const btn=document.getElementById("btnToggleSide");
+  const arrow=document.getElementById("sideToggleArrow");
+  if(!shell||!btn||!arrow) return;
+  const collapsed=shell.classList.contains("collapsed");
+  arrow.textContent=collapsed?"›":"‹";
+  btn.title=collapsed?"Show left pane":"Hide left pane";
+  btn.setAttribute("aria-label",btn.title);
+}
 function updateSaveHubState(){
   const b=document.getElementById("saveHub");
   if(!b) return;
@@ -6237,6 +6288,7 @@ function applyJsonToCurrentLayout(data, sourceLabel){
     State.active._layout=doc;
     if(doc.name) State.active.label=doc.name;
     document.getElementById("crumb").innerHTML=`<b>${esc(State.active.label||"Dashboard")}</b>`;
+    updateDashboardJumpState();
   }
   clearSelection(); State.pending=null; State.stackInfo=null;
   render();
@@ -6718,7 +6770,7 @@ function wire(){
 
   // Info button
   document.getElementById("btnInfo").addEventListener("click",()=>{
-    const ids=State.sel.ids;
+    const ids=currentSelectionTileIds();
     if(!ids||!ids.length){ toast("Select a tile first.","err"); return; }
     showTileInfo(ids[0]);
   });
@@ -6748,7 +6800,13 @@ function wire(){
   });
   document.getElementById("pasteCancel").addEventListener("click",()=>document.getElementById("pasteModal").classList.add("hidden"));
   document.getElementById("pasteLoad").addEventListener("click",loadPasted);
-  document.getElementById("btnToggleSide").addEventListener("click",()=>document.getElementById("shell").classList.toggle("collapsed"));
+  document.getElementById("btnToggleSide").addEventListener("click",()=>{
+    document.getElementById("shell").classList.toggle("collapsed");
+    updateSideToggleIcon();
+  });
+  document.getElementById("btnOpenDashboard").addEventListener("click",openCurrentDashboard);
+  updateSideToggleIcon();
+  updateDashboardJumpState();
   document.querySelectorAll(".slabel.collapsible").forEach(h=>h.addEventListener("click",()=>h.closest(".sect").classList.toggle("collapsed")));
   // (no tool-mode buttons — selection is automatic from what you click)
   document.querySelector('.tool[data-action="insert"]').addEventListener("click",doInsert);
