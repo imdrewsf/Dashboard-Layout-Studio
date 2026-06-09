@@ -501,7 +501,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.215">0.9.215</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.218">0.9.218</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1206,8 +1206,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v215";
-const APP_VERSION = "0.9.215";
+const BUILD = "v218";
+const APP_VERSION = "0.9.218";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -2336,6 +2336,43 @@ function generateCssForIdMap(sourceCss, idMap, destCss){
    on top. We parse those rules and compute an effective z per tile:
      effZ = explicit CSS z-index if set, else class rule, else 0
    Ties broken by array order. This is what the board ACTUALLY renders. */
+
+function generateCssForIdMapFallbackRules(sourceCss, idMap, destCss){
+  if(!sourceCss || !idMap || !idMap.size) return "";
+  const skipNew=new Set();
+  if(destCss){
+    const existing=selectorTileIdsInCss(destCss);
+    for(const nid of new Set(idMap.values())) if(existing.has(Number(nid))) skipNew.add(Number(nid));
+  }
+  function recurse(cssText){
+    const out=[];
+    for(const node of parseCssNodes(cssText||"")){
+      if(node.kind==="stmt") continue;
+      const pre=(node.prelude||"").trim();
+      if(pre.startsWith("@")){
+        const inner=recurse(node.body);
+        if(inner.trim()) out.push(new CssBlock(node.prelude, inner.replace(/\s+$/,"")));
+        continue;
+      }
+      for(const sel of splitSelectorList(pre)){
+        const ids=[...selectorTileIds(sel)].filter(id=>idMap.has(Number(id)));
+        for(const oid of ids){
+          const nid=Number(idMap.get(Number(oid)));
+          if(skipNew.has(nid)) continue;
+          out.push(new CssBlock(replaceTileIdInSelector(sel,Number(oid),nid), replaceTileIdInBody(node.body,Number(oid),nid)));
+        }
+      }
+    }
+    return renderCssNodes(out).trim();
+  }
+  return recurse(sourceCss);
+}
+function generateCssForIdMapForCopy(sourceCss, idMap, destCss){
+  const primary=generateCssForIdMap(sourceCss||"", idMap, destCss||"").trim();
+  if(primary) return primary;
+  return generateCssForIdMapFallbackRules(sourceCss||"", idMap, destCss||"").trim();
+}
+
 function parseCssZ(css){
   const tile={}, cls={};
   if(!css) return {tile,cls};
@@ -3740,7 +3777,16 @@ function tilesInSingleCluster(tiles){
   }
   return comps===1;
 }
+function lineSelectionPushEligible(){
+  const s=State.sel||{};
+  return s.type==="line" && State.selKind && Array.isArray(s.lines) && s.lines.length>0;
+}
 function selectionPushEligible(){
+  // Header-selected rows/columns use a different push model from tile
+  // clusters: pushing inserts the selected row/column count at the
+  // destination before placing the move/copy.  Therefore line selections are
+  // always push-eligible even when the resolved tiles are disconnected.
+  if(lineSelectionPushEligible()) return true;
   const ids=currentSelectionTileIds();
   return ids.length>0 && idsInSingleCluster(ids);
 }
@@ -3748,11 +3794,12 @@ function bufferPushEligible(){
   return !!State.buffer && tilesInSingleCluster(State.buffer.tiles||[]);
 }
 function activePushSourceEligible(){
+  if(lineSelectionPushEligible()) return true;
   const ids=currentSelectionTileIds();
   // The global Overlaps: push option is allowed when there is no current
   // source yet. It becomes a default mode for the next move/copy/paste/resize.
-  // Once a source exists, push is still limited to one tile or one connected
-  // cluster so the placement/push direction remains predictable.
+  // Once a tile/buffer source exists, push is still limited to one tile or one
+  // connected cluster.  Row/column header selections use insert-style push.
   if(ids.length) return idsInSingleCluster(ids);
   if(State.buffer) return bufferPushEligible();
   return true;
@@ -3785,7 +3832,7 @@ function syncPushAvailability(){
   }else if(State.overlaps!=="push"){
     State.pushForcedRestore=null;
   }
-  const reason="Push is available before selecting anything, but selected/copied sources must be one tile or one connected cluster.";
+  const reason="Push is available for row/column header selections, one tile/cluster selections, or one connected clipboard cluster.";
   setMenuButtonDisabled("movePush", !movePushOk, reason);
   setMenuButtonDisabled("copyPush", !copyPushOk, reason);
   setMenuButtonDisabled("pastePush", !pastePushOk, reason);
@@ -4751,6 +4798,146 @@ function cascadePush(tiles, blockers, _ignored, buf, preserve){
   return working;
 }
 
+function cloneTileForLineOp(t){
+  const nt={...t};
+  if(t._raw) nt._raw=JSON.parse(JSON.stringify(t._raw));
+  return nt;
+}
+function setTileAxisValue(t, ax, value){
+  t[ax]=Math.max(1,value);
+  if(t._raw) t._raw[ax]=t[ax];
+}
+function shiftTilesForInsertedLines(tiles, kind, at, count, ignoreIds=null){
+  const ax=kind==="col"?"col":"row";
+  const ignored=ignoreIds||new Set();
+  for(const t of tiles){
+    if(ignored.has(Number(t.id))) continue;
+    if(t[ax]>=at) setTileAxisValue(t, ax, t[ax]+count);
+  }
+}
+function lineSelectionSpan(indices){
+  const lo=Math.min(...indices), hi=Math.max(...indices);
+  return {lo, hi, count:hi-lo+1};
+}
+function setLineSelectionRange(kind, start, count){
+  const n=Math.max(1, Number(count)||1);
+  const first=Math.max(1, Number(start)||1);
+  const lines=[];
+  for(let i=0;i<n;i++) lines.push(first+i);
+  State.selKind=kind;
+  State.anchor=first;
+  State.sel={type:"line", lines, ids:[], rect:null};
+  State.focusTileId=null;
+}
+function restorePendingLineSelection(pend, dest){
+  const span=lineSelectionSpan(pend.indices||[]);
+  setLineSelectionRange(pend.kind, dest, span.count);
+}
+function lineSelectionTileSnapshots(kind, indices, useMoveSpan=false){
+  const {lo,hi}=lineSelectionSpan(indices);
+  const ax=kind==="col"?"col":"row", sp=kind==="col"?"colSpan":"rowSpan";
+  let idxs;
+  if(useMoveSpan){
+    idxs=State.tiles.map((t,i)=>{
+      for(let k=t[ax]; k<t[ax]+t[sp]; k++) if(k>=lo&&k<=hi) return i;
+      return -1;
+    }).filter(i=>i>=0);
+  }else{
+    const T=targetFromLines(indices,kind);
+    idxs=selectIndices(T, State.selMode);
+  }
+  return idxs.map(i=>cloneTileForLineOp(State.tiles[i]));
+}
+function appendLineCopiesFromSnapshots(baseTiles, sourceTiles, kind, fromLine, destLine, cssIgnore){
+  const ax=kind==="col"?"col":"row";
+  const dRow=kind==="row" ? destLine-fromLine : 0;
+  const dCol=kind==="col" ? destLine-fromLine : 0;
+  const reserved=tileIdsInCss(State.customCSS||"");
+  const {used,nextId:startId}=nextIdState(baseTiles,reserved);
+  let nextId=startId;
+  const idMap=new Map();
+  const copies=[];
+  for(const src of sourceTiles){
+    const ct=cloneTileForLineOp(src);
+    const oldId=Number(src.id);
+    nextId=ensureUniqueId(ct,used,nextId);
+    const newId=Number(ct.id);
+    idMap.set(oldId,newId);
+    ct.row=src.row+dRow; ct.col=src.col+dCol;
+    if(ct._raw){ ct._raw.id=newId; ct._raw.row=ct.row; ct._raw.col=ct.col; }
+    copies.push(ct);
+  }
+  const conflictPairs=[];
+  copies.forEach(c=>baseTiles.forEach(o=>{ if(overlaps(c,o)) conflictPairs.push([c,o]); }));
+  if(conflictPairs.length){
+    const cids=new Set(); conflictPairs.forEach(([c,o])=>{ cids.add(Number(c.id)); cids.add(Number(o.id)); });
+    return {ok:false, conflictIds:cids};
+  }
+  let newCss=State.customCSS||"";
+  if(!cssIgnore && idMap.size){
+    const dup=generateCssForIdMapForCopy(State.customCSS||"",idMap,newCss);
+    if(dup.trim()) newCss=(newCss.replace(/\s+$/,"")+"\n"+dup+"\n");
+  }
+  return {ok:true, tiles:baseTiles.concat(copies), newCss, appendedIds:copies.map(t=>Number(t.id)), appended:copies.length};
+}
+function completeCopyLinesWithPush(dest){
+  const pend=State.pending;
+  const kind=pend.kind;
+  const {lo,count}=lineSelectionSpan(pend.indices);
+  const source=lineSelectionTileSnapshots(kind, pend.indices, false);
+  if(!source.length){ toast("No tiles found in the selected line range.","err"); return; }
+  const work=State.tiles.map(cloneTileForLineOp);
+  shiftTilesForInsertedLines(work, kind, dest, count);
+  const cssIgnore=!document.getElementById("chkDupCss").checked;
+  const res=appendLineCopiesFromSnapshots(work, source, kind, lo, dest, cssIgnore);
+  if(!res.ok){
+    State.conflictHighlight=res.conflictIds; render();
+    toast(`Copy blocked after inserting ${count} ${kind}(s): ${res.conflictIds.size} tile(s) would overlap.`, "err");
+    status(`Conflict — copy aborted. ${res.conflictIds.size} tile(s) highlighted. Esc to cancel or pick another destination.`);
+    return;
+  }
+  pushHistory();
+  State.tiles=res.tiles;
+  State.customCSS=res.newCss; State.zMap=parseCssZ(State.customCSS);
+  State.conflictHighlight=null; State.pending=null; restorePendingLineSelection(pend,dest); updateActionButtons(); render();
+  status(`Inserted ${count} ${kind}(s) at ${kind} ${dest}; copied ${res.appended} tile(s) with push.`);
+}
+function completeMoveLinesWithPush(dest){
+  const pend=State.pending;
+  const kind=pend.kind;
+  const ax=kind==="col"?"col":"row";
+  const {lo,count}=lineSelectionSpan(pend.indices);
+  const source=lineSelectionTileSnapshots(kind, pend.indices, true);
+  if(!source.length){ toast("No tiles found in the selected line range.","err"); return; }
+  const movingIds=new Set(source.map(t=>Number(t.id)));
+  const d=dest-lo;
+  const work=State.tiles.map(cloneTileForLineOp);
+  shiftTilesForInsertedLines(work, kind, dest, count, movingIds);
+  for(const t of work){
+    if(!movingIds.has(Number(t.id))) continue;
+    const src=source.find(s=>Number(s.id)===Number(t.id));
+    if(!src) continue;
+    t.row=src.row+(kind==="row"?d:0);
+    t.col=src.col+(kind==="col"?d:0);
+    if(t._raw){ t._raw.row=t.row; t._raw.col=t.col; }
+  }
+  const moved=work.filter(t=>movingIds.has(Number(t.id)));
+  const others=work.filter(t=>!movingIds.has(Number(t.id)));
+  const conflictPairs=[];
+  moved.forEach(m=>others.forEach(o=>{ if(overlaps(m,o)) conflictPairs.push([m,o]); }));
+  if(conflictPairs.length){
+    const cids=new Set(); conflictPairs.forEach(([m,o])=>{ cids.add(Number(m.id)); cids.add(Number(o.id)); });
+    State.conflictHighlight=cids; render();
+    toast(`Move blocked after inserting ${count} ${kind}(s): ${cids.size} tile(s) would overlap.`, "err");
+    status(`Conflict — move aborted. ${cids.size} tile(s) highlighted. Esc to cancel or pick another destination.`);
+    return;
+  }
+  pushHistory();
+  State.tiles=work;
+  State.conflictHighlight=null; State.pending=null; restorePendingLineSelection(pend,dest); updateActionButtons(); render();
+  status(`Inserted ${count} ${kind}(s) at ${kind} ${dest}; moved ${movingIds.size} tile(s) with push.`);
+}
+
 function beginMove(withPush){
   clearConflictHighlight();
   const s=State.sel;
@@ -4779,7 +4966,6 @@ function _beginMoveGo(s, buffer, preserve, dir, explicitPush){
   }
   if(!s.lines.length) return;
   State.pending={action:"move",kind:State.selKind,indices:[...s.lines], push:usePush, buffer, preserve};
-  State.sel.lines=[]; State.sel.type=null;
   status(`Click a ${State.pending.kind} number for the destination${usePush?` (push ${preserve?"preserve":"compact"})` :""}. Esc to cancel.`);
   updateActionButtons(); render();
 }
@@ -4812,7 +4998,6 @@ function _beginCopyGo(s, buffer, preserve, dir, explicitPush){
   }
   if(!s.lines.length) return;
   State.pending={action:"copyLines",kind:State.selKind,indices:[...s.lines], push:usePush, buffer, preserve};
-  State.sel.lines=[]; State.sel.type=null;
   status(`Click a ${State.pending.kind} number for the copy destination${usePush?` (push ${preserve?"preserve":"compact"})`:""}. Esc to cancel.`);
   updateActionButtons(); render();
 }
@@ -4854,6 +5039,7 @@ function completeCopyTiles(cell){
 }
 function completeCopyLines(dest){
   const pend=State.pending;
+  if(pend.push || State.overlaps==="push"){ completeCopyLinesWithPush(dest); return; }
   const ax=pend.kind==="col"?"col":"row";
   const lo=Math.min(...pend.indices), hi=Math.max(...pend.indices);
   const T = ax==="col" ? {r1:1,c1:lo,r2:Infinity,c2:hi} : {r1:lo,c1:1,r2:hi,c2:Infinity};
@@ -4869,7 +5055,11 @@ function completeCopyLines(dest){
     else { toast(res.error||"Copy failed.","err"); }
     return;
   }
-  State.pending=null; commitCopy(res);
+  pushHistory();
+  State.tiles=res.newTiles;
+  if(res.newCss!==undefined){ State.customCSS=res.newCss; State.zMap=parseCssZ(State.customCSS); }
+  State.conflictHighlight=null; State.pending=null; restorePendingLineSelection(pend,dest); updateActionButtons(); render();
+  status(`Copied ${res.appended} tile(s) to ${pend.kind} ${dest}${res.skipped?`; skipped ${res.skipped} conflicting`:""}.`);
 }
 /* MOVE conflict handling (spec p.9): detect conflicts at the destination
    against EXISTING (non-moving) tiles only, evaluated once before moving.
@@ -4922,6 +5112,7 @@ function completeMoveTiles(cell){
 }
 function completeMove(dest){
   const pend=State.pending;
+  if(pend.push || State.overlaps==="push"){ completeMoveLinesWithPush(dest); return; }
   const ax=pend.kind==="col"?"col":"row", sp=pend.kind==="col"?"colSpan":"rowSpan";
   const from=Math.min(...pend.indices);
   const setL=new Set(pend.indices);
@@ -4947,7 +5138,7 @@ function completeMove(dest){
   const pIds=new Set(toPlace.map(t=>t.id));
   toPlace.forEach(t=>{ t[ax]=dest+(t[ax]-from); }); // other tiles NOT shifted
   State.tiles=State.tiles.filter(t=>!pIds.has(t.id)).concat(toPlace);
-  State.conflictHighlight=null; State.pending=null; selectTileIds([...pIds]); render();
+  State.conflictHighlight=null; State.pending=null; restorePendingLineSelection(pend,dest); updateActionButtons(); render();
   status(`Moved ${toPlace.length} ${pend.kind}(s) to ${pend.kind} ${dest}${skipped?`; skipped ${skipped} conflicting`:""}${State.overlaps==="allow"&&conflictPairs.length?" (overlaps allowed)":""}.`);
 }
 
@@ -5027,7 +5218,7 @@ function computeCopy(selIdx, deltaRow, deltaCol, overlapsMode, cssIgnore){
   const landedMap=new Map([...idMap].filter(([,v])=>appendedIds.has(v)));
   let newCss=State.customCSS||"";
   if(!cssIgnore && landedMap.size){
-    const dup=generateCssForIdMap(newCss, landedMap, newCss);
+    const dup=generateCssForIdMapForCopy(State.customCSS||"", landedMap, newCss);
     if(dup.trim()) newCss = (newCss.replace(/\s+$/,"") + "\n" + dup + "\n");
   }
   return { ok:true, newTiles:dest.concat(appended), newCss, idMap:landedMap, skipped, appended:appended.length, appendedIds:appended.map(t=>Number(t.id)) };
@@ -5190,7 +5381,7 @@ function completePasteBuf(cell){
     State.tiles=State.tiles.concat(copies);
     const cssIgnore=!document.getElementById("chkDupCss").checked;
     if(!cssIgnore){ const landed=new Map([...idMap]);
-      const dup=generateCssForIdMap(b.css||"", landed, State.customCSS||"");
+      const dup=generateCssForIdMapForCopy(b.css||"", landed, State.customCSS||"");
       if(dup.trim()){ State.customCSS=(State.customCSS||"").replace(/\s+$/,"")+"\n"+dup+"\n"; State.zMap=parseCssZ(State.customCSS); } }
     State.bufferUsed=true; State.conflictHighlight=null; State.pending=null;
     selectTileIds(copies.map(t=>Number(t.id))); render();
@@ -5210,7 +5401,7 @@ function completePasteBuf(cell){
   const cssIgnore=!document.getElementById("chkDupCss").checked;
   if(!cssIgnore){
     const landed=new Map([...idMap].filter(([,v])=>keep.some(k=>k.id===v)));
-    if(landed.size){ const dup=generateCssForIdMap(b.css||"", landed, State.customCSS||"");
+    if(landed.size){ const dup=generateCssForIdMapForCopy(b.css||"", landed, State.customCSS||"");
       if(dup.trim()){ State.customCSS=(State.customCSS||"").replace(/\s+$/,"")+"\n"+dup+"\n"; State.zMap=parseCssZ(State.customCSS); } }
   }
   State.bufferUsed=true; State.conflictHighlight=null; State.pending=null;
