@@ -1206,8 +1206,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v218";
-const APP_VERSION = "0.9.218";
+const BUILD = "v219";
+const APP_VERSION = "0.9.219";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -1217,6 +1217,7 @@ const State = {
   dashboards:[], active:null,
   cfg:{cols:100,rows:80},        // grid extent from the dashboard config
   original:null,                 // the COMPLETE original dashboard JSON loaded from the source; used for hub-save backups
+  hubSaveBaseline:null,          // hub-loaded layout snapshot used to detect hub-side changes before save
   baseDoc:null,                  // editable full dashboard JSON base used for serialize/save after JSON editor replacement
   savedSnapshot:null,             // compact serialized layout snapshot used to detect unsaved changes
   customCSS:"",                  // dashboard customCSS (drives z-index overrides)
@@ -1532,12 +1533,95 @@ const Hub = {
       State.lastLayoutUrl = successUrl;   // the URL that worked for load → reuse for save
       State.lastDashUrl = href;           // dashboard page URL → used to refresh requestToken if save fails
       await loadHubDeviceNames();
+      State.hubSaveBaseline=cloneLayoutDoc(loaded);
       adoptLayout(meta,loaded);
       toast(`Loaded "${meta.label}".`,"ok");
     }catch(e){
       trace(`load failed: ${e.message}`,null,"err");
       toast(`Could not load layout: ${e.message}`,"err");
     }
+  },
+  async refreshLayoutUrlForSave(){
+    const meta=State.active;
+    if(!meta) throw new Error("no active dashboard");
+    const dtok=meta.accessToken;
+    let dashUrl=State.lastDashUrl||`${this.base()}/${meta.id}/dashboard/${meta.id}?access_token=${dtok}&local=true`;
+    if(State.loadPin && !dashUrl.includes("pin=")) dashUrl+=`&pin=${encodeURIComponent(State.loadPin)}`;
+    trace("GET dashboard page to refresh requestToken",dashUrl);
+    const pres=await fetch(dashUrl,{credentials:"same-origin"});
+    const phtml=await pres.text();
+    if(!pres.ok) throw hubHttpError("dashboard refresh",pres.status,dashUrl,{
+      method:"GET",
+      statusText:pres.statusText,
+      responseText:phtml,
+      responseUrl:pres.url,
+      contentType:pres.headers.get("content-type")||""
+    });
+    const newTok=extractRequestToken(phtml);
+    if(!newTok) throw new Error("could not refresh requestToken");
+    const newLayoutUrl=layoutUrl(dashUrl,newTok,dtok,true,"requestToken");
+    State.lastLayoutUrl=newLayoutUrl;
+    trace("refreshed layout URL",newLayoutUrl,"ok");
+    return newLayoutUrl;
+  },
+  async fetchHubLayoutForSaveCheck(){
+    if(State.conn.mode!=="live") return null;
+    const fetchLayout=async(url)=>{
+      let getUrl=url;
+      if(State.loadPin && !getUrl.includes("pin=")) getUrl+=`&pin=${encodeURIComponent(State.loadPin)}`;
+      trace("GET current hub layout before save",getUrl);
+      const res=await fetch(getUrl,{credentials:"same-origin"});
+      const text=await res.text();
+      trace(`current hub layout → ${res.status}`,null,res.ok?"ok":"err");
+      if(!res.ok) throw hubHttpError("layout check",res.status,getUrl,{
+        method:"GET",
+        statusText:res.statusText,
+        responseText:text,
+        responseUrl:res.url,
+        contentType:res.headers.get("content-type")||""
+      });
+      let layout;
+      try{ layout=JSON.parse(text); }
+      catch(_){ throw new Error("current hub layout response was not JSON"); }
+      if(!layout || !Array.isArray(layout.tiles)) throw new Error("current hub layout response had no tiles array");
+      return layout;
+    };
+    try{
+      return await fetchLayout(State.lastLayoutUrl);
+    }catch(firstErr){
+      trace(`layout check failed: ${firstErr.message}; refreshing requestToken and retrying`,null,"err");
+      const refreshed=await this.refreshLayoutUrlForSave();
+      return await fetchLayout(refreshed);
+    }
+  },
+  async confirmHubBaselineIsCurrent(){
+    if(State.conn.mode!=="live") return true;
+    if(!State.hubSaveBaseline){
+      toast("Cannot verify hub changes because no hub-loaded baseline is stored. Reload the dashboard from the hub before saving.","err");
+      return false;
+    }
+    let current;
+    try{ current=await this.fetchHubLayoutForSaveCheck(); }
+    catch(e){
+      trace(`hub change check failed: ${e.message}`,null,"err");
+      toast(`Save cancelled — could not verify current hub layout: ${e.message}`,"err");
+      return false;
+    }
+    if(layoutsMatchForHubSave(current,State.hubSaveBaseline)){
+      trace("hub change check → current layout matches loaded baseline",null,"ok");
+      return true;
+    }
+    trace("hub change check → current layout differs from loaded baseline",null,"err");
+    return await new Promise(resolve=>{
+      const label=State.active&&State.active.label?State.active.label:"dashboard";
+      showConfirm(
+        "Hub layout changed",
+        `The current hub copy of "${label}" no longer matches the layout that was loaded into this editor. Saving now may overwrite changes made directly on the hub or by another browser window.\n\nReload the dashboard from the hub to keep those changes, or choose Overwrite anyway to replace the hub copy with this edited layout.`,
+        ()=>resolve(true),
+        ()=>{ status("Save cancelled — hub layout changed since it was loaded."); resolve(false); },
+        {okText:"Overwrite anyway", cancelText:"Cancel", defaultButton:"cancel", dangerOk:true}
+      );
+    });
   },
   async saveToHub(){
     if(!State.active) return;
@@ -1549,7 +1633,7 @@ const Hub = {
     const label=State.active.label||`dashboard ${State.active.id}`;
     showSaveConfirm(
       `Save "${label}" to hub`,
-      `This will overwrite the current version of "${label}" on the hub with your edited layout. This cannot be undone on the hub side. Download a backup first if you want to keep the original.`,
+      `This will overwrite the current version of "${label}" on the hub with your edited layout. Before writing, the tool will verify that the hub copy still matches the layout originally loaded into this editor. Download a backup first if you want to keep the original.`,
       async()=>{
     const payload=serializeLayout();
     const body=JSON.stringify(payload);
@@ -1562,6 +1646,8 @@ const Hub = {
       toast("Not connected to hub — save simulated.","ok");
       trace("save simulated (no live connection)",null,"ok"); return;
     }
+    const verified=await this.confirmHubBaselineIsCurrent();
+    if(!verified) return;
     const doPost=async(url)=>{
       let saveUrl=url;
       if(State.loadPin && !saveUrl.includes("pin="))
@@ -1574,21 +1660,13 @@ const Hub = {
       trace(`save → ${res.status}`,null,res.ok?"ok":"err");
       if(!res.ok){
         trace("Save failed, refreshing requestToken and retrying…",null,"err");
-        const meta=State.active;
-        const dtok=meta.accessToken;
-        let dashUrl=State.lastDashUrl||`${this.base()}/${meta.id}/dashboard/${meta.id}?access_token=${dtok}&local=true`;
-        if(State.loadPin && !dashUrl.includes("pin=")) dashUrl+=`&pin=${encodeURIComponent(State.loadPin)}`;
-        const pres=await fetch(dashUrl,{credentials:"same-origin"});
-        const phtml=await pres.text();
-        const newTok=extractRequestToken(phtml);
-        if(!newTok) throw new Error(`save ${res.status} and could not refresh requestToken`);
-        const newLayoutUrl=layoutUrl(dashUrl,newTok,dtok,true,"requestToken");
-        State.lastLayoutUrl=newLayoutUrl;
+        const newLayoutUrl=await this.refreshLayoutUrlForSave();
         trace("Retrying POST with refreshed token",newLayoutUrl);
         res=await doPost(newLayoutUrl);
         trace(`save retry → ${res.status}`,null,res.ok?"ok":"err");
         if(!res.ok) throw new Error(`save ${res.status} (after token refresh)`);
       }
+      State.hubSaveBaseline=cloneLayoutDoc(payload);
       markLayoutClean();
       toast("Layout saved to hub.","ok");
     }catch(e){ trace(`save failed: ${e.message}`,null,"err"); toast(`Save failed: ${e.message}`,"err"); }
@@ -1710,6 +1788,18 @@ function layoutUrl(dashUrl,reqTok,accTok,force8080,param){
   if(reqTok) p.set(param,reqTok);
   u.search=p.toString();
   return u.toString();
+}
+function stableStringifyForCompare(value){
+  if(value===null || typeof value!=="object") return JSON.stringify(value);
+  if(Array.isArray(value)) return "["+value.map(stableStringifyForCompare).join(",")+"]";
+  return "{"+Object.keys(value).sort().map(k=>JSON.stringify(k)+":"+stableStringifyForCompare(value[k])).join(",")+"}";
+}
+function layoutsMatchForHubSave(a,b){
+  try{ return stableStringifyForCompare(a)===stableStringifyForCompare(b); }
+  catch(_){ return false; }
+}
+function cloneLayoutDoc(doc){
+  return JSON.parse(JSON.stringify(doc));
 }
 
 /* ---------- adopt layout (real data model) ---------- */
@@ -6296,6 +6386,7 @@ function loadOfflineLayout(data, sourceLabel){
   State.lastLayoutUrl=null;
   State.lastDashUrl=null;
   State.loadPin=null;
+  State.hubSaveBaseline=null;
   setConn("offline",sourceLabel||"pasted");
   const meta={id:"offline-"+Date.now(),label:data.name||sourceLabel||"Offline dashboard",accessToken:"",_layout:data};
   State.dashboards=[meta]; renderDashList();
