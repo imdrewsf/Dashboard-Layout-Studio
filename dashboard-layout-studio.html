@@ -225,8 +225,8 @@
   /* each row is a scroll-clipped strip */
   .tbar-wrap{position:relative;display:flex;align-items:stretch;overflow:hidden;}
   .tbar-wrap+.tbar-wrap{border-top:1px solid rgba(148,163,184,.1);}
-  .toolbar-row{display:flex;align-items:center;gap:6px;padding:5px 10px;flex-wrap:nowrap;
-    overflow-x:auto;overflow-y:visible;scrollbar-width:none;-ms-overflow-style:none;flex:1;min-width:0;}
+  .toolbar-row{display:flex;align-items:center;gap:6px;padding:3px 10px;flex-wrap:nowrap;
+    overflow-x:auto;overflow-y:visible;scrollbar-width:none;-ms-overflow-style:none;flex:1;min-width:0;min-height:36px;}
   .toolbar-row::-webkit-scrollbar{display:none;}
   .tbar-wrap:last-child .toolbar-row{background:rgba(0,0,0,.10);}
   /* scroll arrow — fades in when content overflows */
@@ -236,32 +236,32 @@
   .tbar-arrow.left{left:0;background:linear-gradient(to right,rgba(13,21,38,.95) 55%,transparent);}
   .tbar-arrow.right{right:0;background:linear-gradient(to left,rgba(13,21,38,.95) 55%,transparent);}
   .tbar-arrow.visible{display:flex;}
-  .tgroup{display:flex;align-items:center;gap:2px;padding:4px 6px;height:auto;
+  .tgroup{display:flex;align-items:stretch;gap:2px;padding:1px 5px;min-height:30px;height:auto;
     background:rgba(255,255,255,.03);border:1px solid rgba(148,163,184,.14);border-radius:8px;}
   .tgroup:last-child{border-right:1px solid rgba(148,163,184,.14);}
   .tgroup.save-actions{gap:2px;}
   .glabel{font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;
     color:var(--faint);margin-right:4px;user-select:none;}
-  .toolbar-divider{width:1px;height:24px;background:rgba(148,163,184,.26);margin:0 5px;flex:none;}
+  .toolbar-divider{width:1px;height:22px;background:rgba(148,163,184,.26);margin:0 4px;flex:none;align-self:center;}
   .modesel{appearance:none;-webkit-appearance:none;
     background:var(--panel-2);color:var(--text);
     border:1px solid var(--border);border-radius:5px;
-    font-family:var(--mono);font-size:.7rem;
-    padding:3px 18px 3px 6px;cursor:pointer;line-height:1.4;
+    font-family:var(--mono);font-size:.7rem;height:26px;
+    padding:0 18px 0 6px;cursor:pointer;line-height:1.2;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a9bbf'/%3E%3C/svg%3E");
     background-repeat:no-repeat;background-position:right 5px center;
     min-width:0;}
   .modesel:focus{outline:none;border-color:var(--accent);}
   .modesel:hover{border-color:var(--border-2);}
-  input.modesel{background-image:none;padding:3px 6px;width:38px;text-align:center;}
-  .msel{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;}
+  input.modesel{background-image:none;padding:0 6px;width:38px;text-align:center;}
+  .msel{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;min-height:26px;}
   .msel>span{font-family:var(--mono);font-size:.62rem;letter-spacing:.02em;color:var(--faint);white-space:nowrap;user-select:none;}
   .msel:has(.push-mode) .modesel{border-color:var(--amber-2)!important;box-shadow:0 0 0 2px rgba(245,166,35,.3)!important;}
-  .tgroup.modifiers{gap:5px;padding:3px 6px;}
-  .chk{display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:.7rem;color:var(--muted);user-select:none;padding:3px 4px;border-radius:5px;white-space:nowrap;}
+  .tgroup.modifiers{gap:5px;padding:1px 5px;align-items:center;min-height:30px;}
+  .chk{display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:.7rem;color:var(--muted);user-select:none;padding:0 4px;min-height:26px;border-radius:5px;white-space:nowrap;}
   .chk:hover{color:var(--text);}
   .chk input{accent-color:var(--accent);width:13px;height:13px;}
-  .holdwrap{position:relative;display:inline-flex;}
+  .holdwrap{position:relative;display:inline-flex;align-self:stretch;}
   .holdmenu{position:fixed;top:0;left:0;right:auto;z-index:10550;background:var(--panel);border:1px solid var(--border);
     border-radius:9px;box-shadow:var(--shadow);padding:5px;min-width:170px;display:flex;flex-direction:column;gap:2px;}
   .holdmenu.hidden{display:none;}
@@ -286,9 +286,9 @@
   .prefs-panel .pp-row input[type=range]{flex:1;max-width:130px;}
   .prefs-panel .pp-row.disabled{opacity:.55;}
   .prefs-panel .pp-row.disabled span{cursor:not-allowed;}
-  .tool{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:6px;
+  .tool{display:inline-flex;align-items:center;gap:5px;padding:0 8px;border-radius:6px;
     border:1px solid transparent;background:transparent;color:var(--text);font-family:var(--sans);font-size:.78rem;
-    font-weight:500;cursor:pointer;transition:all .12s;white-space:nowrap;}
+    font-weight:500;cursor:pointer;transition:all .12s;white-space:nowrap;align-self:stretch;min-height:26px;}
   .tool svg{width:14px;height:14px;flex:none;opacity:.8;}
   .tool:hover:not(:disabled){background:var(--panel-2);color:var(--text);border-color:var(--border);}
   .tool:hover:not(:disabled) svg{opacity:1;}
@@ -314,6 +314,7 @@
     background:rgba(0,0,0,.18);white-space:nowrap;min-width:80px;text-align:center;}
   .coord-readout:empty{display:none;}
   .statusbar .spacer{flex:1;}
+  .statusbar .view-refresh-status{flex:none;max-width:320px;color:var(--accent);}
   .status-actions{display:flex;align-items:center;gap:2px;padding:3px 5px;background:rgba(255,255,255,.03);border:1px solid rgba(148,163,184,.14);border-radius:8px;}
   .status-actions .holdwrap{position:relative;}
 
@@ -475,6 +476,7 @@
   .modal-back{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:10000;}
   /* Confirmation modals must always float above editor/input modals that may already be open. */
   #confirmModal,#saveConfirmModal{z-index:11000;}
+  #cssCleanupModal{z-index:12000;}
   /* Info modal is non-blocking: no backdrop, docked right, tiles stay clickable underneath */
   #infoModal{background:none;backdrop-filter:none;justify-content:flex-end;align-items:flex-start;padding:64px 18px 0 0;pointer-events:none;}
   #infoModal .modal{pointer-events:auto;box-shadow:0 12px 48px rgba(0,0,0,.6);}
@@ -487,12 +489,43 @@
   .info-nav{background:var(--panel-2);border:1px solid var(--border);color:var(--text);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:1.1rem;line-height:1;}
   .orphan-ind{display:inline-flex;align-items:center;gap:7px;margin-left:12px;padding:3px 10px;border-radius:14px;cursor:pointer;
     background:rgba(245,166,35,.14);border:1px solid rgba(245,166,35,.4);color:var(--amber-2);font-size:.72rem;}
-  .orphan-ind:hover{background:rgba(245,166,35,.22);}
+  .orphan-ind.cleanup{background:rgba(52,211,153,.13);border-color:rgba(52,211,153,.42);color:var(--ok);}
+  .orphan-ind.warn{background:rgba(245,166,35,.14);border-color:rgba(245,166,35,.4);color:var(--amber-2);}
+  .orphan-ind.danger{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.5);color:#fecaca;}
+  .orphan-ind:hover{filter:brightness(1.12);}
   .info-nav:hover{border-color:var(--accent);}
   .modal-body{padding:15px 18px;overflow:auto;}
   .modal-body pre{font-family:var(--mono);font-size:.7rem;color:var(--muted);background:var(--bg);padding:12px;border-radius:8px;overflow:auto;line-height:1.5;border:1px solid var(--border);}
   .modal-foot{padding:13px 18px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
   .modal-foot .btn{width:auto;padding:9px 18px;}
+  .css-cleanup-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:0 0 12px;}
+  .css-cleanup-count{border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.035);padding:8px 10px;font-size:.76rem;color:var(--muted);}
+  .css-cleanup-count label{display:flex;align-items:flex-start;gap:7px;cursor:pointer;}
+  .css-cleanup-count label>span{min-width:0;}
+  .css-cleanup-count input{accent-color:var(--accent);margin-top:2px;flex:none;}
+  .css-cleanup-count b{display:block;color:var(--text);font-size:1rem;margin-bottom:2px;}
+  .css-cleanup-count.disabled{opacity:.46;}
+  .css-cleanup-section{border:1px solid var(--border);border-radius:10px;background:rgba(0,0,0,.12);padding:10px;margin-top:10px;}
+  .css-cleanup-section h4{margin:0 0 8px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);}
+  .css-cleanup-note{font-size:.72rem;line-height:1.45;color:var(--faint);margin:4px 0 8px;}
+  .css-conflict-group{border:1px solid rgba(148,163,184,.18);border-radius:9px;background:rgba(255,255,255,.025);padding:9px;margin:8px 0;}
+  .css-conflict-group.is-skipped,.css-dup-row.is-skipped,.css-orphan-row.is-skipped,.css-consolidate-row.is-skipped{opacity:.62;border-style:dashed;}
+  .css-conflict-title{font-family:var(--mono);font-size:.69rem;color:var(--text);word-break:break-word;margin-bottom:7px;}
+  .css-conflict-meta{font-size:.66rem;color:var(--faint);margin-left:5px;}
+  .css-skip-ind{display:none;margin-left:8px;padding:1px 6px;border-radius:999px;border:1px solid rgba(245,166,35,.45);background:rgba(245,166,35,.12);color:var(--amber-2);font-family:var(--mono);font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;}
+  .is-skipped .css-skip-ind{display:inline-flex;}
+  .css-conflict-resolve{margin-bottom:7px;}
+  .css-bubble-row{display:flex;gap:7px;flex-wrap:wrap;}
+  .css-bubble{display:inline-flex;align-items:center;cursor:pointer;max-width:100%;}
+  .css-bubble input{position:absolute;opacity:0;pointer-events:none;}
+  .css-bubble span{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(103,232,249,.26);border-radius:999px;background:rgba(103,232,249,.06);color:var(--muted);padding:5px 9px;font-family:var(--mono);font-size:.66rem;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .css-bubble input:checked+span{border-color:var(--accent);background:rgba(103,232,249,.18);color:#fff;box-shadow:0 0 0 2px rgba(103,232,249,.10);}
+  .css-bubble em{font-style:normal;color:var(--amber-2);font-family:var(--sans);font-size:.62rem;}
+  .css-dup-row,.css-orphan-row,.css-consolidate-row,.css-conflict-resolve{display:flex;align-items:flex-start;gap:8px;border:1px solid rgba(148,163,184,.16);border-radius:8px;background:rgba(255,255,255,.025);padding:8px;margin:6px 0;color:var(--muted);font-size:.75rem;line-height:1.35;}
+  .css-dup-row input,.css-orphan-row input,.css-consolidate-row input,.css-conflict-resolve input{accent-color:var(--accent);margin-top:2px;flex:none;}
+  .css-dup-row code,.css-orphan-row code,.css-consolidate-row code,.css-conflict-resolve code{font-family:var(--mono);font-size:.66rem;color:var(--text);word-break:break-word;}
+  .css-consolidate-preview{display:block;margin-top:5px;color:var(--accent);}
+  .css-cleanup-scroll{max-height:48vh;overflow:auto;padding-right:4px;}
   /* update dialog step states */
   .update-step{transition:opacity .3s, color .3s;}
   .update-step.step-active{color:var(--text) !important;font-weight:500;}
@@ -550,7 +583,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.234">0.9.234</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.247">0.9.247</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -566,7 +599,7 @@
     </button>
     <span class="orphan-ind" id="orphanInd" style="display:none" title="Review orphaned CSS">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-      <span class="oi-txt">CSS Orphans</span>
+      <span class="oi-txt">CSS Status</span>
     </span>
     <span class="view-mode-cluster" id="viewModeCluster" title="Tile display mode">
       <span class="view-mode-switcher" id="viewModeInd">
@@ -575,7 +608,6 @@
         <button type="button" class="view-mode-btn dim" id="viewRenderedBtn">Rendered View</button>
       </span>
       <button type="button" class="view-refresh-btn hidden" id="viewRefreshSnapshots" title="Refresh rendered tile snapshots" aria-label="Refresh rendered tile snapshots">↻</button>
-      <span class="view-refresh-status hidden" id="viewRefreshStatus"></span>
     </span>
     <span class="spacer"></span>
     <span class="conn-dot" id="connDot"></span>
@@ -784,6 +816,7 @@
 
     <div class="statusbar">
       <span class="status-msg" id="statusMsg">Select a dashboard to begin.</span>
+      <span class="view-refresh-status hidden" id="viewRefreshStatus"></span>
       <span class="sel-readout" id="selReadout"></span>
       <span class="coord-readout" id="coordReadout" title="Current mouse position on the grid"></span>
     </div>
@@ -905,7 +938,7 @@
             <div class="k">Unstack and Set All</div><div class="v">Set-menu option that is enabled only when tiles overlap. It breaks overlap stacks apart and sets spacing between individual tiles.</div>
             <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
             <div class="k">Cut / Copy / Paste</div><div class="v">Uses an internal tile buffer. Cut keeps tiles visible until the first paste, which behaves as a move; later pastes create copies.</div>
-            <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded.</div>
+            <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it.</div>
             <div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
             <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
           </div>
@@ -935,9 +968,9 @@
           <div class="help-grid">
             <div class="k">JSON editor</div><div class="v">Allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
             <div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
-            <div class="k">Validate / Format</div><div class="v">Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customCSS, customHTML, and customJS use very basic formatting and limited sanity checks. customCSS also supports Compact CSS for CLI-like one-line selector-rule output. In customCSS view, enable <b>Compact CSS</b> to output one selector rule per line, split selector lists, condense rule bodies, and sort rules similarly to the CLI <code>--compact_css</code> output.</div>
-            <div class="k">Apply changes</div><div class="v">Validates and replaces the current working layout. If the layout was loaded from the hub, the hub save target is preserved. If a custom field fails a basic check, choose whether to return and fix it or discard editor changes.</div>
-            <div class="k">CSS Orphans</div><div class="v">Appears when customCSS references tile ids that no longer exist. You can review, ignore, neutralize, or remove orphaned CSS.</div>
+            <div class="k">Validate / Format</div><div class="v">Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customCSS, customHTML, and customJS use very basic formatting and limited sanity checks. In customCSS view, the format step opens a review dialog when it finds duplicate selector/property declarations, conflicting declarations for the same selector/property, orphan tile rules, or selector rules that can be consolidated. Conflicts are grouped with value bubbles and the current cascade winner selected automatically, plus an Ignore choice for leaving a conflict group unchanged. You can also comment out discarded conflicting declarations instead of deleting them. Duplicates and consolidation choices are listed with preselected checkboxes so you can accept or skip each cleanup. Applying selected cleanup to the current working layout creates a normal Undo checkpoint. Compact CSS still controls the final compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting, while preserving standalone and rule-body comments.</div>
+            <div class="k">Apply changes</div><div class="v">Validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced. If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed. Full JSON edits still invalidate Rendered View captures. If the layout was loaded from the hub, the hub save target is preserved.</div>
+            <div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve cleaned CSS as comments.</div>
             <div class="k">Tile-scoped CSS</div><div class="v">Rules such as <code>#tile-40</code>, <code>#tile_40</code>, or <code>.tile-40</code> are treated as tile-scoped CSS for copy/cleanup operations.</div>
           </div>
           <p>Use the JSON editor when you want to replace the layout while preserving hub context. Use side panel Load file/Paste JSON when you want to open an offline layout.</p>
@@ -1039,6 +1072,23 @@
     <div class="modal-foot" style="justify-content:flex-end">
       <button class="btn ghost" id="confirmCancel">Cancel</button>
       <button class="btn primary" id="confirmOk">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-back hidden" id="cssCleanupModal">
+  <div class="modal" style="width:min(820px,94vw);max-height:88vh">
+    <div class="modal-head"><h3>Review customCSS cleanup</h3></div>
+    <div class="modal-body">
+      <p class="hint" id="cssCleanupIntro" style="margin:0 0 10px"></p>
+      <div id="cssCleanupBody" class="css-cleanup-scroll"></div>
+    </div>
+    <div class="modal-foot" style="justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <button class="btn ghost" id="cssCleanupCancel" type="button">Cancel</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn ghost" id="cssCleanupFormatOnly" type="button">Format only</button>
+        <button class="btn primary" id="cssCleanupApply" type="button">Apply selected cleanup &amp; format</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1266,8 +1316,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v234";
-const APP_VERSION = "0.9.234";
+const BUILD = "v247";
+const APP_VERSION = "0.9.247";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -1284,10 +1334,11 @@ const State = {
   zMap:{tile:{}, cls:{}},        // parsed z-index: by tile id, by template class
   deviceNames:new Map(),          // hub device id -> preferred device name (displayName, fallback name)
   deviceNamesAvailable:false,     // true only after a live hub device list is fetched successfully
-  tileSnapshots:{},               // rendered-dashboard tile snapshot by tile id (experimental visual mode)
+  tileSnapshots:{},               // rendered-dashboard tile snapshots keyed by current layout tile id
   tileSnapshotCapture:null,       // active snapshot capture promise
   tileSnapshotStatus:"none",      // none|loading|ready|failed
   tileSnapshotBlockedUntilReload:false, // manual JSON edits invalidate rendered snapshots until hub save + reload
+  tileSnapshotsStaleReason:"",     // custom field edits can leave existing snapshots usable but stale until refresh
   tileViewMode:"simple",         // actual current tile view: simple|snapshot; preference only enables rendered mode
   renderedViewPreference:false,  // saved preference: offer Rendered View when hosted by the hub
   tiles:[],                      // working layout; array order = tiebreak within same z
@@ -1534,15 +1585,15 @@ const Hub = {
           ? `Connected, but no v1 dashboards were found. ${hidden} non-v1 dashboard${hidden!==1?"s were":" was"} hidden because this tool only supports v1 layouts.`
           : "Connected, but no v1 dashboards were found.";
         status(msg);
-        toast(msg,"err");
         return;
       }
       collapseSection("sectConn", true);   // fold Layout Source once dashboards are discovered
       collapseSection("sectDash", false);  // expand Dashboards so the discovered layouts are visible
-      toast(`Found ${v1.length} v1 dashboard(s)${hidden?` (${hidden} v2 hidden)`:""}.`,"ok");
+      status(`Connected. Found ${v1.length} v1 dashboard(s)${hidden?` (${hidden} v2 hidden)`:""}.`);
     }catch(e){
       trace(`discover failed: ${e.message}`,null,"err");
       resetConnectButton();
+      status("Hub connection failed. See the connection error dialog for details.");
       showHubConnectionError(e);
     }
   },
@@ -1552,6 +1603,7 @@ const Hub = {
     if(pin) href+=`&pin=${encodeURIComponent(pin)}`;
     trace("GET dashboard page"+(pin?" (with pin)":""),href);
     try{
+      status(`Loading "${meta.label||"dashboard"}" — opening dashboard page…`, true);
       const pres=await fetch(href,{credentials:"same-origin"});
       trace(`dashboard page → ${pres.status}`,null,pres.ok?"ok":"err");
       if(!pres.ok) throw new Error(`dashboard page ${pres.status}`);
@@ -1582,6 +1634,7 @@ const Hub = {
         layoutUrl(resolved,reqTok,dtok,false,"request_token"),
       ])];
       let loaded=null, lastErr="", successUrl=null;
+      status(`Loading "${meta.label||"dashboard"}" — reading layout JSON…`, true);
       for(const url of candidates){
         trace("GET layout candidate",url);
         try{
@@ -1598,11 +1651,12 @@ const Hub = {
       State.loadPin = pin || null;        // remember pin (if any) for save reuse
       State.lastLayoutUrl = successUrl;   // the URL that worked for load → reuse for save
       State.lastDashUrl = href;           // dashboard page URL → used to refresh requestToken if save fails
+      status(`Loading "${meta.label||"dashboard"}" — loading device names…`, true);
       await loadHubDeviceNames();
       State.hubSaveBaseline=cloneLayoutDoc(loaded);
       adoptLayout(meta,loaded);
       scheduleTileSnapshotCapture();
-      toast(`Loaded "${meta.label}".`,"ok");
+      status(`Loaded "${meta.label}".`);
     }catch(e){
       trace(`load failed: ${e.message}`,null,"err");
       toast(`Could not load layout: ${e.message}`,"err");
@@ -1736,6 +1790,7 @@ const Hub = {
       State.hubSaveBaseline=cloneLayoutDoc(payload);
       markLayoutClean();
       toast("Layout saved to hub.","ok");
+      refreshRenderedViewAfterHubSave();
     }catch(e){ trace(`save failed: ${e.message}`,null,"err"); toast(`Save failed: ${e.message}`,"err"); }
     }); // end showSaveConfirm onProceed
     }); // end orphanGate
@@ -1987,8 +2042,9 @@ function updateTileDisplayIndicator(){
     }else{
       rendered.className="view-mode-btn "+(mode==="snapshot"?"active":"dim");
       const st=State.tileSnapshotStatus||"none";
+      const stale=State.tileSnapshotsStaleReason ? ` Rendered images do not reflect ${State.tileSnapshotsStaleReason}. Refresh Rendered View to update them.` : "";
       rendered.title=mode==="snapshot"
-        ? (st==="loading" ? "Rendered View is active. Capturing tile snapshots…" : "Rendered View is active. Tiles use captured Hubitat tile appearances.")
+        ? (st==="loading" ? "Rendered View is active. Capturing tile snapshots…" : `Rendered View is active. Tiles use captured Hubitat tile appearances.${stale}`)
         : "Switch to Rendered View.";
     }
   }
@@ -2075,6 +2131,7 @@ function ensureSnapshotModeApplicable(opts={}){
 function resetTileSnapshots(redraw=false){
   State.tileSnapshots={};
   State.tileSnapshotStatus="none";
+  State.tileSnapshotsStaleReason="";
   State.tileSnapshotCapture=null;
   setSnapshotRefreshStatus("", false);
   const f=document.getElementById("tileSnapshotFrame");
@@ -2085,6 +2142,91 @@ function resetTileSnapshots(redraw=false){
   if(fs) fs.remove();
   updateTileDisplayIndicator();
   if(redraw&&State.active) render();
+}
+
+function markRenderedSnapshotsStale(reason, opts={}){
+  reason=String(reason||"manual custom field changes");
+  if(State.tileSnapshots && Object.keys(State.tileSnapshots).length){
+    State.tileSnapshotsStaleReason=reason;
+    if(State.tileSnapshotStatus!=="loading") State.tileSnapshotStatus="ready";
+    updateTileDisplayIndicator();
+    if(tileDisplayMode()==="snapshot" && opts.message!==false){
+      status(`Rendered View still uses the previous captured images; refresh Rendered View to see ${reason}.`);
+    }
+  }else{
+    State.tileSnapshotsStaleReason="";
+  }
+}
+
+function cloneRenderedSnapshotForTileId(sourceId, newId, sourceSnapshots){
+  const srcMap=sourceSnapshots || State.tileSnapshots || {};
+  const src=srcMap[String(sourceId)];
+  if(!src) return false;
+  let snap;
+  try{ snap=JSON.parse(JSON.stringify(src)); }
+  catch(_){ snap={...src}; }
+  snap.id=Number(newId);
+  try{
+    const oldClass=new RegExp(`\\btile-${Number(sourceId)}\\b`,"g");
+    snap.className=String(snap.className||"").replace(oldClass,`tile-${Number(newId)}`);
+    if(snap.html) snap.html=String(snap.html).replace(oldClass,`tile-${Number(newId)}`);
+  }catch(_){ }
+  if(!State.tileSnapshots) State.tileSnapshots={};
+  State.tileSnapshots[String(newId)]=snap;
+  return true;
+}
+function cloneRenderedSnapshotsForIdMap(idMap, sourceSnapshots){
+  if(!idMap || !idMap.size) return 0;
+  let n=0;
+  for(const [oldId,newId] of idMap){
+    if(cloneRenderedSnapshotForTileId(oldId,newId,sourceSnapshots)) n++;
+  }
+  if(n && State.tileSnapshotStatus!="loading") State.tileSnapshotStatus="ready";
+  return n;
+}
+function snapshotSelectionRenderedImages(ids){
+  const out={};
+  if(!State.tileSnapshots) return out;
+  for(const id of ids||[]){
+    const snap=State.tileSnapshots[String(id)];
+    if(!snap) continue;
+    try{ out[String(id)]=JSON.parse(JSON.stringify(snap)); }
+    catch(_){ out[String(id)]={...snap}; }
+  }
+  return out;
+}
+function refreshRenderedViewAfterHubSave(){
+  State.tileSnapshotBlockedUntilReload=false;
+  State.tileSnapshotsStaleReason="";
+  if(!renderedViewEnabled() || !(State.conn.mode==="live" && State.active)){
+    updateTileDisplayIndicator();
+    return;
+  }
+  const a=renderedSnapshotAvailability();
+  if(!a.ok){ updateTileDisplayIndicator(); return; }
+  if(tileDisplayMode()!=="snapshot" && !State.renderedViewPreference){
+    updateTileDisplayIndicator();
+    return;
+  }
+  State.tileViewMode="snapshot";
+  updateTileDisplayIndicator();
+  status("Layout saved to hub. Refreshing Rendered View…", true);
+  captureHubTileSnapshots({silent:false});
+}
+function refreshRenderedViewAfterHubRestore(){
+  State.tileSnapshotBlockedUntilReload=false;
+  State.tileSnapshotsStaleReason="";
+  if(!renderedViewEnabled() || !(State.conn.mode==="live" && State.active && currentDashboardUrl())){
+    updateTileDisplayIndicator();
+    return false;
+  }
+  const a=renderedSnapshotAvailability();
+  if(!a.ok){ updateTileDisplayIndicator(); return false; }
+  State.tileViewMode="snapshot";
+  updateTileDisplayIndicator();
+  status("Restored original hub-loaded layout. Refreshing Rendered View…", true);
+  captureHubTileSnapshots({silent:false});
+  return true;
 }
 function cleanCssContent(v){
   v=String(v||"").trim();
@@ -2539,11 +2681,11 @@ async function captureHubTileSnapshots(opts={}){
       nodes.forEach(n=>{ const s=captureTileSnapshot(n, snapshotCss); if(s) snaps[String(s.id)]=s; });
       State.tileSnapshots=snaps;
       State.tileSnapshotStatus="ready";
+      State.tileSnapshotsStaleReason="";
       const count=Object.keys(snaps).length;
       setSnapshotRefreshStatus(`Captured ${count} tile${count===1?"":"s"}.`, false);
       updateTileDisplayIndicator();
       render();
-      if(!opts.silent) toast(`Captured rendered snapshots for ${count} tile${count===1?"":"s"}.`, count?"ok":"err");
       if(!opts.silent) status(`Rendered View refreshed: ${count} tile${count===1?"":"s"} captured.`);
       setTimeout(()=>{
         if(State.tileSnapshotStatus==="ready") setSnapshotRefreshStatus("", false);
@@ -2585,15 +2727,56 @@ function currentOrphans(){
   const existing=new Set(State.tiles.map(t=>Number(t.id)));
   return orphanBreakdown(State.customCSS, existing);
 }
+function cssCleanupAnalysisForCurrentLayout(){
+  if(!State.customCSS) return analyzeCustomCssCleanup("", new Set(), {includeConsolidation:true});
+  const existing=new Set((State.tiles||[]).map(t=>Number(t.id)).filter(n=>Number.isFinite(n)));
+  return analyzeCustomCssCleanup(State.customCSS||"", existing, {includeConsolidation:true});
+}
+function cssCleanupActionableCounts(analysis){
+  const conflicts=analysis&&analysis.conflictGroups?analysis.conflictGroups.length:0;
+  const duplicates=analysis&&analysis.duplicateGroups?analysis.duplicateGroups.length:0;
+  const consolidations=analysis&&analysis.consolidationGroups?analysis.consolidationGroups.length:0;
+  const activeOrphans=analysis&&analysis.ruleOrphans?analysis.ruleOrphans.size:0;
+  const commentOrphans=analysis&&analysis.commentOnlyOrphans?analysis.commentOnlyOrphans.size:0;
+  return {conflicts, duplicates, consolidations, activeOrphans, commentOrphans,
+    nonCritical:duplicates+activeOrphans+commentOrphans,
+    total:conflicts+duplicates+consolidations+activeOrphans+commentOrphans};
+}
 function updateOrphanIndicator(){
   const el=document.getElementById("orphanInd"); if(!el) return;
   if(!State.active){ el.style.display="none"; return; }
-  const {ruleOrphans, commentOnlyOrphans}=currentOrphans();
-  const nr=ruleOrphans.size, nc=commentOnlyOrphans.size;
-  if(!nr&&!nc){ el.style.display="none"; return; }
+  const analysis=cssCleanupAnalysisForCurrentLayout();
+  const counts=cssCleanupActionableCounts(analysis);
+  if(!counts.total){ el.style.display="none"; return; }
   el.style.display="inline-flex";
-  el.querySelector(".oi-txt").textContent="CSS Orphans";
-  el.title="Click to review orphaned CSS (scrub, hide, or ignore).";
+  el.classList.remove("cleanup","warn","danger");
+  const txt=el.querySelector(".oi-txt");
+  if(counts.conflicts){
+    el.classList.add("danger");
+    txt.textContent=`${counts.conflicts} CSS Conflict${counts.conflicts!==1?"s":""} Found - Fix`;
+    el.title="Click to review conflicting customCSS declarations.";
+  }else if(counts.nonCritical){
+    el.classList.add("warn");
+    txt.textContent=`${counts.nonCritical} CSS Cleanup Item${counts.nonCritical!==1?"s":""} Found`;
+    el.title="Click to review customCSS cleanup items such as orphans and duplicate declarations.";
+  }else{
+    el.classList.add("cleanup");
+    txt.textContent=counts.consolidations===1?"CSS Cleanup Suggested":`${counts.consolidations} CSS Cleanup Suggestions`;
+    el.title="Click to review suggested customCSS optimizations.";
+  }
+}
+function openCssCleanupReviewFromIndicator(){
+  if(!State.active){ toast("No dashboard loaded.","err"); return; }
+  const analysis=cssCleanupAnalysisForCurrentLayout();
+  if(!hasCustomCssCleanupIssues(analysis)){ toast("No customCSS cleanup issues found.","ok"); return; }
+  showCustomCssCleanupDialog(State.customCSS||"", analysis, (cleanedText, changed)=>{
+    if(!changed){ status("customCSS cleanup review closed without changes."); return; }
+    pushHistory();
+    State.customCSS=cleanedText||"";
+    State.zMap=parseCssZ(State.customCSS);
+    render();
+    toast("customCSS cleanup applied.","ok");
+  });
 }
 function doScrubCss(){
   const {ruleOrphans}=currentOrphans();
@@ -2685,6 +2868,7 @@ function finishAdopt(meta){
   }
   State.active=meta;
   State.tileSnapshotBlockedUntilReload=false;
+  State.tileSnapshotsStaleReason="";
   clearSelection(); State.pending=null; State.stackInfo=null;
   State.history=[]; State.future=[];
   document.getElementById("emptyStage").style.display="none";
@@ -2999,6 +3183,49 @@ function processStandaloneCommentsForRemovedTiles(css, removedIds, remove){
     newNodes.push(node);
   }
   return [renderCssNodes(newNodes), removedCount, rewrittenCount];
+}
+
+function neutralizeCssTileRefs(text, ids){
+  let out=String(text||"");
+  const set=new Set([...ids].map(Number));
+  for(const x of set){
+    out=out.replace(new RegExp(`#tile-${x}\\b`,"g"),`#tile_${x}`)
+           .replace(new RegExp(`\\.tile-${x}\\b`,"g"),`.tile_${x}`)
+           .replace(new RegExp(`\\btile-${x}\\b`,"g"),`tile_${x}`);
+  }
+  return out;
+}
+function commentCssForTileIds(css, removedIds){
+  const ids=new Set([...removedIds].map(Number));
+  if(!ids.size) return css||"";
+  function clean(cssText){
+    const out=[];
+    for(const node of parseCssNodes(cssText||"")){
+      if(node.kind==="stmt"){ out.push(node); continue; }
+      const pre=(node.prelude||"").trim();
+      if(pre.startsWith("@")){
+        const inner=clean(node.body||"").replace(/\s+$/," ").trim();
+        if(inner) out.push(new CssBlock(node.prelude, inner));
+        continue;
+      }
+      const hitSelectors=[], keepSelectors=[];
+      for(const sel of splitSelectorList(pre)){
+        const selIds=selectorTileIds(sel);
+        const hit=[...selIds].some(x=>ids.has(x));
+        if(selIds.size && hit) hitSelectors.push(sel);
+        else keepSelectors.push(sel);
+      }
+      if(keepSelectors.length) out.push(new CssBlock(keepSelectors.join(", "), node.body));
+      if(hitSelectors.length){
+        const ruleText=`${neutralizeCssTileRefs(hitSelectors.join(", "), ids)} {\n${(node.body||"").trim()}\n}`;
+        out.push(new CssStmt(`/* CSS cleanup preserved removed tile rule as comment\n${cssCommentSafe(ruleText)} */`));
+      }
+    }
+    return renderCssNodes(out);
+  }
+  let out=clean(css||"");
+  const [out2]=processStandaloneCommentsForRemovedTiles(out, ids, false);
+  return out2;
 }
 
 // collect the actual rule text scoped to given tile ids (for the review window)
@@ -4798,14 +5025,30 @@ function updateActionButtons(){
 }
 
 /* ---------- operations ---------- */
-function snapshot(){ return JSON.stringify({tiles:State.tiles, css:State.customCSS, cfg:State.cfg, baseDoc:State.baseDoc}); }
+function snapshot(){
+  return JSON.stringify({
+    tiles:State.tiles,
+    css:State.customCSS,
+    cfg:State.cfg,
+    baseDoc:State.baseDoc,
+    tileSnapshotBlockedUntilReload:State.tileSnapshotBlockedUntilReload,
+    tileSnapshotsStaleReason:State.tileSnapshotsStaleReason,
+    tileViewMode:State.tileViewMode,
+    tileSnapshotStatus:State.tileSnapshotStatus==="loading"?"none":State.tileSnapshotStatus
+  });
+}
 function restore(s){
   const o=JSON.parse(s);
   State.tiles=o.tiles;
   State.customCSS=o.css;
   if(o.cfg) State.cfg=o.cfg;
   if(o.baseDoc) State.baseDoc=o.baseDoc;
+  if(Object.prototype.hasOwnProperty.call(o,"tileSnapshotBlockedUntilReload")) State.tileSnapshotBlockedUntilReload=!!o.tileSnapshotBlockedUntilReload;
+  if(Object.prototype.hasOwnProperty.call(o,"tileSnapshotsStaleReason")) State.tileSnapshotsStaleReason=o.tileSnapshotsStaleReason||"";
+  if(Object.prototype.hasOwnProperty.call(o,"tileViewMode")) State.tileViewMode=o.tileViewMode==="snapshot"?"snapshot":"simple";
+  if(Object.prototype.hasOwnProperty.call(o,"tileSnapshotStatus")) State.tileSnapshotStatus=o.tileSnapshotStatus||"none";
   State.zMap=parseCssZ(State.customCSS||"");
+  updateTileDisplayIndicator();
 }
 /* Make every modal draggable by its header. Drag applies a transform offset to
    the .modal. Most modals reset on open; Tile Info remembers its last offset. */
@@ -5735,7 +5978,7 @@ function appendLineCopiesFromSnapshots(baseTiles, sourceTiles, kind, fromLine, d
     const dup=generateCssForIdMapForCopy(State.customCSS||"",idMap,newCss);
     if(dup.trim()) newCss=(newCss.replace(/\s+$/,"")+"\n"+dup+"\n");
   }
-  return {ok:true, tiles:baseTiles.concat(copies), newCss, appendedIds:copies.map(t=>Number(t.id)), appended:copies.length};
+  return {ok:true, tiles:baseTiles.concat(copies), newCss, idMap, appendedIds:copies.map(t=>Number(t.id)), appended:copies.length};
 }
 function completeCopyLinesWithPush(dest){
   const pend=State.pending;
@@ -5756,6 +5999,7 @@ function completeCopyLinesWithPush(dest){
   pushHistory();
   State.tiles=res.tiles;
   State.customCSS=res.newCss; State.zMap=parseCssZ(State.customCSS);
+  cloneRenderedSnapshotsForIdMap(res.idMap);
   State.conflictHighlight=null; State.pending=null; restorePendingLineSelection(pend,dest); updateActionButtons(); render();
   status(`Inserted ${count} ${kind}(s) at ${kind} ${dest}; copied ${res.appended} tile(s) with push.`);
 }
@@ -5888,6 +6132,7 @@ function completeCopyTiles(cell){
     const worked=cascadePush(others, placed, pushDown, buf, preserve);
     const wmap=new Map(worked.map(t=>[Number(t.id),t]));
     for(const t of State.tiles){ const w=wmap.get(Number(t.id)); if(w){t.row=w.row;t.col=w.col;} }
+    cloneRenderedSnapshotsForIdMap(res.idMap);
     State.conflictHighlight=null; State.pending=null;
     selectTileIds(res.appendedIds.map(Number)); render();
     status(`Copied ${res.appended} tile(s) with push.`); return;
@@ -5915,6 +6160,7 @@ function completeCopyLines(dest){
   pushHistory();
   State.tiles=res.newTiles;
   if(res.newCss!==undefined){ State.customCSS=res.newCss; State.zMap=parseCssZ(State.customCSS); }
+  cloneRenderedSnapshotsForIdMap(res.idMap);
   State.conflictHighlight=null; State.pending=null; restorePendingLineSelection(pend,dest); updateActionButtons(); render();
   status(`Copied ${res.appended} tile(s) to ${pend.kind} ${dest}${res.skipped?`; skipped ${res.skipped} conflicting`:""}.`);
 }
@@ -6086,6 +6332,7 @@ function commitCopy(result){
   pushHistory();
   State.tiles=result.newTiles;
   if(result.newCss!==undefined){ State.customCSS=result.newCss; State.zMap=parseCssZ(State.customCSS); }
+  cloneRenderedSnapshotsForIdMap(result.idMap);
   State.conflictHighlight=null;
   if(result.appendedIds&&result.appendedIds.length) selectTileIds(result.appendedIds); else clearSelection();
   render();
@@ -6117,14 +6364,14 @@ function snapshotSelectionToBuffer(mode){
     id:t.id,row:t.row,col:t.col,rowSpan:t.rowSpan,colSpan:t.colSpan,template:t.template,label:t.label,
     _raw:t._raw?JSON.parse(JSON.stringify(t._raw)):null,
   }));
-  // snapshot the CSS scoped to these ids (so it survives a dashboard switch)
+  // snapshot the CSS and rendered tile images scoped to these ids (so they survive a dashboard switch)
   const css=State.customCSS||"";
-  State.buffer={ tiles, css, sourceId: State.active?State.active.id:null, mode, cutIds:idset };
+  const snapshots=snapshotSelectionRenderedImages(ids);
+  State.buffer={ tiles, css, snapshots, sourceId: State.active?State.active.id:null, mode, cutIds:idset };
   State.bufferUsed=false;
   updateActionButtons(); render();
   const verb=mode==="cut"?"Cut":"Copied";
   status(`${verb} ${tiles.length} tile(s) to buffer.${mode==="cut"?" Paste to move; tiles stay until you do.":""}`);
-  toast(`${verb} ${tiles.length} tile(s) to buffer.`,"ok");
 }
 function cutToBuffer(){ snapshotSelectionToBuffer("cut"); }
 function copyToBuffer(){ snapshotSelectionToBuffer("copy"); }
@@ -6184,6 +6431,9 @@ function completePasteBuf(cell){
     pushHistory();
     // remove cut originals, add moved tiles
     State.tiles=State.tiles.filter(t=>!cutSet.has(Number(t.id))).concat(keep);
+    // Reapply any buffered rendered snapshots to the moved ids. This keeps cut/paste
+    // visually tied to the buffered tile content, not to whichever tile id was reused.
+    cloneRenderedSnapshotsForIdMap(new Map(keep.map(t=>[Number(t.id),Number(t.id)])), b.snapshots);
     // CSS unchanged (move keeps ids); buffer promotes to copy mode for subsequent pastes
     State.buffer.mode="copy"; State.bufferUsed=true; State.conflictHighlight=null; State.pending=null;
     selectTileIds(keep.map(t=>Number(t.id))); render();
@@ -6236,6 +6486,9 @@ function completePasteBuf(cell){
     const idToWork=new Map(worked.map(t=>[Number(t.id),t]));
     for(const t of State.tiles){ const w=idToWork.get(Number(t.id)); if(w){ t.row=w.row; t.col=w.col; } }
     State.tiles=State.tiles.concat(copies);
+    // Copy rendered snapshots from the buffer using the source->destination id map.
+    // This overwrites any stale snapshot that may already exist under the new id.
+    cloneRenderedSnapshotsForIdMap(idMap, b.snapshots);
     const cssIgnore=!document.getElementById("chkDupCss").checked;
     if(!cssIgnore){ const landed=new Map([...idMap]);
       const dup=generateCssForIdMapForCopy(b.css||"", landed, State.customCSS||"");
@@ -6254,10 +6507,14 @@ function completePasteBuf(cell){
   if(cp.length && State.overlaps==="skip"){ const bad=new Set(cp.map(([a])=>a)); keep=copies.filter(c=>!bad.has(c.id)); skipped=bad.size; }
   pushHistory();
   State.tiles=State.tiles.concat(keep);
+  const landed=new Map([...idMap].filter(([,v])=>keep.some(k=>Number(k.id)===Number(v))));
+  // Rendered snapshots are remapped from the buffer snapshot, not looked up by
+  // the destination tile id. This prevents pasted tiles from inheriting images
+  // that belonged to former tiles with the same ids.
+  cloneRenderedSnapshotsForIdMap(landed, b.snapshots);
   // CSS duplication from the buffer's snapshot, remapped to landed ids
   const cssIgnore=!document.getElementById("chkDupCss").checked;
   if(!cssIgnore){
-    const landed=new Map([...idMap].filter(([,v])=>keep.some(k=>k.id===v)));
     if(landed.size){ const dup=generateCssForIdMapForCopy(b.css||"", landed, State.customCSS||"");
       if(dup.trim()){ State.customCSS=(State.customCSS||"").replace(/\s+$/,"")+"\n"+dup+"\n"; State.zMap=parseCssZ(State.customCSS); } }
   }
@@ -6800,7 +7057,8 @@ function undo(){ clearConflictHighlight(); if(!State.history.length)return; Stat
 function redo(){ clearConflictHighlight(); if(!State.future.length)return; State.history.push(snapshot()); restore(State.future.pop()); clearSelection(); render(); status("Redo."); }
 function restoreOriginalLayoutState(){
   if(!State.original) return;
-  const doc=JSON.parse(JSON.stringify(State.original));
+  const source=(State.conn.mode==="live" && State.hubSaveBaseline) ? State.hubSaveBaseline : State.original;
+  const doc=JSON.parse(JSON.stringify(source));
   State.baseDoc=JSON.parse(JSON.stringify(doc));
   State.cfg.cols=doc.cols||100;
   State.cfg.rows=doc.rows||80;
@@ -6818,15 +7076,21 @@ function undoAll(){
   if(!State.original){ toast("No original layout to restore.","err"); return; }
   showConfirm(
     "Restore original layout",
-    "This will restore the layout exactly as it was when loaded. The restore itself can be undone with Undo.",
+    "This will restore the layout to the current clean baseline. For hub-loaded layouts, that is the last hub-loaded or hub-saved state. The restore itself can be undone with Undo.",
     ()=>{
       pushHistory();
       restoreOriginalLayoutState();
+      State.tileSnapshotBlockedUntilReload=false;
+      State.tileSnapshotsStaleReason="";
       clearSelection();
-      render();
       markLayoutClean();
-      status("Restored original loaded layout. Use Undo to return to the previous working layout.");
-      toast("Original layout restored.","ok");
+      const refreshStarted=refreshRenderedViewAfterHubRestore();
+      render();
+      if(refreshStarted){
+        status("Restored original hub-loaded layout. Refreshing Rendered View… Use Undo to return to the previous working layout.", true);
+      }else{
+        status("Restored original loaded layout. Use Undo to return to the previous working layout.");
+      }
     }
   );
 }
@@ -7006,12 +7270,13 @@ function resetConnectButton(){
 function setConnectProgress(label){
   const connect=document.getElementById("btnDiscover");
   const gear=document.getElementById("btnHubSettings");
+  if(label) status(`Hub connection: ${label}`, true);
   if(connect){
-    connect.textContent=label;
+    connect.textContent="Connect To Hub";
     connect.disabled=true;
     connect.classList.remove("hub-connected","hover-reconnect");
     connect.classList.add("busy");
-    connect.title="Hub connection in progress.";
+    connect.title=label ? `Hub connection in progress: ${label}` : "Hub connection in progress.";
   }
   if(gear) gear.disabled=true;
   setHubParamFieldsDisabled(true);
@@ -7299,6 +7564,42 @@ function syncJsonEditorView(opts={}){
   }
   return true;
 }
+function normalizedJsonForCompare(doc){
+  try{ return JSON.stringify(normalizeLoadedJson(cloneJsonDoc(doc))); }
+  catch(_e){ return null; }
+}
+function jsonEditorDocMatchesCurrentExceptCustomCss(){
+  if(!State.active||!JsonEditorState.doc) return false;
+  try{
+    const cur=normalizeLoadedJson(serializeLayout());
+    const ed=normalizeLoadedJson(cloneJsonDoc(JsonEditorState.doc));
+    ed.customCSS=cur.customCSS||"";
+    cur.customCSS=cur.customCSS||"";
+    return JSON.stringify(ed)===JSON.stringify(cur);
+  }catch(_e){ return false; }
+}
+function liveApplyCustomCssFromEditor(css, label="customCSS cleanup"){
+  css=String(css||"");
+  if(!jsonEditorDocMatchesCurrentExceptCustomCss()) return false;
+  if(String(State.customCSS||"")===css) return false;
+  pushHistory();
+  State.customCSS=css;
+  State.zMap=parseCssZ(State.customCSS||"");
+  if(State.baseDoc) State.baseDoc.customCSS=css;
+  if(State.active&&State.active._layout) State.active._layout.customCSS=css;
+  State.tileSnapshotBlockedUntilReload=false;
+  markRenderedSnapshotsStale("manual customCSS changes", {message:true});
+  render();
+  updateSaveHubState();
+  status(`${label} applied to the working layout. Use Undo to restore the previous customCSS.${State.tileSnapshotsStaleReason?" Rendered View images were kept but need refresh to reflect the CSS change.":""}`);
+  return true;
+}
+function sameAsCurrentLayoutData(data){
+  try{
+    const doc=Array.isArray(data)?{tiles:data}:normalizeLoadedJson(data);
+    return normalizedJsonForCompare(doc)===normalizedJsonForCompare(serializeLayout());
+  }catch(_e){ return false; }
+}
 function switchJsonEditorMode(mode){
   if(mode===JsonEditorState.mode) return;
   if(mode!=="json"&&!JSON_EDITOR_FIELD_MODES.has(mode)) return;
@@ -7328,8 +7629,13 @@ function parseJsonEditor(opts={}){
   }
   return data;
 }
-function applyJsonToCurrentLayout(data, sourceLabel){
+function applyJsonToCurrentLayout(data, sourceLabel, opts={}){
   data=normalizeLoadedJson(data);
+  if(sameAsCurrentLayoutData(data)){
+    status("JSON editor changes already match the working layout.");
+    toast("No additional JSON changes to apply.","ok");
+    return false;
+  }
   pushHistory();
   const doc=Array.isArray(data)?{tiles:data}:data;
   State.baseDoc=JSON.parse(JSON.stringify(doc));
@@ -7348,17 +7654,25 @@ function applyJsonToCurrentLayout(data, sourceLabel){
     document.getElementById("crumb").innerHTML=`<b>${esc(State.active.label||"Dashboard")}</b>`;
     updateDashboardJumpState();
   }
-  State.tileSnapshotBlockedUntilReload=true;
-  if(tileDisplayMode()==="snapshot"){
-    forceSimpleTileDisplay("Manual JSON edits changed the working layout; save to the hub and reload the dashboard before using Rendered View",{warn:true,redraw:false});
+  const preserveRenderedSnapshots=!!opts.preserveRenderedSnapshots;
+  if(preserveRenderedSnapshots){
+    State.tileSnapshotBlockedUntilReload=false;
+    const changedFields=(opts.changedFields&&opts.changedFields.length)?opts.changedFields.join("/"):"custom field changes";
+    markRenderedSnapshotsStale(`manual ${changedFields} changes`, {message:true});
   }else{
-    resetTileSnapshots(false);
+    State.tileSnapshotBlockedUntilReload=true;
+    if(tileDisplayMode()==="snapshot"){
+      forceSimpleTileDisplay("Manual JSON edits changed the working layout; save to the hub and reload the dashboard before using Rendered View",{warn:true,redraw:false});
+    }else{
+      resetTileSnapshots(false);
+    }
   }
   clearSelection(); State.pending=null; State.stackInfo=null;
   render();
   updateSaveHubState();
-  status(`Applied JSON · ${State.tiles.length} tiles · ${State.cfg.cols}×${State.cfg.rows} grid.`);
-  toast(`Applied ${sourceLabel||"edited JSON"} to current layout.`,"ok");
+  status(`Applied JSON · ${State.tiles.length} tiles · ${State.cfg.cols}×${State.cfg.rows} grid. Use Undo to restore the previous layout.${preserveRenderedSnapshots&&State.tileSnapshotsStaleReason?" Rendered View images were kept but need refresh to reflect the manual custom field change.":""}`);
+  toast(`Applied ${sourceLabel||"edited JSON"} to current layout. Undo is available.`,"ok");
+  return true;
 }
 function fieldValidationMessage(mode, issues){
   if(!issues||!issues.length) return "";
@@ -7527,12 +7841,23 @@ function cssCompactSortKey(item){
   if(/^\.[A-Za-z0-9_-]/.test(stripped) && !/^\.tile[-_]?\d+\b/i.test(stripped)) return [2,0,stripped.toLowerCase()];
   return [1,0,stripped.toLowerCase()];
 }
+function compactCssRuleBodyPreserveComments(body){
+  const parts=splitCssDeclarationsForProblems(body||"")
+    .map(part=>cssMinifySafe(part).replace(/;+$/g,"").trim())
+    .filter(Boolean);
+  if(!parts.length) return cssMinifySafe(body||"").replace(/^;+|;+$/g,"").trim();
+  return parts.map(part=>{
+    if(cssPartIsCommentOnly(part)) return part;
+    const d=parseCssDeclarationForProblems(part);
+    return d ? part+";" : part;
+  }).join(" ").trim();
+}
 function compactCssCliLike(css){
   const entries=[];
   for(const st of extractCssStatements(css)){
     if(st.type==="rule"){
       const selector=(st.selector||"").trim();
-      const body=cssMinifySafe(st.body||"").replace(/^;+|;+$/g,"").trim();
+      const body=compactCssRuleBodyPreserveComments(st.body||"");
       if(!selector) continue;
       if(/^@[^\s{]+/i.test(selector)){
         entries.push({selector,text:`${selector} { ${cssMinifySafe(st.body||"")} }`});
@@ -7555,6 +7880,551 @@ function compactCssCliLike(css){
   });
   return entries.map(e=>e.text.trim()).filter(Boolean).join("\n")+(entries.length?"\n":"");
 }
+
+function normalizeCssSelectorForProblems(selector){
+  return String(selector||"")
+    .trim()
+    .replace(/\s+/g," ")
+    .replace(/\s*([>+~])\s*/g,"$1")
+    .toLowerCase();
+}
+function normalizeCssValueForProblems(value){
+  return String(value||"")
+    .trim()
+    .replace(/\s+/g," ")
+    .replace(/\s*!\s*important\b/ig," !important");
+}
+function findCssColonOutsideStrings(text){
+  text=String(text||"");
+  let quote=null, esc=false, comment=false, paren=0, bracket=0;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i], nx=text[i+1];
+    if(comment){ if(ch==="*"&&nx==="/"){ comment=false; i++; } continue; }
+    if(quote){ if(esc){ esc=false; continue; } if(ch==="\\"){ esc=true; continue; } if(ch===quote) quote=null; continue; }
+    if(ch==="/"&&nx==="*"){ comment=true; i++; continue; }
+    if(ch==="'"||ch==='"'){ quote=ch; continue; }
+    if(ch==="(") paren++; else if(ch===")") paren=Math.max(0,paren-1);
+    else if(ch==="[") bracket++; else if(ch==="]") bracket=Math.max(0,bracket-1);
+    else if(ch===":"&&!paren&&!bracket) return i;
+  }
+  return -1;
+}
+function splitCssBodyItemsForProblems(body){
+  body=String(body||"");
+  const out=[]; let cur="", quote=null, esc=false, paren=0, bracket=0;
+  const flushDecl=()=>{ const text=cur.trim(); if(text) out.push({type:"part",text}); cur=""; };
+  for(let i=0;i<body.length;i++){
+    const ch=body[i], nx=body[i+1];
+    if(quote){ cur+=ch; if(esc){ esc=false; continue; } if(ch==="\\"){ esc=true; continue; } if(ch===quote) quote=null; continue; }
+    if(ch==="'"||ch==='"'){ quote=ch; cur+=ch; continue; }
+    if(ch==="(" ) paren++; else if(ch===")") paren=Math.max(0,paren-1);
+    else if(ch==="[") bracket++; else if(ch==="]") bracket=Math.max(0,bracket-1);
+    if(ch==="/"&&nx==="*"){
+      const end=body.indexOf("*/",i+2);
+      const comment=end<0 ? body.slice(i) : body.slice(i,end+2);
+      if(cur.trim()) cur+=comment;
+      else out.push({type:"comment",text:comment.trim()});
+      i=end<0 ? body.length : end+1;
+      continue;
+    }
+    if(ch===";"&&!paren&&!bracket){ flushDecl(); continue; }
+    cur+=ch;
+  }
+  flushDecl();
+  return out;
+}
+function splitCssDeclarationsForProblems(body){
+  return splitCssBodyItemsForProblems(body).map(item=>item.text).filter(x=>String(x||"").trim());
+}
+function cssPartIsCommentOnly(part){
+  return /^\s*\/\*[\s\S]*?\*\/\s*$/.test(String(part||""));
+}
+function cssBodyPartOutputText(part){
+  const normalized=String(part||"").replace(/;+$/g,"").trim();
+  if(!normalized) return "";
+  if(cssPartIsCommentOnly(normalized)) return normalized;
+  const d=parseCssDeclarationForProblems(normalized);
+  return d ? normalized+";" : normalized;
+}
+
+function parseCssDeclarationForProblems(text){
+  const raw=String(text||"").trim();
+  const idx=findCssColonOutsideStrings(raw);
+  if(idx<1) return null;
+  const prop=raw.slice(0,idx).trim().toLowerCase();
+  const value=raw.slice(idx+1).trim();
+  if(!prop||!value||/[{};]/.test(prop)) return null;
+  return {raw, prop, value, normValue:normalizeCssValueForProblems(value)};
+}
+function cssProblemContextKey(atPath, selector, prop){
+  return `${(atPath||[]).join(" > ")}||${normalizeCssSelectorForProblems(selector)}||${prop}`;
+}
+function collectCssDeclarationProblemData(css){
+  const groups=new Map();
+  const decls=[];
+  let seq=0;
+  function ensureGroup(key, selector, prop, atPath){
+    if(!groups.has(key)) groups.set(key,{key,selector:selector.trim(),prop,atPath:[...(atPath||[])],items:[],values:new Map()});
+    return groups.get(key);
+  }
+  function scan(cssText, atPath=[]){
+    for(const node of parseCssNodes(cssText||"")){
+      if(node.kind!=="block") continue;
+      const pre=(node.prelude||"").trim();
+      if(!pre) continue;
+      if(pre.startsWith("@")){
+        scan(node.body||"", [...atPath, pre]);
+        continue;
+      }
+      const selectors=splitSelectorList(pre).map(s=>s.trim()).filter(Boolean);
+      if(!selectors.length) continue;
+      for(const part of splitCssDeclarationsForProblems(node.body||"")){
+        const d=parseCssDeclarationForProblems(part);
+        if(!d) continue;
+        const rec={id:seq++, order:seq, prop:d.prop, value:d.value, normValue:d.normValue, selectors, atPath:[...atPath], keys:[]};
+        for(const sel of selectors){
+          const key=cssProblemContextKey(atPath, sel, d.prop);
+          rec.keys.push(key);
+          const g=ensureGroup(key,sel,d.prop,atPath);
+          g.items.push(rec);
+          if(!g.values.has(d.normValue)) g.values.set(d.normValue,d.value);
+        }
+        decls.push(rec);
+      }
+    }
+  }
+  scan(css||"");
+  const duplicateGroups=[];
+  const conflictGroups=[];
+  const dropByKey=new Map();
+  for(const g of groups.values()){
+    if(g.items.length<2) continue;
+    if(g.values.size>1) conflictGroups.push(g);
+    else duplicateGroups.push(g);
+    const sorted=[...g.items].sort((a,b)=>a.order-b.order);
+    for(const item of sorted.slice(0,-1)){
+      if(!dropByKey.has(g.key)) dropByKey.set(g.key,new Set());
+      dropByKey.get(g.key).add(item.id);
+    }
+  }
+  const dropDeclarationIds=new Set();
+  for(const rec of decls){
+    if(!rec.keys.length) continue;
+    const removable=rec.keys.every(k=>dropByKey.has(k)&&dropByKey.get(k).has(rec.id));
+    if(removable) dropDeclarationIds.add(rec.id);
+  }
+  return {groups, decls, duplicateGroups, conflictGroups, dropDeclarationIds};
+}
+function cssSelectorContextKey(atPath, selector){
+  return `${(atPath||[]).join(" > ")}||${normalizeCssSelectorForProblems(selector)}`;
+}
+function cssDeclarationDisplayBody(parts){
+  const order=[];
+  const byProp=new Map();
+  let rawSeq=0;
+  for(const part of parts||[]){
+    const cleaned=String(part||"").replace(/;+$/g,"").trim();
+    if(!cleaned) continue;
+    const d=parseCssDeclarationForProblems(cleaned);
+    if(d){
+      if(!byProp.has(d.prop)) order.push({type:"decl",prop:d.prop});
+      byProp.set(d.prop, `${d.prop}: ${d.value}`);
+    }else{
+      order.push({type:"raw",key:`raw${rawSeq++}`,text:cssBodyPartOutputText(cleaned)});
+    }
+  }
+  return order.map(item=>{
+    if(item.type==="decl") return (byProp.get(item.prop)||"")+";";
+    return item.text||"";
+  }).filter(Boolean).join(" ");
+}
+
+function collectCssConsolidationGroups(css){
+  const groups=new Map();
+  let order=0;
+  function ensure(key, selector, atPath){
+    if(!groups.has(key)) groups.set(key,{key,selector:selector.trim(),atPath:[...(atPath||[])],rules:[],parts:[],firstOrder:order});
+    return groups.get(key);
+  }
+  function scan(cssText, atPath=[]){
+    for(const node of parseCssNodes(cssText||"")){
+      if(node.kind!=="block") continue;
+      const pre=(node.prelude||"").trim();
+      if(!pre) continue;
+      if(pre.startsWith("@")){
+        scan(node.body||"", [...atPath, pre]);
+        continue;
+      }
+      const selectors=splitSelectorList(pre).map(s=>s.trim()).filter(Boolean);
+      if(!selectors.length) continue;
+      const parts=splitCssDeclarationsForProblems(node.body||"").map(p=>p.replace(/;+$/g,"").trim()).filter(Boolean);
+      if(!parts.length) continue;
+      const thisOrder=order++;
+      for(const sel of selectors){
+        const key=cssSelectorContextKey(atPath, sel);
+        const g=ensure(key, sel, atPath);
+        g.rules.push({order:thisOrder, selector:sel, body:parts.map(cssBodyPartOutputText).filter(Boolean).join(" ")});
+        g.parts.push(...parts);
+      }
+    }
+  }
+  scan(css||"");
+  return [...groups.values()]
+    .filter(g=>g.rules.length>1)
+    .sort((a,b)=>a.firstOrder-b.firstOrder)
+    .map(g=>({...g, consolidatedBody:cssDeclarationDisplayBody(g.parts)}));
+}
+function consolidateCssSelectorRules(css, selectedKeys, opts={}){
+  selectedKeys=selectedKeys||new Set();
+  if(!selectedKeys.size) return css||"";
+  const commentRemoved=!!opts.commentRemoved;
+  function consolidateParts(parts){ return cssDeclarationDisplayBody(parts); }
+  function clean(cssText, atPath=[]){
+    const nodes=parseCssNodes(cssText||"");
+    const groups=new Map();
+    nodes.forEach((node,idx)=>{
+      if(node.kind!=="block") return;
+      const pre=(node.prelude||"").trim();
+      if(!pre || pre.startsWith("@")) return;
+      const parts=splitCssDeclarationsForProblems(node.body||"").map(p=>p.replace(/;+$/g,"").trim()).filter(Boolean);
+      if(!parts.length) return;
+      for(const sel of splitSelectorList(pre).map(s=>s.trim()).filter(Boolean)){
+        const key=cssSelectorContextKey(atPath, sel);
+        if(!selectedKeys.has(key)) continue;
+        if(!groups.has(key)) groups.set(key,{key,selector:sel,parts:[],firstIdx:idx,count:0});
+        const g=groups.get(key);
+        g.parts.push(...parts);
+        g.count++;
+      }
+    });
+    const emitted=new Set();
+    const out=[];
+    nodes.forEach((node,idx)=>{
+      if(node.kind!=="block"){ out.push(node); return; }
+      const pre=(node.prelude||"").trim();
+      if(pre.startsWith("@")){
+        const inner=clean(node.body||"", [...atPath, pre]).replace(/\s+$/," ").trim();
+        if(inner) out.push(new CssBlock(node.prelude, inner));
+        return;
+      }
+      const selectors=splitSelectorList(pre).map(s=>s.trim()).filter(Boolean);
+      const selectedSelectors=selectors.filter(sel=>selectedKeys.has(cssSelectorContextKey(atPath, sel)));
+      const keepSelectors=selectors.filter(sel=>!selectedKeys.has(cssSelectorContextKey(atPath, sel)));
+      if(keepSelectors.length) out.push(new CssBlock(keepSelectors.join(", "), node.body));
+      for(const sel of selectedSelectors){
+        const key=cssSelectorContextKey(atPath, sel);
+        const g=groups.get(key);
+        if(!g || emitted.has(key) || g.firstIdx!==idx) continue;
+        const body=consolidateParts(g.parts);
+        if(body) out.push(new CssBlock(g.selector, body));
+        emitted.add(key);
+      }
+      if(selectedSelectors.length && commentRemoved){
+        const original=`${selectedSelectors.join(", ")} {\n${(node.body||"").trim()}\n}`;
+        out.push(new CssStmt(`/* CSS cleanup preserved original selector rule after consolidation\n${cssCommentSafe(original)} */`));
+      }
+    });
+    return renderCssNodes(out);
+  }
+  return clean(css||"");
+}
+function customCssExistingTileIds(){
+  const doc=JsonEditorState.doc||{};
+  return new Set(((doc.tiles&&Array.isArray(doc.tiles))?doc.tiles:State.tiles||[]).map(t=>Number(t.id)).filter(n=>Number.isFinite(n)));
+}
+function summarizeCssProblemGroups(groups, max=6){
+  const lines=[];
+  for(const g of groups.slice(0,max)){
+    const ctx=g.atPath&&g.atPath.length?` [${g.atPath.join(" > ")}]`:"";
+    const vals=[...g.values.values()].map(v=>String(v).trim()).filter(Boolean).slice(0,3);
+    lines.push(`- ${g.selector}${ctx} → ${g.prop}: ${vals.join(" | ")}`);
+  }
+  if(groups.length>max) lines.push(`- …${groups.length-max} more`);
+  return lines;
+}
+function analyzeCustomCssCleanup(css, existingIds, opts={}){
+  const orph=orphanBreakdown(css||"", existingIds||new Set());
+  const decls=collectCssDeclarationProblemData(css||"");
+  const consolidationGroups=opts.includeConsolidation ? collectCssConsolidationGroups(css||"") : [];
+  return {ruleOrphans:orph.ruleOrphans, commentOnlyOrphans:orph.commentOnlyOrphans, duplicateGroups:decls.duplicateGroups, conflictGroups:decls.conflictGroups, consolidationGroups, declData:decls};
+}
+function hasCustomCssCleanupIssues(analysis){
+  return !!(analysis && (analysis.ruleOrphans.size || analysis.commentOnlyOrphans.size || analysis.duplicateGroups.length || analysis.conflictGroups.length || (analysis.consolidationGroups&&analysis.consolidationGroups.length)));
+}
+function customCssCleanupMessage(analysis){
+  const lines=[];
+  if(analysis.ruleOrphans.size) lines.push(`${analysis.ruleOrphans.size} active orphan tile rule reference${analysis.ruleOrphans.size!==1?"s":""} found.`);
+  if(analysis.commentOnlyOrphans.size) lines.push(`${analysis.commentOnlyOrphans.size} orphan reference${analysis.commentOnlyOrphans.size!==1?"s":""} found only in comments.`);
+  if(analysis.duplicateGroups.length) lines.push(`${analysis.duplicateGroups.length} duplicate selector/property group${analysis.duplicateGroups.length!==1?"s":""} found.`);
+  if(analysis.conflictGroups.length) lines.push(`${analysis.conflictGroups.length} conflicting selector/property group${analysis.conflictGroups.length!==1?"s":""} found.`);
+  if(analysis.consolidationGroups&&analysis.consolidationGroups.length) lines.push(`${analysis.consolidationGroups.length} selector consolidation group${analysis.consolidationGroups.length!==1?"s":""} found.`);
+  const detail=[];
+  if(analysis.conflictGroups.length){ detail.push("", "Conflicts:", ...summarizeCssProblemGroups(analysis.conflictGroups)); }
+  if(analysis.duplicateGroups.length){ detail.push("", "Duplicates:", ...summarizeCssProblemGroups(analysis.duplicateGroups)); }
+  if(analysis.consolidationGroups&&analysis.consolidationGroups.length){ detail.push("", "Consolidations:", ...analysis.consolidationGroups.slice(0,6).map(g=>`- ${g.selector}${g.atPath&&g.atPath.length?` [${g.atPath.join(" > ")}]`:""} → ${g.rules.length} rules can become 1`)); if(analysis.consolidationGroups.length>6) detail.push(`- …${analysis.consolidationGroups.length-6} more`); }
+  if(analysis.ruleOrphans.size){ detail.push("", `Active orphan tile ids: ${[...analysis.ruleOrphans].sort((a,b)=>a-b).slice(0,20).join(", ")}${analysis.ruleOrphans.size>20?", …":""}`); }
+  if(analysis.commentOnlyOrphans.size){ detail.push("", `Comment-only orphan ids: ${[...analysis.commentOnlyOrphans].sort((a,b)=>a-b).slice(0,20).join(", ")}${analysis.commentOnlyOrphans.size>20?", …":""}`); }
+  return `customCSS review found:\n\n${lines.join("\n")}${detail.join("\n")}`;
+}
+function htmlEscape(s){
+  return String(s==null?"":s).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
+function cssProblemDisplayTitle(g){
+  const ctx=g.atPath&&g.atPath.length?` [${g.atPath.join(" > ")}]`:"";
+  return `${g.selector}${ctx} → ${g.prop}`;
+}
+function cssProblemLatestItem(g){
+  const items=[...(g.items||[])].sort((a,b)=>a.order-b.order);
+  return items[items.length-1]||null;
+}
+function cssProblemValueOptions(g){
+  const byNorm=new Map();
+  for(const item of [...(g.items||[])].sort((a,b)=>a.order-b.order)) byNorm.set(item.normValue,{norm:item.normValue,value:item.value,last:item});
+  return [...byNorm.values()];
+}
+const CSS_CONFLICT_IGNORE_CHOICE="__DLS_IGNORE_CSS_CONFLICT__";
+function cssCleanupCountBox(id, category, count, label, checked=true, actionable=true){
+  const dis=actionable&&count>0?"":" disabled";
+  const checkedAttr=checked&&actionable&&count>0?" checked":"";
+  return `<div class="css-cleanup-count${(!actionable||!count)?" disabled":""}"><label><input type="checkbox" class="css-category-choice" data-category="${category}"${checkedAttr}${dis}><span><b>${count}</b> ${htmlEscape(label)}</span></label></div>`;
+}
+function buildCustomCssCleanupDialogHtml(analysis){
+  const parts=[];
+  parts.push(`<label class="css-orphan-row"><input type="checkbox" id="cssCleanupCommentRemoved"><span><b>Comment out cleaned CSS instead of deleting it</b><br>When checked, duplicate declarations, discarded conflicts, orphan rules, and consolidated-away selector rules are preserved as comments.</span></label>`);
+  parts.push(`<div class="css-cleanup-summary">`+
+    cssCleanupCountBox("conflicts","conflicts",analysis.conflictGroups.length,`conflict group${analysis.conflictGroups.length!==1?"s":""}`)+
+    cssCleanupCountBox("duplicates","duplicates",analysis.duplicateGroups.length,`duplicate group${analysis.duplicateGroups.length!==1?"s":""}`)+
+    cssCleanupCountBox("consolidations","consolidations",(analysis.consolidationGroups||[]).length,`consolidation group${(analysis.consolidationGroups||[]).length!==1?"s":""}`)+
+    cssCleanupCountBox("orphans","orphans",analysis.ruleOrphans.size,`active orphan id${analysis.ruleOrphans.size!==1?"s":""}`)+
+    cssCleanupCountBox("commentOrphans","commentOrphans",analysis.commentOnlyOrphans.size,`comment-only orphan id${analysis.commentOnlyOrphans.size!==1?"s":""}`, false, false)+
+    `</div>`);
+  if(analysis.conflictGroups.length){
+    parts.push(`<div class="css-cleanup-section" data-category-section="conflicts"><h4>Conflicts</h4><p class="css-cleanup-note">Each bubble is a different value for the same selector and CSS property. The current CSS cascade winner is selected automatically. Uncheck <b>Resolve this conflict</b> to skip a conflict group.</p>`);
+    analysis.conflictGroups.forEach((g,i)=>{
+      const latest=cssProblemLatestItem(g);
+      const latestNorm=latest?latest.normValue:"";
+      parts.push(`<div class="css-conflict-group" data-conflict-key="${htmlEscape(g.key)}"><div class="css-conflict-title">${htmlEscape(cssProblemDisplayTitle(g))}<span class="css-conflict-meta">${g.items.length} declarations</span><span class="css-skip-ind">Skip</span></div>`);
+      parts.push(`<label class="css-conflict-resolve"><input type="checkbox" class="css-conflict-choice" data-conflict-key="${htmlEscape(g.key)}" checked><span>Resolve this conflict</span></label><div class="css-bubble-row">`);
+      cssProblemValueOptions(g).forEach((opt,j)=>{
+        const checked=opt.norm===latestNorm?" checked":"";
+        const current=opt.norm===latestNorm?" <em>current</em>":"";
+        parts.push(`<label class="css-bubble" title="${htmlEscape(opt.value)}"><input type="radio" name="cssConflict${i}" data-conflict-key="${htmlEscape(g.key)}" data-norm="${htmlEscape(opt.norm)}"${checked}><span>${htmlEscape(opt.value)}${current}</span></label>`);
+      });
+      parts.push(`</div></div>`);
+    });
+    parts.push(`</div>`);
+  }
+  if(analysis.duplicateGroups.length){
+    parts.push(`<div class="css-cleanup-section" data-category-section="duplicates"><h4>Duplicates</h4><p class="css-cleanup-note">Checked rows keep the final copy and remove or comment out earlier identical declarations. Uncheck a row to skip that duplicate group.</p>`);
+    analysis.duplicateGroups.forEach((g,i)=>{
+      const latest=cssProblemLatestItem(g);
+      const value=latest?latest.value:[...g.values.values()][0]||"";
+      parts.push(`<label class="css-dup-row"><input type="checkbox" class="css-duplicate-choice" data-duplicate-key="${htmlEscape(g.key)}" checked><span><code>${htmlEscape(cssProblemDisplayTitle(g))}</code><span class="css-skip-ind">Skip</span><br>Keep one declaration: <code>${htmlEscape(value)}</code> <span class="css-conflict-meta">${g.items.length} copies</span></span></label>`);
+    });
+    parts.push(`</div>`);
+  }
+  if(analysis.consolidationGroups&&analysis.consolidationGroups.length){
+    parts.push(`<div class="css-cleanup-section" data-category-section="consolidations"><h4>Consolidate selectors</h4><p class="css-cleanup-note">Repeated rules for the same selector can be combined into one rule. Checked rows consolidate that selector; uncheck to skip that consolidation. Compact CSS is not required for this check.</p>`);
+    analysis.consolidationGroups.forEach((g,i)=>{
+      const ruleList=g.rules.slice(0,4).map(r=>`<code>${htmlEscape(g.selector)} { ${htmlEscape(r.body)} }</code>`).join(`<br>`);
+      const more=g.rules.length>4?`<br><span class="css-conflict-meta">…${g.rules.length-4} more rule${g.rules.length-4!==1?"s":""}</span>`:"";
+      parts.push(`<label class="css-consolidate-row"><input type="checkbox" class="css-consolidate-choice" data-consolidate-key="${htmlEscape(g.key)}" checked><span><code>${htmlEscape(g.selector)}${g.atPath&&g.atPath.length?` [${htmlEscape(g.atPath.join(" > "))}]`:""}</code><span class="css-skip-ind">Skip</span><br>${ruleList}${more}<span class="css-consolidate-preview">Consolidate to: <code>${htmlEscape(g.selector)} { ${htmlEscape(g.consolidatedBody)} }</code></span></span></label>`);
+    });
+    parts.push(`</div>`);
+  }
+  if(analysis.ruleOrphans.size || analysis.commentOnlyOrphans.size){
+    parts.push(`<div class="css-cleanup-section" data-category-section="orphans"><h4>Orphans</h4>`);
+    if(analysis.ruleOrphans.size){
+      const ids=[...analysis.ruleOrphans].sort((a,b)=>a-b).join(", ");
+      parts.push(`<label class="css-orphan-row"><input type="checkbox" id="cssCleanupRemoveOrphans" class="css-orphan-choice" checked><span>Remove or comment out active CSS rules for missing tile ids:<span class="css-skip-ind">Skip</span><br><code>${htmlEscape(ids)}</code></span></label>`);
+    }
+    if(analysis.commentOnlyOrphans.size){
+      const ids=[...analysis.commentOnlyOrphans].sort((a,b)=>a-b).join(", ");
+      parts.push(`<p class="css-cleanup-note">Comment-only orphan references are shown for awareness and are not changed by cleanup: <code>${htmlEscape(ids)}</code></p>`);
+    }
+    parts.push(`</div>`);
+  }
+  return parts.join("");
+}
+function wireCssCleanupDialogControls(body){
+  if(!body) return;
+  const categoryTargets={conflicts:".css-conflict-choice",duplicates:".css-duplicate-choice",consolidations:".css-consolidate-choice",orphans:".css-orphan-choice"};
+  function refreshOne(input){
+    if(!input) return;
+    let row=input.closest(".css-conflict-group")||input.closest(".css-dup-row")||input.closest(".css-consolidate-row")||input.closest(".css-orphan-row");
+    if(row) row.classList.toggle("is-skipped", !input.checked);
+    if(input.classList.contains("css-conflict-choice")){
+      const group=input.closest(".css-conflict-group");
+      if(group) group.querySelectorAll('input[type="radio"]').forEach(r=>{ r.disabled=!input.checked; });
+    }
+  }
+  function refreshAll(){
+    body.querySelectorAll(".css-conflict-choice,.css-duplicate-choice,.css-consolidate-choice,.css-orphan-choice").forEach(refreshOne);
+    body.querySelectorAll(".css-category-choice").forEach(cat=>{
+      const selector=categoryTargets[cat.getAttribute("data-category")];
+      if(!selector) return;
+      const anyChecked=[...body.querySelectorAll(selector)].some(x=>x.checked);
+      cat.checked=anyChecked;
+    });
+  }
+  body.querySelectorAll(".css-conflict-choice,.css-duplicate-choice,.css-consolidate-choice,.css-orphan-choice").forEach(input=>input.addEventListener("change",refreshAll));
+  body.querySelectorAll(".css-category-choice").forEach(cat=>{
+    cat.addEventListener("change",()=>{
+      const selector=categoryTargets[cat.getAttribute("data-category")];
+      if(!selector) return;
+      body.querySelectorAll(selector).forEach(input=>{ input.checked=cat.checked; });
+      refreshAll();
+    });
+  });
+  refreshAll();
+}
+function computeCssDeclarationCleanupIds(declData, conflictChoices, duplicateKeys){
+  const conflictDropByKey=new Map();
+  const duplicateDropByKey=new Map();
+  const mark=(map,key,id)=>{ if(!map.has(key)) map.set(key,new Set()); map.get(key).add(id); };
+  for(const g of declData.conflictGroups||[]){
+    const selectedNorm=conflictChoices.has(g.key) ? conflictChoices.get(g.key) : (cssProblemLatestItem(g)||{}).normValue;
+    if(selectedNorm===CSS_CONFLICT_IGNORE_CHOICE) continue;
+    const sorted=[...(g.items||[])].sort((a,b)=>a.order-b.order);
+    let keep=null;
+    for(let i=sorted.length-1;i>=0;i--){ if(sorted[i].normValue===selectedNorm){ keep=sorted[i]; break; } }
+    if(!keep) keep=sorted[sorted.length-1];
+    for(const item of sorted){ if(!keep || item.id!==keep.id) mark(conflictDropByKey,g.key,item.id); }
+  }
+  for(const g of declData.duplicateGroups||[]){
+    if(!duplicateKeys.has(g.key)) continue;
+    const sorted=[...(g.items||[])].sort((a,b)=>a.order-b.order);
+    const keep=sorted[sorted.length-1];
+    for(const item of sorted){ if(!keep || item.id!==keep.id) mark(duplicateDropByKey,g.key,item.id); }
+  }
+  const idsForDropMap=(dropByKey)=>{
+    const ids=new Set();
+    for(const rec of declData.decls||[]){
+      if(rec.keys && rec.keys.length && rec.keys.every(k=>dropByKey.has(k)&&dropByKey.get(k).has(rec.id))) ids.add(rec.id);
+    }
+    return ids;
+  };
+  return {conflictIds:idsForDropMap(conflictDropByKey), duplicateIds:idsForDropMap(duplicateDropByKey)};
+}
+function computeSelectedCssDeclarationRemovals(declData, conflictChoices, duplicateKeys){
+  const ids=computeCssDeclarationCleanupIds(declData, conflictChoices||new Map(), duplicateKeys||new Set());
+  return new Set([...ids.conflictIds, ...ids.duplicateIds]);
+}
+function cssCommentSafe(text){
+  return String(text||"").replace(/\/\*/g,"/ *").replace(/\*\//g,"* /");
+}
+function rewriteCssDeclarationsByProblemIds(css, opts={}){
+  const removeIds=opts.removeIds||new Set();
+  const commentIds=opts.commentIds||new Set();
+  if(!removeIds.size && !commentIds.size) return css||"";
+  let seq=0;
+  function clean(cssText){
+    const out=[];
+    for(const node of parseCssNodes(cssText||"")){
+      if(node.kind!=="block"){ out.push(node); continue; }
+      const pre=(node.prelude||"").trim();
+      if(pre.startsWith("@")){
+        const inner=clean(node.body||"").replace(/\s+$/, " ").trim();
+        if(inner) out.push(new CssBlock(node.prelude, inner));
+        continue;
+      }
+      const kept=[];
+      for(const part of splitCssDeclarationsForProblems(node.body||"")){
+        const d=parseCssDeclarationForProblems(part);
+        const id=d ? seq++ : null;
+        const normalized=part.replace(/;+$/g,"").trim();
+        if(d && removeIds.has(id)) continue;
+        if(d && commentIds.has(id)){
+          kept.push(`/* CSS cleanup preserved removed declaration: ${cssCommentSafe(normalized)}; */`);
+          continue;
+        }
+        kept.push(cssBodyPartOutputText(normalized));
+      }
+      if(kept.length) out.push(new CssBlock(node.prelude, kept.join("\n")));
+    }
+    return renderCssNodes(out);
+  }
+  return clean(css||"");
+}
+function removeCssDeclarationsByProblemIds(css, idsToRemove){
+  return rewriteCssDeclarationsByProblemIds(css, {removeIds:idsToRemove||new Set()});
+}
+function cleanCustomCssProblemsWithChoices(css, analysis, choices){
+  let out=css||"";
+  const ids=computeCssDeclarationCleanupIds(analysis.declData||{}, choices.conflicts||new Map(), choices.duplicates||new Set());
+  const commentCleaned=!!choices.commentCleaned;
+  const removeIds=new Set();
+  const commentIds=new Set();
+  const addIds=(target,set)=>set.forEach(id=>target.add(id));
+  if(commentCleaned){
+    addIds(commentIds, ids.duplicateIds);
+    addIds(commentIds, ids.conflictIds);
+  }else{
+    addIds(removeIds, ids.duplicateIds);
+    addIds(removeIds, ids.conflictIds);
+  }
+  if(removeIds.size||commentIds.size) out=rewriteCssDeclarationsByProblemIds(out, {removeIds, commentIds});
+  if(choices.removeOrphans && analysis.ruleOrphans.size){
+    out=commentCleaned ? commentCssForTileIds(out, [...analysis.ruleOrphans]) : cleanupCssForTileIds(out, [...analysis.ruleOrphans]);
+  }
+  if(choices.consolidations && choices.consolidations.size) out=consolidateCssSelectorRules(out, choices.consolidations, {commentRemoved:commentCleaned});
+  return out;
+}
+function cleanCustomCssProblems(css, existingIds){
+  const analysis=analyzeCustomCssCleanup(css||"", existingIds||new Set(), {includeConsolidation:true});
+  const conflicts=new Map();
+  for(const g of analysis.conflictGroups){ const latest=cssProblemLatestItem(g); if(latest) conflicts.set(g.key, latest.normValue); }
+  const duplicates=new Set(analysis.duplicateGroups.map(g=>g.key));
+  const consolidations=new Set((analysis.consolidationGroups||[]).map(g=>g.key));
+  return cleanCustomCssProblemsWithChoices(css||"", analysis, {conflicts, duplicates, consolidations, removeOrphans:true, commentCleaned:false});
+}
+function showCustomCssCleanupDialog(text, analysis, done){
+  const modal=document.getElementById("cssCleanupModal");
+  const body=document.getElementById("cssCleanupBody");
+  const intro=document.getElementById("cssCleanupIntro");
+  const cancel=document.getElementById("cssCleanupCancel");
+  const formatOnly=document.getElementById("cssCleanupFormatOnly");
+  const apply=document.getElementById("cssCleanupApply");
+  if(!modal||!body||!intro||!cancel||!formatOnly||!apply){ done(text||"", false, customCssCleanupMessage(analysis)); return; }
+  intro.textContent="Review the detected customCSS items before formatting. Cancel leaves the editor unchanged. Selector consolidation is checked whether or not Compact CSS is enabled. Comments are preserved during compact formatting and selector consolidation.";
+  body.innerHTML=buildCustomCssCleanupDialogHtml(analysis);
+  wireCssCleanupDialogControls(body);
+  resetModalPosition("cssCleanupModal");
+  modal.classList.remove("hidden");
+  let cleaned=false;
+  const cleanup=()=>{ if(cleaned) return false; cleaned=true; modal.classList.add("hidden"); cancel.onclick=null; formatOnly.onclick=null; apply.onclick=null; return true; };
+  cancel.onclick=()=>{ cleanup(); status("customCSS format cancelled."); };
+  formatOnly.onclick=()=>{ if(!cleanup()) return; done(text||"", false, customCssCleanupMessage(analysis)); };
+  apply.onclick=()=>{
+    if(!cleanup()) return;
+    const conflicts=new Map();
+    const enabledConflictKeys=new Set();
+    body.querySelectorAll('.css-conflict-choice:checked').forEach(el=>enabledConflictKeys.add(el.getAttribute("data-conflict-key")));
+    (analysis.conflictGroups||[]).forEach(g=>{ if(!enabledConflictKeys.has(g.key)) conflicts.set(g.key, CSS_CONFLICT_IGNORE_CHOICE); });
+    body.querySelectorAll('input[type="radio"][data-conflict-key]:checked').forEach(el=>{
+      const key=el.getAttribute("data-conflict-key");
+      if(enabledConflictKeys.has(key)) conflicts.set(key, el.getAttribute("data-norm")||"");
+    });
+    const commentCleaned=!!(body.querySelector("#cssCleanupCommentRemoved")&&body.querySelector("#cssCleanupCommentRemoved").checked);
+    const duplicates=new Set();
+    body.querySelectorAll('.css-duplicate-choice:checked').forEach(el=>duplicates.add(el.getAttribute("data-duplicate-key")));
+    const consolidations=new Set();
+    body.querySelectorAll('.css-consolidate-choice:checked').forEach(el=>consolidations.add(el.getAttribute("data-consolidate-key")));
+    const removeOrphans=!!(body.querySelector("#cssCleanupRemoveOrphans")&&body.querySelector("#cssCleanupRemoveOrphans").checked);
+    const cleanedText=cleanCustomCssProblemsWithChoices(text||"", analysis, {conflicts, duplicates, consolidations, removeOrphans, commentCleaned});
+    done(cleanedText, cleanedText!==(text||""), null);
+  };
+  setTimeout(()=>apply.focus({preventScroll:true}),0);
+}
+function formatCustomCssAfterReview(text, done){
+  const existing=customCssExistingTileIds();
+  const analysis=analyzeCustomCssCleanup(text||"", existing, {includeConsolidation:true});
+  if(!hasCustomCssCleanupIssues(analysis)){ done(text||"", false, null); return; }
+  setJsonEditorError("");
+  status("customCSS review found issues. Review the cleanup dialog before formatting.");
+  showCustomCssCleanupDialog(text||"", analysis, done);
+}
+
 function isCompactCssEnabled(){ const el=document.getElementById("jsonCompactCss"); return !!(el&&el.checked&&!el.disabled); }
 function formatJsBasic(js){ return formatBraceCodeBasic(js,{js:true}); }
 function formatHtmlBasic(html){
@@ -7598,10 +8468,22 @@ function formatJsonEditor(){
       promptJsonEditorFixOrDiscard(fieldValidationMessage(JsonEditorState.mode,issues));
       return;
     }
-    const formatted=formatCustomField(JsonEditorState.mode,text);
-    setJsonEditorText(formatted,"start");
-    syncJsonEditorView({promptDiscard:true});
-    toast(`${JsonEditorState.mode} validated and formatted${JsonEditorState.mode==="customCSS"&&isCompactCssEnabled()?" compactly":""}.`,"ok");
+    const finishFormat=(sourceText, cleaned=false, warning=null)=>{
+      const formatted=formatCustomField(JsonEditorState.mode,sourceText);
+      setJsonEditorText(formatted,"start");
+      syncJsonEditorView({promptDiscard:true});
+      let liveUndo=false;
+      if(JsonEditorState.mode==="customCSS" && String(State.customCSS||"")!==String(formatted||"")){
+        liveUndo=liveApplyCustomCssFromEditor(formatted, cleaned ? "customCSS cleanup" : "customCSS format");
+      }
+      if(warning) setJsonEditorError(warning);
+      toast(`${JsonEditorState.mode} validated and formatted${JsonEditorState.mode==="customCSS"&&isCompactCssEnabled()?" compactly":""}${cleaned?"; CSS cleanup applied":""}${liveUndo?"; Undo available":""}.`,"ok");
+    };
+    if(JsonEditorState.mode==="customCSS"){
+      formatCustomCssAfterReview(text, finishFormat);
+      return;
+    }
+    finishFormat(text);
     return;
   }
   let data;
@@ -8108,7 +8990,7 @@ function wire(){
   document.getElementById("pinSubmit").addEventListener("click",submitPin);
   document.getElementById("pinCancel").addEventListener("click",()=>{ document.getElementById("pinModal").classList.add("hidden"); State.pinTarget=null; });
   document.getElementById("pinInput").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); submitPin(); } });
-  document.getElementById("orphanInd").addEventListener("click",openOrphanReview);
+  document.getElementById("orphanInd").addEventListener("click",openCssCleanupReviewFromIndicator);
   document.getElementById("orphanIgnore").addEventListener("click",()=>{ document.getElementById("orphanModal").classList.add("hidden"); });
   document.getElementById("orphanCancel").addEventListener("click",()=>{ document.getElementById("orphanModal").classList.add("hidden"); });
   document.getElementById("orphanDownload").addEventListener("click",()=>{
@@ -8248,13 +9130,14 @@ function wire(){
     let data;
     try{ data=parseJsonEditor({promptDiscard:true}); }
     catch(e){ return; }
-    const doApply=()=>{
-      applyJsonToCurrentLayout(data,"edited JSON");
-      JsonEditorState.doc=cloneJsonDoc(serializeLayout());
-      document.getElementById("jsonModal").classList.add("hidden");
-    };
-    if(hasUnsavedChanges()) confirmUnsavedLayoutChange("Applying JSON editor changes", doApply);
-    else doApply();
+    // Treat JSON editor commits as normal edits to the current working layout.
+    // applyJsonToCurrentLayout creates the undo checkpoint before replacing layout data,
+    // so prior unsaved work can be restored with Undo instead of being treated as discarded.
+    const preserveRenderedSnapshots=JsonEditorState.mode!=="json";
+    const changedFields=preserveRenderedSnapshots?[JsonEditorState.mode]:[];
+    applyJsonToCurrentLayout(data,"edited JSON",{preserveRenderedSnapshots, changedFields});
+    JsonEditorState.doc=cloneJsonDoc(serializeLayout());
+    document.getElementById("jsonModal").classList.add("hidden");
   });
   document.getElementById("jsonCopy").addEventListener("click",()=>{
     const ed=document.getElementById("jsonEditor");
