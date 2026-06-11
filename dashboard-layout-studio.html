@@ -82,7 +82,7 @@
   .brand h1 small{display:block;font-family:var(--mono);font-size:.58rem;color:var(--faint);letter-spacing:.08em;margin-top:6px;text-align:center;width:100%;}
 
   /* topbar */
-  .topbar{grid-area:topbar; display:flex; align-items:center; gap:12px; padding:0 14px;
+  .topbar{grid-area:topbar; display:flex; align-items:center; gap:12px; padding:0 14px; position:relative;
     border-bottom:1px solid var(--border); background:rgba(0,0,0,.12);}
   .icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--panel-2);
     color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .14s;flex:none;}
@@ -284,6 +284,8 @@
   .prefs-panel .pp-head{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:11px;}
   .prefs-panel .pp-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0;font-size:.82rem;color:var(--text);}
   .prefs-panel .pp-row input[type=range]{flex:1;max-width:130px;}
+  .prefs-panel .pp-row.disabled{opacity:.55;}
+  .prefs-panel .pp-row.disabled span{cursor:not-allowed;}
   .tool{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:6px;
     border:1px solid transparent;background:transparent;color:var(--text);font-family:var(--sans);font-size:.78rem;
     font-weight:500;cursor:pointer;transition:all .12s;white-space:nowrap;}
@@ -371,6 +373,32 @@
   .tile.c-text{background:linear-gradient(145deg,rgba(120,135,160,.26),rgba(120,135,160,.09));border-style:dashed;}
   .tile.c-button{background:linear-gradient(145deg,rgba(52,211,153,.32),rgba(52,211,153,.13));}
   .tile.c-other{background:linear-gradient(145deg,rgba(148,163,184,.3),rgba(148,163,184,.12));}
+  .tile.display-snapshot{padding:0;justify-content:stretch;align-items:stretch;background:var(--snap-bg,rgba(30,41,59,.58));
+    color:var(--snap-color,var(--text));border:var(--snap-border,1px solid rgba(255,255,255,.09));
+    border-radius:var(--snap-radius,3px);box-shadow:var(--snap-shadow,inset 0 1px 0 rgba(255,255,255,.07));}
+  .snap-tile{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;box-sizing:border-box;
+    font-family:Avenir,Helvetica,Arial,sans-serif;line-height:1.08;pointer-events:none;color:inherit;}
+  .snap-main{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:3px;padding:2px;
+    overflow:hidden;text-align:center;background:var(--snap-main-bg,transparent);color:var(--snap-main-color,currentColor);
+    font-size:var(--snap-main-font,10px);}
+  .snap-main-text,.snap-title-text,.snap-sub-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+  .snap-title{flex:none;display:flex;align-items:center;justify-content:center;padding:1px 3px;min-height:11px;
+    background:var(--snap-title-bg,rgba(0,0,0,.18));color:var(--snap-title-color,currentColor);
+    font-size:var(--snap-title-font,9px);font-weight:600;}
+  .snap-sub{flex:none;display:flex;align-items:center;justify-content:center;padding:1px 3px;min-height:10px;
+    color:var(--snap-sub-color,rgba(255,255,255,.72));font-size:var(--snap-sub-font,8px);}
+  .snap-icon{font-family:"Material Icons","hubitat",Avenir,Helvetica,Arial,sans-serif;font-size:var(--snap-icon-font,14px);
+    line-height:1;flex:none;max-width:40%;overflow:hidden;text-overflow:clip;color:var(--snap-icon-color,currentColor);}
+  .tile.display-snapshot .snap-dom{position:absolute;inset:0;z-index:1;width:100%;height:100%;overflow:hidden;box-sizing:border-box;pointer-events:none;}
+  .tile.display-snapshot .snap-scale{position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;pointer-events:none;}
+  .tile.display-snapshot .snap-captured-root{display:block;pointer-events:none;}
+  .tile.display-snapshot .snap-dom *{box-sizing:border-box;}
+  .tile.display-snapshot.image-snapshot{background:transparent;border:0;padding:0;}
+  .tile.display-snapshot .snap-img{position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;object-fit:fill;pointer-events:none;user-select:none;opacity:0;}
+  .tile.display-snapshot.snap-image-loaded .snap-img{opacity:1;}
+  .tile.display-snapshot.snap-image-loaded .snap-dom{display:none;}
+  .tile.display-snapshot:not(.snap-image-loaded) .snap-img{display:none;}
+  .tile.display-snapshot .t-id,.tile.display-snapshot .t-name{display:none;}
   .tile.sel{outline:2px solid #fff;outline-offset:-1px;box-shadow:0 0 0 3px rgba(255,255,255,.2),0 6px 16px rgba(0,0,0,.5);cursor:grab;}
   .tile.grouped{outline:2px solid var(--accent);outline-offset:-1px;box-shadow:0 0 0 3px rgba(103,232,249,.22);cursor:grab;}
   .tile.line-sel{outline:2px solid var(--amber-2);outline-offset:-1px;box-shadow:0 0 0 3px rgba(245,166,35,.2);}
@@ -497,11 +525,32 @@
   .help-key{font-family:var(--mono);font-size:.72rem;color:var(--text);border:1px solid rgba(148,163,184,.28);border-bottom-color:rgba(148,163,184,.45);border-radius:4px;padding:1px 5px;background:rgba(255,255,255,.06);white-space:nowrap;}
   @media(max-width:760px){.help-body{grid-template-columns:1fr}.help-tabs{border-right:none;border-bottom:1px solid var(--border);display:flex;gap:5px;overflow:auto}.help-tab{width:auto;white-space:nowrap;margin:0}.help-content{max-height:calc(88vh - 170px)}}
 
+  .view-mode-cluster{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:4px;z-index:4;white-space:nowrap;}
+  .view-mode-cluster.hidden{display:none!important;}
+  .view-mode-switcher{display:inline-flex;align-items:center;gap:5px;border:0;border-radius:0;padding:0;font-size:.72rem;line-height:1;font-family:var(--mono);background:transparent;white-space:nowrap;}
+  .view-mode-switcher.hidden{display:none!important;}
+  .view-mode-btn{border:0;background:transparent;color:rgba(103,232,249,.54);font:inherit;line-height:1;border-radius:5px;padding:2px 3px;cursor:pointer;transition:color .14s,opacity .14s,text-shadow .14s;}
+  .view-mode-btn:hover:not(:disabled){color:#cffafe;text-shadow:0 0 8px rgba(103,232,249,.28);}
+  .view-mode-btn.active{color:#ffffff;text-shadow:0 0 9px rgba(103,232,249,.55);font-weight:800;}
+  .view-mode-btn.dim{color:rgba(103,232,249,.42);}
+  .view-mode-btn.unavailable{color:#64748b;text-shadow:none;cursor:pointer;}
+  .view-mode-btn.hidden,.view-mode-sep.hidden{display:none!important;}
+  .view-mode-sep{color:rgba(103,232,249,.35);font-size:.72rem;}
+  .view-refresh-btn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border:1px solid rgba(103,232,249,.30);border-radius:999px;background:rgba(15,23,42,.36);color:rgba(103,232,249,.92);cursor:pointer;font-size:.8rem;line-height:1;margin-left:1px;}
+  .view-refresh-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(103,232,249,.12);color:#fff;}
+  .view-refresh-btn:disabled{opacity:.48;cursor:not-allowed;color:rgba(103,232,249,.45);}
+  .view-refresh-btn.hidden{display:none!important;}
+  .view-refresh-btn.busy{color:#fff;border-color:var(--accent);animation:viewspin 1s linear infinite;}
+  .view-refresh-status{font-family:var(--mono);font-size:.62rem;color:rgba(103,232,249,.72);max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .view-refresh-status.hidden{display:none!important;}
+  .view-refresh-status.busy{color:#ffffff;text-shadow:0 0 8px rgba(103,232,249,.45);}
+  @keyframes viewspin{to{transform:rotate(360deg)}}
+
 </style>
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.218">0.9.218</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.234">0.9.234</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -518,6 +567,15 @@
     <span class="orphan-ind" id="orphanInd" style="display:none" title="Review orphaned CSS">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
       <span class="oi-txt">CSS Orphans</span>
+    </span>
+    <span class="view-mode-cluster" id="viewModeCluster" title="Tile display mode">
+      <span class="view-mode-switcher" id="viewModeInd">
+        <button type="button" class="view-mode-btn active" id="viewSimpleBtn">Simple View</button>
+        <span class="view-mode-sep" id="viewModeSep">|</span>
+        <button type="button" class="view-mode-btn dim" id="viewRenderedBtn">Rendered View</button>
+      </span>
+      <button type="button" class="view-refresh-btn hidden" id="viewRefreshSnapshots" title="Refresh rendered tile snapshots" aria-label="Refresh rendered tile snapshots">↻</button>
+      <span class="view-refresh-status hidden" id="viewRefreshStatus"></span>
     </span>
     <span class="spacer"></span>
     <span class="conn-dot" id="connDot"></span>
@@ -716,6 +774,8 @@
         <input type="checkbox" id="prefAutoConnect" /></label>
       <label class="pp-row"><span>Tile opacity <span id="tileOpacityVal">100%</span></span>
         <input type="range" id="prefTileOpacity" min="20" max="100" value="100" /></label>
+      <label class="pp-row"><span>Enable Rendered View</span>
+        <input type="checkbox" id="prefRenderedViewEnabled" /></label>
       <p class="hint" style="margin:8px 0 0">Auto-connect runs Discover automatically when the page loads, using saved connection settings.</p>
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
         <button class="btn ghost" id="prefCheckUpdate" style="width:100%">Check for updates</button>
@@ -1206,8 +1266,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v219";
-const APP_VERSION = "0.9.219";
+const BUILD = "v234";
+const APP_VERSION = "0.9.234";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -1224,6 +1284,12 @@ const State = {
   zMap:{tile:{}, cls:{}},        // parsed z-index: by tile id, by template class
   deviceNames:new Map(),          // hub device id -> preferred device name (displayName, fallback name)
   deviceNamesAvailable:false,     // true only after a live hub device list is fetched successfully
+  tileSnapshots:{},               // rendered-dashboard tile snapshot by tile id (experimental visual mode)
+  tileSnapshotCapture:null,       // active snapshot capture promise
+  tileSnapshotStatus:"none",      // none|loading|ready|failed
+  tileSnapshotBlockedUntilReload:false, // manual JSON edits invalidate rendered snapshots until hub save + reload
+  tileViewMode:"simple",         // actual current tile view: simple|snapshot; preference only enables rendered mode
+  renderedViewPreference:false,  // saved preference: offer Rendered View when hosted by the hub
   tiles:[],                      // working layout; array order = tiebreak within same z
   selKind:null,                  // 'col'|'row' — set automatically by what you click; drives col/row ops
   selMode:"default",             // 'default'|'include_partial'|'exclude_partial'|'only_partial' (per spec)
@@ -1535,6 +1601,7 @@ const Hub = {
       await loadHubDeviceNames();
       State.hubSaveBaseline=cloneLayoutDoc(loaded);
       adoptLayout(meta,loaded);
+      scheduleTileSnapshotCapture();
       toast(`Loaded "${meta.label}".`,"ok");
     }catch(e){
       trace(`load failed: ${e.message}`,null,"err");
@@ -1831,6 +1898,683 @@ function applyTileOpacity(v){
   const el=document.getElementById("tileOpacityVal"); if(el) el.textContent=v+"%";
 }
 
+function isPageHostedByHubForRenderedView(){
+  const h=(window.location.hostname||"").toLowerCase();
+  const privateHost = h==="localhost" || h==="127.0.0.1" || /^192\./.test(h) || /^10\./.test(h) || /^172\.(1[6-9]|2\d|3[01])/.test(h);
+  return !!(State.hubAvailable && privateHost && window.location.pathname.startsWith("/local/"));
+}
+function updateRenderedViewPreferenceAvailability(){
+  const el=document.getElementById("prefRenderedViewEnabled");
+  if(!el) return false;
+  const ok=isPageHostedByHubForRenderedView();
+  el.disabled=!ok;
+  el.title=ok
+    ? "Enable Rendered View for layouts loaded directly from this hub."
+    : "Rendered View requires this page to be hosted by the hub.";
+  const row=el.closest(".pp-row");
+  if(row){
+    row.classList.toggle("disabled", !ok);
+    row.title=el.title;
+  }
+  if(ok){
+    el.checked=!!State.renderedViewPreference;
+  }else{
+    el.checked=false;
+    if(State.tileViewMode==="snapshot") State.tileViewMode="simple";
+    resetTileSnapshots(false);
+  }
+  return ok;
+}
+function renderedViewEnabled(){
+  const el=document.getElementById("prefRenderedViewEnabled");
+  return !!(el && State.renderedViewPreference && !el.disabled && isPageHostedByHubForRenderedView());
+}
+function setSnapshotRefreshStatus(msg="", busy=false){
+  const st=document.getElementById("viewRefreshStatus");
+  const btn=document.getElementById("viewRefreshSnapshots");
+  if(st){
+    st.textContent=msg||"";
+    st.classList.toggle("hidden", !msg);
+    st.classList.toggle("busy", !!busy);
+    if(msg) st.title=msg;
+  }
+  if(btn){
+    btn.classList.toggle("busy", !!busy);
+    if(msg) btn.title=msg;
+  }
+}
+function tileDisplayMode(){
+  return State.tileViewMode || "simple";
+}
+function renderedUnavailableReason(){
+  const a=renderedSnapshotAvailability();
+  return a.ok ? "" : a.reason;
+}
+function updateTileDisplayIndicator(){
+  const cluster=document.getElementById("viewModeCluster");
+  const wrap=document.getElementById("viewModeInd");
+  const simple=document.getElementById("viewSimpleBtn");
+  const rendered=document.getElementById("viewRenderedBtn");
+  const sep=document.getElementById("viewModeSep");
+  const refreshTop=document.getElementById("viewRefreshSnapshots");
+  const refreshPref=document.getElementById("prefRefreshSnapshots");
+  updateRenderedViewPreferenceAvailability();
+  const enabled=renderedViewEnabled();
+  const mode=tileDisplayMode();
+  const a=renderedSnapshotAvailability();
+  if(!cluster||!wrap||!simple) return;
+  cluster.classList.remove("hidden");
+  wrap.classList.remove("hidden");
+  if(!enabled){
+    simple.className="view-mode-btn active";
+    simple.textContent="Simple View";
+    simple.title="Simple View is active.";
+    if(rendered) rendered.classList.add("hidden");
+    if(sep) sep.classList.add("hidden");
+    if(refreshTop) refreshTop.classList.add("hidden");
+    if(refreshPref) refreshPref.disabled=true;
+    setSnapshotRefreshStatus("", false);
+    return;
+  }
+  if(rendered) rendered.classList.remove("hidden");
+  if(sep) sep.classList.remove("hidden");
+  simple.className="view-mode-btn "+(mode==="simple"?"active":"dim");
+  simple.title=mode==="simple" ? "Simple View is active." : "Switch to Simple View.";
+  if(rendered){
+    if(!a.ok){
+      rendered.className="view-mode-btn unavailable";
+      rendered.title=`Rendered View is unavailable: ${a.reason}`;
+    }else{
+      rendered.className="view-mode-btn "+(mode==="snapshot"?"active":"dim");
+      const st=State.tileSnapshotStatus||"none";
+      rendered.title=mode==="snapshot"
+        ? (st==="loading" ? "Rendered View is active. Capturing tile snapshots…" : "Rendered View is active. Tiles use captured Hubitat tile appearances.")
+        : "Switch to Rendered View.";
+    }
+  }
+  const showRefresh=mode==="snapshot";
+  const refreshDisabled=!showRefresh || !a.ok || State.tileSnapshotStatus==="loading";
+  if(refreshTop){
+    refreshTop.classList.toggle("hidden", !showRefresh);
+    refreshTop.disabled=refreshDisabled;
+    refreshTop.title=!a.ok
+      ? `Rendered View is unavailable: ${a.reason}`
+      : State.tileSnapshotStatus==="loading"
+        ? "Rendered snapshots are refreshing."
+        : "Refresh rendered tile snapshots.";
+  }
+  if(refreshPref){
+    refreshPref.disabled=refreshDisabled;
+    refreshPref.title=refreshTop ? refreshTop.title : "Refresh rendered tile snapshots.";
+  }
+  if(mode!=="snapshot" || State.tileSnapshotStatus!=="loading") setSnapshotRefreshStatus("", false);
+}
+function renderedSnapshotAvailability(){
+  if(State.tileSnapshotBlockedUntilReload){
+    return {ok:false, reason:"manual JSON edits changed the working layout; save to the hub and reload the dashboard before using Rendered View"};
+  }
+  if(!isPageHostedByHubForRenderedView()){
+    return {ok:false, reason:"page is not hosted by the hub"};
+  }
+  if(!(State.conn.mode==="live"&&State.active&&currentDashboardUrl())){
+    return {ok:false, reason:"layout was not loaded directly from the hub"};
+  }
+  return {ok:true, reason:""};
+}
+function updateTileDisplayControls(){
+  updateTileDisplayIndicator();
+}
+function setTileDisplayMode(mode, opts={}){
+  mode = mode==="snapshot" ? "snapshot" : "simple";
+  if(mode==="snapshot"){
+    if(!renderedViewEnabled()){
+      if(opts.warn!==false) toast("Rendered View Mode is not enabled in Preferences.","err");
+      return false;
+    }
+    const a=renderedSnapshotAvailability();
+    if(!a.ok){
+      if(opts.warn!==false) toast(`Rendered View is unavailable: ${a.reason}.`,"err");
+      State.tileViewMode="simple";
+      resetTileSnapshots(false);
+      updateTileDisplayIndicator();
+      if(opts.redraw!==false && State.active) render();
+      return false;
+    }
+    State.tileViewMode="snapshot";
+    updateTileDisplayIndicator();
+    if(opts.redraw!==false && State.active) render();
+    if(opts.capture!==false) captureHubTileSnapshots({silent:opts.silent!==false, timeoutMs:opts.timeoutMs});
+    return true;
+  }
+  State.tileViewMode="simple";
+  resetTileSnapshots(false);
+  updateTileDisplayIndicator();
+  if(opts.redraw!==false && State.active) render();
+  return true;
+}
+function forceSimpleTileDisplay(reason, opts={}){
+  const wasSnapshot=tileDisplayMode()==="snapshot";
+  State.tileViewMode="simple";
+  State.tileSnapshotStatus="none";
+  resetTileSnapshots(false);
+  updateTileDisplayIndicator();
+  if(opts.redraw!==false && State.active) render();
+  if(wasSnapshot && opts.warn!==false){
+    const msg=`${reason||"Rendered View is unavailable"}. Switching to Simple View.`;
+    toast(msg,"err");
+    status(msg);
+  }
+}
+function ensureSnapshotModeApplicable(opts={}){
+  if(tileDisplayMode()!=="snapshot"){ updateTileDisplayIndicator(); return true; }
+  const a=renderedSnapshotAvailability();
+  if(!a.ok){ forceSimpleTileDisplay(a.reason,{warn:opts.warn!==false,redraw:opts.redraw}); return false; }
+  updateTileDisplayIndicator();
+  return true;
+}
+function resetTileSnapshots(redraw=false){
+  State.tileSnapshots={};
+  State.tileSnapshotStatus="none";
+  State.tileSnapshotCapture=null;
+  setSnapshotRefreshStatus("", false);
+  const f=document.getElementById("tileSnapshotFrame");
+  if(f) f.remove();
+  const st=document.getElementById("snapshotScopedTileCss");
+  if(st) st.remove();
+  const fs=document.getElementById("snapshotFontCss");
+  if(fs) fs.remove();
+  updateTileDisplayIndicator();
+  if(redraw&&State.active) render();
+}
+function cleanCssContent(v){
+  v=String(v||"").trim();
+  if(!v||v==="none"||v==="normal"||v==="initial") return "";
+  if((v.startsWith('"')&&v.endsWith('"'))||(v.startsWith("'")&&v.endsWith("'"))){
+    v=v.slice(1,-1);
+  }
+  return v.replace(/\\([0-9a-fA-F]{1,6})\s?/g,(_,hex)=>{
+    const cp=parseInt(hex,16);
+    return Number.isFinite(cp)?String.fromCodePoint(cp):"";
+  }).replace(/\\(["'])/g,"$1");
+}
+function cssTextFrom(el,pseudo){
+  if(!el) return "";
+  try{ return cleanCssContent(el.ownerDocument.defaultView.getComputedStyle(el,pseudo).content); }catch(_){ return ""; }
+}
+function visibleNodeText(el){
+  if(!el) return "";
+  const txt=String(el.innerText||el.textContent||"").replace(/\s+/g," ").trim();
+  const before=cssTextFrom(el,"::before");
+  const after=cssTextFrom(el,"::after");
+  return [before,txt,after].filter(Boolean).join(" ").replace(/\s+/g," ").trim();
+}
+function styleSummary(el){
+  if(!el) return {};
+  const w=el.ownerDocument.defaultView;
+  const cs=w.getComputedStyle(el);
+  return {
+    backgroundColor:cs.backgroundColor,
+    color:cs.color,
+    border:`${cs.borderTopWidth} ${cs.borderTopStyle} ${cs.borderTopColor}`,
+    borderRadius:cs.borderRadius,
+    boxShadow:cs.boxShadow,
+    fontSize:cs.fontSize,
+    fontWeight:cs.fontWeight,
+  };
+}
+function isHiddenNode(el){
+  if(!el) return true;
+  try{
+    const cs=el.ownerDocument.defaultView.getComputedStyle(el);
+    return cs.display==="none"||cs.visibility==="hidden"||cs.opacity==="0";
+  }catch(_){ return false; }
+}
+function safeSnapshotCssText(css){
+  return String(css||"").replace(/\]\]>/g,"]]]]><![CDATA[>");
+}
+function collectSnapshotDocumentCss(doc){
+  const chunks=[];
+  try{
+    for(const sh of Array.from(doc.styleSheets||[])){
+      try{
+        const rules=Array.from(sh.cssRules||[]).map(r=>r.cssText).filter(Boolean).join("\n");
+        if(rules) chunks.push(rules);
+      }catch(_){
+        // Cross-origin or protected stylesheet. Same-origin hub-hosted sheets
+        // should usually be readable; unavailable sheets are skipped.
+      }
+    }
+  }catch(_){ }
+  try{
+    doc.querySelectorAll("style").forEach(st=>{ if(st.textContent) chunks.push(st.textContent); });
+  }catch(_){ }
+  if(State.customCSS) chunks.push(State.customCSS);
+  return chunks.join("\n");
+}
+
+const SNAPSHOT_INLINE_STYLE_PROPS=[
+  "display","box-sizing","position","left","top","right","bottom","width","height","min-width","min-height","max-width","max-height",
+  "margin-top","margin-right","margin-bottom","margin-left","padding-top","padding-right","padding-bottom","padding-left",
+  "border-top-width","border-right-width","border-bottom-width","border-left-width","border-top-style","border-right-style","border-bottom-style","border-left-style",
+  "border-top-color","border-right-color","border-bottom-color","border-left-color","border-top-left-radius","border-top-right-radius","border-bottom-right-radius","border-bottom-left-radius",
+  "background","background-color","background-image","background-size","background-position","background-repeat","box-shadow","opacity",
+  "color","font-family","font-size","font-weight","font-style","font-variant","line-height","letter-spacing","text-align","text-decoration","text-shadow","text-transform",
+  "white-space","word-break","overflow","overflow-x","overflow-y","text-overflow","vertical-align",
+  "flex","flex-grow","flex-shrink","flex-basis","flex-direction","flex-wrap","align-items","align-content","align-self","justify-content","justify-items","justify-self","gap","row-gap","column-gap",
+  "grid-template-columns","grid-template-rows","grid-column","grid-row",
+  "transform","transform-origin","visibility","z-index","float","clear"
+];
+const SNAPSHOT_PSEUDO_STYLE_PROPS=[
+  "display","box-sizing","position","left","top","right","bottom","width","height","margin-top","margin-right","margin-bottom","margin-left",
+  "padding-top","padding-right","padding-bottom","padding-left","border-top-width","border-right-width","border-bottom-width","border-left-width",
+  "border-top-style","border-right-style","border-bottom-style","border-left-style","border-top-color","border-right-color","border-bottom-color","border-left-color",
+  "border-top-left-radius","border-top-right-radius","border-bottom-right-radius","border-bottom-left-radius","background","background-color","box-shadow","opacity",
+  "color","font-family","font-size","font-weight","font-style","line-height","letter-spacing","text-align","text-decoration","text-shadow","white-space","vertical-align","transform","transform-origin","visibility","z-index"
+];
+function snapshotCssContentText(raw){
+  let v=String(raw||"").trim();
+  if(!v || v==="none" || v==="normal") return "";
+  if((v.startsWith('"')&&v.endsWith('"')) || (v.startsWith("'")&&v.endsWith("'"))) v=v.slice(1,-1);
+  try{ v=v.replace(/\\([0-9a-fA-F]{1,6})\s?/g,(_,h)=>String.fromCodePoint(parseInt(h,16))); }catch(_){ }
+  return v.replace(/\\(["'\\])/g,"$1");
+}
+function applyComputedStyleInline(src,dst,props){
+  if(!src || !dst || !src.ownerDocument || !src.ownerDocument.defaultView) return;
+  let cs;
+  try{ cs=src.ownerDocument.defaultView.getComputedStyle(src); }catch(_){ return; }
+  for(const prop of props){
+    let val="";
+    try{ val=cs.getPropertyValue(prop); }catch(_){ val=""; }
+    if(!val) continue;
+    try{ dst.style.setProperty(prop,val,cs.getPropertyPriority(prop)||""); }catch(_){ }
+  }
+}
+function applyPseudoSnapshot(src,dst,pseudo){
+  if(!src || !dst || !src.ownerDocument || !src.ownerDocument.defaultView) return;
+  let cs;
+  try{ cs=src.ownerDocument.defaultView.getComputedStyle(src,pseudo); }catch(_){ return; }
+  const txt=snapshotCssContentText(cs && cs.getPropertyValue("content"));
+  if(!txt) return;
+  const sp=(dst.ownerDocument||document).createElement("span");
+  sp.className=`snap-pseudo snap-${pseudo.replace(/[^a-z]/gi,"")}`;
+  sp.textContent=txt;
+  for(const prop of SNAPSHOT_PSEUDO_STYLE_PROPS){
+    let val="";
+    try{ val=cs.getPropertyValue(prop); }catch(_){ val=""; }
+    if(!val) continue;
+    try{ sp.style.setProperty(prop,val,cs.getPropertyPriority(prop)||""); }catch(_){ }
+  }
+  try{ sp.style.setProperty("pointer-events","none","important"); }catch(_){ }
+  if(pseudo==="::before") dst.insertBefore(sp,dst.firstChild);
+  else dst.appendChild(sp);
+}
+function inlineSnapshotComputedStyles(src,dst,isRoot=false,rootSize=null){
+  if(!src || !dst || src.nodeType!==1 || dst.nodeType!==1) return;
+  applyComputedStyleInline(src,dst,SNAPSHOT_INLINE_STYLE_PROPS);
+  [...dst.attributes].forEach(a=>{ const nm=String(a.name||"").toLowerCase(); if(nm.startsWith("on")) dst.removeAttribute(a.name); });
+  if(dst.hasAttribute("id")) dst.removeAttribute("id");
+  if(isRoot){
+    dst.classList.add("snap-captured-root");
+    if(rootSize){
+      dst.style.setProperty("position","relative","important");
+      dst.style.setProperty("left","0px","important");
+      dst.style.setProperty("top","0px","important");
+      dst.style.setProperty("right","auto","important");
+      dst.style.setProperty("bottom","auto","important");
+      dst.style.setProperty("width",`${rootSize.width}px`,"important");
+      dst.style.setProperty("height",`${rootSize.height}px`,"important");
+      dst.style.setProperty("max-width",`${rootSize.width}px`,"important");
+      dst.style.setProperty("max-height",`${rootSize.height}px`,"important");
+      dst.style.setProperty("min-width","0px","important");
+      dst.style.setProperty("min-height","0px","important");
+      dst.style.setProperty("margin","0px","important");
+      dst.style.setProperty("transform","none","important");
+      dst.style.setProperty("transform-origin","0 0","important");
+      dst.style.setProperty("box-sizing","border-box","important");
+      dst.style.setProperty("overflow","hidden","important");
+    }
+  }
+  const srcKids=[...src.children];
+  const dstKids=[...dst.children];
+  for(let i=0;i<Math.min(srcKids.length,dstKids.length);i++) inlineSnapshotComputedStyles(srcKids[i],dstKids[i],false,null);
+  applyPseudoSnapshot(src,dst,"::before");
+  applyPseudoSnapshot(src,dst,"::after");
+}
+function collectSnapshotFontCss(doc){
+  const chunks=[];
+  try{
+    for(const sh of Array.from(doc.styleSheets||[])){
+      try{
+        for(const rule of Array.from(sh.cssRules||[])){
+          const txt=String(rule.cssText||"");
+          if(/^@font-face/i.test(txt)) chunks.push(txt);
+        }
+      }catch(_){ }
+    }
+  }catch(_){ }
+  return chunks.join("\n");
+}
+function syncSnapshotFontCss(css){
+  let st=document.getElementById("snapshotFontCss");
+  if(!css){ if(st) st.remove(); return; }
+  if(!st){ st=document.createElement("style"); st.id="snapshotFontCss"; document.head.appendChild(st); }
+  st.textContent=css;
+}
+function scrubSnapshotClone(node){
+  if(!node || node.nodeType!==1) return;
+  node.querySelectorAll("script,iframe,object,embed").forEach(n=>n.remove());
+  const clean=(el)=>{
+    if(!el || el.nodeType!==1) return;
+    [...el.attributes].forEach(a=>{
+      const nm=String(a.name||"").toLowerCase();
+      if(nm.startsWith("on")) el.removeAttribute(a.name);
+      if((nm==="href"||nm==="src") && /^javascript:/i.test(String(a.value||""))) el.removeAttribute(a.name);
+    });
+    [...el.children].forEach(clean);
+  };
+  clean(node);
+}
+function serializeSnapshotClone(tileEl){
+  if(!tileEl) return "";
+  const rect=tileEl.getBoundingClientRect ? tileEl.getBoundingClientRect() : {width:tileEl.offsetWidth,height:tileEl.offsetHeight};
+  const w=Math.max(1, Math.ceil(rect.width || tileEl.offsetWidth || 1));
+  const h=Math.max(1, Math.ceil(rect.height || tileEl.offsetHeight || 1));
+  const clone=tileEl.cloneNode(true);
+  scrubSnapshotClone(clone);
+  inlineSnapshotComputedStyles(tileEl,clone,true,{width:w,height:h});
+  try{ return clone.outerHTML || new XMLSerializer().serializeToString(clone); }
+  catch(_){ return String(clone.outerHTML||""); }
+}
+function buildTileSnapshotSvg(tileEl, cssText){
+  const idMatch=String(tileEl.id||"").match(/^tile-(\d+)$/);
+  if(!idMatch) return null;
+  const id=+idMatch[1];
+  const rect=tileEl.getBoundingClientRect ? tileEl.getBoundingClientRect() : {width:tileEl.offsetWidth,height:tileEl.offsetHeight};
+  const w=Math.max(1, Math.ceil(rect.width || tileEl.offsetWidth || 1));
+  const h=Math.max(1, Math.ceil(rect.height || tileEl.offsetHeight || 1));
+  const cloneHtml=serializeSnapshotClone(tileEl);
+  const normalizeCss=`
+html,body,.dls-snap-surface{margin:0!important;padding:0!important;width:${w}px!important;height:${h}px!important;overflow:hidden!important;background:transparent!important;}
+.dls-snap-surface{font-family:Avenir,Helvetica,Arial,sans-serif;}
+.dls-snap-wrap{position:relative!important;width:${w}px!important;height:${h}px!important;overflow:hidden!important;background:transparent!important;}
+#tile-${id}{position:absolute!important;left:0!important;top:0!important;right:auto!important;bottom:auto!important;transform:none!important;width:${w}px!important;height:${h}px!important;max-width:${w}px!important;max-height:${h}px!important;box-sizing:border-box!important;}
+`;
+  const css=String(cssText||"")+"\n"+normalizeCss;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`+
+    `<foreignObject x="0" y="0" width="${w}" height="${h}">`+
+    `<div xmlns="http://www.w3.org/1999/xhtml" class="dls-snap-surface">`+
+    `<style type="text/css"><![CDATA[${safeSnapshotCssText(css)}]]></style>`+
+    `<div class="dls-snap-wrap">${cloneHtml}</div>`+
+    `</div></foreignObject></svg>`;
+  return {id,width:w,height:h,svg,dataUrl:"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg)};
+}
+function captureTileSnapshot(tileEl, cssText){
+  const idMatch=String(tileEl&&tileEl.id||"").match(/^tile-(\d+)$/);
+  if(!idMatch) return null;
+  const id=+idMatch[1];
+  const rect=tileEl.getBoundingClientRect ? tileEl.getBoundingClientRect() : {width:tileEl.offsetWidth,height:tileEl.offsetHeight};
+  const w=Math.max(1, Math.ceil(rect.width || tileEl.offsetWidth || 1));
+  const h=Math.max(1, Math.ceil(rect.height || tileEl.offsetHeight || 1));
+  const html=serializeSnapshotClone(tileEl);
+  return {
+    id,
+    kind:"computed-dom",
+    width:w,
+    height:h,
+    imageDataUrl:"",
+    html,
+    className:String(tileEl.className||""),
+    root:styleSummary(tileEl)
+  };
+}
+function applySnapshotVars(el,snap){
+  const set=(k,v)=>{ if(v&&v!=="rgba(0, 0, 0, 0)"&&v!=="none") el.style.setProperty(k,v); };
+  set("--snap-bg",snap.root&&snap.root.backgroundColor);
+  set("--snap-color",snap.root&&snap.root.color);
+  set("--snap-border",snap.root&&snap.root.border);
+  set("--snap-radius",snap.root&&snap.root.borderRadius);
+  set("--snap-shadow",snap.root&&snap.root.boxShadow);
+  set("--snap-title-bg",snap.title&&snap.title.style&&snap.title.style.backgroundColor);
+  set("--snap-title-color",snap.title&&snap.title.style&&snap.title.style.color);
+  set("--snap-title-font",snap.title&&snap.title.style&&snap.title.style.fontSize);
+  set("--snap-main-bg",snap.main&&snap.main.style&&snap.main.style.backgroundColor);
+  set("--snap-main-color",snap.main&&snap.main.style&&snap.main.style.color);
+  set("--snap-main-font",snap.main&&snap.main.style&&snap.main.style.fontSize);
+  set("--snap-sub-color",snap.sub&&snap.sub.style&&snap.sub.style.color);
+  set("--snap-sub-font",snap.sub&&snap.sub.style&&snap.sub.style.fontSize);
+  set("--snap-icon-color",snap.icon&&snap.icon.style&&snap.icon.style.color);
+  set("--snap-icon-font",snap.icon&&snap.icon.style&&snap.icon.style.fontSize);
+}
+function snapshotForTile(t){
+  if(tileDisplayMode()!=="snapshot") return null;
+  return State.tileSnapshots && State.tileSnapshots[String(t.id)] || null;
+}
+function sanitizeSnapshotInnerHtml(html){
+  if(!html) return "";
+  try{
+    const tpl=document.createElement("template");
+    tpl.innerHTML=String(html);
+    const root=tpl.content.firstElementChild;
+    if(!root) return "";
+    root.querySelectorAll("script,style,link,iframe,object,embed").forEach(n=>n.remove());
+    const clean=(node)=>{
+      if(node.nodeType!==1) return;
+      [...node.attributes].forEach(a=>{
+        const nm=a.name.toLowerCase();
+        if(nm.startsWith("on")) node.removeAttribute(a.name);
+        if(nm==="id" && /^tile-\d+$/.test(a.value||"")) node.removeAttribute(a.name);
+      });
+      [...node.children].forEach(clean);
+    };
+    clean(root);
+    return root.outerHTML||root.innerHTML||"";
+  }catch(_){ return ""; }
+}
+function applySnapshotRootClasses(el,snap,t){
+  el.classList.add("display-snapshot",`tile-${t.id}`);
+  const cls=String(snap&&snap.className||"").split(/\s+/).filter(Boolean);
+  for(const c of cls){
+    if(!/^[A-Za-z_][\w:-]*$/.test(c)) continue;
+    if(c==="selected"||c==="active"||c==="dragging") continue;
+    try{ el.classList.add(c); }catch(_){}
+  }
+}
+function snapshotRootSelector(sel){
+  const s=String(sel||"").trim();
+  return /^#tile-\d+\s*$/.test(s)||/^\.tile-\d+\s*$/.test(s)||/^#tile-\d+\.?[\w-]*\s*$/.test(s);
+}
+function stripSnapshotRootLayoutCss(body){
+  const banned=/^(?:z-index|position|left|top|right|bottom|width|height|min-width|min-height|max-width|max-height|transform)$/i;
+  const out=[]; let buf="", inStr=null, paren=0;
+  const flush=()=>{
+    const p=buf.trim(); buf="";
+    if(!p) return;
+    const m=p.match(/^([\w-]+)\s*:/);
+    if(m && banned.test(m[1])) return;
+    out.push(p.replace(/;?\s*$/,"")+";");
+  };
+  for(let i=0;i<String(body||"").length;i++){
+    const ch=body[i]; buf+=ch;
+    if(inStr){ if(ch==="\\"){ if(i+1<body.length){ buf+=body[++i]; } continue; } if(ch===inStr) inStr=null; continue; }
+    if(ch==="'"||ch==='"'){ inStr=ch; continue; }
+    if(ch==="(") paren++;
+    else if(ch===")") paren=Math.max(0,paren-1);
+    else if(ch===";"&&paren===0) flush();
+  }
+  flush();
+  return out.join("\n");
+}
+function buildSnapshotScopedCss(){
+  // Computed-DOM snapshots inline the final rendered styles captured from the
+  // Hubitat dashboard. Re-applying tile-scoped CSS in the editor can distort
+  // the captured skin and cause selection redraw flicker, so no editor-side
+  // scoped CSS is injected for snapshot mode.
+  return "";
+  if(tileDisplayMode()!=="snapshot" || !State.customCSS || !State.tiles.length) return "";
+  const ids=new Set(State.tiles.map(t=>Number(t.id)));
+  function rec(cssText){
+    const out=[];
+    for(const node of parseCssNodes(cssText||"")){
+      if(node.kind!=="block") continue;
+      const pre=(node.prelude||"").trim();
+      if(pre.startsWith("@")){
+        const inner=rec(node.body);
+        if(inner.trim()) out.push(`${node.prelude} {\n${inner}\n}`);
+        continue;
+      }
+      for(const sel of splitSelectorList(pre)){
+        const selIds=selectorTileIds(sel);
+        if(![...selIds].some(x=>ids.has(x))) continue;
+        const body=snapshotRootSelector(sel) ? stripSnapshotRootLayoutCss(node.body) : node.body.trim();
+        if(body.trim()) out.push(`${sel.trim()} {\n${body}\n}`);
+      }
+    }
+    return out.join("\n");
+  }
+  return rec(State.customCSS);
+}
+function syncSnapshotScopedCss(){
+  let st=document.getElementById("snapshotScopedTileCss");
+  const css=buildSnapshotScopedCss();
+  if(!css){ if(st) st.remove(); return; }
+  if(!st){
+    st=document.createElement("style");
+    st.id="snapshotScopedTileCss";
+    document.head.appendChild(st);
+  }
+  st.textContent=css;
+}
+function renderSnapshotHtml(t,snap){
+  const captured=sanitizeSnapshotInnerHtml(snap && snap.html || "");
+  if(captured){
+    const Z=Number(State.zoom)||9;
+    const targetW=Math.max(1, (Number(t.colSpan)||1)*Z-1);
+    const targetH=Math.max(1, (Number(t.rowSpan)||1)*Z-1);
+    const srcW=Math.max(1, Number(snap&&snap.width)||targetW);
+    const srcH=Math.max(1, Number(snap&&snap.height)||targetH);
+    const sx=targetW/srcW;
+    const sy=targetH/srcH;
+    return `<div class="snap-dom"><div class="snap-scale" style="width:${srcW}px;height:${srcH}px;transform:scale(${sx},${sy});">${captured}</div></div>`;
+  }
+  const title=(snap&&snap.title&&snap.title.text) || "";
+  let main=(snap&&snap.main&&snap.main.text) || "";
+  let sub=(snap&&snap.sub&&snap.sub.text) || "";
+  const icon=(snap&&snap.icon&&snap.icon.text) || "";
+  // Rendered View should show only what the Hubitat dashboard rendered.
+  // Do not add Dashboard Layout Studio labels, tile ids, or fallback text.
+  if(main && title && main===title) main="";
+  const hasMain = !!(icon||main);
+  return `<div class="snap-tile">`+
+    `${title?`<div class="snap-title"><span class="snap-title-text">${esc(title)}</span></div>`:""}`+
+    `${hasMain?`<div class="snap-main">${icon?`<span class="snap-icon">${esc(icon)}</span>`:""}${main?`<span class="snap-main-text">${esc(main)}</span>`:""}</div>`:""}`+
+    `${sub?`<div class="snap-sub"><span class="snap-sub-text">${esc(sub)}</span></div>`:""}`+
+    `</div>`;
+}
+
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+async function waitForSnapshotTiles(frame,timeoutMs=15000){
+  const started=Date.now();
+  let lastCount=0;
+  while(Date.now()-started<timeoutMs){
+    let doc;
+    try{ doc=frame.contentDocument || (frame.contentWindow&&frame.contentWindow.document); }
+    catch(e){ throw new Error("browser blocked access to the dashboard frame; snapshot mode requires same-origin hub hosting"); }
+    if(doc){
+      const nodes=[...doc.querySelectorAll('[id^="tile-"]')].filter(n=>/^tile-\d+$/.test(n.id||""));
+      lastCount=nodes.length;
+      if(nodes.length) return nodes;
+    }
+    await wait(350);
+  }
+  throw new Error(`dashboard rendered no tile DOM nodes${lastCount?` (${lastCount})`:""}`);
+}
+function makeSnapshotFrame(url){
+  let frame=document.getElementById("tileSnapshotFrame");
+  if(frame) frame.remove();
+  frame=document.createElement("iframe");
+  frame.id="tileSnapshotFrame";
+  frame.setAttribute("aria-hidden","true");
+  frame.tabIndex=-1;
+  frame.style.cssText="position:fixed;left:-20000px;top:0;width:1400px;height:1000px;opacity:.01;pointer-events:none;border:0;";
+  document.body.appendChild(frame);
+  frame.src=url;
+  return frame;
+}
+async function captureHubTileSnapshots(opts={}){
+  if(tileDisplayMode()!=="snapshot") return 0;
+  if(!ensureSnapshotModeApplicable({warn:!opts.silent,redraw:true})) return 0;
+  const url=currentDashboardUrl();
+  if(!url){
+    forceSimpleTileDisplay("Rendered View requires a dashboard loaded directly from the hub",{warn:!opts.silent,redraw:true});
+    return 0;
+  }
+  if(State.tileSnapshotCapture) return State.tileSnapshotCapture;
+  State.tileSnapshotStatus="loading";
+  setSnapshotRefreshStatus("Opening dashboard…", true);
+  updateTileDisplayIndicator();
+  if(!opts.silent) status("Opening dashboard for rendered snapshot refresh…",true);
+  const run=(async()=>{
+    const frame=makeSnapshotFrame(url);
+    try{
+      setSnapshotRefreshStatus("Waiting for tiles…", true);
+      if(!opts.silent) status("Waiting for dashboard tiles to render…",true);
+      await waitForSnapshotTiles(frame, opts.timeoutMs||16000);
+      const frameDoc=frame.contentDocument || (frame.contentWindow&&frame.contentWindow.document);
+      try{
+        if(frameDoc.fonts && frameDoc.fonts.ready){
+          setSnapshotRefreshStatus("Waiting for fonts…", true);
+          if(!opts.silent) status("Waiting for dashboard fonts…",true);
+          await Promise.race([frameDoc.fonts.ready, wait(2500)]);
+        }
+      }catch(_){ }
+      setSnapshotRefreshStatus("Settling layout…", true);
+      if(!opts.silent) status("Letting dashboard layout settle…",true);
+      await wait(opts.settleMs||1800);
+      setSnapshotRefreshStatus("Capturing tiles…", true);
+      if(!opts.silent) status("Capturing rendered tile appearances…",true);
+      const nodes=[...frameDoc.querySelectorAll('[id^="tile-"]')].filter(n=>/^tile-\d+$/.test(n.id||"") && n.getBoundingClientRect().width>0 && n.getBoundingClientRect().height>0);
+      const snapshotCss=collectSnapshotDocumentCss(frameDoc);
+      syncSnapshotFontCss(collectSnapshotFontCss(frameDoc));
+      const snaps={};
+      nodes.forEach(n=>{ const s=captureTileSnapshot(n, snapshotCss); if(s) snaps[String(s.id)]=s; });
+      State.tileSnapshots=snaps;
+      State.tileSnapshotStatus="ready";
+      const count=Object.keys(snaps).length;
+      setSnapshotRefreshStatus(`Captured ${count} tile${count===1?"":"s"}.`, false);
+      updateTileDisplayIndicator();
+      render();
+      if(!opts.silent) toast(`Captured rendered snapshots for ${count} tile${count===1?"":"s"}.`, count?"ok":"err");
+      if(!opts.silent) status(`Rendered View refreshed: ${count} tile${count===1?"":"s"} captured.`);
+      setTimeout(()=>{
+        if(State.tileSnapshotStatus==="ready") setSnapshotRefreshStatus("", false);
+      },2600);
+      return count;
+    }catch(e){
+      State.tileSnapshotStatus="failed";
+      State.tileSnapshots={};
+      setSnapshotRefreshStatus("", false);
+      updateTileDisplayIndicator();
+      trace(`snapshot capture failed: ${e.message}`,null,"err");
+      forceSimpleTileDisplay(`Could not capture rendered snapshots: ${e.message}`,{warn:!opts.silent,redraw:true});
+      return 0;
+    }finally{
+      State.tileSnapshotCapture=null;
+      const f=document.getElementById("tileSnapshotFrame");
+      if(f) setTimeout(()=>{ const x=document.getElementById("tileSnapshotFrame"); if(x) x.remove(); },1000);
+    }
+  })();
+  State.tileSnapshotCapture=run;
+  return run;
+}
+function scheduleTileSnapshotCapture(){
+  if(!renderedViewEnabled()) { setTileDisplayMode("simple",{redraw:false,warn:false}); return; }
+  const a=renderedSnapshotAvailability();
+  if(!a.ok){ setTileDisplayMode("simple",{redraw:false,warn:false}); updateTileDisplayIndicator(); return; }
+  State.tileViewMode="snapshot";
+  updateTileDisplayIndicator();
+  setTimeout(()=>captureHubTileSnapshots({silent:true}),350);
+}
+
 /* Orphan CSS: rules/comments referencing tile-ids that no longer exist.
    - rule orphans: real #tile-N / .tile-N selectors with no matching tile.
    - comment-only orphans: tile refs that exist ONLY in comments (notes the user
@@ -1940,6 +2684,7 @@ function finishAdopt(meta){
     State.buffer=null; State.bufferUsed=false;
   }
   State.active=meta;
+  State.tileSnapshotBlockedUntilReload=false;
   clearSelection(); State.pending=null; State.stackInfo=null;
   State.history=[]; State.future=[];
   document.getElementById("emptyStage").style.display="none";
@@ -1952,6 +2697,8 @@ function finishAdopt(meta){
   collapseSection("sectDash", true);   // fold the dashboard list once one is loaded
   enableTools(true);
   clearSelection();
+  if(!(renderedViewEnabled() && State.conn.mode==="live")){ State.tileViewMode="simple"; }
+  ensureSnapshotModeApplicable({warn:true,redraw:false});
   render();
   markLayoutClean();
   updateSaveHubState();
@@ -2610,6 +3357,7 @@ function gridExtent(){
   return { cols:maxC+HEADROOM, rows:maxR+HEADROOM };
 }
 function render(){
+  updateTileDisplayIndicator();
   const grid=document.getElementById("gridmap");
   const colH=document.getElementById("colHeaders");
   const rowH=document.getElementById("rowHeaders");
@@ -2645,6 +3393,7 @@ function render(){
 
   // tiles
   grid.innerHTML="";
+  syncSnapshotScopedCss();
   // The interactive canvas extends past the saved layout boundary via gridExtent();
   // saved cols/rows are preserved by serializeLayout().
   const conflicts=State.flag?findConflicts():new Set();
@@ -2679,7 +3428,25 @@ function render(){
     if(State.pending&&State.pending.action==="copyTiles"&&State.pending.ids.includes(t.id)) el.classList.add("moving");
     if(State.buffer&&State.buffer.mode==="cut"&&!State.bufferUsed&&State.buffer.sourceId===(State.active&&State.active.id)&&State.buffer.cutIds.has(Number(t.id))) el.classList.add("cut-pending");
     if(State.tileDrag&&State.tileDrag.ids&&State.tileDrag.ids.includes(t.id)) el.classList.add("drag-src");
-    if(showText && t.colSpan*Z>=26 && t.rowSpan*Z>=16){
+    const snap=snapshotForTile(t);
+    if(tileDisplayMode()==="snapshot"){
+      el.id=`tile-${t.id}`;
+      el.style.setProperty("position","absolute","important");
+      el.style.setProperty("left",((t.col-1)*Z)+"px","important");
+      el.style.setProperty("top",((t.row-1)*Z)+"px","important");
+      el.style.setProperty("width",(t.colSpan*Z-1)+"px","important");
+      el.style.setProperty("height",(t.rowSpan*Z-1)+"px","important");
+      el.style.setProperty("z-index",String(100+effZ(t)),"important");
+      if(snap){
+        applySnapshotRootClasses(el,snap,t);
+        if(snap.imageDataUrl) el.classList.add("image-snapshot");
+        else applySnapshotVars(el,snap);
+        el.innerHTML=renderSnapshotHtml(t,snap);
+      }else{
+        el.classList.add("display-snapshot",`tile-${t.id}`);
+        el.innerHTML="";
+      }
+    }else if(showText && t.colSpan*Z>=26 && t.rowSpan*Z>=16){
       el.innerHTML=`<span class="t-id">#${t.id}</span><span class="t-name">${esc(tileDisplayLabel(t))}</span>`;
     }
     el.title=`#${t.id} ${tileDisplayLabel(t)} — col ${t.col}-${t.col+t.colSpan-1}, row ${t.row}-${t.row+t.rowSpan-1} (z ${effZ(t)})`;
@@ -6293,6 +7060,7 @@ function hubParamsChanged(){
     State.lastLayoutUrl=null;
     State.lastDashUrl=null;
     State.loadPin=null;
+    resetTileSnapshots(false);
     setConn("disconnected","");
     updateSaveHubState();
   }
@@ -6334,6 +7102,12 @@ function setHubAvailability(onHub, host){
   }
   resetConnectButton();
   updateSaveHubState();
+  updateRenderedViewPreferenceAvailability();
+  if(!isPageHostedByHubForRenderedView() && tileDisplayMode()==="snapshot"){
+    forceSimpleTileDisplay("page is not hosted by the hub",{warn:true,redraw:true});
+  }else{
+    updateTileDisplayControls();
+  }
 }
 function toast(msg,kind){ const w=document.getElementById("toastWrap"),t=document.createElement("div");
   t.className="toast "+(kind||""); t.textContent=msg; w.appendChild(t);
@@ -6381,6 +7155,8 @@ function normalizeLoadedJson(data){
 function loadOfflineLayout(data, sourceLabel){
   data=normalizeLoadedJson(data);
   resetDeviceNames();
+  State.tileViewMode="simple";
+  resetTileSnapshots(false);
   // "offline" mode: no hub connection; save-to-hub is disabled but file/clipboard work
   State.conn.mode="offline";
   State.lastLayoutUrl=null;
@@ -6571,6 +7347,12 @@ function applyJsonToCurrentLayout(data, sourceLabel){
     if(doc.name) State.active.label=doc.name;
     document.getElementById("crumb").innerHTML=`<b>${esc(State.active.label||"Dashboard")}</b>`;
     updateDashboardJumpState();
+  }
+  State.tileSnapshotBlockedUntilReload=true;
+  if(tileDisplayMode()==="snapshot"){
+    forceSimpleTileDisplay("Manual JSON edits changed the working layout; save to the hub and reload the dashboard before using Rendered View",{warn:true,redraw:false});
+  }else{
+    resetTileSnapshots(false);
   }
   clearSelection(); State.pending=null; State.stackInfo=null;
   render();
@@ -6857,6 +7639,7 @@ function saveConn(){
       token:document.getElementById("token").value.trim(),
       autoConnect:document.getElementById("prefAutoConnect").checked,
       tileOpacity:+document.getElementById("prefTileOpacity").value,
+      renderedViewEnabled:!!State.renderedViewPreference,
       pushBuf:+document.getElementById("pushBufInput").value||0,
     }));
   }catch(_){ /* storage unavailable — ignore */ }
@@ -6873,6 +7656,12 @@ function restoreConn(){
     if(c.tileOpacity!=null){
       document.getElementById("prefTileOpacity").value=c.tileOpacity;
       applyTileOpacity(c.tileOpacity);
+    }
+    const rve=document.getElementById("prefRenderedViewEnabled");
+    if(rve){
+      if(c.renderedViewEnabled!=null) State.renderedViewPreference=!!c.renderedViewEnabled;
+      else if(c.tileDisplay) State.renderedViewPreference=(c.tileDisplay==="snapshot");
+      rve.checked=!!State.renderedViewPreference;
     }
     if(c.pushBuf!=null) document.getElementById("pushBufInput").value=c.pushBuf;
     return c;
@@ -6979,6 +7768,7 @@ function wireUpdateModal(){
 
 function wire(){
   const savedConn=restoreConn();
+  updateTileDisplayIndicator();
   applyTileOpacity(+document.getElementById("prefTileOpacity").value);
   // Note: updatePushModeButtons(false) is called after PUSH_BTNS is defined, further below
   // Preferences slide-down
@@ -7000,6 +7790,39 @@ function wire(){
   document.getElementById("prefAutoConnect").addEventListener("change",saveConn);
   document.getElementById("prefTileOpacity").addEventListener("input",e=>{
     applyTileOpacity(+e.target.value); saveConn();
+  });
+  document.getElementById("prefRenderedViewEnabled").addEventListener("change",e=>{
+    if(e.target.disabled) return;
+    State.renderedViewPreference=!!e.target.checked;
+    saveConn();
+    if(!State.renderedViewPreference){
+      setTileDisplayMode("simple",{redraw:true,warn:false});
+    }else{
+      if(renderedSnapshotAvailability().ok) setTileDisplayMode("snapshot",{redraw:true,warn:true,silent:false});
+      else { State.tileViewMode="simple"; updateTileDisplayIndicator(); }
+    }
+  });
+  document.getElementById("viewSimpleBtn")?.addEventListener("click",()=>{
+    if(tileDisplayMode()!=="simple") setTileDisplayMode("simple",{redraw:true,warn:false});
+  });
+  document.getElementById("viewRenderedBtn")?.addEventListener("click",()=>{
+    if(!renderedViewEnabled()) return;
+    if(tileDisplayMode()==="snapshot") return;
+    setTileDisplayMode("snapshot",{redraw:true,warn:true,silent:false});
+  });
+  const refreshSnapshots=()=>{
+    if(tileDisplayMode()!=="snapshot"){ toast("Switch to Rendered View before refreshing snapshots.","err"); return; }
+    const a=renderedSnapshotAvailability();
+    if(!a.ok){ toast(`Rendered View is unavailable: ${a.reason}.`,"err"); updateTileDisplayIndicator(); return; }
+    captureHubTileSnapshots({silent:false,timeoutMs:18000});
+  };
+  document.getElementById("prefRefreshSnapshots")?.addEventListener("click",()=>{
+    if(document.getElementById("prefRefreshSnapshots")?.disabled) return;
+    refreshSnapshots();
+  });
+  document.getElementById("viewRefreshSnapshots")?.addEventListener("click",()=>{
+    if(document.getElementById("viewRefreshSnapshots").disabled) return;
+    refreshSnapshots();
   });
   document.getElementById("pushBufInput").addEventListener("change",saveConn);
   document.getElementById("prefCheckUpdate")?.addEventListener("click", ()=>checkForUpdate(true));
