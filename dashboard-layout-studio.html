@@ -195,7 +195,8 @@
   .btn.gear{width:34px;min-width:34px;padding:6px;}
   .btn.gear svg{width:14px;height:14px;}
   .btn.gear.active{border-color:var(--accent);box-shadow:inset 0 0 0 1px rgba(103,232,249,.18);color:var(--accent);}
-  .hub-settings{overflow:hidden;max-height:190px;opacity:1;margin:0 0 7px;transition:max-height .22s ease,opacity .18s ease,margin .22s ease;}
+  .hub-settings{overflow:hidden;max-height:235px;opacity:1;margin:0 0 7px;transition:max-height .22s ease,opacity .18s ease,margin .22s ease;}
+  .hub-auto-discover{margin-top:1px;}
   .hub-settings.collapsed{max-height:0;opacity:0;margin:0;pointer-events:none;}
   .hub-settings.hidden{display:none;}
   .dash-list{display:flex;flex-direction:column;gap:3px;}
@@ -318,6 +319,8 @@
   .prefs-panel .pp-head{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:11px;}
   .prefs-panel .pp-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0;font-size:.82rem;color:var(--text);}
   .prefs-panel .pp-row input[type=range]{flex:1;max-width:130px;}
+  .prefs-panel .pp-row select{max-width:148px;min-width:0;padding:4px 6px;border:1px solid var(--border);border-radius:6px;background:rgba(2,6,23,.72);color:var(--text);font-size:.72rem;}
+  .prefs-panel .pp-row select:disabled{cursor:not-allowed;}
   .prefs-panel .pp-row.disabled{opacity:.55;}
   .prefs-panel .pp-row.disabled span{cursor:not-allowed;}
   .tool{display:inline-flex;align-items:center;gap:5px;padding:0 8px;border-radius:6px;
@@ -668,7 +671,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.280">0.9.280</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.284">0.9.284</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -720,6 +723,7 @@
           <div class="field"><label>Hub IP address</label><input class="input" id="hubIp" placeholder="192.168.1.50" /></div>
           <div class="field"><label>Dashboard app number</label><input class="input" id="appId" placeholder="2" /></div>
           <div class="field"><label>Access token</label><input class="input" id="token" placeholder="xxxxxxxx-xxxx-…" /></div>
+          <button class="btn ghost hub-auto-discover" id="btnAutoDiscoverHub" type="button" title="Find the Hubitat Dashboard app number and access token on this hub">Auto Discover App &amp; Token</button>
         </div>
         <p class="hint" id="hubHint" style="margin-top:9px;text-align:center"></p>
       </div>
@@ -885,7 +889,13 @@
         <input type="range" id="prefTileOpacity" min="20" max="100" value="100" /></label>
       <label class="pp-row"><span>Enable Rendered View</span>
         <input type="checkbox" id="prefRenderedViewEnabled" /></label>
-      <p class="hint" style="margin:8px 0 0">Auto-connect runs Discover automatically when the page loads, using saved connection settings.</p>
+      <label class="pp-row" id="prefRenderedViewCompatibilityRow"><span>Compatibility mode</span>
+        <select id="prefRenderedViewCompatibility" title="Choose how Rendered View uses the mobile-compatible capture method">
+          <option value="off">Off</option>
+          <option value="auto" selected>Automatic fallback</option>
+          <option value="always">Always</option>
+        </select></label>
+      <p class="hint" style="margin:8px 0 0">Automatic fallback finishes all normal capture attempts before retrying with the mobile-compatible method. Auto-connect runs Discover automatically when the page loads.</p>
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
         <button class="btn ghost" id="prefCheckUpdate" style="width:100%">Check for updates</button>
       </div>
@@ -975,6 +985,7 @@
           <div class="help-grid">
             <div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
             <div class="k">Gear beside Connect</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
+            <div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
             <div class="k">Dashboard list</div><div class="v">After discovery, choose a dashboard to load its layout into the editor.</div>
             <div class="k">Load file</div><div class="v">Loads a JSON file as an offline layout. This is useful for editing backups, but it does not create a hub save target.</div>
             <div class="k">Paste dashboard JSON</div><div class="v">Loads pasted JSON as an offline layout. Like file load, this does not create a hub save target.</div>
@@ -1026,6 +1037,7 @@
             <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
             <div class="k">Cut / Copy / Paste</div><div class="v">Uses an internal tile buffer. Cut keeps tiles visible until the first paste, which behaves as a move; later pastes create copies.</div>
             <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it.</div>
+            <div class="k">Rendered View compatibility</div><div class="v">Preferences can disable compatibility capture, use it only as an automatic fallback, or always use it. Automatic fallback completes every normal capture attempt and retry before it starts the viewport-based mobile compatibility method.</div>
             <div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
             <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
           </div>
@@ -1432,8 +1444,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v280";
-const APP_VERSION = "0.9.280";
+const BUILD = "v284";
+const APP_VERSION = "0.9.284";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -1463,6 +1475,7 @@ const State = {
   tileSnapshotsStaleReason:"",     // custom field edits can leave existing snapshots usable but stale until refresh
   tileViewMode:"simple",         // actual current tile view: simple|snapshot; preference only enables rendered mode
   renderedViewPreference:false,  // saved preference: offer Rendered View when hosted by the hub
+  renderedViewCompatibility:"auto", // off|auto|always; auto retries compatibility only after normal retries fail
   tiles:[],                      // working layout; array order = tiebreak within same z
   selKind:null,                  // 'col'|'row' — set automatically by what you click; drives col/row ops
   selMode:"default",             // 'default'|'include_partial'|'exclude_partial'|'only_partial' (per spec)
@@ -2010,7 +2023,12 @@ function showDevicePickedAuditDialog(meta, layout, pickedInfo){
   modal.classList.remove("hidden");
 }
 const Hub = {
-  base(){return `http://${State.conn.ip}/apps/api`;},
+  base(){
+    if(State.hubAvailable && pageLooksHubHosted()) return `${window.location.origin}/apps/api`;
+    const target=String(State.conn.ip||"").trim().replace(/\/+$/g,"");
+    if(/^https?:\/\//i.test(target)) return `${target}/apps/api`;
+    return `http://${target}/apps/api`;
+  },
   async discover(){
     const {ip,appId,token}=State.conn;
     if(!ip||!appId||!token){ resetConnectButton(); toast("Fill in IP, app number, and token.","err"); return; }
@@ -2430,10 +2448,42 @@ function applyTileOpacity(v){
   const el=document.getElementById("tileOpacityVal"); if(el) el.textContent=v+"%";
 }
 
+function pageLooksHubHosted(){
+  const protocol=String(window.location.protocol||"").toLowerCase();
+  const host=String(window.location.hostname||"").trim();
+  const path=String(window.location.pathname||"");
+  // A Hubitat File Manager page is identified primarily by its /local/ path.
+  // Accept IPv4, IPv6, localhost, mDNS names, DNS names, and reverse-proxy
+  // hostnames instead of limiting hub detection to private IPv4 addresses.
+  return !!(host && (protocol==="http:"||protocol==="https:") && /^\/local(?:\/|$)/i.test(path));
+}
 function isPageHostedByHubForRenderedView(){
-  const h=(window.location.hostname||"").toLowerCase();
-  const privateHost = h==="localhost" || h==="127.0.0.1" || /^192\./.test(h) || /^10\./.test(h) || /^172\.(1[6-9]|2\d|3[01])/.test(h);
-  return !!(State.hubAvailable && privateHost && window.location.pathname.startsWith("/local/"));
+  return !!(State.hubAvailable && pageLooksHubHosted());
+}
+function normalizeRenderedViewCompatibility(value){
+  const mode=String(value||"auto").toLowerCase();
+  return mode==="off"||mode==="always"?mode:"auto";
+}
+function renderedViewCaptureStrategies(){
+  const mode=normalizeRenderedViewCompatibility(State.renderedViewCompatibility);
+  if(mode==="always") return ["compatibility"];
+  if(mode==="off") return ["standard"];
+  return ["standard","compatibility"];
+}
+function updateRenderedViewCompatibilityAvailability(){
+  const select=document.getElementById("prefRenderedViewCompatibility");
+  if(!select) return;
+  State.renderedViewCompatibility=normalizeRenderedViewCompatibility(State.renderedViewCompatibility);
+  select.value=State.renderedViewCompatibility;
+  const enabled=isPageHostedByHubForRenderedView() && !!State.renderedViewPreference;
+  select.disabled=!enabled;
+  const row=document.getElementById("prefRenderedViewCompatibilityRow")||select.closest(".pp-row");
+  if(row){
+    row.classList.toggle("disabled", !enabled);
+    row.title=enabled
+      ? "Off uses only standard capture. Automatic fallback completes all standard attempts before trying compatibility mode. Always uses compatibility mode first."
+      : "Enable Rendered View to configure compatibility mode.";
+  }
 }
 function updateRenderedViewPreferenceAvailability(){
   const el=document.getElementById("prefRenderedViewEnabled");
@@ -2442,7 +2492,7 @@ function updateRenderedViewPreferenceAvailability(){
   el.disabled=!ok;
   el.title=ok
     ? "Enable Rendered View for layouts loaded directly from this hub."
-    : "Rendered View requires this page to be hosted by the hub.";
+    : "Rendered View requires this page to be served from a hub /local/ URL.";
   const row=el.closest(".pp-row");
   if(row){
     row.classList.toggle("disabled", !ok);
@@ -2459,6 +2509,7 @@ function updateRenderedViewPreferenceAvailability(){
     // That recursion prevented offline/non-hub startup from finishing.
     resetTileSnapshots(false,{skipIndicator:true});
   }
+  updateRenderedViewCompatibilityAvailability();
   return ok;
 }
 function renderedViewEnabled(){
@@ -2481,6 +2532,9 @@ function setSnapshotRefreshStatus(msg="", busy=false){
 }
 function tileDisplayMode(){
   return State.tileViewMode || "simple";
+}
+function hasReusableTileSnapshots(){
+  return State.tileSnapshotStatus==="ready" && !!(State.tileSnapshots && Object.keys(State.tileSnapshots).length);
 }
 function renderedUnavailableReason(){
   const a=renderedSnapshotAvailability();
@@ -2586,16 +2640,31 @@ function setTileDisplayMode(mode, opts={}){
       if(opts.redraw!==false && State.active) render();
       return false;
     }
+    const reuse=opts.forceCapture!==true && hasReusableTileSnapshots();
     State.tileViewMode="snapshot";
     updateTileDisplayIndicator();
     if(opts.redraw!==false && State.active) render();
-    if(opts.capture!==false) captureHubTileSnapshots({silent:opts.silent!==false, timeoutMs:opts.timeoutMs});
+    if(opts.capture!==false && !reuse){
+      captureHubTileSnapshots({silent:opts.silent!==false, timeoutMs:opts.timeoutMs});
+    }else if(reuse){
+      State.tileSnapshotLastError="";
+      setSnapshotRefreshStatus("", false);
+      updateTileDisplayIndicator();
+      if(opts.silent===false) status("Rendered View restored using the existing captured images.");
+    }
     return true;
   }
-  cancelTileSnapshotCapture("", {status:"none"});
+  const preserve=hasReusableTileSnapshots();
+  if(State.tileSnapshotStatus==="loading" || State.tileSnapshotCapture){
+    cancelTileSnapshotCapture("", {status:"none"});
+  }
   State.tileViewMode="simple";
-  resetTileSnapshots(false);
-  updateTileDisplayIndicator();
+  if(!preserve) resetTileSnapshots(false);
+  else{
+    removeSnapshotCaptureFrame();
+    setSnapshotRefreshStatus("", false);
+    updateTileDisplayIndicator();
+  }
   if(opts.redraw!==false && State.active) render();
   return true;
 }
@@ -2619,6 +2688,12 @@ function ensureSnapshotModeApplicable(opts={}){
   updateTileDisplayIndicator();
   return true;
 }
+function removeSnapshotCaptureFrame(){
+  const f=document.getElementById("tileSnapshotFrame");
+  if(f){ clearSnapshotFrameGuards(f); f.remove(); }
+  const host=document.getElementById("tileSnapshotCaptureHost");
+  if(host) host.remove();
+}
 function resetTileSnapshots(redraw=false, opts={}){
   if(State.tileSnapshotCancelToken) State.tileSnapshotCancelToken.cancelled=true;
   State.tileSnapshots={};
@@ -2628,8 +2703,7 @@ function resetTileSnapshots(redraw=false, opts={}){
   State.tileSnapshotCapture=null;
   State.tileSnapshotCancelToken=null;
   setSnapshotRefreshStatus("", false);
-  const f=document.getElementById("tileSnapshotFrame");
-  if(f){ clearSnapshotFrameGuards(f); f.remove(); }
+  removeSnapshotCaptureFrame();
   const st=document.getElementById("snapshotScopedTileCss");
   if(st) st.remove();
   const fs=document.getElementById("snapshotFontCss");
@@ -3121,11 +3195,20 @@ function waitForSnapshotDelay(ms, token){
     resolve=()=>{ clearInterval(poll); oldResolve(); };
   });
 }
-function isRetryableSnapshotError(e){
+function snapshotErrorBlocksRetryOrFallback(e){
   const msg=String(e&&e.message||"").toLowerCase();
-  if(e&&e.cancelled) return false;
-  if(msg.includes("same-origin")||msg.includes("blocked access")) return false;
-  return !!(e&&e.timeout) || msg.includes("timed out") || msg.includes("no tile dom") || msg.includes("dashboard rendered no tile");
+  if(e&&e.cancelled) return true;
+  return msg.includes("same-origin")||msg.includes("blocked access");
+}
+function isRetryableSnapshotError(e){
+  // Complete the configured number of attempts for every ordinary capture
+  // failure. Mobile Safari may report a blank or failed standard iframe using
+  // several different messages, so automatic fallback must not depend on a
+  // narrow timeout/no-tiles message list.
+  return !snapshotErrorBlocksRetryOrFallback(e);
+}
+function shouldUseCompatibilitySnapshotFallback(e){
+  return !snapshotErrorBlocksRetryOrFallback(e);
 }
 function cancelTileSnapshotCapture(reason="", opts={}){
   if(State.tileSnapshotCancelToken) State.tileSnapshotCancelToken.cancelled=true;
@@ -3210,24 +3293,36 @@ function installSnapshotFrameGuards(frame, token){
 function clearSnapshotFrameGuards(frame){
   try{ if(frame&&frame._dlsGuardTimer) clearInterval(frame._dlsGuardTimer); }catch(_){ }
 }
-async function makeSnapshotFrame(url, token=null){
-  let frame=document.getElementById("tileSnapshotFrame");
-  if(frame){ clearSnapshotFrameGuards(frame); frame.remove(); }
-  frame=document.createElement("iframe");
+async function makeSnapshotFrame(url, token=null, captureMode="standard"){
+  removeSnapshotCaptureFrame();
+  const mode=captureMode==="compatibility"?"compatibility":"standard";
+  const frame=document.createElement("iframe");
   frame.id="tileSnapshotFrame";
   frame.setAttribute("aria-hidden","true");
   frame.tabIndex=-1;
   frame.dataset.loaded="0";
   frame.dataset.loadError="";
-  frame.style.cssText="position:fixed;left:-20000px;top:0;width:1400px;height:1000px;opacity:.01;pointer-events:none;border:0;";
+  frame.dataset.captureMode=mode;
+  if(mode==="compatibility"){
+    const host=document.createElement("div");
+    host.id="tileSnapshotCaptureHost";
+    host.setAttribute("aria-hidden","true");
+    host.style.cssText="position:fixed;inset:0;overflow:hidden;opacity:.001;pointer-events:none;z-index:2147483646;background:transparent;";
+    try{ host.inert=true; }catch(_){ }
+    frame.style.cssText="position:absolute;left:0;top:0;width:1400px;height:1000px;opacity:1;pointer-events:none;border:0;";
+    host.appendChild(frame);
+    document.body.appendChild(host);
+  }else{
+    frame.style.cssText="position:fixed;left:-20000px;top:0;width:1400px;height:1000px;opacity:.01;pointer-events:none;border:0;";
+    document.body.appendChild(frame);
+  }
   frame.addEventListener("load",()=>{ frame.dataset.loaded="1"; installSnapshotFrameGuards(frame, token); },{once:true});
   frame.addEventListener("error",()=>{ frame.dataset.loadError="dashboard frame failed to load"; },{once:true});
-  document.body.appendChild(frame);
   installSnapshotFrameGuards(frame, token);
   // Hubitat's dashboard app depends on running from the real dashboard URL while
-  // it initializes.  Loading the page through iframe.srcdoc can leave the app on
+  // it initializes. Loading the page through iframe.srcdoc can leave the app on
   // about:srcdoc and produce a blank/no-tile capture even when the dashboard is
-  // otherwise valid.  Use a real same-origin iframe URL for reliable tile DOM.
+  // otherwise valid. Use a real same-origin iframe URL for reliable tile DOM.
   frame.src=url;
   return frame;
 }
@@ -3252,6 +3347,7 @@ async function captureHubTileSnapshots(opts={}){
   if(State.tileSnapshotCapture) return State.tileSnapshotCapture;
   const timeoutMs=Math.max(6000, Number(opts.timeoutMs)||30000);
   const retryCount=Number.isFinite(Number(opts.retryCount)) ? Math.max(0, Number(opts.retryCount)) : 1;
+  const strategies=renderedViewCaptureStrategies();
   const token={cancelled:false};
   State.tileSnapshotCancelToken=token;
   State.tileSnapshotStatus="loading";
@@ -3260,78 +3356,99 @@ async function captureHubTileSnapshots(opts={}){
   updateTileDisplayIndicator();
   if(!opts.silent) status("Opening dashboard for rendered snapshot refresh…",true);
   trace("snapshot capture URL", url);
+  trace(`snapshot capture strategies: ${strategies.join(" → ")}`,null,"ok");
   const run=(async()=>{
     let lastErr=null;
-    for(let attempt=0; attempt<=retryCount; attempt++){
-      let frame=null;
-      const started=Date.now();
-      const remaining=()=>Math.max(0, timeoutMs-(Date.now()-started));
-      const check=()=>{ throwIfSnapshotCaptureCancelled(token); if(remaining()<=0) throw snapshotCaptureTimeoutError(); };
-      try{
-        check();
-        if(attempt>0){
-          setSnapshotRefreshStatus(`Retrying capture (${attempt+1}/${retryCount+1})…`, true);
-          if(!opts.silent) status(`Retrying Rendered View capture (${attempt+1}/${retryCount+1})…`, true);
-          await waitForSnapshotDelay(900, token);
-        }
-        frame=await makeSnapshotFrame(url, token);
-        setSnapshotRefreshStatus("Loading dashboard frame…", true);
-        if(!opts.silent) status("Loading dashboard frame for rendered snapshot capture…",true);
-        await waitForSnapshotFrameLoad(frame, Math.min(8000, remaining()), token);
-        check();
-        setSnapshotRefreshStatus("Waiting for tiles…", true);
-        if(!opts.silent) status("Waiting for dashboard tiles to render…",true);
-        await waitForSnapshotTiles(frame, Math.min(18000, remaining()), token);
-        check();
-        const frameDoc=frame.contentDocument || (frame.contentWindow&&frame.contentWindow.document);
-        try{
-          if(frameDoc.fonts && frameDoc.fonts.ready){
-            setSnapshotRefreshStatus("Waiting for fonts…", true);
-            if(!opts.silent) status("Waiting for dashboard fonts…",true);
-            await Promise.race([frameDoc.fonts.ready, waitForSnapshotDelay(Math.min(2500, remaining()), token)]);
-          }
-        }catch(e){ if(e&&e.cancelled) throw e; }
-        check();
-        setSnapshotRefreshStatus("Settling layout…", true);
-        if(!opts.silent) status("Letting dashboard layout settle…",true);
-        await waitForSnapshotDelay(Math.min(opts.settleMs||1800, remaining()), token);
-        check();
-        setSnapshotRefreshStatus("Capturing tiles…", true);
-        if(!opts.silent) status("Capturing rendered tile appearances…",true);
-        const nodes=[...frameDoc.querySelectorAll('[id^="tile-"]')].filter(n=>/^tile-\d+$/.test(n.id||"") && n.getBoundingClientRect().width>0 && n.getBoundingClientRect().height>0);
-        if(!nodes.length) throw new Error("dashboard rendered no visible tile DOM nodes");
-        const snapshotCss=collectSnapshotDocumentCss(frameDoc);
-        syncSnapshotFontCss(collectSnapshotFontCss(frameDoc));
-        const snaps={};
-        nodes.forEach(n=>{ const s=captureTileSnapshot(n, snapshotCss); if(s) snaps[String(s.id)]=s; });
-        if(!Object.keys(snaps).length) throw new Error("dashboard tiles could not be captured");
-        throwIfSnapshotCaptureCancelled(token);
-        State.tileSnapshots=snaps;
-        State.tileSnapshotStatus="ready";
-        State.tileSnapshotLastError="";
-        State.tileSnapshotsStaleReason="";
-        const count=Object.keys(snaps).length;
-        setSnapshotRefreshStatus(`Captured ${count} tile${count===1?"":"s"}.`, false);
-        updateTileDisplayIndicator();
-        render();
-        if(!opts.silent) status(`Rendered View refreshed: ${count} tile${count===1?"":"s"} captured.`);
-        setTimeout(()=>{
-          if(State.tileSnapshotStatus==="ready") setSnapshotRefreshStatus("", false);
-        },2600);
-        return count;
-      }catch(e){
-        lastErr=e;
-        if(e&&e.cancelled){
-          State.tileSnapshotStatus="none";
-          State.tileSnapshotLastError="";
-          setSnapshotRefreshStatus("", false);
-          updateTileDisplayIndicator();
-          return 0;
-        }
-        if(frame){ clearSnapshotFrameGuards(frame); frame.remove(); }
-        if(attempt<retryCount && isRetryableSnapshotError(e)) continue;
-        break;
+    let standardErr=null;
+    strategyLoop:
+    for(let strategyIndex=0; strategyIndex<strategies.length; strategyIndex++){
+      const captureMode=strategies[strategyIndex];
+      const compatibility=captureMode==="compatibility";
+      if(compatibility && strategyIndex>0){
+        const previous=standardErr&&standardErr.message?`: ${standardErr.message}`:"";
+        trace(`standard snapshot capture exhausted; starting compatibility mode${previous}`,null,"err");
+        setSnapshotRefreshStatus("Standard capture failed. Starting compatibility mode…", true);
+        if(!opts.silent) status("Standard Rendered View capture failed after all attempts. Retrying in compatibility mode…",true);
+        await waitForSnapshotDelay(900, token);
       }
+      let strategyErr=null;
+      for(let attempt=0; attempt<=retryCount; attempt++){
+        let frame=null;
+        const started=Date.now();
+        const remaining=()=>Math.max(0, timeoutMs-(Date.now()-started));
+        const check=()=>{ throwIfSnapshotCaptureCancelled(token); if(remaining()<=0) throw snapshotCaptureTimeoutError(); };
+        try{
+          check();
+          if(attempt>0){
+            const label=compatibility?"compatibility":"standard";
+            setSnapshotRefreshStatus(`Retrying ${label} capture (${attempt+1}/${retryCount+1})…`, true);
+            if(!opts.silent) status(`Retrying ${label} Rendered View capture (${attempt+1}/${retryCount+1})…`, true);
+            await waitForSnapshotDelay(900, token);
+          }
+          frame=await makeSnapshotFrame(url, token, captureMode);
+          setSnapshotRefreshStatus(compatibility?"Loading compatibility dashboard frame…":"Loading dashboard frame…", true);
+          if(!opts.silent) status(compatibility?"Loading dashboard frame in compatibility mode…":"Loading dashboard frame for rendered snapshot capture…",true);
+          await waitForSnapshotFrameLoad(frame, Math.min(8000, remaining()), token);
+          check();
+          setSnapshotRefreshStatus(compatibility?"Compatibility mode: waiting for tiles…":"Waiting for tiles…", true);
+          if(!opts.silent) status(compatibility?"Compatibility mode: waiting for dashboard tiles to render…":"Waiting for dashboard tiles to render…",true);
+          await waitForSnapshotTiles(frame, Math.min(18000, remaining()), token);
+          check();
+          const frameDoc=frame.contentDocument || (frame.contentWindow&&frame.contentWindow.document);
+          try{
+            if(frameDoc.fonts && frameDoc.fonts.ready){
+              setSnapshotRefreshStatus("Waiting for fonts…", true);
+              if(!opts.silent) status("Waiting for dashboard fonts…",true);
+              await Promise.race([frameDoc.fonts.ready, waitForSnapshotDelay(Math.min(2500, remaining()), token)]);
+            }
+          }catch(e){ if(e&&e.cancelled) throw e; }
+          check();
+          setSnapshotRefreshStatus("Settling layout…", true);
+          if(!opts.silent) status("Letting dashboard layout settle…",true);
+          await waitForSnapshotDelay(Math.min(opts.settleMs||1800, remaining()), token);
+          check();
+          setSnapshotRefreshStatus("Capturing tiles…", true);
+          if(!opts.silent) status("Capturing rendered tile appearances…",true);
+          const nodes=[...frameDoc.querySelectorAll('[id^="tile-"]')].filter(n=>/^tile-\d+$/.test(n.id||"") && n.getBoundingClientRect().width>0 && n.getBoundingClientRect().height>0);
+          if(!nodes.length) throw new Error("dashboard rendered no visible tile DOM nodes");
+          const snapshotCss=collectSnapshotDocumentCss(frameDoc);
+          syncSnapshotFontCss(collectSnapshotFontCss(frameDoc));
+          const snaps={};
+          nodes.forEach(n=>{ const snap=captureTileSnapshot(n, snapshotCss); if(snap) snaps[String(snap.id)]=snap; });
+          if(!Object.keys(snaps).length) throw new Error("dashboard tiles could not be captured");
+          throwIfSnapshotCaptureCancelled(token);
+          State.tileSnapshots=snaps;
+          State.tileSnapshotStatus="ready";
+          State.tileSnapshotLastError="";
+          State.tileSnapshotsStaleReason="";
+          const count=Object.keys(snaps).length;
+          setSnapshotRefreshStatus(`Captured ${count} tile${count===1?"":"s"}${compatibility?" in compatibility mode":""}.`, false);
+          updateTileDisplayIndicator();
+          render();
+          if(!opts.silent) status(`Rendered View refreshed${compatibility?" in compatibility mode":""}: ${count} tile${count===1?"":"s"} captured.`);
+          setTimeout(()=>{
+            if(State.tileSnapshotStatus==="ready") setSnapshotRefreshStatus("", false);
+          },2600);
+          return count;
+        }catch(e){
+          strategyErr=e;
+          lastErr=e;
+          if(e&&e.cancelled){
+            State.tileSnapshotStatus="none";
+            State.tileSnapshotLastError="";
+            setSnapshotRefreshStatus("", false);
+            updateTileDisplayIndicator();
+            return 0;
+          }
+          removeSnapshotCaptureFrame();
+          if(attempt<retryCount && isRetryableSnapshotError(e)) continue;
+          break;
+        }
+      }
+      if(!compatibility) standardErr=strategyErr;
+      const nextIsCompatibility=strategyIndex+1<strategies.length && strategies[strategyIndex+1]==="compatibility";
+      if(nextIsCompatibility && shouldUseCompatibilitySnapshotFallback(strategyErr)) continue strategyLoop;
+      break strategyLoop;
     }
     const msg=lastErr&&lastErr.message?lastErr.message:"unknown rendered snapshot error";
     State.tileSnapshotStatus="failed";
@@ -3345,8 +3462,9 @@ async function captureHubTileSnapshots(opts={}){
   })().finally(()=>{
     State.tileSnapshotCapture=null;
     if(State.tileSnapshotCancelToken===token) State.tileSnapshotCancelToken=null;
-    const f=document.getElementById("tileSnapshotFrame");
-    if(f) setTimeout(()=>{ const x=document.getElementById("tileSnapshotFrame"); if(x){ clearSnapshotFrameGuards(x); x.remove(); } },1000);
+    if(document.getElementById("tileSnapshotFrame")||document.getElementById("tileSnapshotCaptureHost")){
+      setTimeout(removeSnapshotCaptureFrame,1000);
+    }
     updateTileDisplayIndicator();
   });
   State.tileSnapshotCapture=run;
@@ -8022,6 +8140,15 @@ function snapshotDashboardUrl(){
     // Keep Hubitat's normal local dashboard rendering path.  The hidden capture
     // frame still gets a cache-busting token, but it must remain the real dashboard
     // URL so the Hubitat app can build the tile DOM normally.
+    if(pageLooksHubHosted()){
+      // The editor and capture frame must be same-origin. When the hub is opened
+      // through a hostname but a saved connection still contains its IP address
+      // (or another alias), use the page's current origin for the capture URL.
+      const page=new URL(window.location.href);
+      u.protocol=page.protocol;
+      u.hostname=page.hostname;
+      u.port=page.port;
+    }
     if(!u.searchParams.has("local")) u.searchParams.set("local","true");
     u.searchParams.set("dlsSnapshot", String(Date.now()));
     return u.toString();
@@ -8068,6 +8195,8 @@ function setHubParamFieldsDisabled(disabled){
     const el=document.getElementById(id);
     if(el) el.disabled=!!disabled || !State.hubAvailable;
   });
+  const autoDiscover=document.getElementById("btnAutoDiscoverHub");
+  if(autoDiscover) autoDiscover.disabled=autoDiscover.classList.contains("busy") || !!disabled || !State.hubAvailable;
 }
 function currentHubParamFields(){
   return {
@@ -9666,6 +9795,7 @@ function saveConn(){
       autoConnect:document.getElementById("prefAutoConnect").checked,
       tileOpacity:+document.getElementById("prefTileOpacity").value,
       renderedViewEnabled:!!State.renderedViewPreference,
+      renderedViewCompatibility:normalizeRenderedViewCompatibility(State.renderedViewCompatibility),
       pushBuf:+document.getElementById("pushBufInput").value||0,
     }));
   }catch(_){ /* storage unavailable — ignore */ }
@@ -9689,6 +9819,9 @@ function restoreConn(){
       else if(c.tileDisplay) State.renderedViewPreference=(c.tileDisplay==="snapshot");
       rve.checked=!!State.renderedViewPreference;
     }
+    State.renderedViewCompatibility=normalizeRenderedViewCompatibility(c.renderedViewCompatibility);
+    const rvc=document.getElementById("prefRenderedViewCompatibility");
+    if(rvc) rvc.value=State.renderedViewCompatibility;
     if(c.pushBuf!=null) document.getElementById("pushBufInput").value=c.pushBuf;
     return c;
   }catch(_){ /* storage unavailable — keep prepopulated defaults */ }
@@ -9749,38 +9882,63 @@ function findDashboardAppInHubData(data){
   return null;
 }
 async function maybeAutofillDashboardConnectionFromHubData(opts={}){
-  if(!State.hubAvailable) return false;
+  if(!State.hubAvailable){
+    if(!opts.quiet) toast("Auto discovery is available only when this page is hosted by the hub.","err");
+    return false;
+  }
   const ipField=document.getElementById("hubIp");
   const appField=document.getElementById("appId");
   const tokenField=document.getElementById("token");
   if(!ipField || !appField || !tokenField) return false;
-  const needsApp=!hubFieldHasUserValue("appId");
-  const needsToken=!hubFieldHasUserValue("token");
+  const force=!!opts.force;
+  const needsApp=force || !hubFieldHasUserValue("appId");
+  const needsToken=force || !hubFieldHasUserValue("token");
   if(!needsApp && !needsToken) return false;
+  if(!ipField.value.trim()) ipField.value=window.location.host||window.location.hostname||"";
   const url=new URL("/hub2/hubData", window.location.origin).toString();
   trace("GET hubData for Dashboard app settings",url);
   try{
     const res=await fetch(url,{credentials:"same-origin",cache:"no-store"});
     trace(`hubData → ${res.status}`,null,res.ok?"ok":"err");
-    if(!res.ok) return false;
+    if(!res.ok){
+      if(!opts.quiet) toast(`Auto discovery failed: the hub returned HTTP ${res.status}.`,"err");
+      return false;
+    }
     const data=await res.json();
     const found=findDashboardAppInHubData(data);
-    if(!found) { trace("hubData → Dashboard app details not found",null,"err"); return false; }
+    if(!found){
+      trace("hubData → Dashboard app details not found",null,"err");
+      if(!opts.quiet) toast("No Dashboard app number and access token were found on this hub.","err");
+      return false;
+    }
+    const nextApp=String(found.appId||"").trim();
+    const nextToken=String(found.token||"").trim();
+    const oldApp=String(appField.value||"").trim();
+    const oldToken=String(tokenField.value||"").trim();
     let changed=false;
-    if(needsApp && found.appId){ appField.value=String(found.appId).trim(); changed=true; }
-    if(needsToken && found.token){ tokenField.value=String(found.token).trim(); changed=true; }
+    if(needsApp && nextApp && oldApp!==nextApp){ appField.value=nextApp; changed=true; }
+    if(needsToken && nextToken && oldToken!==nextToken){ tokenField.value=nextToken; changed=true; }
     if(changed){
+      // Programmatic field updates do not emit input events. Apply the same
+      // disconnect/reset behavior as a manual connection-parameter change,
+      // then synchronize the newly discovered values into State.
+      hubParamsChanged();
       State.conn.ip=ipField.value.trim();
       State.conn.appId=appField.value.trim();
       State.conn.token=tokenField.value.trim();
       saveConn();
       resetConnectButton();
       trace(`hubData → Dashboard app ${State.conn.appId||"(unknown)"} details filled`,null,"ok");
-      if(!opts.quiet) toast("Dashboard app settings filled from hubData.","ok");
+    }else{
+      trace(`hubData → Dashboard app ${nextApp||"(unknown)"} already matches the fields`,null,"ok");
     }
-    return changed;
+    if(!opts.quiet){
+      toast(changed ? "Dashboard app number and access token discovered." : "Dashboard app number and access token already match the hub.","ok");
+    }
+    return true;
   }catch(e){
     trace(`hubData lookup failed: ${e.message}`,null,"err");
+    if(!opts.quiet) toast(`Auto discovery failed: ${e.message}`,"err");
     return false;
   }
 }
@@ -9912,12 +10070,18 @@ async function wire(){
     if(e.target.disabled) return;
     State.renderedViewPreference=!!e.target.checked;
     saveConn();
+    updateRenderedViewCompatibilityAvailability();
     if(!State.renderedViewPreference){
       setTileDisplayMode("simple",{redraw:true,warn:false});
     }else{
       if(renderedSnapshotAvailability().ok) setTileDisplayMode("snapshot",{redraw:true,warn:true,silent:false});
       else { State.tileViewMode="simple"; updateTileDisplayIndicator(); }
     }
+  });
+  document.getElementById("prefRenderedViewCompatibility")?.addEventListener("change",e=>{
+    State.renderedViewCompatibility=normalizeRenderedViewCompatibility(e.target.value);
+    e.target.value=State.renderedViewCompatibility;
+    saveConn();
   });
   document.getElementById("viewSimpleBtn")?.addEventListener("click",()=>{
     if(tileDisplayMode()!=="simple") setTileDisplayMode("simple",{redraw:true,warn:false});
@@ -9949,14 +10113,13 @@ async function wire(){
   // When served from the hub via File Manager (/local/ path), auto-fill the hub IP.
   (function detectHub(){
     const h=window.location.hostname;
-    const onLocalNetwork = h==="localhost"||h==="127.0.0.1"||/^192\.|^10\.|^172\.(1[6-9]|2\d|3[01])/.test(h);
-    // Live hub fetch/save/rendering must be disabled unless this tool is served
-    // by the hub File Manager from /local/. A private-network host by itself is
-    // not enough; file:// and desktop/local-server copies must stay offline.
-    const servedFromHub = onLocalNetwork && window.location.pathname.startsWith("/local/");
+    // File Manager's /local/ path is the stable hub-hosted signal. Hostnames,
+    // IPv6 addresses, reverse-proxy names, localhost, and IPv4 addresses are all
+    // accepted; file:// and ordinary web-server paths remain offline.
+    const servedFromHub=pageLooksHubHosted();
     if(servedFromHub){
       const ipField=document.getElementById("hubIp");
-      if(ipField && !ipField.value) ipField.value=h;
+      if(ipField && !ipField.value) ipField.value=window.location.host||h;
     }
     setHubAvailability(servedFromHub, h);
   })();
@@ -9968,6 +10131,27 @@ async function wire(){
       if(hubSettingsBtn.disabled) return;
       const panel=document.getElementById("hubSettingsPanel");
       setHubSettingsOpen(panel ? panel.classList.contains("collapsed") : false);
+    });
+  }
+  const autoDiscoverHubBtn=document.getElementById("btnAutoDiscoverHub");
+  if(autoDiscoverHubBtn){
+    autoDiscoverHubBtn.addEventListener("click",async()=>{
+      if(autoDiscoverHubBtn.disabled || !State.hubAvailable) return;
+      const normalLabel="Auto Discover App & Token";
+      autoDiscoverHubBtn.classList.add("busy");
+      autoDiscoverHubBtn.disabled=true;
+      autoDiscoverHubBtn.textContent="Discovering…";
+      status("Searching this hub for the Dashboard app number and access token…",true);
+      try{
+        const found=await maybeAutofillDashboardConnectionFromHubData({force:true,quiet:false});
+        status(found
+          ? "Dashboard app number and access token discovered. Review them, then connect to the hub."
+          : "Dashboard app auto discovery did not find usable connection settings.");
+      }finally{
+        autoDiscoverHubBtn.classList.remove("busy");
+        autoDiscoverHubBtn.textContent=normalLabel;
+        autoDiscoverHubBtn.disabled=!State.hubAvailable || document.getElementById("btnDiscover")?.classList.contains("busy");
+      }
     });
   }
   ["hubIp","appId","token"].forEach(id=>{
