@@ -600,6 +600,11 @@
   .css-consolidate-preview{display:block;margin-top:5px;color:var(--accent);}
   .css-cleanup-comment-wrap{display:flex;align-items:center;gap:6px;margin:auto 4px;color:var(--muted);font-size:.72rem;line-height:1.2;white-space:nowrap;}
   .css-cleanup-comment-wrap input{accent-color:var(--accent);width:13px;height:13px;flex:none;}
+  .css-cleanup-option-stack{display:flex;flex-direction:column;align-items:flex-start;gap:5px;margin:auto 4px;}
+  .css-cleanup-option-wrap{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.72rem;line-height:1.2;white-space:nowrap;}
+  .css-cleanup-option-wrap input{accent-color:var(--accent);width:13px;height:13px;flex:none;}
+  .css-cleanup-option-wrap.disabled{opacity:.45;cursor:not-allowed;}
+  .css-cleanup-option-wrap.disabled input{cursor:not-allowed;}
   .css-cleanup-help-btn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1px solid rgba(103,232,249,.42);background:rgba(103,232,249,.08);color:var(--accent);font-size:.7rem;font-weight:800;line-height:1;cursor:pointer;padding:0;margin-left:4px;vertical-align:middle;}
   .css-cleanup-help-btn:hover{border-color:var(--accent);background:rgba(103,232,249,.16);color:#fff;}
   .css-cleanup-scroll{max-height:48vh;overflow:auto;padding-right:4px;}
@@ -663,7 +668,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.273">0.9.273</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.280">0.9.280</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1050,7 +1055,7 @@
           <div class="help-grid">
             <div class="k">JSON editor</div><div class="v">Allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
             <div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
-            <div class="k">Validate / Format</div><div class="v">Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customCSS, customHTML, and customJS use very basic formatting and limited sanity checks. In customCSS view, the format step opens a review dialog when it finds duplicate selector/property declarations, conflicting declarations for the same selector/property, orphan tile rules, or selector rules that can be consolidated. Conflicts are grouped with value bubbles and the current cascade winner selected automatically. Each issue row has a consistent skip checkbox, and the Preserve removed CSS footer option can keep removed duplicates, conflicts, and orphans inactive instead of deleting them. Duplicate declarations are removed before selector consolidation. Consolidation rewrites repeated selector rules into one rule and does not preserve the original repeated rules. Consolidation rows tied to skipped conflicts are disabled; rows tied to selected conflicts stay enabled because conflict cleanup runs first. Duplicates and consolidation choices are listed with preselected checkboxes so you can accept or skip each cleanup. Applying selected cleanup to the current working layout creates a normal Undo checkpoint. Compact CSS still controls the final compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting, while preserving standalone and rule-body comments without letting preserved cleanup comments split compact rules across multiple lines.</div>
+            <div class="k">Validate / Format</div><div class="v">Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customCSS, customHTML, and customJS use very basic formatting and limited sanity checks. In customCSS view, the format step opens a review dialog when it finds duplicate selector/property declarations, conflicting declarations for the same selector/property, orphan tile rules, or selector rules that can be consolidated. Conflicts are grouped with value bubbles and the current cascade winner selected automatically. Each issue row has a consistent skip checkbox, and the Preserve removed CSS footer option can keep removed duplicates, conflicts, and orphans inactive instead of deleting them. Duplicate declarations are removed before selector consolidation. Consolidation rewrites repeated selector rules into one rule and does not preserve the original repeated rules. Consolidation rows tied to skipped conflicts are disabled; rows tied to selected conflicts stay enabled because conflict cleanup runs first. Duplicates and consolidation choices are listed with preselected checkboxes so you can accept or skip each cleanup. Applying selected cleanup to the current working layout creates a normal Undo checkpoint. The cleanup dialog applies only the selected fixes unless Reformat after applying fixes is checked. Use compact CSS format first runs the regular CSS formatter and then applies the same compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting as the JSON editor Compact CSS option. When any selector consolidation is applied, all preserved duplicate comments are removed because every duplicate is already represented by a surviving active declaration. This includes comments inside selectors that were already in a single rule and comments preserved by an earlier cleanup run.</div>
             <div class="k">Apply changes</div><div class="v">Validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced. If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed. Full JSON edits still invalidate Rendered View captures. If the layout was loaded from the hub, the hub save target is preserved.</div>
             <div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block. Consolidated selector originals are not preserved. Consolidation is blocked only when related conflicts are skipped.</div>
             <div class="k">Tile-scoped CSS</div><div class="v">Rules such as <code>#tile-40</code>, <code>#tile_40</code>, or <code>.tile-40</code> are treated as tile-scoped CSS for copy/cleanup operations.</div>
@@ -1167,10 +1172,13 @@
     </div>
     <div class="modal-foot" style="justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
       <button class="btn ghost" id="cssCleanupCancel" type="button">Cancel</button>
-      <label class="css-cleanup-comment-wrap" title="Keep cleaned CSS inactive instead of deleting it"><input type="checkbox" id="cssCleanupCommentRemoved"> Preserve removed CSS <button type="button" class="css-cleanup-help-btn" id="cssCleanupPreserveHelp" title="Explain Preserve removed CSS" aria-label="Explain Preserve removed CSS">?</button></label>
+      <div class="css-cleanup-option-stack">
+        <label class="css-cleanup-option-wrap" title="Keep cleaned CSS inactive instead of deleting it"><input type="checkbox" id="cssCleanupCommentRemoved"> Preserve removed CSS <button type="button" class="css-cleanup-help-btn" id="cssCleanupPreserveHelp" title="Explain Preserve removed CSS" aria-label="Explain Preserve removed CSS">?</button></label>
+        <label class="css-cleanup-option-wrap" title="Reformat customCSS after applying the selected fixes"><input type="checkbox" id="cssCleanupReformatAfter"> Reformat after applying fixes</label>
+        <label class="css-cleanup-option-wrap disabled" id="cssCleanupCompactWrap" title="Use the same compact CSS format as the JSON editor Compact CSS option"><input type="checkbox" id="cssCleanupCompactFormat" disabled> Use compact CSS format</label>
+      </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn ghost" id="cssCleanupFormatOnly" type="button">Format only</button>
-        <button class="btn primary" id="cssCleanupApply" type="button">Apply selected cleanup &amp; format</button>
+        <button class="btn primary" id="cssCleanupApply" type="button">Apply Fixes</button>
       </div>
     </div>
   </div>
@@ -1180,7 +1188,7 @@
   <div class="modal" style="width:520px">
     <div class="modal-head"><h3>Preserve removed CSS</h3></div>
     <div class="modal-body">
-      <p style="margin:0;line-height:1.6">When checked, duplicate and conflicting declarations are placed in CSS comment blocks instead of being deleted. Orphaned tile rules and related orphan comments are moved into one <b>Removed Orphaned Rules and comments.</b> comment block, with active tile selectors such as <code>#tile-5</code> or <code>.tile-5</code> changed to inactive selectors such as <code>#tile_5</code> or <code>.tile_5</code>. Consolidated selector rules are not preserved; consolidation always replaces repeated selector rules with one combined rule after conflicts and duplicates have been processed.</p>
+      <p style="margin:0;line-height:1.6">When checked, duplicate and conflicting declarations are placed in CSS comment blocks instead of being deleted. Duplicate comments are retained only when no selector consolidation is applied. When consolidation runs, all preserved duplicate comments are removed because each duplicate is already represented by a surviving active declaration, including comments inside selectors that were already in one rule and comments preserved by an earlier cleanup run. Orphaned tile rules and related orphan comments are moved into one <b>Removed Orphaned Rules and comments.</b> comment block, with active tile selectors such as <code>#tile-5</code> or <code>.tile-5</code> changed to inactive selectors such as <code>#tile_5</code> or <code>.tile_5</code>. Consolidated selector rules are not preserved; consolidation always replaces repeated selector rules with one combined rule after conflicts and duplicates have been processed.</p>
     </div>
     <div class="modal-foot"><button class="btn primary" id="preserveCssHelpOk" type="button">OK</button></div>
   </div>
@@ -1424,8 +1432,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v273";
-const APP_VERSION = "0.9.273";
+const BUILD = "v280";
+const APP_VERSION = "0.9.280";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -4951,7 +4959,7 @@ function hideCtxMenu(){ document.getElementById("ctxMenu").classList.add("hidden
 function hasTileSel(){ return (State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.length>0; }
 
 function buildCtxItems(ctx){
-  // ctx: {kind:'tile'|'cell'|'colHeader'|'rowHeader', cell:{row,col}, line, tileId}
+  // ctx: {kind:'tile'|'selectionTile'|'cell'|'colHeader'|'rowHeader', cell:{row,col}, line, tileId, selectionIds}
   const items=[];
   const sel=hasTileSel();
   const buf=!!State.buffer;
@@ -4965,7 +4973,12 @@ function buildCtxItems(ctx){
   const clr=icon('<rect x="4" y="4" width="16" height="16" rx="2" stroke-dasharray="3 2"/>');
   const info=icon('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>');
 
-  if(ctx.kind==="tile"){
+  if(ctx.kind==="selectionTile"){
+    const tile=State.tiles.find(t=>Number(t.id)===Number(ctx.tileId));
+    items.push({hd:tile?`Tile #${tile.id} · ${tileDisplayLabel(tile)}`:`Tile #${ctx.tileId}`});
+    items.push({label:"Tile Info", html:info, act:()=>showTileInfo(ctx.tileId)});
+    items.push({label:"Deselect", html:del, act:()=>deselectSelectionTile(ctx.tileId,ctx.selectionIds)});
+  } else if(ctx.kind==="tile"){
     items.push({label:"Info / rules", html:info, act:()=>showTileInfo(ctx.tileId)});
     items.push({sep:true});
     items.push({label:"Cut", html:cut, key:"⌘X", act:()=>{ ensureTileSelected(ctx.tileId); cutToBuffer(); }});
@@ -5018,6 +5031,15 @@ function showContextMenu(e, ctx){
 }
 function ensureTileSelected(tileId){
   if(!(hasTileSel()&&State.sel.ids.includes(tileId))) selectTile(tileId);
+}
+function deselectSelectionTile(tileId,selectionIds){
+  const source=Array.isArray(selectionIds)&&selectionIds.length
+    ? selectionIds
+    : ((State.sel.type==="tile"||State.sel.type==="rect") ? State.sel.ids : []);
+  const ids=source.filter(id=>Number(id)!==Number(tileId));
+  if(Number(State.focusTileId)===Number(tileId)) State.focusTileId=null;
+  if(ids.length) selectTileIds(ids); else clearTileSel();
+  render();
 }
 // destination-from-right-click actions (no second click)
 function pasteAt(cell){ if(!State.buffer) return; State.pending={action:"pasteBuf",anchorRow:Math.min(...State.buffer.tiles.map(t=>t.row)),anchorCol:Math.min(...State.buffer.tiles.map(t=>t.col))}; completePasteBuf(cell); }
@@ -5369,20 +5391,44 @@ function renderSelCard(){
   card.innerHTML=html;
   // interactions
   card.querySelectorAll(".sg-head[data-cluster]").forEach(h=>h.addEventListener("click",()=>h.parentElement.classList.toggle("collapsed")));
-  card.querySelectorAll("[data-tile]").forEach(b=>b.addEventListener("click",e=>{
-    const tid=+b.dataset.tile;
-    // In the selection pane, clicking a tile row focuses it (scrolls the map to it)
-    // but does NOT drop the multi-selection. Use ctrl-click to remove it.
-    if(e.ctrlKey||e.metaKey){
-      const ids=State.sel.ids.filter(x=>x!==tid);
-      if(ids.length) selectTileIds(ids); else clearTileSel();
-      render();
-    } else {
-      // Single click: keep the multi-selection, but focus/highlight this tile on the map and side panes.
-      if(isInfoModalOpen()) showTileInfo(tid);
-      else setFocusedTile(tid,{render:true,scroll:true,updateStack:true});
-    }
-  }));
+  card.querySelectorAll("[data-tile]").forEach(b=>{
+    b.addEventListener("click",e=>{
+      const tid=+b.dataset.tile;
+      // In the selection pane, clicking a tile row focuses it (scrolls the map to it)
+      // but does NOT drop the multi-selection. Use ctrl-click to remove it.
+      if(e.ctrlKey||e.metaKey){
+        if(b._selectionClickTimer) clearTimeout(b._selectionClickTimer);
+        const ids=displayIds.filter(x=>Number(x)!==Number(tid));
+        if(ids.length) selectTileIds(ids); else clearTileSel();
+        render();
+        return;
+      }
+      // Delay the single-click action very briefly so the first click does not
+      // re-render and replace the row before a double-click can be recognized.
+      if(e.detail>1){
+        if(b._selectionClickTimer) clearTimeout(b._selectionClickTimer);
+        return;
+      }
+      b._selectionClickTimer=setTimeout(()=>{
+        b._selectionClickTimer=null;
+        // Single click: keep the multi-selection, but focus/highlight this tile on the map and side panes.
+        if(isInfoModalOpen()) showTileInfo(tid);
+        else setFocusedTile(tid,{render:true,scroll:true,updateStack:true});
+      },220);
+    });
+    b.addEventListener("dblclick",e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      if(b._selectionClickTimer) clearTimeout(b._selectionClickTimer);
+      b._selectionClickTimer=null;
+      showTileInfo(+b.dataset.tile);
+    });
+    b.addEventListener("contextmenu",e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      showContextMenu(e,{kind:"selectionTile",tileId:+b.dataset.tile,selectionIds:[...displayIds]});
+    });
+  });
   card.querySelectorAll("[data-cluster-sel]").forEach(b=>b.addEventListener("click",()=>{
     const comp=clusters[+b.dataset.clusterSel];
     const clusterIds=comp.map(i=>State.tiles[i].id);
@@ -8718,6 +8764,9 @@ function compactCssCliLike(css){
   });
   return entries.map(e=>e.text.trim()).filter(Boolean).join("\n")+(entries.length?"\n":"");
 }
+function formatCssCompact(css){
+  return compactCssCliLike(formatCssBasic(css));
+}
 
 function normalizeCssSelectorForProblems(selector){
   return String(selector||"")
@@ -8776,6 +8825,25 @@ function splitCssDeclarationsForProblems(body){
 }
 function cssPartIsCommentOnly(part){
   return /^\s*\/\*[\s\S]*?\*\/\s*$/.test(String(part||""));
+}
+function cssPartIsRemovedDuplicateComment(part){
+  return /^\s*\/\*\s*removed\s+duplicate(?:\s*:|\s*\*\/)/i.test(String(part||""));
+}
+function cssStripRemovedDuplicateCommentsFromBody(body){
+  return splitCssDeclarationsForProblems(body||"")
+    .map(part=>String(part||"").replace(/;+$/g,"").trim())
+    .filter(part=>part&&!cssPartIsRemovedDuplicateComment(part))
+    .map(cssBodyPartOutputText)
+    .filter(Boolean)
+    .join("\n");
+}
+function cssStripAllRemovedDuplicateComments(css){
+  // When any selector consolidation is actually applied, preserved duplicate
+  // comments are no longer useful anywhere in the stylesheet: each removed
+  // declaration is already represented by its surviving active declaration.
+  // Remove comments created by this tool even from selectors that were already
+  // in a single rule and therefore had no individual consolidation row.
+  return String(css||"").replace(/\/\*\s*removed\s+duplicate\s*:[\s\S]*?\*\//gi,"");
 }
 function cssBodyPartOutputText(part){
   const normalized=String(part||"").replace(/;+$/g,"").trim();
@@ -8939,7 +9007,9 @@ function collectCssConsolidationGroups(css){
 function consolidateCssSelectorRules(css, selectedKeys, opts={}){
   selectedKeys=selectedKeys||new Set();
   if(!selectedKeys.size) return css||"";
-  function consolidateParts(parts){ return cssDeclarationDisplayBody(parts); }
+  function consolidateParts(parts){
+    return cssDeclarationDisplayBody((parts||[]).filter(part=>!cssPartIsRemovedDuplicateComment(part)));
+  }
   function clean(cssText, atPath=[]){
     const nodes=parseCssNodes(cssText||"");
     const groups=new Map();
@@ -8971,7 +9041,14 @@ function consolidateCssSelectorRules(css, selectedKeys, opts={}){
       const selectors=splitSelectorList(pre).map(s=>s.trim()).filter(Boolean);
       const selectedSelectors=selectors.filter(sel=>selectedKeys.has(cssSelectorContextKey(atPath, sel)));
       const keepSelectors=selectors.filter(sel=>!selectedKeys.has(cssSelectorContextKey(atPath, sel)));
-      if(keepSelectors.length) out.push(new CssBlock(keepSelectors.join(", "), node.body));
+      // A duplicate may have been preserved as a comment during an earlier
+      // cleanup pass that did not consolidate selectors. Once any selector
+      // from this rule is consolidated, that preserved duplicate is redundant
+      // and must be removed from every remainder of the original rule too.
+      if(keepSelectors.length){
+        const keepBody=selectedSelectors.length ? cssStripRemovedDuplicateCommentsFromBody(node.body) : node.body;
+        if(String(keepBody||"").trim()) out.push(new CssBlock(keepSelectors.join(", "), keepBody));
+      }
       for(const sel of selectedSelectors){
         const key=cssSelectorContextKey(atPath, sel);
         const g=groups.get(key);
@@ -9385,7 +9462,8 @@ function cleanCustomCssProblemsWithChoices(css, analysis, choices){
   // have no unresolved conflicts after the selected conflict/duplicate passes.
   current=analyzeCustomCssCleanup(out, existingIds, {includeConsolidation:true});
   const eligibleConsolidations=cssEligibleConsolidationKeysForCurrentAnalysis(current, choices);
-  if(eligibleConsolidations.size) out=consolidateCssSelectorRules(out, eligibleConsolidations);
+  const appliedConsolidation=eligibleConsolidations.size>0;
+  if(appliedConsolidation) out=consolidateCssSelectorRules(out, eligibleConsolidations);
 
   // 5. Final duplicate pass remains strict: only originally checked duplicate
   // groups can be touched. There is intentionally no final conflict auto-pass.
@@ -9394,6 +9472,11 @@ function cleanCustomCssProblemsWithChoices(css, analysis, choices){
     const duplicateKeys=cssSelectedDuplicateKeysForCurrentAnalysis(current, choices);
     if(duplicateKeys.size) out=cssApplyDeclarationCleanup(out, current.declData||{}, new Map(), duplicateKeys, commentCleaned);
   }
+
+  // Consolidation makes every preserved duplicate comment redundant, including
+  // comments inside selectors that were already represented by a single rule.
+  // Run this after the final duplicate pass so that pass cannot add them back.
+  if(appliedConsolidation) out=cssStripAllRemovedDuplicateComments(out);
 
   return out;
 }
@@ -9410,17 +9493,29 @@ function showCustomCssCleanupDialog(text, analysis, done){
   const body=document.getElementById("cssCleanupBody");
   const intro=document.getElementById("cssCleanupIntro");
   const cancel=document.getElementById("cssCleanupCancel");
-  const formatOnly=document.getElementById("cssCleanupFormatOnly");
   const apply=document.getElementById("cssCleanupApply");
   const preserveHelp=document.getElementById("cssCleanupPreserveHelp");
-  if(!modal||!body||!intro||!cancel||!formatOnly||!apply){ done(text||"", false, customCssCleanupMessage(analysis)); return; }
-  intro.textContent="Review the detected customCSS items before formatting. Use row checkboxes to skip items, category checkboxes to skip entire types, and Preserve removed CSS to keep removed duplicates, conflicts, and orphans inactive instead of deleting them. Cleanup runs in order: conflicts first, selected duplicates second, selector consolidation third, and a final selected-duplicate pass after consolidation. Unchecked rows and unchecked categories are never fixed indirectly by later cleanup stages.";
+  const reformatAfter=document.getElementById("cssCleanupReformatAfter");
+  const compactFormat=document.getElementById("cssCleanupCompactFormat");
+  const compactWrap=document.getElementById("cssCleanupCompactWrap");
+  if(!modal||!body||!intro||!cancel||!apply||!reformatAfter||!compactFormat||!compactWrap){ done(text||"", false, customCssCleanupMessage(analysis)); return; }
+  intro.textContent="Review the detected customCSS items before applying fixes. Use row checkboxes to skip items, category checkboxes to skip entire types, and Preserve removed CSS to keep removed duplicates, conflicts, and orphans inactive instead of deleting them. Reformatting is optional and uses the same normal or compact CSS formatter as the JSON editor. Cleanup runs in order: conflicts first, selected duplicates second, selector consolidation third, and a final selected-duplicate pass after consolidation. Unchecked rows and unchecked categories are never fixed indirectly by later cleanup stages.";
   body.innerHTML=buildCustomCssCleanupDialogHtml(analysis);
   wireCssCleanupDialogControls(body);
   body.scrollTop=0;
   const modalBody=body.closest(".modal-body");
   if(modalBody) modalBody.scrollTop=0;
   resetModalPosition("cssCleanupModal");
+  reformatAfter.checked=false;
+  compactFormat.checked=false;
+  compactFormat.disabled=true;
+  compactWrap.classList.add("disabled");
+  reformatAfter.onchange=()=>{
+    const enabled=!!reformatAfter.checked;
+    compactFormat.disabled=!enabled;
+    compactWrap.classList.toggle("disabled",!enabled);
+    if(!enabled) compactFormat.checked=false;
+  };
   modal.classList.remove("hidden");
   requestAnimationFrame(()=>{ body.scrollTop=0; if(modalBody) modalBody.scrollTop=0; });
   let cleaned=false;
@@ -9431,9 +9526,8 @@ function showCustomCssCleanupDialog(text, analysis, done){
       if(helpModal){ resetModalPosition("preserveCssHelpModal"); helpModal.classList.remove("hidden"); document.getElementById("preserveCssHelpOk")?.focus({preventScroll:true}); }
     };
   }
-  const cleanup=()=>{ if(cleaned) return false; cleaned=true; modal.classList.add("hidden"); cancel.onclick=null; formatOnly.onclick=null; apply.onclick=null; if(preserveHelp) preserveHelp.onclick=null; return true; };
-  cancel.onclick=()=>{ cleanup(); status("customCSS format cancelled."); };
-  formatOnly.onclick=()=>{ if(!cleanup()) return; done(text||"", false, null); };
+  const cleanup=()=>{ if(cleaned) return false; cleaned=true; modal.classList.add("hidden"); cancel.onclick=null; apply.onclick=null; reformatAfter.onchange=null; if(preserveHelp) preserveHelp.onclick=null; return true; };
+  cancel.onclick=()=>{ cleanup(); status("customCSS cleanup cancelled."); };
   apply.onclick=()=>{
     if(!cleanup()) return;
     const conflicts=new Map();
@@ -9455,7 +9549,10 @@ function showCustomCssCleanupDialog(text, analysis, done){
     body.querySelectorAll('.css-consolidate-choice:checked').forEach(el=>consolidations.add(el.getAttribute("data-consolidate-key")));
     const removeOrphans=!!(body.querySelector("#cssCleanupRemoveOrphans")&&body.querySelector("#cssCleanupRemoveOrphans").checked);
     const cleanedText=cleanCustomCssProblemsWithChoices(text||"", analysis, {conflicts, duplicates, skippedDuplicates, consolidations, removeOrphans, commentCleaned, conflictCleanupEnabled, duplicateCleanupEnabled, existingIds:customCssExistingTileIds()});
-    done(cleanedText, cleanedText!==(text||""), null);
+    const shouldReformat=!!reformatAfter.checked;
+    const useCompact=shouldReformat&&!!compactFormat.checked;
+    const resultText=shouldReformat ? (useCompact?formatCssCompact(cleanedText):formatCssBasic(cleanedText)) : cleanedText;
+    done(resultText, resultText!==(text||""), null, {formatHandled:true,reformatted:shouldReformat,compact:useCompact,fixesChanged:cleanedText!==(text||"")});
   };
   setTimeout(()=>apply.focus({preventScroll:true}),0);
 }
@@ -9497,7 +9594,7 @@ function formatHtmlBasic(html){
   return out.join("\n").replace(/\n{3,}/g,"\n\n")+"\n";
 }
 function formatCustomField(mode, text){
-  if(mode==="customCSS") return isCompactCssEnabled()?compactCssCliLike(text):formatCssBasic(text);
+  if(mode==="customCSS") return isCompactCssEnabled()?formatCssCompact(text):formatCssBasic(text);
   if(mode==="customHTML") return formatHtmlBasic(text);
   if(mode==="customJS") return formatJsBasic(text);
   return text;
@@ -9511,8 +9608,8 @@ function formatJsonEditor(){
       promptJsonEditorFixOrDiscard(fieldValidationMessage(JsonEditorState.mode,issues));
       return;
     }
-    const finishFormat=(sourceText, cleaned=false, warning=null)=>{
-      const formatted=formatCustomField(JsonEditorState.mode,sourceText);
+    const finishFormat=(sourceText, cleaned=false, warning=null, reviewOptions=null)=>{
+      const formatted=reviewOptions&&reviewOptions.formatHandled ? sourceText : formatCustomField(JsonEditorState.mode,sourceText);
       setJsonEditorText(formatted,"start");
       syncJsonEditorView({promptDiscard:true});
       let liveUndo=false;
@@ -9520,7 +9617,10 @@ function formatJsonEditor(){
         liveUndo=liveApplyCustomCssFromEditor(formatted, cleaned ? "customCSS cleanup" : "customCSS format");
       }
       if(warning) setJsonEditorError(warning);
-      toast(`${JsonEditorState.mode} validated and formatted${JsonEditorState.mode==="customCSS"&&isCompactCssEnabled()?" compactly":""}${cleaned?"; CSS cleanup applied":""}${liveUndo?"; Undo available":""}.`,"ok");
+      const reformatted=reviewOptions&&reviewOptions.formatHandled ? !!reviewOptions.reformatted : true;
+      const compacted=reviewOptions&&reviewOptions.formatHandled ? !!reviewOptions.compact : (JsonEditorState.mode==="customCSS"&&isCompactCssEnabled());
+      const actionText=reformatted ? `validated and formatted${compacted?" compactly":""}` : "validated; CSS fixes applied without reformatting";
+      toast(`${JsonEditorState.mode} ${actionText}${cleaned?"; CSS cleanup applied":""}${liveUndo?"; Undo available":""}.`,"ok");
     };
     if(JsonEditorState.mode==="customCSS"){
       formatCustomCssAfterReview(text, finishFormat);
