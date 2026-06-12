@@ -671,7 +671,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.284">0.9.284</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.287">0.9.287</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1444,8 +1444,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v284";
-const APP_VERSION = "0.9.284";
+const BUILD = "v287";
+const APP_VERSION = "0.9.287";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -1940,28 +1940,72 @@ function commitTileDeviceIdChange(tileId, newId){
   const t=State.tiles.find(x=>Number(x.id)===Number(tileId));
   if(!t) return false;
   const oldId=tileDeviceIdRawValue(t);
-  const next=canonicalDeviceId(newId);
-  if(!next){ toast("Device id must be numeric.","err"); return false; }
-  if(infoDeviceEditorIsOnline() && !isDeviceSelectedForActiveDashboard(next)){
-    toast("That device is not selected for this dashboard.","err");
-    return false;
+  const online=infoDeviceEditorIsOnline();
+  const entered=newId==null ? "" : String(newId).trim();
+  let next="";
+  if(online){
+    next=canonicalDeviceId(entered);
+    if(!next){ toast("Device id must be numeric.","err"); return false; }
+    if(!isDeviceSelectedForActiveDashboard(next)){
+      toast("That device is not selected for this dashboard.","err");
+      return false;
+    }
+  }else{
+    if(entered && !/^\d+$/.test(entered)){
+      toast("Device id must contain digits only, or be left blank.","err");
+      return false;
+    }
+    next=entered ? canonicalDeviceId(entered) : "";
   }
   if(oldId===next){ State.infoDeviceEdit=null; showTileInfo(tileId); return true; }
-  pushHistory();
-  if(!t._raw) t._raw={id:t.id,template:t.template};
-  t._raw.device=next;
-  State.tileSnapshotBlockedUntilReload=true;
-  if(tileDisplayMode()==="snapshot"){
-    forceSimpleTileDisplay("Tile device id changed; save to the hub and reload the dashboard before using Rendered View",{warn:true,redraw:false});
-  }else{
-    resetTileSnapshots(false);
+  const applyChange=()=>{
+    pushHistory();
+    if(!t._raw) t._raw={id:t.id,template:t.template};
+    t._raw.device=next;
+    State.tileSnapshotBlockedUntilReload=true;
+    if(tileDisplayMode()==="snapshot"){
+      forceSimpleTileDisplay("Tile device id changed; save to the hub and reload the dashboard before using Rendered View",{warn:true,redraw:false});
+    }else{
+      resetTileSnapshots(false);
+    }
+    State.infoDeviceEdit=null;
+    updateActionButtons();
+    render();
+    showTileInfo(tileId);
+    status(`Changed Tile #${tileId} device id from ${oldId||"N/A"} to ${next||"N/A"}.`);
+    return true;
+  };
+  if(!online && !next && oldId){
+    showConfirm(
+      "Save blank device id?",
+      `Tile #${tileId} currently has device id #${oldId}. Save a blank device id?`,
+      applyChange,
+      null,
+      {okText:"Save blank", cancelText:"Cancel", defaultButton:"cancel"}
+    );
+    return false;
   }
-  State.infoDeviceEdit=null;
-  updateActionButtons();
-  render();
-  showTileInfo(tileId);
-  status(`Changed Tile #${tileId} device id from ${oldId||"N/A"} to ${next}.`);
-  return true;
+  return applyChange();
+}
+function guardInfoDeviceEditDiscard(actionLabel, onDiscard){
+  if(!State.infoDeviceEdit){
+    State.infoDeviceEdit=null;
+    if(onDiscard) onDiscard();
+    return true;
+  }
+  const editTileId=Number(State.infoDeviceEdit.tileId);
+  const tileLabel=Number.isFinite(editTileId) ? `Tile #${editTileId}` : "This tile";
+  showConfirm(
+    "Discard device id changes?",
+    `${tileLabel}'s device id is currently being edited. Discard the unsaved changes and ${actionLabel}?`,
+    ()=>{
+      State.infoDeviceEdit=null;
+      if(onDiscard) onDiscard();
+    },
+    null,
+    {okText:"Discard changes", cancelText:"Keep editing", defaultButton:"cancel", dangerOk:true}
+  );
+  return false;
 }
 function wireInfoDeviceEditor(tileId){
   const edit=document.getElementById("infoDeviceEditBtn");
@@ -8843,16 +8887,27 @@ function extractCssStatements(css){
   return out;
 }
 function cssTileIdFromText(text){
-  const m=String(text||"").match(/(?:#|\.)tile[-_]?(\d+)\b/i);
-  return m?parseInt(m[1],10):null;
+  const value=String(text||"");
+  const selectorRef=value.match(/(?:#|\.)tile[-_]?(\d+)\b/i);
+  if(selectorRef) return parseInt(selectorRef[1],10);
+  const plainRef=value.match(/\btile[-_]?(\d+)\b/i);
+  return plainRef?parseInt(plainRef[1],10):null;
 }
 function cssCompactSortKey(item){
   const text=item.selector||item.text||"";
   const tile=cssTileIdFromText(text);
-  if(tile!=null) return [3,tile,text.toLowerCase()];
+  if(tile!=null){
+    const trimmed=text.trim();
+    const isComment=/^\/\*/.test(trimmed);
+    // A standalone tile section comment belongs immediately before that tile's
+    // active rules. A comment containing CSS rule braces is a commented-out
+    // rule block and belongs after the active rules for the same tile.
+    const tilePart=isComment ? (/[{}]/.test(trimmed)?2:0) : 1;
+    return [3,tile,tilePart,text.toLowerCase()];
+  }
   const stripped=text.replace(/^\/\*[\s\S]*?\*\//g,"").trim();
-  if(/^\.[A-Za-z0-9_-]/.test(stripped) && !/^\.tile[-_]?\d+\b/i.test(stripped)) return [2,0,stripped.toLowerCase()];
-  return [1,0,stripped.toLowerCase()];
+  if(/^\.[A-Za-z0-9_-]/.test(stripped) && !/^\.tile[-_]?\d+\b/i.test(stripped)) return [2,0,0,stripped.toLowerCase()];
+  return [1,0,0,stripped.toLowerCase()];
 }
 function compactCssRuleBodyPreserveComments(body){
   const parts=splitCssDeclarationsForProblems(body||"")
@@ -10408,7 +10463,12 @@ async function wire(){
   });
   document.addEventListener("click",()=>hideCtxMenu());
   document.addEventListener("scroll",()=>hideCtxMenu(),true);
-  document.getElementById("infoClose").addEventListener("click",()=>document.getElementById("infoModal").classList.add("hidden"));
+  document.getElementById("infoClose").addEventListener("click",()=>{
+    guardInfoDeviceEditDiscard("close Tile Information",()=>{
+      State.infoDeviceEdit=null;
+      document.getElementById("infoModal").classList.add("hidden");
+    });
+  });
   document.getElementById("devicePickedClose")?.addEventListener("click",()=>document.getElementById("devicePickedModal")?.classList.add("hidden"));
   // confirmModal: buttons are wired dynamically by showConfirm()
   document.getElementById("pinSubmit").addEventListener("click",submitPin);
@@ -10428,11 +10488,13 @@ async function wire(){
   document.getElementById("orphanCopy").addEventListener("click",()=>{ copyText(document.getElementById("orphanOut").textContent, "Orphan CSS copied."); });
   document.getElementById("infoPrev").addEventListener("click",()=>{
     const n=State.infoNav; if(!n||n.ids.length<2) return;
-    n.pos=(n.pos-1+n.ids.length)%n.ids.length; showTileInfo(n.ids[n.pos]);
+    const targetId=n.ids[(n.pos-1+n.ids.length)%n.ids.length];
+    guardInfoDeviceEditDiscard("go to another tile",()=>showTileInfo(targetId));
   });
   document.getElementById("infoNext").addEventListener("click",()=>{
     const n=State.infoNav; if(!n||n.ids.length<2) return;
-    n.pos=(n.pos+1)%n.ids.length; showTileInfo(n.ids[n.pos]);
+    const targetId=n.ids[(n.pos+1)%n.ids.length];
+    guardInfoDeviceEditDiscard("go to another tile",()=>showTileInfo(targetId));
   });
   initModalDragging();
   document.getElementById("gridmap").addEventListener("dblclick",e=>{ const c=cellFromEvent(e); selectGroupAt(c.row,c.col); });
