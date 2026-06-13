@@ -486,6 +486,29 @@
   .info-icon-btn:hover{background:rgba(255,255,255,.1);}
   .info-icon-btn.ok{color:#86efac;border-color:rgba(134,239,172,.35);}
   .info-icon-btn.cancel{color:#fca5a5;border-color:rgba(252,165,165,.35);}
+  .info-css-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 6px;}
+  .info-css-label{font-family:var(--mono);font-size:.72rem;color:var(--muted);}
+  .info-css-edit-btn{display:inline-flex;align-items:center;gap:5px;width:auto;padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);font-size:.72rem;cursor:pointer;}
+  .info-css-edit-btn:hover{border-color:var(--accent);background:rgba(103,232,249,.10);}
+  .info-css-edit-shell{display:flex;flex-direction:column;flex:1;min-height:0;}
+  .info-css-instructions{flex:none;margin:0 0 10px;padding:12px 14px;border:1px solid rgba(103,232,249,.28);border-radius:9px;background:rgba(103,232,249,.07);color:var(--muted);font-size:.76rem;line-height:1.5;max-height:none;overflow:visible;}
+  .info-css-instructions b{color:var(--text);}
+  .info-css-instructions code{font-family:var(--mono);color:var(--text);}
+  .info-css-instructions ul{margin:5px 0 0 18px;padding:0;}
+  .info-css-instructions li{margin:2px 0;}
+  .info-css-editor{width:100%;min-height:220px;max-height:42vh;resize:vertical;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:.7rem;line-height:1.45;white-space:pre;overflow:auto;}
+  .info-css-editor:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(103,232,249,.10);}
+  .info-css-error{display:none;flex:none;margin:8px 0 0;padding:8px 10px;border:1px solid rgba(239,68,68,.42);border-radius:8px;background:rgba(239,68,68,.09);color:#fecaca;font-size:.72rem;line-height:1.45;white-space:pre-wrap;}
+  .info-css-actions{display:flex;flex:none;justify-content:flex-end;gap:8px;margin-top:9px;}
+  .info-css-actions .btn{width:auto;padding:6px 12px;}
+  #infoModal.css-editing .modal{height:min(820px,calc(100vh - 66px));max-height:calc(100vh - 66px);}
+  #infoModal.css-editing .modal-body{display:flex;flex:1;min-height:0;overflow:hidden;padding:12px 18px 0;}
+  #infoModal.css-editing #infoBody{display:flex;flex:1;flex-direction:column;min-height:0;width:100%;}
+  #infoModal.css-editing .info-css-instructions{flex:0 0 auto;max-height:none!important;overflow:visible!important;}
+  #infoModal.css-editing .info-css-head{flex:none;margin:0 0 7px;}
+  #infoModal.css-editing .info-css-editor{flex:1;min-height:150px;max-height:none;resize:none;}
+  #infoModal.css-editing .info-css-actions{margin:9px 0 12px;}
+
 
   /* empty state */
   .empty-stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -671,7 +694,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.287">0.9.287</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.291">0.9.291</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1023,7 +1046,7 @@
           <p>The first toolbar group in the top row contains actions that operate on the current selection: tiles, rows, columns, or selected areas. The next top-row group contains whole-layout actions such as Trim and Spacing.</p>
           <div class="help-grid">
             <div class="k">Select</div><div class="v">Selects all tiles in the layout. This is the toolbar equivalent of Ctrl/Cmd+A.</div>
-            <div class="k">Info</div><div class="v">Shows tile id, position, size, device id from the layout JSON, hub device name when available, template details, and tile-scoped custom CSS for the selected tile.</div>
+            <div class="k">Info</div><div class="v">Shows tile id, position, size, device id from the layout JSON, hub device name when available, template details, and tile-scoped custom CSS for the selected tile. The scoped CSS section can be edited directly; every saved selector must remain scoped to the current tile.</div>
             <div class="k">Insert</div><div class="v">For row/column selections, inserts rows or columns before the selected line range and shifts affected tiles.</div>
             <div class="k">Delete</div><div class="v">Deletes selected rows/columns and shifts later tiles to close the gap. For tile selections, use Clear to remove without shifting.</div>
             <div class="k">Clear</div><div class="v">Removes selected tiles or tiles in the selected area without shifting other tiles.</div>
@@ -1444,8 +1467,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v287";
-const APP_VERSION = "0.9.287";
+const BUILD = "v291";
+const APP_VERSION = "0.9.291";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -1496,6 +1519,7 @@ const State = {
   resizeDrag:null,               // {selIds,tileId,origTiles,savedOverlaps,startEndRow,startEndCol}         // suppress click after a tile drag
   focusTileId:null,              // tile id currently focused from Tile Info / left pane; highlighted on map + side panes
   infoDeviceEdit:null,           // {tileId} while Tile Info is editing a tile device id
+  infoCssEdit:null,              // {tileId,initialCss} while Tile Info is editing tile-scoped customCSS
   pendingRemoval:null,           // {removedIds, commitFn, preview} during CSS-review
   buffer:null,                   // {tiles:[full snapshots], css, sourceId, mode:'cut'|'copy', cutIds:Set}
   bufferUsed:false,              // whether the current (cut) buffer has been pasted once
@@ -1892,6 +1916,41 @@ function isDeviceSelectedForActiveDashboard(id){
 function hubDeviceOptionLabel(device){
   return `#${device.id} - ${device.name}`;
 }
+async function confirmHubSaveDeviceAssignments(payload){
+  if(!(State.conn.mode==="live"&&State.active)) return true;
+  const label=State.active.label||`dashboard ${State.active.id}`;
+  status(`Checking selected devices for "${label}" before saving…`,true);
+  const picked=await loadDashboardDevicesPicked(State.active);
+  if(!picked.ok){
+    trace(`pre-save devicesPicked validation unavailable: ${picked.error||"unknown error"}`,null,"err");
+    return await new Promise(resolve=>{
+      showConfirm(
+        "Dashboard device validation unavailable",
+        `The selected-device list for "${label}" could not be read from the hub, so tile device assignments cannot be verified before saving.\n\nSaving without validation may preserve invalid assignments or allow Hubitat to remove them. Save to the hub anyway?`,
+        ()=>resolve(true),
+        ()=>{ status("Save cancelled — dashboard devices could not be validated."); resolve(false); },
+        {okText:"Save anyway",cancelText:"Cancel",defaultButton:"cancel",dangerOk:true}
+      );
+    });
+  }
+  const invalid=invalidLayoutDeviceIdsForCurrentDashboard(payload);
+  if(!invalid.length){
+    trace(`pre-save device validation → all ${bufferedTileDeviceIds(payload&&payload.tiles).length} referenced device id(s) are selected for the dashboard`,null,"ok");
+    status("Dashboard device assignments validated.");
+    return true;
+  }
+  const list=invalid.map(id=>`#${id} - ${hubDeviceDisplayName(id)}`).join("\n");
+  trace(`pre-save device validation → ${invalid.length} unselected device id(s): ${invalid.join(", ")}`,null,"err");
+  return await new Promise(resolve=>{
+    showConfirm(
+      "Layout uses devices not selected for this dashboard",
+      `The layout contains tile assignments to device IDs that are not selected for "${label}" in the Hubitat Dashboard app. Saving this layout to the hub may cause those tile device assignments to be removed or lost.\n\n${list}\n\nSelect these devices for the dashboard in Hubitat before saving, or choose Save anyway to continue.`,
+      ()=>resolve(true),
+      ()=>{ status("Save cancelled — select the missing dashboard devices before saving."); resolve(false); },
+      {okText:"Save anyway",cancelText:"Cancel",defaultButton:"cancel",dangerOk:true}
+    );
+  });
+}
 function optionHtmlForHubDevice(device, selected, current=false){
   const label=hubDeviceOptionLabel(device);
   return `<option value="${esc(device.id)}"${selected?"":" disabled"}${current?" selected":""}>${esc(label)}</option>`;
@@ -1987,19 +2046,27 @@ function commitTileDeviceIdChange(tileId, newId){
   }
   return applyChange();
 }
-function guardInfoDeviceEditDiscard(actionLabel, onDiscard){
-  if(!State.infoDeviceEdit){
-    State.infoDeviceEdit=null;
+function clearInfoEditStates(){
+  State.infoDeviceEdit=null;
+  State.infoCssEdit=null;
+}
+function guardInfoEditDiscard(actionLabel, onDiscard){
+  const deviceEdit=State.infoDeviceEdit;
+  const cssEdit=State.infoCssEdit;
+  if(!deviceEdit && !cssEdit){
+    clearInfoEditStates();
     if(onDiscard) onDiscard();
     return true;
   }
-  const editTileId=Number(State.infoDeviceEdit.tileId);
+  const editState=cssEdit||deviceEdit;
+  const editTileId=Number(editState&&editState.tileId);
   const tileLabel=Number.isFinite(editTileId) ? `Tile #${editTileId}` : "This tile";
+  const editLabel=cssEdit ? "tile-scoped CSS" : "device id";
   showConfirm(
-    "Discard device id changes?",
-    `${tileLabel}'s device id is currently being edited. Discard the unsaved changes and ${actionLabel}?`,
+    `Discard ${editLabel} changes?`,
+    `${tileLabel}'s ${editLabel} is currently being edited. Discard the unsaved changes and ${actionLabel}?`,
     ()=>{
-      State.infoDeviceEdit=null;
+      clearInfoEditStates();
       if(onDiscard) onDiscard();
     },
     null,
@@ -2007,9 +2074,18 @@ function guardInfoDeviceEditDiscard(actionLabel, onDiscard){
   );
   return false;
 }
+function guardInfoDeviceEditDiscard(actionLabel, onDiscard){
+  return guardInfoEditDiscard(actionLabel,onDiscard);
+}
 function wireInfoDeviceEditor(tileId){
   const edit=document.getElementById("infoDeviceEditBtn");
-  if(edit) edit.addEventListener("click",()=>{ State.infoDeviceEdit={tileId}; showTileInfo(tileId); });
+  if(edit) edit.addEventListener("click",()=>{
+    guardInfoEditDiscard("edit this tile's device id",()=>{
+      State.infoCssEdit=null;
+      State.infoDeviceEdit={tileId};
+      showTileInfo(tileId);
+    });
+  });
   const cancel=document.getElementById("infoDeviceCancelBtn");
   if(cancel) cancel.addEventListener("click",()=>{ State.infoDeviceEdit=null; showTileInfo(tileId); });
   const save=document.getElementById("infoDeviceSaveBtn");
@@ -2299,6 +2375,8 @@ const Hub = {
     }
     const verified=await this.confirmHubBaselineIsCurrent();
     if(!verified) return;
+    const devicesValidated=await confirmHubSaveDeviceAssignments(payload);
+    if(!devicesValidated) return;
     const doPost=async(url)=>{
       let saveUrl=url;
       if(State.loadPin && !saveUrl.includes("pin="))
@@ -2597,10 +2675,23 @@ function updateTileDisplayIndicator(){
   const enabled=renderedViewEnabled();
   const mode=tileDisplayMode();
   const a=renderedSnapshotAvailability();
+  const offlineLayout=State.conn.mode==="offline";
   if(legend) legend.classList.toggle("hidden", mode!=="simple");
   if(!cluster||!wrap||!simple) return;
   cluster.classList.remove("hidden");
   wrap.classList.remove("hidden");
+  if(offlineLayout){
+    if(State.tileViewMode!=="simple") State.tileViewMode="simple";
+    simple.className="view-mode-btn active";
+    simple.textContent="Simple View";
+    simple.title="Simple View is active.";
+    if(rendered) rendered.classList.add("hidden");
+    if(sep) sep.classList.add("hidden");
+    if(refreshTop) refreshTop.classList.add("hidden");
+    if(refreshPref) refreshPref.disabled=true;
+    setSnapshotRefreshStatus("", false);
+    return;
+  }
   if(!enabled){
     simple.className="view-mode-btn active";
     simple.textContent="Simple View";
@@ -4150,6 +4241,169 @@ function collectRulesForTileIds(css, tileIds){
   return found;
 }
 
+
+/* Tile Information scoped-CSS editor. This source-preserving scanner is kept
+   separate from the cleanup formatter so editing one tile does not reformat
+   unrelated customCSS. */
+function scanCssSourceNodes(css){
+  css=String(css||"");
+  const nodes=[]; let i=0, n=css.length;
+  const skipWs=j=>{ while(j<n&&/\s/.test(css[j])) j++; return j; };
+  while(i<n){
+    i=skipWs(i); if(i>=n) break;
+    const start=i;
+    if(css.startsWith("/*",i)){
+      const j=css.indexOf("*/",i+2);
+      const end=j<0?n:j+2;
+      nodes.push({kind:"comment",start,end,text:css.slice(start,end)});
+      i=end; continue;
+    }
+    let j=i, quote=null;
+    while(j<n){
+      const ch=css[j];
+      if(quote){ if(ch==="\\"){ j+=2; continue; } if(ch===quote) quote=null; j++; continue; }
+      if(ch==="'"||ch==='"'){ quote=ch; j++; continue; }
+      if(css.startsWith("/*",j)){ const e=css.indexOf("*/",j+2); j=e<0?n:e+2; continue; }
+      if(ch==="{"||ch===";") break;
+      j++;
+    }
+    if(j>=n){ nodes.push({kind:"stmt",start,end:n,text:css.slice(start)}); break; }
+    if(css[j]===";"){
+      nodes.push({kind:"stmt",start,end:j+1,text:css.slice(start,j+1)});
+      i=j+1; continue;
+    }
+    const openBrace=j;
+    let depth=1, k=j+1; quote=null;
+    while(k<n&&depth>0){
+      const ch=css[k];
+      if(quote){ if(ch==="\\"){ k+=2; continue; } if(ch===quote) quote=null; k++; continue; }
+      if(ch==="'"||ch==='"'){ quote=ch; k++; continue; }
+      if(css.startsWith("/*",k)){ const e=css.indexOf("*/",k+2); k=e<0?n:e+2; continue; }
+      if(ch==="{") depth++; else if(ch==="}") depth--;
+      k++;
+    }
+    const balanced=depth===0;
+    const end=balanced?k:n;
+    const bodyEnd=balanced?k-1:n;
+    nodes.push({kind:"block",start,end,openBrace,bodyStart:openBrace+1,bodyEnd,
+      prelude:css.slice(start,openBrace),body:css.slice(openBrace+1,bodyEnd),text:css.slice(start,end)});
+    i=end;
+  }
+  return nodes;
+}
+function extractTileScopedCssForEditor(css,tileId){
+  const id=Number(tileId);
+  function rec(text){
+    const parts=[];
+    for(const node of scanCssSourceNodes(text)){
+      if(node.kind==="comment"){
+        const ids=tileIdsInCommentText(node.text);
+        if(ids.size===1&&ids.has(id)) parts.push(node.text.trim());
+        continue;
+      }
+      if(node.kind!=="block") continue;
+      const pre=node.prelude.trim();
+      if(pre.startsWith("@")){
+        const inner=rec(node.body);
+        if(inner.trim()) parts.push(`${pre} {\n${inner.trim()}\n}`);
+        continue;
+      }
+      const kept=splitSelectorList(pre).filter(sel=>selectorTileIds(sel).has(id));
+      if(kept.length) parts.push(`${kept.join(", ")} {${node.body}}`);
+    }
+    return parts.join("\n\n");
+  }
+  return rec(String(css||"")).trim();
+}
+function transformTileScopedCssSource(css,tileId){
+  const id=Number(tileId);
+  function rec(text){
+    const nodes=scanCssSourceNodes(text);
+    let cursor=0, out="", changed=false, firstChange=-1;
+    for(const node of nodes){
+      out+=text.slice(cursor,node.start);
+      let nodeText=text.slice(node.start,node.end), nodeChanged=false;
+      if(node.kind==="comment"){
+        const ids=tileIdsInCommentText(node.text);
+        if(ids.size===1&&ids.has(id)){ nodeText=""; nodeChanged=true; }
+      }else if(node.kind==="block"){
+        const pre=node.prelude.trim();
+        if(pre.startsWith("@")){
+          const inner=rec(node.body);
+          if(inner.changed){
+            nodeText=text.slice(node.start,node.bodyStart)+inner.css+text.slice(node.bodyEnd,node.end);
+            nodeChanged=true;
+          }
+        }else{
+          const selectors=splitSelectorList(pre);
+          const kept=selectors.filter(sel=>!selectorTileIds(sel).has(id));
+          if(kept.length!==selectors.length){
+            nodeChanged=true;
+            nodeText=kept.length ? kept.join(", ")+text.slice(node.openBrace,node.end) : "";
+          }
+        }
+      }
+      if(nodeChanged){
+        if(firstChange<0) firstChange=out.length;
+        changed=true;
+      }
+      out+=nodeText;
+      cursor=node.end;
+    }
+    out+=text.slice(cursor);
+    return {css:out,changed,firstChange};
+  }
+  return rec(String(css||""));
+}
+function replaceTileScopedCssPreserveSource(css,tileId,replacement){
+  const transformed=transformTileScopedCssSource(css,tileId);
+  const add=String(replacement||"").trim();
+  if(!add) return transformed.css;
+  let at=transformed.firstChange;
+  if(at<0) at=transformed.css.length;
+  let before=transformed.css.slice(0,at), after=transformed.css.slice(at);
+  if(before && !before.endsWith("\n\n")) before+=before.endsWith("\n")?"\n":"\n\n";
+  let middle=add;
+  if(after && !after.startsWith("\n\n")) middle+=after.startsWith("\n")?"\n":"\n\n";
+  else if(!after) middle+="\n";
+  return before+middle+after;
+}
+function validateTileScopedCssEditorText(tileId,css){
+  const id=Number(tileId), issues=validateCustomCssBasic(String(css||""));
+  if(issues.length) return issues;
+  function rec(text,path){
+    for(const node of scanCssSourceNodes(text)){
+      if(node.kind==="comment"){
+        const ids=tileIdsInCommentText(node.text);
+        const others=[...ids].filter(x=>x!==id);
+        if(others.length) issues.push(`A comment references another tile: ${others.map(x=>"#"+x).join(", ")}.`);
+        continue;
+      }
+      if(node.kind==="stmt"){
+        if(node.text.trim()) issues.push(`Unscoped CSS statement is not allowed: ${node.text.trim().slice(0,90)}`);
+        continue;
+      }
+      const pre=node.prelude.trim();
+      if(pre.startsWith("@")){ rec(node.body,path.concat(pre)); continue; }
+      const selectors=splitSelectorList(pre);
+      if(!selectors.length){ issues.push("A CSS rule has no selector."); continue; }
+      for(const selector of selectors){
+        const ids=selectorTileIds(selector);
+        if(!ids.size){ issues.push(`Selector is not scoped to Tile #${id}: ${selector}`); continue; }
+        const others=[...ids].filter(x=>x!==id);
+        if(others.length) issues.push(`Selector references another tile (${others.map(x=>"#"+x).join(", ")}): ${selector}`);
+        if(!ids.has(id)) issues.push(`Selector must include #tile-${id} or .tile-${id}: ${selector}`);
+      }
+    }
+  }
+  rec(String(css||""),[]);
+  return [...new Set(issues)];
+}
+function tileCssIssueCounts(css,tileId){
+  const analysis=analyzeCustomCssCleanup(String(css||""),new Set([Number(tileId)]),{includeConsolidation:true});
+  return {analysis,conflicts:(analysis.conflictGroups||[]).length,duplicates:(analysis.duplicateGroups||[]).length};
+}
+
 /* ===== DTU CSS ENGINE: duplication + orphan detection (verified byte-identical
    to css_ops.py generate_css_for_id_map / tile_ids_in_css / orphan helpers) ===== */
 // ===== DUPLICATION (port of generate_css_for_id_map and helpers) =====
@@ -5211,8 +5465,121 @@ function moveSelectionToLine(kind,line){ const k=kind==="colHeader"?"col":"row";
 function copySelectionToLine(kind,line){ const k=kind==="colHeader"?"col":"row"; State.selKind=k; beginCopy(); if(State.pending&&State.pending.action==="copyLines") completeCopyLines(line); }
 function insertAt(kind,line){ const k=kind==="colHeader"?"col":"row"; State.selKind=k; State.sel={type:"line",lines:[line],ids:[],rect:null}; doInsert(); }
 
+function setInfoCssEditorError(message){
+  const el=document.getElementById("infoCssError");
+  if(!el) return;
+  const text=String(message||"").trim();
+  el.textContent=text;
+  el.style.display=text?"block":"none";
+}
+function tileInfoCssEditorHtml(tileId,css,rulesCount,commentsCount){
+  const editing=State.infoCssEdit&&Number(State.infoCssEdit.tileId)===Number(tileId);
+  const head=`<div class="info-css-head"><span class="info-css-label">scoped customCSS · ${rulesCount} rule(s), ${commentsCount} comment(s)</span>${editing?"":`<button type="button" class="info-css-edit-btn" id="infoCssEditBtn" title="Edit CSS scoped to Tile #${esc(tileId)}">✎ Edit</button>`}</div>`;
+  if(!editing){
+    return head+(css?`<pre>${esc(css)}</pre>`:`<p class="hint">No tile-scoped CSS for this tile.</p>`);
+  }
+  const renderedNote=(State.conn.mode==="live"&&!!State.lastLayoutUrl)
+    ? `<li>Rendered View will not show these edits until the dashboard is saved back to the hub and Rendered View is refreshed.</li>`
+    : "";
+  return `<div class="info-css-edit-shell">`+
+    `<div class="info-css-instructions"><b>Editing CSS for Tile #${esc(tileId)}</b><ul>`+
+    `<li>Every active selector must include <code>#tile-${esc(tileId)}</code> or <code>.tile-${esc(tileId)}</code>.</li>`+
+    `<li>Unscoped selectors and selectors for other tile IDs cannot be saved.</li>`+
+    `<li>Blank content removes all CSS scoped to this tile. Shared comments that reference multiple tiles remain outside this editor.</li>`+
+    `<li>Save validates the CSS and warns before keeping duplicate or conflicting declarations.</li>`+
+    renderedNote+
+    `</ul></div>`+
+    head+
+    `<textarea id="infoCssEditor" class="info-css-editor" spellcheck="false" wrap="off" aria-label="Tile #${esc(tileId)} scoped customCSS">${esc(css)}</textarea>`+
+    `<div id="infoCssError" class="info-css-error"></div>`+
+    `<div class="info-css-actions"><button type="button" class="btn ghost" id="infoCssCancelBtn">Cancel</button><button type="button" class="btn primary" id="infoCssSaveBtn">Save CSS</button></div>`+
+    `</div>`;
+}
+function applyTileScopedCssChange(tileId,editedCss){
+  const nextCss=replaceTileScopedCssPreserveSource(State.customCSS||"",tileId,editedCss);
+  pushHistory();
+  State.customCSS=nextCss;
+  State.zMap=parseCssZ(State.customCSS||"");
+  if(State.baseDoc) State.baseDoc.customCSS=State.customCSS;
+  if(State.active&&State.active._layout) State.active._layout.customCSS=State.customCSS;
+  State.tileSnapshotBlockedUntilReload=false;
+  markRenderedSnapshotsStale(`Tile #${tileId} CSS changes`,{message:false});
+  State.infoCssEdit=null;
+  updateSaveHubState();
+  render();
+  showTileInfo(tileId);
+  const online=State.conn.mode==="live"&&!!State.lastLayoutUrl;
+  status(`Saved Tile #${tileId} scoped CSS to the working layout.${online?" Save the dashboard to the hub and refresh Rendered View to update captured tile images.":""}`);
+  if(online){
+    showConfirm(
+      "Rendered View will not reflect this CSS yet",
+      `The CSS change was saved to the working layout, but Rendered View captures the dashboard currently stored on the hub. Save this dashboard back to the hub, then refresh Rendered View to capture the updated CSS.`,
+      null,null,
+      {okText:"OK",hideCancel:true}
+    );
+  }else toast(`Saved Tile #${tileId} scoped CSS.`,"ok");
+  return true;
+}
+function commitTileScopedCssChange(tileId,editedCss,opts={}){
+  const edit=State.infoCssEdit;
+  if(!edit||Number(edit.tileId)!==Number(tileId)) return false;
+  const text=String(editedCss||"");
+  const issues=validateTileScopedCssEditorText(tileId,text);
+  if(issues.length){
+    setInfoCssEditorError(`CSS was not saved:\n• ${issues.join("\n• ")}`);
+    toast("Tile CSS must be valid and scoped only to this tile.","err");
+    return false;
+  }
+  if(text.trim()===String(edit.initialCss||"").trim()){
+    State.infoCssEdit=null;
+    showTileInfo(tileId);
+    status(`Tile #${tileId} CSS was unchanged.`);
+    return true;
+  }
+  const found=tileCssIssueCounts(text,tileId);
+  if(!opts.issueWarningAccepted&&(found.conflicts||found.duplicates)){
+    const parts=[];
+    if(found.conflicts) parts.push(`${found.conflicts} conflicting selector/property group${found.conflicts!==1?"s":""}`);
+    if(found.duplicates) parts.push(`${found.duplicates} duplicate selector/property group${found.duplicates!==1?"s":""}`);
+    const summary=parts.join(" and ");
+    setInfoCssEditorError(`Warning: ${summary} found. Review the CSS or choose Save anyway.`);
+    showConfirm(
+      "CSS conflicts or duplicates found",
+      `Tile #${tileId}'s edited CSS contains ${summary}. Conflicts can change which value wins, and duplicates can make later maintenance difficult.\n\nSave this CSS anyway?`,
+      ()=>commitTileScopedCssChange(tileId,text,{issueWarningAccepted:true}),
+      ()=>setInfoCssEditorError(`Warning: ${summary} found. Changes were not saved.`),
+      {okText:"Save anyway",cancelText:"Keep editing",defaultButton:"cancel",dangerOk:!!found.conflicts}
+    );
+    return false;
+  }
+  return applyTileScopedCssChange(tileId,text);
+}
+function wireInfoCssEditor(tileId){
+  const edit=document.getElementById("infoCssEditBtn");
+  if(edit) edit.addEventListener("click",()=>{
+    guardInfoEditDiscard("edit this tile's CSS",()=>{
+      State.infoDeviceEdit=null;
+      const initialCss=extractTileScopedCssForEditor(State.customCSS||"",tileId);
+      State.infoCssEdit={tileId,initialCss};
+      showTileInfo(tileId);
+      setTimeout(()=>document.getElementById("infoCssEditor")?.focus(),0);
+    });
+  });
+  const cancel=document.getElementById("infoCssCancelBtn");
+  if(cancel) cancel.addEventListener("click",()=>{ State.infoCssEdit=null; showTileInfo(tileId); });
+  const save=document.getElementById("infoCssSaveBtn");
+  if(save) save.addEventListener("click",()=>commitTileScopedCssChange(tileId,document.getElementById("infoCssEditor")?.value||""));
+  const editor=document.getElementById("infoCssEditor");
+  if(editor) editor.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){ e.preventDefault(); State.infoCssEdit=null; showTileInfo(tileId); }
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="s"){ e.preventDefault(); commitTileScopedCssChange(tileId,editor.value); }
+  });
+}
+
 function showTileInfo(tileId){
   const t=State.tiles.find(x=>Number(x.id)===Number(tileId)); if(!t) return;
+  if(State.infoDeviceEdit&&Number(State.infoDeviceEdit.tileId)!==Number(tileId)) State.infoDeviceEdit=null;
+  if(State.infoCssEdit&&Number(State.infoCssEdit.tileId)!==Number(tileId)) State.infoCssEdit=null;
   setFocusedTile(t.id,{render:true,scroll:true,updateStack:true});
   // selection list for prev/next paging through Info
   const selList = (State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.length>1 ? [...State.sel.ids] : [tileId];
@@ -5226,9 +5593,8 @@ function showTileInfo(tileId){
   const placement=pm.get(idx)?.placement||"independent";
   const scoped = State.customCSS ? collectRulesForTileIds(State.customCSS,[tileId]) : [];
   const rules=scoped.filter(x=>x.kind==="rule"), comments=scoped.filter(x=>x.kind==="comment");
-  let css="";
-  if(rules.length) css+=rules.map(r=>`${r.selector} {\n  ${r.body.trim()}\n}`).join("\n\n");
-  if(comments.length) css+=(css?"\n\n":"")+comments.map(c=>c.text).join("\n");
+  const editingCss=State.infoCssEdit&&Number(State.infoCssEdit.tileId)===Number(tileId);
+  const css=editingCss ? String(State.infoCssEdit.initialCss||"") : extractTileScopedCssForEditor(State.customCSS||"",tileId);
   const rows=[
     ["id",esc(String(t.id))],
     ["label",esc(String(tileLabel(t)))],
@@ -5236,17 +5602,22 @@ function showTileInfo(tileId){
     ["device name",esc(String(deviceNameInfoValue(t)))],
     ["template",esc(String(t.template||"—"))],
     ["position",esc(`row ${t.row}, col ${t.col}`)],
-    ["span",esc(`${t.colSpan} × ${t.rowSpan} (w×h)`)],
+    ["span",esc(`${t.colSpan} × ${t.rowSpan} (w×h)`) ],
     ["placement",esc(String(placement))],
     ["z-index",esc(String(effZ(t)))],
-    ["CSS rules",esc(`${rules.length} rule(s), ${comments.length} comment(s)`)],
+    ["CSS rules",esc(`${rules.length} rule(s), ${comments.length} comment(s)`) ],
   ];
   const posLabel = State.infoNav.ids.length>1 ? ` (${State.infoNav.pos+1} of ${State.infoNav.ids.length})` : "";
-  document.getElementById("infoTitle").textContent=`Tile #${t.id} — ${tileDisplayLabel(t)}${posLabel}`;
+  const infoModal=document.getElementById("infoModal");
+  infoModal.classList.toggle("css-editing",!!editingCss);
+  document.getElementById("infoTitle").textContent=editingCss
+    ? `Edit CSS — Tile #${t.id}${posLabel}`
+    : `Tile #${t.id} — ${tileDisplayLabel(t)}${posLabel}`;
   document.getElementById("infoBody").innerHTML=
-    `<div class="kv">${rows.map(([k,v])=>`<div class="k">${esc(k)}</div><div>${v}</div>`).join("")}</div>`+
-    (css?`<div class="k" style="font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-bottom:6px">scoped customCSS</div><pre>${esc(css)}</pre>`:`<p class="hint">No tile-scoped CSS for this tile.</p>`);
+    (editingCss?"":`<div class="kv">${rows.map(([k,v])=>`<div class="k">${esc(k)}</div><div>${v}</div>`).join("")}</div>`)+
+    tileInfoCssEditorHtml(tileId,css,rules.length,comments.length);
   wireInfoDeviceEditor(tileId);
+  wireInfoCssEditor(tileId);
   restoreModalPosition("infoModal"); document.getElementById("infoModal").classList.remove("hidden");
 }
 
@@ -7356,6 +7727,59 @@ function bufferedTileDeviceIds(tiles){
 function invalidBufferedDeviceIdsForDestination(buffer){
   if(!buffer || !State.devicePickedAvailable) return [];
   return bufferedTileDeviceIds(buffer.tiles).filter(id=>!deviceIdSetHas(State.devicePickedIds,id));
+}
+function currentHubTargetDashboardName(){
+  if(!(State.conn.mode==="live"&&State.active)) return "";
+  const candidates=[
+    State.hubSaveBaseline&&State.hubSaveBaseline.name,
+    State.original&&State.original.name,
+    State.active&&State.active.label
+  ];
+  for(const value of candidates){
+    const name=String(value==null?"":value).trim();
+    if(name) return name;
+  }
+  return "";
+}
+function prepareFullJsonForCurrentHubTarget(data){
+  const doc=normalizeLoadedJson(cloneJsonDoc(data));
+  const targetName=currentHubTargetDashboardName();
+  if(targetName) doc.name=targetName;
+  return doc;
+}
+function invalidLayoutDeviceIdsForCurrentDashboard(data){
+  if(!data||!State.devicePickedAvailable) return [];
+  return bufferedTileDeviceIds(data.tiles).filter(id=>!deviceIdSetHas(State.devicePickedIds,id));
+}
+function confirmFullJsonDeviceValidation(data,onProceed){
+  if(!(State.conn.mode==="live"&&State.active)){
+    if(onProceed) onProceed();
+    return true;
+  }
+  if(!State.devicePickedAvailable){
+    showConfirm(
+      "Dashboard device validation unavailable",
+      "The selected-device list for the hub dashboard being replaced could not be read, so the replacement JSON cannot be checked against that dashboard's devicesPicked setting. Apply the replacement layout anyway?",
+      onProceed,
+      ()=>status("JSON replacement was not applied."),
+      {okText:"Apply anyway",cancelText:"Cancel",defaultButton:"cancel"}
+    );
+    return false;
+  }
+  const invalid=invalidLayoutDeviceIdsForCurrentDashboard(data);
+  if(!invalid.length){
+    if(onProceed) onProceed();
+    return true;
+  }
+  const list=invalid.map(id=>`#${id} - ${hubDeviceDisplayName(id)}`).join("\n");
+  showConfirm(
+    "Replacement layout uses devices not selected for this dashboard",
+    `The replacement JSON contains device ids that are not selected in the current hub dashboard's devicesPicked setting. Hubitat may not render or control those tiles until the devices are selected for this dashboard.\n\n${list}\n\nApply the replacement layout anyway?`,
+    onProceed,
+    ()=>status("JSON replacement was not applied."),
+    {okText:"Apply anyway",cancelText:"Cancel",defaultButton:"cancel"}
+  );
+  return false;
 }
 function warnIfPasteHasUnselectedDevices(cell){
   const pending=State.pending;
@@ -10465,7 +10889,7 @@ async function wire(){
   document.addEventListener("scroll",()=>hideCtxMenu(),true);
   document.getElementById("infoClose").addEventListener("click",()=>{
     guardInfoDeviceEditDiscard("close Tile Information",()=>{
-      State.infoDeviceEdit=null;
+      clearInfoEditStates();
       document.getElementById("infoModal").classList.add("hidden");
     });
   });
@@ -10619,17 +11043,28 @@ async function wire(){
     let data;
     try{ data=parseJsonEditor({promptDiscard:true}); }
     catch(e){ return; }
-    // Treat JSON editor commits as normal edits to the current working layout.
-    // applyJsonToCurrentLayout creates the undo checkpoint before replacing layout data,
-    // so prior unsaved work can be restored with Undo instead of being treated as discarded.
-    const preserveRenderedSnapshots=JsonEditorState.mode!=="json";
-    const changedFields=preserveRenderedSnapshots?[JsonEditorState.mode]:[];
-    applyJsonToCurrentLayout(data,"edited JSON",{preserveRenderedSnapshots, changedFields});
-    JsonEditorState.doc=cloneJsonDoc(serializeLayout());
-    JsonEditorState.initialText=JSON.stringify(normalizeLoadedJson(serializeLayout()),null,2);
-    JsonEditorState.initialComparable=normalizedJsonForCompare(serializeLayout());
-    setJsonEditorDirtyState(false);
-    document.getElementById("jsonModal").classList.add("hidden");
+    const fullJsonReplace=JsonEditorState.mode==="json";
+    if(fullJsonReplace&&State.conn.mode==="live"&&State.active){
+      data=prepareFullJsonForCurrentHubTarget(data);
+    }
+    const applyNow=()=>{
+      // Treat JSON editor commits as normal edits to the current working layout.
+      // applyJsonToCurrentLayout creates the undo checkpoint before replacing layout data,
+      // so prior unsaved work can be restored with Undo instead of being treated as discarded.
+      const preserveRenderedSnapshots=!fullJsonReplace;
+      const changedFields=preserveRenderedSnapshots?[JsonEditorState.mode]:[];
+      applyJsonToCurrentLayout(data,"edited JSON",{preserveRenderedSnapshots, changedFields});
+      JsonEditorState.doc=cloneJsonDoc(serializeLayout());
+      JsonEditorState.initialText=JSON.stringify(normalizeLoadedJson(serializeLayout()),null,2);
+      JsonEditorState.initialComparable=normalizedJsonForCompare(serializeLayout());
+      setJsonEditorDirtyState(false);
+      document.getElementById("jsonModal").classList.add("hidden");
+    };
+    if(fullJsonReplace&&State.conn.mode==="live"&&State.active){
+      confirmFullJsonDeviceValidation(data,applyNow);
+      return;
+    }
+    applyNow();
   });
   document.getElementById("jsonCopy").addEventListener("click",()=>{
     const ed=document.getElementById("jsonEditor");
