@@ -551,6 +551,17 @@
   .device-picked-extracted .empty{color:var(--faint);}
   .device-picked-select{width:100%;margin:0 0 10px;padding:7px 9px;border:1px solid var(--border);border-radius:8px;background:rgba(2,6,23,.72);color:var(--text);font-size:.78rem;}
   .device-picked-select option:disabled{color:var(--faint);background:rgba(15,23,42,.95);}
+  .import-device-list{margin:4px 0 2px;border-top:1px solid var(--border);}
+  .import-device-row{display:grid;grid-template-columns:minmax(74px,auto) minmax(150px,1fr) minmax(150px,1fr);gap:10px;align-items:baseline;padding:8px 2px;border-bottom:1px solid var(--border);font-size:.78rem;}
+  .import-device-row .id{font-family:var(--mono);font-weight:700;color:var(--accent);}
+  .import-device-row .name{color:var(--text);overflow-wrap:anywhere;}
+  .import-device-row .state{color:var(--muted);font-size:.72rem;}
+  .import-device-row.unknown .name,.import-device-row.unknown .state{color:#fecaca;}
+  .import-device-warning{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:.79rem;line-height:1.5;}
+  .import-device-confirm{display:flex;align-items:flex-start;gap:8px;margin-top:2px;color:var(--text);font-size:.8rem;line-height:1.45;}
+  .import-device-confirm input{margin-top:3px;}
+  .import-device-status{min-height:1.2em;margin:0;color:var(--muted);font-size:.74rem;line-height:1.4;}
+  .import-device-status.err{color:#fecaca;}
   .trace-body .ok{color:var(--ok);} .trace-body .err{color:var(--danger);} .trace-body .url{color:var(--faint);word-break:break-all;}
 
   /* toast */
@@ -564,6 +575,7 @@
   .modal-back{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:10000;}
   /* Confirmation modals must always float above editor/input modals that may already be open. */
   #confirmModal,#saveConfirmModal{z-index:13000;}
+  #importDeviceWarningModal{z-index:13100;}
   #preserveCssHelpModal{z-index:13050;}
   #cssCleanupModal{z-index:12000;}
   /* Info modal is non-blocking: no backdrop, docked right, tiles stay clickable underneath */
@@ -646,26 +658,58 @@
   .json-modebar .json-mode-hint{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--faint);white-space:nowrap;}
 
   /* help modal */
-  .help-modal{width:min(980px,94vw);max-height:88vh;}
-  .help-body{display:grid;grid-template-columns:190px minmax(0,1fr);gap:14px;padding:0;overflow:hidden;}
-  .help-tabs{border-right:1px solid var(--border);background:rgba(0,0,0,.12);padding:10px;overflow:auto;}
+  .help-modal{width:min(1080px,96vw);height:min(780px,92vh);max-height:92vh;}
+  .help-body{display:grid;grid-template-columns:205px minmax(0,1fr);gap:0;padding:0;overflow:hidden;min-height:0;flex:1;}
+  .help-tabs{border-right:1px solid var(--border);background:rgba(0,0,0,.12);padding:12px 10px;overflow:auto;}
   .help-tab{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;color:var(--muted);
-    border-radius:7px;padding:8px 10px;margin-bottom:5px;cursor:pointer;font-size:.78rem;font-weight:600;}
+    border-radius:7px;padding:9px 10px;margin-bottom:5px;cursor:pointer;font-size:.78rem;font-weight:600;}
   .help-tab:hover{color:var(--text);background:var(--panel-2);border-color:var(--border);}
   .help-tab.active{color:var(--accent);background:rgba(103,232,249,.10);border-color:rgba(103,232,249,.32);}
-  .help-content{padding:16px 18px;overflow:auto;max-height:calc(88vh - 112px);}
-  .help-pane{display:none;}
-  .help-pane.active{display:block;}
-  .help-pane h4{margin:0 0 8px;font-size:.95rem;color:var(--text);}
-  .help-pane h5{margin:16px 0 7px;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);}
-  .help-pane p{margin:0 0 10px;line-height:1.55;color:var(--muted);font-size:.82rem;}
-  .help-pane ul,.help-pane ol{margin:6px 0 12px 20px;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
-  .help-pane li{margin:3px 0;}
-  .help-grid{display:grid;grid-template-columns:minmax(120px,.55fr) minmax(0,1fr);gap:6px 12px;margin:8px 0 14px;font-size:.8rem;}
-  .help-grid .k{font-family:var(--mono);color:var(--text);background:rgba(255,255,255,.04);border:1px solid rgba(148,163,184,.16);border-radius:5px;padding:4px 6px;}
-  .help-grid .v{color:var(--muted);line-height:1.45;padding:4px 0;}
+  .help-content{padding:0;overflow:hidden;min-height:0;display:flex;flex-direction:column;}
+  .help-pane{display:none;min-height:0;height:100%;}
+  .help-pane.active{display:flex;flex-direction:column;}
+  .help-pages{flex:1;min-height:0;position:relative;overflow:hidden;}
+  .help-page{display:none;height:100%;overflow:auto;padding:20px 22px 18px;scrollbar-gutter:stable;}
+  .help-page.active{display:block;}
+  .help-page-kicker{font-family:var(--mono);font-size:.61rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:0 0 5px;}
+  .help-page h4{margin:0 0 9px;font-size:1rem;color:var(--text);}
+  .help-page h5{margin:16px 0 7px;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);}
+  .help-page p{margin:0 0 11px;line-height:1.56;color:var(--muted);font-size:.82rem;}
+  .help-page ul,.help-page ol{margin:7px 0 13px 20px;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
+  .help-page li{margin:4px 0;}
+  .help-page-nav{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--border);background:rgba(0,0,0,.13);flex:none;}
+  .help-page-nav .btn{width:auto;min-width:104px;padding:7px 12px;}
+  .help-page-nav .btn:disabled{opacity:.28;}
+  .help-page-status{text-align:center;min-width:0;}
+  .help-page-title{display:block;color:var(--text);font-size:.75rem;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .help-page-count{display:block;font-family:var(--mono);font-size:.58rem;color:var(--faint);margin-top:2px;}
+  .help-page-dots{display:flex;justify-content:center;gap:5px;margin-top:5px;}
+  .help-page-dot{width:6px;height:6px;border:0;border-radius:50%;padding:0;background:rgba(148,163,184,.35);cursor:pointer;}
+  .help-page-dot.active{background:var(--accent);box-shadow:0 0 7px rgba(103,232,249,.45);}
+  .help-page-dot:hover{background:var(--text);}
+  .help-grid{display:block;margin:8px 0 16px;font-size:.8rem;}
+  .help-grid .k{font-family:var(--mono);font-weight:700;color:var(--text);margin:13px 0 3px;padding:0;}
+  .help-grid .v{color:var(--muted);line-height:1.52;padding:0 0 10px 14px;border-bottom:1px solid rgba(148,163,184,.12);}
+  .help-grid .v:last-child{border-bottom:0;}
   .help-key{font-family:var(--mono);font-size:.72rem;color:var(--text);border:1px solid rgba(148,163,184,.28);border-bottom-color:rgba(148,163,184,.45);border-radius:4px;padding:1px 5px;background:rgba(255,255,255,.06);white-space:nowrap;}
-  @media(max-width:760px){.help-body{grid-template-columns:1fr}.help-tabs{border-right:none;border-bottom:1px solid var(--border);display:flex;gap:5px;overflow:auto}.help-tab{width:auto;white-space:nowrap;margin:0}.help-content{max-height:calc(88vh - 170px)}}
+  .help-callout{border:0;border-left:3px solid var(--accent);border-radius:0;background:transparent;padding:3px 0 3px 12px;margin:12px 0 15px;color:var(--muted);font-size:.8rem;line-height:1.52;}
+  .help-callout.warn{border-left-color:var(--amber-2);background:transparent;}
+  .help-card-grid{display:block;margin:8px 0 16px;}
+  .help-card{border:0;border-left:2px solid rgba(103,232,249,.25);border-radius:0;background:transparent;padding:1px 0 8px 12px;margin:10px 0;}
+  .help-card b{display:block;color:var(--text);font-size:.8rem;margin-bottom:3px;}
+  .help-card p{font-size:.8rem;line-height:1.52;margin:0;}
+  .help-step-list{list-style:decimal!important;margin:7px 0 14px 22px!important;display:block;}
+  .help-step-list>li{position:static;padding:0 0 0 4px;border:0;border-radius:0;background:transparent;margin:6px 0;}
+  .help-step-list>li::before{content:none;}
+  @media(max-width:760px){
+    .help-modal{width:96vw;height:92vh;}
+    .help-body{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);}
+    .help-tabs{border-right:none;border-bottom:1px solid var(--border);display:flex;gap:5px;overflow:auto;padding:8px;}
+    .help-tab{width:auto;white-space:nowrap;margin:0;padding:7px 9px;}
+    .help-page{padding:16px;}
+    .help-page-nav{gap:6px;padding:8px;}
+    .help-page-nav .btn{min-width:0;padding:7px 9px;font-size:.72rem;}
+  }
 
   .view-mode-cluster{display:inline-flex;align-items:center;gap:4px;z-index:4;white-space:nowrap;flex:none;}
   .view-mode-cluster.hidden{display:none!important;}
@@ -694,7 +738,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.291">0.9.291</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.300">0.9.300</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -974,168 +1018,182 @@
 <div class="ctxmenu hidden" id="ctxMenu"></div>
 
 <div class="modal-back hidden" id="helpModal">
-  <div class="modal help-modal">
-    <div class="modal-head"><h3>Dashboard Layout Studio Help</h3></div>
-    <div class="modal-body help-body">
-      <div class="help-tabs" role="tablist" aria-label="Help topics">
-        <button class="help-tab active" data-help-pane="helpOverview">Overview</button>
-        <button class="help-tab" data-help-pane="helpLoadSave">Load &amp; Save</button>
-        <button class="help-tab" data-help-pane="helpSelect">Selecting Tiles</button>
-        <button class="help-tab" data-help-pane="helpToolbar">Toolbar Buttons</button>
-        <button class="help-tab" data-help-pane="helpMove">Move, Copy &amp; Spacing</button>
-        <button class="help-tab" data-help-pane="helpJsonCss">JSON &amp; CSS</button>
-        <button class="help-tab" data-help-pane="helpShortcuts">Shortcuts</button>
-      </div>
-      <div class="help-content">
-        <section class="help-pane active" id="helpOverview">
-          <h4>What this tool does</h4>
-          <p>Dashboard Layout Studio edits Hubitat dashboard layout JSON using a spreadsheet-like row and column model. It is designed for rearranging, copying, trimming, resizing, spacing, and saving dashboard tiles without hand-editing every tile coordinate.</p>
-          <p><b>Compatibility:</b> Dashboard Layout Studio works only with v1 dashboard layouts from the built-in Hubitat Dashboards app. It is not compatible with Hubitat EZ Dashboards.</p>
-          <h5>Basic workflow</h5>
-          <ol>
-            <li>Load a dashboard from the hub, from a JSON file, or from pasted JSON.</li>
-            <li>Select tiles, rows, columns, or a rectangular area on the grid.</li>
-            <li>Use the toolbar to insert, delete, clear, move, copy, paste, resize, trim, or adjust spacing.</li>
-            <li>Use Undo/Redo while experimenting.</li>
-            <li>Review JSON or CSS if needed.</li>
-            <li>Save to the hub, download a file, or copy the finished JSON to the clipboard.</li>
-          </ol>
-          <p>The grid is not a live Hubitat dashboard. It is an editor for the layout JSON. Changes are applied to the working layout until you save or download them.</p>
-        </section>
-
-        <section class="help-pane" id="helpLoadSave">
-          <h4>Loading and saving layouts</h4>
-          <div class="help-grid">
-            <div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
-            <div class="k">Gear beside Connect</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
-            <div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
-            <div class="k">Dashboard list</div><div class="v">After discovery, choose a dashboard to load its layout into the editor.</div>
-            <div class="k">Load file</div><div class="v">Loads a JSON file as an offline layout. This is useful for editing backups, but it does not create a hub save target.</div>
-            <div class="k">Paste dashboard JSON</div><div class="v">Loads pasted JSON as an offline layout. Like file load, this does not create a hub save target.</div>
-            <div class="k">Save</div><div class="v">Opens save options: Save to hub, Download as file, or Copy to clipboard. Save to hub is available only when the active layout was loaded from the hub.</div>
-          </div>
-          <h5>Important hub-save distinction</h5>
-          <p>If you load a layout with the side panel file/paste tools, the tool treats it as offline JSON. If you instead load from the hub and then use the JSON editor to replace or edit the layout, the existing hub save target is preserved.</p>
-        </section>
-
-        <section class="help-pane" id="helpSelect">
-          <h4>Selecting tiles, rows, columns, and areas</h4>
-          <div class="help-grid">
-            <div class="k">Click a tile</div><div class="v">Selects the tile at that cell. Repeated clicks on the same overlapped cell cycle through the stack.</div>
-            <div class="k">Ctrl/Cmd-click tile</div><div class="v">Adds or removes a tile from the current tile selection. On overlapped stacks, repeated Ctrl/Cmd-clicks cycle through layers.</div>
-            <div class="k">Alt-click tile</div><div class="v">Selects the connected tile cluster at that cell.</div>
-            <div class="k">Double-click tile/grid cell</div><div class="v">Selects the connected tile cluster at that cell.</div>
-            <div class="k">Drag on grid</div><div class="v">Creates a rectangular selection. The Selection mode option determines which crossing tiles are included.</div>
-            <div class="k">Ctrl/Cmd-drag grid</div><div class="v">Adds the rectangular drag selection to the current tile selection.</div>
-            <div class="k">Click row/column header</div><div class="v">Selects that row or column as a line selection.</div>
-            <div class="k">Drag row/column headers</div><div class="v">Selects a contiguous row or column range.</div>
-            <div class="k">Shift-click header</div><div class="v">Extends the row or column selection from the previous header anchor.</div>
-            <div class="k">Right-click grid/header</div><div class="v">Opens a context menu for tile, empty cell, row, or column actions.</div>
-          </div>
-          <h5>Selection mode</h5>
-          <ul>
-            <li><b>default</b>: selects tiles located in the target area by their upper-left row/column.</li>
-            <li><b>incl partial</b>: also includes tiles that start outside the target but cross into it.</li>
-            <li><b>excl partial</b>: limits the result to tiles fully contained in the target.</li>
-            <li><b>only partial</b>: selects only tiles crossing the target boundary; intended for clear-type cleanup work.</li>
-          </ul>
-        </section>
-
-        <section class="help-pane" id="helpToolbar">
-          <h4>Toolbar buttons</h4>
-          <p>The first toolbar group in the top row contains actions that operate on the current selection: tiles, rows, columns, or selected areas. The next top-row group contains whole-layout actions such as Trim and Spacing.</p>
-          <div class="help-grid">
-            <div class="k">Select</div><div class="v">Selects all tiles in the layout. This is the toolbar equivalent of Ctrl/Cmd+A.</div>
-            <div class="k">Info</div><div class="v">Shows tile id, position, size, device id from the layout JSON, hub device name when available, template details, and tile-scoped custom CSS for the selected tile. The scoped CSS section can be edited directly; every saved selector must remain scoped to the current tile.</div>
-            <div class="k">Insert</div><div class="v">For row/column selections, inserts rows or columns before the selected line range and shifts affected tiles.</div>
-            <div class="k">Delete</div><div class="v">Deletes selected rows/columns and shifts later tiles to close the gap. For tile selections, use Clear to remove without shifting.</div>
-            <div class="k">Clear</div><div class="v">Removes selected tiles or tiles in the selected area without shifting other tiles.</div>
-            <div class="k">Move to</div><div class="v">Starts a placement operation. Click a destination cell or compatible row/column header to move the selection.</div>
-            <div class="k">Copy to</div><div class="v">Starts a placement operation that duplicates the selection to a clicked destination.</div>
-            <div class="k">Trim</div><div class="v">Whole-layout action that removes blank space above and/or left of the current layout. Hold the button for top-only or left-only choices.</div>
-            <div class="k">Resize</div><div class="v">Selection-action button that sets selected tiles to an exact height and width. Options can preserve spacing between resized tiles and/or push the surrounding layout out of the way. When Overlaps is set to push, or Shift is held, the Resize button glows and the dialog opens with Preserve spacing between resized tiles and Push layout to make room enabled.</div>
-            <div class="k">Spacing</div><div class="v">Opens a dialog with all spacing actions: Set all, Set rows only, Set columns only, Unstack and Set All, Inc/Dec all, Inc/Dec rows only, and Inc/Dec columns only.</div>
-            <div class="k">Enl/Rdc</div><div class="v">Opens the Enlarge / Reduce dialog for enlarging or reducing the entire layout by row and column amounts. Positive rows/columns enlarge tiles; negative rows/columns reduce them. This is equivalent to selecting all tiles and dragging the lower-right resize handle.</div>
-            <div class="k">Unstack and Set All</div><div class="v">Set-menu option that is enabled only when tiles overlap. It breaks overlap stacks apart and sets spacing between individual tiles.</div>
-            <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
-            <div class="k">Cut / Copy / Paste</div><div class="v">Uses an internal tile buffer. Cut keeps tiles visible until the first paste, which behaves as a move; later pastes create copies.</div>
-            <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it.</div>
-            <div class="k">Rendered View compatibility</div><div class="v">Preferences can disable compatibility capture, use it only as an automatic fallback, or always use it. Automatic fallback completes every normal capture attempt and retry before it starts the viewport-based mobile compatibility method.</div>
-            <div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
-            <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
-          </div>
-        </section>
-
-        <section class="help-pane" id="helpMove">
-          <h4>Move, copy, paste, overlaps, and spacing</h4>
-          <h5>Placement operations</h5>
-          <p>Move to, Copy to, and Paste put the editor into a pending placement mode. After choosing the action, click the destination grid cell. Use Escape to cancel the pending operation.</p>
-          <h5>Push behavior</h5>
-          <p>Push is available for a single tile or a single connected cluster. It is disabled for disconnected multi-cluster selections or buffers. When push is used, tiles to the right and/or below the destination are moved enough to make room.</p>
-          <div class="help-grid">
-            <div class="k">Overlaps: warn</div><div class="v">Blocks operations that would overlap existing tiles.</div>
-            <div class="k">Overlaps: allow</div><div class="v">Allows the operation even if resulting tiles overlap.</div>
-            <div class="k">Overlaps: skip</div><div class="v">Skips conflicting copied/moved tiles when possible.</div>
-            <div class="k">Overlaps: push</div><div class="v">Moves affected tiles to make room, using the Push buf value as an added gap.</div>
-            <div class="k">Dup CSS</div><div class="v">When copying tiles, duplicates tile-scoped custom CSS for the new tile ids.</div>
-          </div>
-          <h5>Spacing and unstacking</h5>
-          <p>Spacing Set normally treats touching or overlapping tiles as connected clusters, so spacing is adjusted between clusters without breaking them apart. <b>Unstack and Set All</b> is available only when the layout has actual overlapping tiles. It treats every tile as its own unit, moves tiles as needed, and sets the requested spacing while removing overlaps. This is the GUI equivalent of using spacing set with overlap removal for all tiles.</p>
-          <h5>Dragging and resizing</h5>
-          <p>Drag selected tiles directly on the grid to move them. Drag the resize handle at the bottom-right of a selected tile to resize the selection. Mouse resizing grows from the upper-left corner and adjusts neighboring selected tiles to avoid growing over each other. The Resize dialog does the same kind of spacing-aware resize, but uses an exact height and width entered by the user. The Enl/Rdc (Enlarge / Reduce) dialog applies that same resize-drag behavior to the full layout by treating every tile as selected and applying row/column deltas.</p><p><b>Resize dialog options:</b> <b>Preserve spacing between resized tiles</b> preserves the original spacing between the selected tiles while their sizes change. If the target size is larger than the selected tiles, the layout option is <b>Push layout to make room</b>: it automatically enables Preserve spacing between resized tiles and moves affected surrounding tiles to make room, using the same push buffer and overlap behavior as Move to, Copy to, and Paste. If the target size is smaller than the selected tiles, the option changes to <b>Pull layout to close gaps</b>. When Pull layout to close gaps is unchecked, unselected tiles do not move; only the selected tiles resize, though Preserve spacing between resized tiles can still move selected tiles relative to each other to preserve their internal gaps. When Pull layout to close gaps is checked, every row/column band freed by the shrink is removed from downstream tiles, so the collapse continues through the full layout rather than stopping at the first nearby row or column. When multiple selected tiles form one adjacent cluster with no unselected tiles between them, their internal spacing is preserved regardless of gap size, and the surrounding layout is pushed or pulled using the resized cluster's combined outside footprint. If an unselected tile sits between selected tiles, Resize Push/Pull is blocked instead of treating the selection as separate pieces. Without Push/Pull layout, conflicts are handled by the Overlaps setting: warn, allow, or skip. If the entered size enlarges any selected tile and would create overlaps, the Resize dialog shows a live warning. With Overlaps set to allow, the warning indicates that overlaps will be allowed. With Overlaps set to warn, pressing Resize opens a confirmation so the user can cancel or deliberately proceed creating the overlaps.</p>
-        </section>
-
-        <section class="help-pane" id="helpJsonCss">
-          <h4>JSON editor and CSS tools</h4>
-          <div class="help-grid">
-            <div class="k">JSON editor</div><div class="v">Allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
-            <div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
-            <div class="k">Validate / Format</div><div class="v">Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customCSS, customHTML, and customJS use very basic formatting and limited sanity checks. In customCSS view, the format step opens a review dialog when it finds duplicate selector/property declarations, conflicting declarations for the same selector/property, orphan tile rules, or selector rules that can be consolidated. Conflicts are grouped with value bubbles and the current cascade winner selected automatically. Each issue row has a consistent skip checkbox, and the Preserve removed CSS footer option can keep removed duplicates, conflicts, and orphans inactive instead of deleting them. Duplicate declarations are removed before selector consolidation. Consolidation rewrites repeated selector rules into one rule and does not preserve the original repeated rules. Consolidation rows tied to skipped conflicts are disabled; rows tied to selected conflicts stay enabled because conflict cleanup runs first. Duplicates and consolidation choices are listed with preselected checkboxes so you can accept or skip each cleanup. Applying selected cleanup to the current working layout creates a normal Undo checkpoint. The cleanup dialog applies only the selected fixes unless Reformat after applying fixes is checked. Use compact CSS format first runs the regular CSS formatter and then applies the same compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting as the JSON editor Compact CSS option. When any selector consolidation is applied, all preserved duplicate comments are removed because every duplicate is already represented by a surviving active declaration. This includes comments inside selectors that were already in a single rule and comments preserved by an earlier cleanup run.</div>
-            <div class="k">Apply changes</div><div class="v">Validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced. If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed. Full JSON edits still invalidate Rendered View captures. If the layout was loaded from the hub, the hub save target is preserved.</div>
-            <div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block. Consolidated selector originals are not preserved. Consolidation is blocked only when related conflicts are skipped.</div>
-            <div class="k">Tile-scoped CSS</div><div class="v">Rules such as <code>#tile-40</code>, <code>#tile_40</code>, or <code>.tile-40</code> are treated as tile-scoped CSS for copy/cleanup operations.</div>
-          </div>
-          <p>Use the JSON editor when you want to replace the layout while preserving hub context. Use side panel Load file/Paste JSON when you want to open an offline layout.</p>
-        </section>
-
-        <section class="help-pane" id="helpShortcuts">
-          <h4>Keyboard shortcuts and mouse combinations</h4>
-          <h5>Keyboard</h5>
-          <div class="help-grid">
-            <div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">Z</span></div><div class="v">Undo.</div>
-            <div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">Shift</span> + <span class="help-key">Z</span></div><div class="v">Redo.</div>
-            <div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">Y</span></div><div class="v">Redo.</div>
-            <div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">A</span></div><div class="v">Select all tiles, when not typing in an input/editor.</div>
-            <div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">C</span></div><div class="v">Copy selected tiles to the internal buffer.</div>
-            <div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">X</span></div><div class="v">Cut selected tiles to the internal buffer.</div>
-            <div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">V</span></div><div class="v">Begin paste from the internal buffer.</div>
-            <div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">Shift</span> + <span class="help-key">V</span></div><div class="v">Begin paste with push when the clipboard/buffer is push-eligible.</div>
-            <div class="k"><span class="help-key">Delete</span> / <span class="help-key">Backspace</span></div><div class="v">Clear the current selection without shifting other tiles.</div>
-            <div class="k"><span class="help-key">Shift</span> + <span class="help-key">Delete</span></div><div class="v">For row/column selections, delete selected lines and shift tiles to close the gap.</div>
-            <div class="k"><span class="help-key">Esc</span></div><div class="v">Cancel a pending move/copy/paste or cancel an active resize drag.</div>
-            <div class="k"><span class="help-key">Shift</span> held</div><div class="v">Temporarily switches eligible Move to / Copy to / Paste actions into push mode and opens Resize with Preserve spacing between resized tiles + Push layout to make room enabled. Push-mode buttons glow while active.</div>
-            <div class="k"><span class="help-key">Enter</span></div><div class="v">Submits the PIN prompt when opening a PIN-protected dashboard.</div>
-          </div>
-          <h5>Mouse</h5>
-          <div class="help-grid">
-            <div class="k">Click tile</div><div class="v">Select tile; repeated clicks on the same overlapped cell cycle layers.</div>
-            <div class="k">Ctrl/Cmd-click tile</div><div class="v">Toggle tile in multi-selection; repeated clicks on overlapped cells cycle/toggle layers.</div>
-            <div class="k">Alt-click tile</div><div class="v">Select the connected cluster.</div>
-            <div class="k">Double-click tile/cell</div><div class="v">Select the connected cluster.</div>
-            <div class="k">Drag selected tile</div><div class="v">Move the selected tile or selected group.</div>
-            <div class="k">Drag resize handle</div><div class="v">Resize selected tiles from their lower-right edge.</div>
-            <div class="k">Drag grid background</div><div class="v">Create a rectangular tile selection.</div>
-            <div class="k">Ctrl/Cmd-drag grid</div><div class="v">Add a rectangular selection to the existing selection.</div>
-            <div class="k">Click/drag header</div><div class="v">Select one row/column or a contiguous row/column range.</div>
-            <div class="k">Shift-click header</div><div class="v">Extend row/column selection from the previous header anchor.</div>
-            <div class="k">Right-click grid/header</div><div class="v">Open the context menu.</div>
-            <div class="k">Press and hold toolbar buttons</div><div class="v">Open alternate options on buttons with a dropdown arrow, such as push placement, trim direction, spacing scope, and save destination.</div>
-          </div>
-        </section>
-      </div>
-    </div>
-    <div class="modal-foot"><button class="btn" id="helpClose">Close</button></div>
-  </div>
+<div class="modal help-modal">
+<div class="modal-head"><h3>Dashboard Layout Studio Help</h3></div>
+<div class="modal-body help-body">
+<div aria-label="Help topics" class="help-tabs" role="tablist">
+<button class="help-tab active" data-help-pane="helpOverview">Overview</button>
+<button class="help-tab" data-help-pane="helpLoadSave">Load &amp; Save</button>
+<button class="help-tab" data-help-pane="helpSelect">Selecting Tiles</button>
+<button class="help-tab" data-help-pane="helpToolbar">Toolbar Buttons</button>
+<button class="help-tab" data-help-pane="helpMove">Move, Copy &amp; Spacing</button>
+<button class="help-tab" data-help-pane="helpJsonCss">JSON &amp; CSS</button>
+<button class="help-tab" data-help-pane="helpShortcuts">Shortcuts</button>
+</div>
+<div class="help-content">
+<section class="help-pane active" id="helpOverview">
+<div class="help-pages"><article class="help-page active" data-help-title="Purpose and workflow"><div class="help-page-kicker">Overview</div><h4>Purpose and workflow</h4><h5>What this tool does</h5><p>Dashboard Layout Studio works with the same row-and-column grid layout used by the Hubitat native dashboard editor, but adds an enhanced graphical interface for selecting, rearranging, copying, resizing, spacing, and otherwise manipulating tiles and complete layouts without hand-editing every tile coordinate.</p><div class="help-callout"><b>Compatibility:</b> Dashboard Layout Studio works only with v1 dashboard layouts from the built-in Hubitat Dashboards app. It is not compatible with Hubitat EZ Dashboards.</div><div class="help-callout warn"><b>Working layout:</b> The grid is not a live Hubitat dashboard. It is an editor for the layout JSON. Changes are applied to the working layout until you save or download them.</div><h5>Basic workflow</h5><ol class="help-step-list">
+<li>Load a dashboard from the hub, from a JSON file, or from pasted JSON.</li>
+<li>Select tiles, rows, columns, or a rectangular area on the grid.</li>
+<li>Use the toolbar to insert, delete, clear, move, copy, paste, resize, trim, or adjust spacing.</li>
+<li>Use Undo/Redo while experimenting.</li>
+<li>Review JSON or CSS if needed.</li>
+<li>Save to the hub, download a file, or copy the finished JSON to the clipboard.</li>
+</ol></article></div>
+<div class="help-page-nav"></div>
+</section>
+<section class="help-pane" id="helpLoadSave">
+<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><h5>Connecting to the hub</h5><div class="help-grid">
+<div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
+<div class="k">Gear beside Connect</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
+<div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
+<div class="k">Dashboard list</div><div class="v">After discovery, choose a dashboard to load its layout into the editor.</div>
+</div><h5>Opening offline layouts</h5><div class="help-card-grid">
+<div class="help-card"><b>Load file</b><p>Loads a JSON file as an offline layout. This is useful for editing backups, but it does not create a hub save target.</p></div>
+<div class="help-card"><b>Paste dashboard JSON</b><p>Loads pasted JSON as an offline layout. Like file load, this does not create a hub save target.</p></div>
+</div><div class="help-callout">Offline layouts can be edited, downloaded, or copied to the clipboard, but they cannot be saved directly to a hub dashboard unless a hub-loaded layout context is already being preserved through the JSON editor.</div></article><article class="help-page" data-help-title="Saving and preserving hub context"><div class="help-page-kicker">Load &amp; Save</div><h4>Saving and preserving hub context</h4><h5>Saving and preserving hub context</h5><div class="help-grid">
+<div class="k">Save</div><div class="v">Opens save options: Save to hub, Download as file, or Copy to clipboard. Save to hub is available only when the active layout was loaded from the hub.</div>
+</div><h5>Important hub-save distinction</h5><p>If you load a layout with the side panel file/paste tools, the tool treats it as offline JSON.</p><p>If you instead load from the hub and then use the JSON editor to replace or edit the layout, the existing hub save target is preserved.</p></article></div>
+<div class="help-page-nav"></div>
+</section>
+<section class="help-pane" id="helpSelect">
+<div class="help-pages"><article class="help-page active" data-help-title="How tile selection works"><div class="help-page-kicker">Selecting Tiles</div><h4>How tile selection works</h4><h5>Selecting individual tiles and stacks</h5><p>Like the Hubitat native editor, each tile location is defined by the row and column of the tile’s upper-left corner. Dashboard Layout Studio uses that same upper-left-corner location when deciding whether a tile belongs to a row, column, or rectangular selection.</p><p>A tile may extend beyond the selected area because its height and width span additional grid cells. The Selection mode controls whether a tile whose upper-left corner is outside the target—but whose span crosses into it—is included, excluded, or selected by itself as a partial tile.</p><div class="help-grid">
+<div class="k">Click a tile</div><div class="v">Selects the tile at that cell. Repeated clicks on the same overlapped cell cycle through the stack.</div>
+<div class="k">Ctrl/Cmd-click tile</div><div class="v">Adds or removes a tile from the current tile selection. On overlapped stacks, repeated Ctrl/Cmd-clicks cycle through layers.</div>
+<div class="k">Alt-click tile</div><div class="v">Selects the connected tile cluster at that cell.</div>
+<div class="k">Double-click tile/grid cell</div><div class="v">Selects the connected tile cluster at that cell.</div>
+</div><h5>Selecting areas, rows, and columns</h5><div class="help-grid">
+<div class="k">Drag on grid</div><div class="v">Creates a rectangular selection. The Selection mode option determines which crossing tiles are included.</div>
+<div class="k">Ctrl/Cmd-drag grid</div><div class="v">Adds the rectangular drag selection to the current tile selection.</div>
+<div class="k">Click row/column header</div><div class="v">Selects that row or column as a line selection.</div>
+<div class="k">Drag row/column headers</div><div class="v">Selects a contiguous row or column range.</div>
+<div class="k">Shift-click header</div><div class="v">Extends the row or column selection from the previous header anchor.</div>
+<div class="k">Right-click grid/header</div><div class="v">Opens a context menu for tile, empty cell, row, or column actions.</div>
+</div><h5>Selection mode</h5><div class="help-card-grid">
+<div class="help-card"><b>default</b><p>Selects tiles located in the target area by their upper-left row/column.</p></div>
+<div class="help-card"><b>incl partial</b><p>Also includes tiles that start outside the target but cross into it.</p></div>
+<div class="help-card"><b>excl partial</b><p>Limits the result to tiles fully contained in the target.</p></div>
+<div class="help-card"><b>only partial</b><p>Selects only tiles crossing the target boundary; intended for clear-type cleanup work.</p></div>
+</div></article></div>
+<div class="help-page-nav"></div>
+</section>
+<section class="help-pane" id="helpToolbar">
+<div class="help-pages"><article class="help-page active" data-help-title="Selection and tile actions"><div class="help-page-kicker">Toolbar Buttons</div><h4>Selection and tile actions</h4><h5>How the toolbar is organized</h5><p>The first toolbar group in the top row contains actions that operate on the current selection: tiles, rows, columns, or selected areas.</p><p>The next top-row group contains whole-layout actions such as Trim and Spacing.</p><div class="help-callout">Select first, then act. Selection actions use the current tile, row, column, or rectangular selection; whole-layout actions operate across the dashboard layout.</div><h5>Selection and structural actions</h5><div class="help-grid">
+<div class="k">Select</div><div class="v">Selects all tiles in the layout. This is the toolbar equivalent of Ctrl/Cmd+A.</div>
+<div class="k">Info</div><div class="v">Shows tile id, position, size, device id from the layout JSON, hub device name when available, template details, and tile-scoped custom CSS for the selected tile. The scoped CSS section can be edited directly; every saved selector must remain scoped to the current tile.</div>
+<div class="k">Insert</div><div class="v">For row/column selections, inserts rows or columns before the selected line range and shifts affected tiles.</div>
+<div class="k">Delete</div><div class="v">Deletes selected rows/columns and shifts later tiles to close the gap. For tile selections, use Clear to remove without shifting.</div>
+<div class="k">Clear</div><div class="v">Removes selected tiles or tiles in the selected area without shifting other tiles.</div>
+</div><h5>Placement and clipboard actions</h5><div class="help-grid">
+<div class="k">Move to</div><div class="v">Starts a placement operation. Click a destination cell or compatible row/column header to move the selection.</div>
+<div class="k">Copy to</div><div class="v">Starts a placement operation that duplicates the selection to a clicked destination.</div>
+<div class="k">Cut / Copy / Paste</div><div class="v">Uses an internal tile buffer. Cut keeps tiles visible until the first paste, which behaves as a move; later pastes create copies.</div>
+</div></article><article class="help-page" data-help-title="Layout and editor controls"><div class="help-page-kicker">Toolbar Buttons</div><h4>Layout and editor controls</h4><h5>Layout sizing and spacing actions</h5><div class="help-grid">
+<div class="k">Trim</div><div class="v">Whole-layout action that removes blank space above and/or left of the current layout. Hold the button for top-only or left-only choices.</div>
+<div class="k">Resize</div><div class="v">Selection-action button that sets selected tiles to an exact height and width. Options can preserve spacing between resized tiles and/or push the surrounding layout out of the way. When Overlaps is set to push, or Shift is held, the Resize button glows and the dialog opens with Preserve spacing between resized tiles and Push layout to make room enabled.</div>
+<div class="k">Spacing</div><div class="v">Opens a dialog with all spacing actions: Set all, Set rows only, Set columns only, Unstack and Set All, Inc/Dec all, Inc/Dec rows only, and Inc/Dec columns only.</div>
+<div class="k">Enl/Rdc</div><div class="v">Opens the Enlarge / Reduce dialog for enlarging or reducing the entire layout by row and column amounts. Positive rows/columns enlarge tiles; negative rows/columns reduce them. This is equivalent to selecting all tiles and dragging the lower-right resize handle.</div>
+<div class="k">Unstack and Set All</div><div class="v">Set-menu option that is enabled only when tiles overlap. It breaks overlap stacks apart and sets spacing between individual tiles.</div>
+<div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
+</div><h5>History, views, JSON, and Save</h5><div class="help-grid">
+<div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it.</div>
+<div class="k">Rendered View compatibility</div><div class="v">Preferences can disable compatibility capture, use it only as an automatic fallback, or always use it. Automatic fallback completes every normal capture attempt and retry before it starts the viewport-based mobile compatibility method.</div>
+<div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
+<div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
+</div></article></div>
+<div class="help-page-nav"></div>
+</section>
+<section class="help-pane" id="helpMove">
+<div class="help-pages"><article class="help-page active" data-help-title="Move, copy, paste, and overlaps"><div class="help-page-kicker">Move, Copy &amp; Spacing</div><h4>Move, copy, paste, and overlaps</h4><h5>Placement operations</h5><p>Move to, Copy to, and Paste put the editor into a pending placement mode.</p><ol class="help-step-list">
+<li>Choose Move to, Copy to, or Paste.</li>
+<li>Click the destination grid cell.</li>
+<li>Use Escape to cancel the pending operation.</li>
+</ol><h5>Push behavior</h5><p>Push is available for a single tile or a single connected cluster. It is disabled for disconnected multi-cluster selections or buffers.</p><p>When push is used, tiles to the right and/or below the destination are moved enough to make room.</p><h5>Overlap handling and CSS duplication</h5><div class="help-grid">
+<div class="k">Overlaps: warn</div><div class="v">Blocks operations that would overlap existing tiles.</div>
+<div class="k">Overlaps: allow</div><div class="v">Allows the operation even if resulting tiles overlap.</div>
+<div class="k">Overlaps: skip</div><div class="v">Skips conflicting copied/moved tiles when possible.</div>
+<div class="k">Overlaps: push</div><div class="v">Moves affected tiles to make room, using the Push buf value as an added gap.</div>
+<div class="k">Dup CSS</div><div class="v">When copying tiles, duplicates tile-scoped custom CSS for the new tile ids.</div>
+</div></article><article class="help-page" data-help-title="Spacing and direct manipulation"><div class="help-page-kicker">Move, Copy &amp; Spacing</div><h4>Spacing and direct manipulation</h4><h5>Spacing and unstacking</h5><p>Spacing Set normally treats touching or overlapping tiles as connected clusters, so spacing is adjusted between clusters without breaking them apart.</p><div class="help-callout"><b>Unstack and Set All</b> is available only when the layout has actual overlapping tiles. It treats every tile as its own unit, moves tiles as needed, and sets the requested spacing while removing overlaps.</div><p>This is the GUI equivalent of using spacing set with overlap removal for all tiles.</p><h5>Dragging and resizing</h5><div class="help-card-grid">
+<div class="help-card"><b>Move by dragging</b><p>Drag selected tiles directly on the grid to move them.</p></div>
+<div class="help-card"><b>Resize by dragging</b><p>Drag the resize handle at the bottom-right of a selected tile to resize the selection.</p></div>
+<div class="help-card"><b>Mouse-resize behavior</b><p>Mouse resizing grows from the upper-left corner and adjusts neighboring selected tiles to avoid growing over each other.</p></div>
+<div class="help-card"><b>Exact size</b><p>The Resize dialog does the same kind of spacing-aware resize, but uses an exact height and width entered by the user.</p></div>
+</div><p>The Enl/Rdc (Enlarge / Reduce) dialog applies that same resize-drag behavior to the full layout by treating every tile as selected and applying row/column deltas.</p></article><article class="help-page" data-help-title="Resize selected tiles"><div class="help-page-kicker">Move, Copy &amp; Spacing</div><h4>Resize selected tiles</h4><h5>Resize dialog: preserving spacing and growing</h5><div class="help-card"><b>Preserve spacing between resized tiles</b><p>Preserves the original spacing between the selected tiles while their sizes change.</p></div><div class="help-card" style="margin-top:10px"><b>Push layout to make room</b><p>If the target size is larger than the selected tiles, the layout option is Push layout to make room. It automatically enables Preserve spacing between resized tiles and moves affected surrounding tiles to make room, using the same push buffer and overlap behavior as Move to, Copy to, and Paste.</p></div><h5>Resize dialog: reducing, pulling, and conflicts</h5><ul>
+<li>If the target size is smaller than the selected tiles, the option changes to <b>Pull layout to close gaps</b>.</li>
+<li>When Pull layout to close gaps is unchecked, unselected tiles do not move; only the selected tiles resize, though Preserve spacing between resized tiles can still move selected tiles relative to each other to preserve their internal gaps.</li>
+<li>When Pull layout to close gaps is checked, every row/column band freed by the shrink is removed from downstream tiles, so the collapse continues through the full layout rather than stopping at the first nearby row or column.</li>
+<li>When multiple selected tiles form one adjacent cluster with no unselected tiles between them, their internal spacing is preserved regardless of gap size, and the surrounding layout is pushed or pulled using the resized cluster's combined outside footprint.</li>
+<li>If an unselected tile sits between selected tiles, Resize Push/Pull is blocked instead of treating the selection as separate pieces.</li>
+<li>Without Push/Pull layout, conflicts are handled by the Overlaps setting: warn, allow, or skip.</li>
+<li>If the entered size enlarges any selected tile and would create overlaps, the Resize dialog shows a live warning.</li>
+<li>With Overlaps set to allow, the warning indicates that overlaps will be allowed.</li>
+<li>With Overlaps set to warn, pressing Resize opens a confirmation so the user can cancel or deliberately proceed creating the overlaps.</li>
+</ul></article></div>
+<div class="help-page-nav"></div>
+</section>
+<section class="help-pane" id="helpJsonCss">
+<div class="help-pages"><article class="help-page active" data-help-title="JSON editor and applying changes"><div class="help-page-kicker">JSON &amp; CSS</div><h4>JSON editor and applying changes</h4><h5>JSON editor and field views</h5><div class="help-grid">
+<div class="k">JSON editor</div><div class="v">Allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
+<div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
+</div><h5>Applying editor changes</h5><p><b>Apply changes</b> validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced.</p><div class="help-card-grid">
+<div class="help-card"><b>Custom field-only edits</b><p>If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed.</p></div>
+<div class="help-card"><b>Full JSON edits</b><p>Full JSON edits still invalidate Rendered View captures.</p></div>
+</div><p>If the layout was loaded from the hub, the hub save target is preserved.</p><div class="help-callout">Use the JSON editor when you want to replace the layout while preserving hub context. Use side panel Load file/Paste JSON when you want to open an offline layout.</div></article><article class="help-page" data-help-title="CSS validation and cleanup"><div class="help-page-kicker">JSON &amp; CSS</div><h4>CSS validation and cleanup</h4><h5>Validate / Format</h5><p>Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customCSS, customHTML, and customJS use very basic formatting and limited sanity checks.</p><p>In customCSS view, the format step opens a review dialog when it finds:</p><div class="help-card-grid">
+<div class="help-card"><b>Duplicates</b><p>Duplicate selector/property declarations.</p></div>
+<div class="help-card"><b>Conflicts</b><p>Conflicting declarations for the same selector/property.</p></div>
+<div class="help-card"><b>Orphans</b><p>Tile rules that reference tiles no longer present.</p></div>
+<div class="help-card"><b>Consolidation</b><p>Repeated selector rules that can be combined.</p></div>
+</div><p>Conflicts are grouped with value bubbles and the current cascade winner selected automatically. Each issue row has a consistent skip checkbox, and the Preserve removed CSS footer option can keep removed duplicates, conflicts, and orphans inactive instead of deleting them.</p><h5>CSS cleanup processing and options</h5><ul>
+<li>Duplicate declarations are removed before selector consolidation.</li>
+<li>Consolidation rewrites repeated selector rules into one rule and does not preserve the original repeated rules.</li>
+<li>Consolidation rows tied to skipped conflicts are disabled; rows tied to selected conflicts stay enabled because conflict cleanup runs first.</li>
+<li>Duplicates and consolidation choices are listed with preselected checkboxes so you can accept or skip each cleanup.</li>
+<li>Applying selected cleanup to the current working layout creates a normal Undo checkpoint.</li>
+<li>The cleanup dialog applies only the selected fixes unless Reformat after applying fixes is checked.</li>
+<li>Use compact CSS format first runs the regular CSS formatter and then applies the same compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting as the JSON editor Compact CSS option.</li>
+<li>When any selector consolidation is applied, all preserved duplicate comments are removed because every duplicate is already represented by a surviving active declaration. This includes comments inside selectors that were already in a single rule and comments preserved by an earlier cleanup run.</li>
+</ul><h5>CSS status and tile scope</h5><div class="help-grid">
+<div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block. Consolidated selector originals are not preserved. Consolidation is blocked only when related conflicts are skipped.</div>
+<div class="k">Tile-scoped CSS</div><div class="v">Rules such as <code>#tile-40</code>, <code>#tile_40</code>, or <code>.tile-40</code> are treated as tile-scoped CSS for copy/cleanup operations.</div>
+</div></article></div>
+<div class="help-page-nav"></div>
+</section>
+<section class="help-pane" id="helpShortcuts">
+<div class="help-pages"><article class="help-page active" data-help-title="Keyboard shortcuts"><div class="help-page-kicker">Shortcuts</div><h4>Keyboard shortcuts</h4><h5>Keyboard shortcuts</h5><div class="help-grid">
+<div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">Z</span></div><div class="v">Undo.</div>
+<div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">Shift</span> + <span class="help-key">Z</span></div><div class="v">Redo.</div>
+<div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">Y</span></div><div class="v">Redo.</div>
+<div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">A</span></div><div class="v">Select all tiles, when not typing in an input/editor.</div>
+<div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">C</span></div><div class="v">Copy selected tiles to the internal buffer.</div>
+<div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">X</span></div><div class="v">Cut selected tiles to the internal buffer.</div>
+<div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">V</span></div><div class="v">Begin paste from the internal buffer.</div>
+<div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">Shift</span> + <span class="help-key">V</span></div><div class="v">Begin paste with push when the clipboard/buffer is push-eligible.</div>
+<div class="k"><span class="help-key">Delete</span> / <span class="help-key">Backspace</span></div><div class="v">Clear the current selection without shifting other tiles.</div>
+<div class="k"><span class="help-key">Shift</span> + <span class="help-key">Delete</span></div><div class="v">For row/column selections, delete selected lines and shift tiles to close the gap.</div>
+<div class="k"><span class="help-key">Esc</span></div><div class="v">Cancel a pending move/copy/paste or cancel an active resize drag.</div>
+<div class="k"><span class="help-key">Shift</span> held</div><div class="v">Temporarily switches eligible Move to / Copy to / Paste actions into push mode and opens Resize with Preserve spacing between resized tiles + Push layout to make room enabled. Push-mode buttons glow while active.</div>
+<div class="k"><span class="help-key">Enter</span></div><div class="v">Submits the PIN prompt when opening a PIN-protected dashboard.</div>
+</div></article><article class="help-page" data-help-title="Mouse combinations"><div class="help-page-kicker">Shortcuts</div><h4>Mouse combinations</h4><h5>Mouse combinations</h5><div class="help-grid">
+<div class="k">Click tile</div><div class="v">Select tile; repeated clicks on the same overlapped cell cycle layers.</div>
+<div class="k">Ctrl/Cmd-click tile</div><div class="v">Toggle tile in multi-selection; repeated clicks on overlapped cells cycle/toggle layers.</div>
+<div class="k">Alt-click tile</div><div class="v">Select the connected cluster.</div>
+<div class="k">Double-click tile/cell</div><div class="v">Select the connected cluster.</div>
+<div class="k">Drag selected tile</div><div class="v">Move the selected tile or selected group.</div>
+<div class="k">Drag resize handle</div><div class="v">Resize selected tiles from their lower-right edge.</div>
+<div class="k">Drag grid background</div><div class="v">Create a rectangular tile selection.</div>
+<div class="k">Ctrl/Cmd-drag grid</div><div class="v">Add a rectangular selection to the existing selection.</div>
+<div class="k">Click/drag header</div><div class="v">Select one row/column or a contiguous row/column range.</div>
+<div class="k">Shift-click header</div><div class="v">Extend row/column selection from the previous header anchor.</div>
+<div class="k">Right-click grid/header</div><div class="v">Open the context menu.</div>
+<div class="k">Press and hold toolbar buttons</div><div class="v">Open alternate options on buttons with a dropdown arrow, such as push placement, trim direction, spacing scope, and save destination.</div>
+</div></article></div>
+<div class="help-page-nav"></div>
+</section>
+</div>
+</div>
+<div class="modal-foot"><button class="btn" id="helpClose">Close</button></div>
+</div>
 </div>
 
 <div class="modal-back hidden" id="saveConfirmModal">
@@ -1194,6 +1252,33 @@
     <div class="modal-foot" style="justify-content:flex-end">
       <button class="btn ghost" id="confirmCancel">Cancel</button>
       <button class="btn primary" id="confirmOk">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-back hidden" id="importDeviceWarningModal">
+  <div class="modal" style="width:min(700px,94vw);max-height:88vh">
+    <div class="modal-head"><h3 id="importDeviceWarningTitle">Review tile device assignments</h3></div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:12px">
+      <p id="importDeviceWarningIntro" style="margin:0;line-height:1.55"></p>
+      <div id="importDeviceWarningList" class="import-device-list"></div>
+      <ul class="import-device-warning">
+        <li id="importDeviceCrossHubWarning">Device IDs are specific to a hub. A layout copied from another hub may refer to different devices even when the numbers exist on this hub.</li>
+        <li>The recommended method is to add the devices manually through the Hubitat Dashboards interface.</li>
+        <li>Automatic device selection uses an undocumented Hubitat endpoint, is experimental, and may stop working after a platform update.</li>
+        <li>Saving the dashboard while these devices remain unselected may cause Hubitat to remove or lose the tile device assignments.</li>
+      </ul>
+      <label class="import-device-confirm"><input type="checkbox" id="importDeviceConfirmIds"> <span id="importDeviceConfirmIdsText">I confirmed that the device IDs and local device names above identify the intended devices on this hub.</span></label>
+      <label class="import-device-confirm hidden" id="importDeviceLossConfirmWrap"><input type="checkbox" id="importDeviceConfirmLoss"> <span>I understand that devices marked <b>Not found on this hub</b> cannot be reconciled with this hub and that continuing may cause those tile device assignments to be lost when the dashboard is saved.</span></label>
+      <p id="importDeviceWarningStatus" class="import-device-status"></p>
+    </div>
+    <div class="modal-foot" style="justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <button class="btn ghost" id="importDeviceOpenHub" type="button">Open Hub Dashboards</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+        <button class="btn ghost" id="importDeviceCancel" type="button">Cancel</button>
+        <button class="btn ghost danger" id="importDeviceContinue" type="button" disabled>Continue without adding</button>
+        <button class="btn primary" id="importDeviceAdd" type="button" disabled>Add devices (experimental)</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1467,8 +1552,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v291";
-const APP_VERSION = "0.9.291";
+const BUILD = "v300";
+const APP_VERSION = "0.9.300";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -2262,7 +2347,8 @@ const Hub = {
       adoptLayout(meta,loaded);
       scheduleTileSnapshotCapture();
       status(`Loaded "${meta.label}".`);
-      // Device inventory and devicesPicked are cached for the Tile Info device picker and paste validation.
+      reviewLoadedDashboardDeviceAssignments(loaded,pickedAudit);
+      // Device inventory and devicesPicked are cached for the Tile Info device picker, load-time audit, and paste validation.
     }catch(e){
       trace(`load failed: ${e.message}`,null,"err");
       toast(`Could not load layout: ${e.message}`,"err");
@@ -7751,6 +7837,449 @@ function invalidLayoutDeviceIdsForCurrentDashboard(data){
   if(!data||!State.devicePickedAvailable) return [];
   return bufferedTileDeviceIds(data.tiles).filter(id=>!deviceIdSetHas(State.devicePickedIds,id));
 }
+function knownHubDeviceById(id){
+  const want=canonicalDeviceId(id);
+  if(!want) return null;
+  return allHubDevicesForAudit().find(d=>canonicalDeviceId(d.id)===want)||null;
+}
+function importedDeviceRowsHtml(ids){
+  return ids.map(id=>{
+    const d=knownHubDeviceById(id);
+    const name=d&&d.name?String(d.name):"Not found on this hub";
+    const state=d?"Exists on this hub, but is not selected for this dashboard":"Cannot be added automatically because this ID was not found";
+    return `<div class="import-device-row ${d?"":"unknown"}"><span class="id">#${esc(id)}</span><span class="name">${esc(name)}</span><span class="state">${esc(state)}</span></div>`;
+  }).join("");
+}
+function dashboardAdminPinTokenFromHtml(html){
+  const m=String(html||"").match(/globalDashboardPinToken\s*=\s*['"]([^'"]+)['"]/i);
+  return m?m[1]:"";
+}
+function objectOwnEntry(obj,names){
+  if(!obj||typeof obj!=="object") return {found:false,key:null,value:undefined};
+  for(const name of names){
+    if(Object.prototype.hasOwnProperty.call(obj,name)) return {found:true,key:name,value:obj[name]};
+  }
+  const keys=Object.keys(obj);
+  for(const name of names){
+    const target=String(name).toLowerCase();
+    const key=keys.find(k=>String(k).toLowerCase()===target);
+    if(key!=null) return {found:true,key,value:obj[key]};
+  }
+  return {found:false,key:null,value:undefined};
+}
+function objectOwnValue(obj,names){
+  return objectOwnEntry(obj,names).value;
+}
+function dashboardAdminIdAliases(){
+  return ["id","dashboardId","dashboardID","dashId","appId","appID","installedAppId","installedApplicationId","childAppId"];
+}
+function dashboardAdminJsonValue(value){
+  if(typeof value!=="string") return null;
+  const text=value.trim();
+  if(!text || !/^[\[{]/.test(text)) return null;
+  try{ return JSON.parse(text); }catch(_){ return null; }
+}
+function dashboardAdminIdsFromObject(obj,parentKey){
+  const ids=new Set();
+  const add=value=>{
+    const text=String(value==null?"":value).trim();
+    if(/^\d+$/.test(text)) ids.add(text);
+  };
+  if(obj&&typeof obj==="object"&&!Array.isArray(obj)){
+    for(const alias of dashboardAdminIdAliases()){
+      const entry=objectOwnEntry(obj,[alias]);
+      if(entry.found) add(entry.value);
+    }
+    for(const value of Object.values(obj)){
+      if(typeof value!=="string") continue;
+      const text=value;
+      let m;
+      const patterns=[
+        /\/apps\/api\/(\d+)\/dashboard\/(\d+)/i,
+        /\/dashboard\/ui\/(\d+)/i,
+        /(?:^|[^a-z0-9])dashboard-(\d+)(?:[^a-z0-9]|$)/i,
+        /(?:[?&]|^)id=(\d+)(?:&|$)/i
+      ];
+      for(const re of patterns){
+        m=text.match(re);
+        if(!m) continue;
+        for(let i=1;i<m.length;i++) add(m[i]);
+      }
+    }
+  }
+  add(parentKey);
+  return ids;
+}
+function dashboardAdminLooksLikeConfig(obj){
+  if(!obj||typeof obj!=="object"||Array.isArray(obj)) return false;
+  const keys=["deviceIds","devices","selectedDeviceIds","showModeTile","showClockTile","showCalendarTile","showHSMTile","showEdit","showNavigation","showTutorial","navigationSelection","dashboardPin","hsmPin","theme"];
+  return keys.some(key=>objectOwnEntry(obj,[key]).found);
+}
+function dashboardAdminDeepEntry(obj,names,maxDepth=4){
+  const seen=new Set();
+  const queue=[{value:obj,depth:0}];
+  while(queue.length){
+    const current=queue.shift();
+    const value=current.value;
+    if(value==null) continue;
+    if(typeof value==="string"){
+      const parsed=dashboardAdminJsonValue(value);
+      if(parsed&&current.depth<maxDepth) queue.push({value:parsed,depth:current.depth+1});
+      continue;
+    }
+    if(typeof value!=="object"||seen.has(value)) continue;
+    seen.add(value);
+    if(!Array.isArray(value)){
+      const direct=objectOwnEntry(value,names);
+      if(direct.found) return direct;
+    }
+    if(current.depth>=maxDepth) continue;
+    const children=Array.isArray(value)?value:Object.values(value);
+    for(const child of children){
+      if(child!=null&&(typeof child==="object"||typeof child==="string")) queue.push({value:child,depth:current.depth+1});
+    }
+  }
+  return {found:false,key:null,value:undefined};
+}
+function normalizedDashboardAdminConfig(obj,want){
+  if(!obj||typeof obj!=="object") return null;
+  const fields={
+    id:dashboardAdminIdAliases(),
+    name:["name","label"],
+    deviceIds:["deviceIds","devices","selectedDeviceIds"],
+    showModeTile:["showModeTile"],
+    showClockTile:["showClockTile"],
+    showCalendarTile:["showCalendarTile"],
+    showHSMTile:["showHSMTile"],
+    showEdit:["showEdit"],
+    showNavigation:["showNavigation"],
+    showTutorial:["showTutorial"],
+    navigationSelection:["navigationSelection"],
+    dashboardPin:["dashboardPin"],
+    hsmPin:["hsmPin"],
+    theme:["theme"]
+  };
+  const normalized={};
+  for(const [canonical,names] of Object.entries(fields)){
+    const entry=dashboardAdminDeepEntry(obj,names);
+    if(entry.found) normalized[canonical]=entry.value;
+  }
+  normalized.id=String(normalized.id==null?want:normalized.id);
+  return normalized;
+}
+function findDashboardConfigById(data,id){
+  const want=String(id==null?"":id).trim();
+  const seen=new Set(), queue=[{value:data,parentKey:null}];
+  while(queue.length){
+    const current=queue.shift();
+    let value=current.value;
+    if(typeof value==="string"){
+      value=dashboardAdminJsonValue(value);
+      if(!value) continue;
+    }
+    if(!value||typeof value!=="object"||seen.has(value)) continue;
+    seen.add(value);
+    if(!Array.isArray(value)){
+      const ids=dashboardAdminIdsFromObject(value,current.parentKey);
+      if(ids.has(want)){
+        if(dashboardAdminLooksLikeConfig(value)) return normalizedDashboardAdminConfig(value,want);
+        const nested=dashboardAdminDeepEntry(value,["deviceIds","devices","selectedDeviceIds"]);
+        if(nested.found) return normalizedDashboardAdminConfig(value,want);
+      }
+      for(const [key,child] of Object.entries(value)){
+        if(child!=null&&(typeof child==="object"||typeof child==="string")) queue.push({value:child,parentKey:key});
+      }
+    }else{
+      for(const child of value) if(child!=null&&(typeof child==="object"||typeof child==="string")) queue.push({value:child,parentKey:null});
+    }
+  }
+  return null;
+}
+function dashboardAdminCandidateIds(data){
+  const out=new Set(), seen=new Set(), queue=[{value:data,parentKey:null}];
+  while(queue.length&&seen.size<1000){
+    const current=queue.shift();
+    let value=current.value;
+    if(typeof value==="string"){
+      value=dashboardAdminJsonValue(value);
+      if(!value) continue;
+    }
+    if(!value||typeof value!=="object"||seen.has(value)) continue;
+    seen.add(value);
+    if(!Array.isArray(value)){
+      for(const id of dashboardAdminIdsFromObject(value,current.parentKey)) out.add(id);
+      for(const [key,child] of Object.entries(value)) if(child!=null&&(typeof child==="object"||typeof child==="string")) queue.push({value:child,parentKey:key});
+    }else{
+      for(const child of value) if(child!=null&&(typeof child==="object"||typeof child==="string")) queue.push({value:child,parentKey:null});
+    }
+  }
+  return sortDeviceIds(out);
+}
+async function loadActiveDashboardAdminConfig(){
+  if(!(State.hubAvailable&&State.conn.mode==="live"&&State.active)) throw new Error("the active layout is not connected to a hub dashboard");
+  const selectUrl=new URL("/dashboard/select",window.location.origin).toString();
+  trace("GET Hubitat dashboard administration page",selectUrl);
+  const selectRes=await fetch(selectUrl,{credentials:"same-origin",cache:"no-store"});
+  const selectHtml=await selectRes.text();
+  if(!selectRes.ok) throw new Error(`dashboard administration page returned HTTP ${selectRes.status}`);
+  const pinToken=dashboardAdminPinTokenFromHtml(selectHtml);
+  if(!pinToken) throw new Error("the dashboard administration token could not be read; sign in to the hub UI and try again");
+  const allUrl=new URL("/dashboard/all",window.location.origin);
+  allUrl.searchParams.set("pinToken",pinToken);
+  trace("GET current Hubitat dashboard configuration",allUrl.toString());
+  const allRes=await fetch(allUrl.toString(),{credentials:"same-origin",cache:"no-store"});
+  const text=await allRes.text();
+  if(!allRes.ok) throw new Error(`dashboard configuration returned HTTP ${allRes.status}`);
+  let data;
+  try{ data=JSON.parse(text); }
+  catch(_){ throw new Error("dashboard configuration response was not JSON"); }
+  const config=findDashboardConfigById(data,State.active.id);
+  if(!config){
+    const ids=dashboardAdminCandidateIds(data);
+    const detail=ids.length?` The response contained dashboard-like IDs: ${ids.slice(0,20).join(", ")}${ids.length>20?", …":""}.`:" No dashboard IDs could be recognized in the response.";
+    throw new Error(`dashboard ${State.active.id} was not found in the administration response.${detail}`);
+  }
+  return config;
+}
+function dashboardConfigValue(config,names,opts={}){
+  const entry=objectOwnEntry(config,names);
+  if(entry.found) return entry.value;
+  if(Object.prototype.hasOwnProperty.call(opts,"fallback")) return opts.fallback;
+  if(opts.required) throw new Error(`dashboard setting ${names[0]} was not present in Hubitat's dashboard configuration; no update was attempted`);
+  return undefined;
+}
+function normalizeDashboardDeviceIds(value){
+  const out=new Set();
+  const add=v=>{
+    const id=canonicalDeviceId(v);
+    if(id&&id!=="0") out.add(id);
+  };
+  if(Array.isArray(value)) value.forEach(v=>typeof v==="object"?add(objectOwnValue(v,["id","deviceId","deviceID"])):add(v));
+  else if(value&&typeof value==="object"){
+    for(const [k,v] of Object.entries(value)){
+      if(v===true||v==="true"||v===1||v==="1") add(k);
+      else if(v&&typeof v==="object") add(objectOwnValue(v,["id","deviceId","deviceID"]));
+    }
+  }else String(value==null?"":value).split(/[^0-9]+/).forEach(add);
+  return out;
+}
+function dashboardBooleanParam(value){
+  if(typeof value==="string") return /^(true|1|yes|on)$/i.test(value.trim())?"true":"false";
+  return value?"true":"false";
+}
+function dashboardUpdateSettingParams(config){
+  const params=new URLSearchParams();
+  const name=dashboardConfigValue(config,["name","label"],{required:true});
+  const navigationSelection=dashboardConfigValue(config,["navigationSelection"],{required:true});
+  const dashboardPin=dashboardConfigValue(config,["dashboardPin"],{required:true});
+  const hsmPin=dashboardConfigValue(config,["hsmPin"],{required:true});
+  const theme=dashboardConfigValue(config,["theme"],{required:true});
+  const id=dashboardConfigValue(config,dashboardAdminIdAliases(),{required:true});
+  params.set("name",name==null?"":String(name));
+  for(const key of ["showModeTile","showClockTile","showCalendarTile","showHSMTile","showEdit","showNavigation"]){
+    params.set(key,dashboardBooleanParam(dashboardConfigValue(config,[key],{required:true})));
+  }
+  const showTutorial=objectOwnEntry(config,["showTutorial"]);
+  if(showTutorial.found) params.set("showTutorial",dashboardBooleanParam(showTutorial.value));
+  params.set("navigationSelection",navigationSelection==null?"":String(navigationSelection));
+  params.set("dashboardPin",dashboardPin==null?"":String(dashboardPin));
+  params.set("hsmPin",hsmPin==null?"null":String(hsmPin));
+  params.set("theme",theme==null?"":String(theme));
+  params.set("id",id==null?"":String(id));
+  return params;
+}
+function buildDashboardUpdateParams(config,missingIds){
+  const selected=normalizeDashboardDeviceIds(dashboardConfigValue(config,["deviceIds","devices","selectedDeviceIds"],{required:true}));
+  for(const picked of State.devicePickedIds||[]) selected.add(canonicalDeviceId(picked));
+  for(const missing of missingIds||[]) selected.add(canonicalDeviceId(missing));
+  selected.delete(null); selected.delete(""); selected.delete("0");
+  const settings=dashboardUpdateSettingParams(config);
+  const params=new URLSearchParams();
+  params.set("name",settings.get("name"));
+  params.set("deviceIds",sortDeviceIds(selected).join(","));
+  for(const key of ["showModeTile","showClockTile","showCalendarTile","showHSMTile","showEdit","showNavigation","navigationSelection","dashboardPin","hsmPin","theme","id"]){
+    params.set(key,settings.get(key));
+  }
+  if(settings.has("showTutorial")) params.set("showTutorial",settings.get("showTutorial"));
+  return params;
+}
+function changedDashboardSettings(expectedParams,actualConfig){
+  const actual=dashboardUpdateSettingParams(actualConfig);
+  const keys=["name","showModeTile","showClockTile","showCalendarTile","showHSMTile","showEdit","showNavigation","navigationSelection","dashboardPin","hsmPin","theme","id"];
+  if(expectedParams.has("showTutorial")) keys.push("showTutorial");
+  return keys.filter(key=>String(expectedParams.get(key))!==String(actual.get(key)));
+}
+async function experimentallyAddDevicesToActiveDashboard(ids){
+  const missing=sortDeviceIds(new Set((ids||[]).map(canonicalDeviceId).filter(Boolean)));
+  if(!missing.length) return true;
+  const unknown=missing.filter(id=>!knownHubDeviceById(id));
+  if(unknown.length) throw new Error(`device id${unknown.length===1?"":"s"} ${unknown.map(id=>`#${id}`).join(", ")} ${unknown.length===1?"was":"were"} not found on this hub`);
+  const config=await loadActiveDashboardAdminConfig();
+  const params=buildDashboardUpdateParams(config,missing);
+  const expectedSettings=new URLSearchParams(params);
+  expectedSettings.delete("deviceIds");
+  const url=new URL("/dashboard/update",window.location.origin);
+  url.search=params.toString();
+  trace(`experimental dashboard device update → add ${missing.join(", ")}`,url.toString());
+  const res=await fetch(url.toString(),{credentials:"same-origin",cache:"no-store",headers:{Accept:"*/*"}});
+  const text=await res.text().catch(()=>"");
+  if(!res.ok) throw new Error(`dashboard update returned HTTP ${res.status}${text?`: ${text.slice(0,180)}`:""}`);
+  const verifyConfig=await loadActiveDashboardAdminConfig();
+  const changed=changedDashboardSettings(expectedSettings,verifyConfig);
+  if(changed.length) throw new Error(`the devices may have been updated, but Hubitat did not preserve these dashboard settings: ${changed.join(", ")}`);
+  const picked=await loadDashboardDevicesPicked(State.active);
+  if(!picked.ok) throw new Error(`the update returned successfully and dashboard settings were preserved, but selected devices could not be verified: ${picked.error||"unknown error"}`);
+  const stillMissing=missing.filter(id=>!deviceIdSetHas(State.devicePickedIds,id));
+  if(stillMissing.length) throw new Error(`Hubitat did not report ${stillMissing.map(id=>`#${id}`).join(", ")} as selected after the update`);
+  trace(`experimental dashboard device update verified with all dashboard settings preserved: ${missing.join(", ")}`,null,"ok");
+  return true;
+}
+function showImportedDeviceWarning(opts){
+  const ids=sortDeviceIds(new Set((opts&&opts.ids||[]).map(canonicalDeviceId).filter(Boolean)));
+  if(!ids.length){ if(opts&&opts.onContinue) opts.onContinue(); return true; }
+  const modal=document.getElementById("importDeviceWarningModal");
+  const title=document.getElementById("importDeviceWarningTitle");
+  const intro=document.getElementById("importDeviceWarningIntro");
+  const list=document.getElementById("importDeviceWarningList");
+  const confirm=document.getElementById("importDeviceConfirmIds");
+  const confirmText=document.getElementById("importDeviceConfirmIdsText");
+  const lossWrap=document.getElementById("importDeviceLossConfirmWrap");
+  const lossConfirm=document.getElementById("importDeviceConfirmLoss");
+  const statusEl=document.getElementById("importDeviceWarningStatus");
+  const crossHubWarning=document.getElementById("importDeviceCrossHubWarning");
+  const openHub=document.getElementById("importDeviceOpenHub");
+  const cancel=document.getElementById("importDeviceCancel");
+  const proceed=document.getElementById("importDeviceContinue");
+  const add=document.getElementById("importDeviceAdd");
+  const unknown=ids.filter(id=>!knownHubDeviceById(id));
+  const known=ids.filter(id=>knownHubDeviceById(id));
+  const loadedDashboard=!!(opts&&opts.loadedDashboard);
+  const requireDecision=!!(opts&&opts.requireDecision);
+  title.textContent=opts.title||"Review tile device assignments";
+  intro.textContent=opts.intro||(loadedDashboard
+    ? `The loaded dashboard layout refers to ${ids.length} device ID${ids.length===1?"":"s"} that ${ids.length===1?"is":"are"} not selected for "${State.active&&State.active.label||"this dashboard"}". Review the devices before continuing.`
+    : `${opts.subject||"The imported tiles"} refer to ${ids.length} device ID${ids.length===1?"":"s"} that ${ids.length===1?"is":"are"} not selected for "${State.active&&State.active.label||"this dashboard"}". Review the local device names below before continuing.`);
+  list.innerHTML=importedDeviceRowsHtml(ids);
+  confirm.checked=false;
+  lossConfirm.checked=false;
+  if(crossHubWarning){
+    crossHubWarning.textContent=loadedDashboard
+      ? "This dashboard was loaded directly from the current hub, so the IDs shown are the device IDs already stored in its layout."
+      : "Device IDs are specific to a hub. A layout copied from another hub may refer to different devices even when the numbers exist on this hub.";
+  }
+  confirmText.textContent=loadedDashboard
+    ? "I reviewed the unselected devices above and understand that saving without adding them may cause those tile device assignments to be lost."
+    : (unknown.length
+      ? "I reviewed the device IDs and local device names above and confirmed the device matches that could be made on this hub."
+      : "I confirmed that the device IDs and local device names above identify the intended devices on this hub.");
+  lossWrap.classList.toggle("hidden",!unknown.length);
+  const lossText=lossWrap.querySelector("span");
+  if(lossText){
+    lossText.innerHTML=known.length
+      ? `I understand that devices marked <b>Not found on this hub</b> cannot be added. I may add the other ${known.length} available device${known.length===1?"":"s"} and continue knowing that the unresolved tiles do not have valid device assignments and that those assignments may be lost when the dashboard is saved.`
+      : `I understand that devices marked <b>Not found on this hub</b> cannot be reconciled with this hub and that continuing may cause those tile device assignments to be lost when the dashboard is saved.`;
+  }
+  cancel.textContent=loadedDashboard?"Close":"Cancel";
+  cancel.classList.toggle("hidden",loadedDashboard&&requireDecision);
+  proceed.textContent=opts.continueText||"Continue without adding";
+  add.textContent=opts.addText||(unknown.length&&known.length?"Add available devices and continue (experimental)":"Add devices (experimental)");
+  statusEl.textContent=unknown.length
+    ? (known.length
+      ? `${known.length} device${known.length===1?" is":"s are"} available to add, while ${unknown.length} device ID${unknown.length===1?" could":"s could"} not be reconciled with this hub. Check both confirmations to add the available devices and continue with the unresolved tile assignments.`
+      : `No listed device IDs could be reconciled with this hub. You may continue only after reviewing the IDs and acknowledging that those tile assignments may be lost.`)
+    : (loadedDashboard
+      ? "Add the devices manually through Hubitat, use the experimental add option, or acknowledge the risk and continue without adding them."
+      : "Confirm the IDs before continuing or using the experimental add option.");
+  statusEl.className="import-device-status"+(unknown.length?" err":"");
+  let busy=false, cleaned=false;
+  const sync=()=>{
+    const checked=!!confirm.checked;
+    const lossAccepted=!unknown.length||!!lossConfirm.checked;
+    proceed.disabled=busy||!checked||!lossAccepted;
+    add.disabled=busy||!checked||!lossAccepted||!known.length||!(State.hubAvailable&&State.conn.mode==="live"&&State.active);
+    cancel.disabled=busy;
+    openHub.disabled=busy;
+  };
+  const cleanup=()=>{
+    if(cleaned) return;
+    cleaned=true;
+    modal.classList.add("hidden");
+    confirm.onchange=null; lossConfirm.onchange=null; openHub.onclick=null; cancel.onclick=null; proceed.onclick=null; add.onclick=null;
+    document.removeEventListener("keydown",onKeyDown,true);
+  };
+  const onKeyDown=e=>{
+    if(e.key!=="Escape"||busy) return;
+    e.preventDefault();
+    if(requireDecision) return;
+    cleanup();
+    if(opts.onCancel) opts.onCancel();
+  };
+  confirm.onchange=sync;
+  lossConfirm.onchange=sync;
+  openHub.onclick=()=>window.open(new URL("/dashboard/select",window.location.origin).toString(),"_blank","noopener");
+  cancel.onclick=()=>{ cleanup(); if(opts.onCancel) opts.onCancel(); };
+  proceed.onclick=()=>{ if(proceed.disabled) return; cleanup(); if(opts.onContinue) opts.onContinue({devicesAdded:false}); };
+  add.onclick=async()=>{
+    if(add.disabled) return;
+    busy=true; sync();
+    statusEl.className="import-device-status";
+    statusEl.textContent=unknown.length
+      ? `Attempting to add ${known.length} available device${known.length===1?"":"s"} through Hubitat's undocumented dashboard endpoint…`
+      : "Attempting to add the devices through Hubitat's undocumented dashboard endpoint…";
+    try{
+      await experimentallyAddDevicesToActiveDashboard(known);
+      statusEl.textContent=unknown.length
+        ? `The ${known.length} available device${known.length===1?" was":"s were"} added and verified. ${unknown.length} unresolved tile assignment${unknown.length===1?" remains":"s remain"}.`
+        : "Devices were added and verified.";
+      cleanup();
+      if(opts.onContinue) opts.onContinue({devicesAdded:true,addedIds:[...known],unresolvedIds:[...unknown],partial:!!unknown.length});
+    }catch(e){
+      busy=false;
+      statusEl.className="import-device-status err";
+      statusEl.textContent=`Experimental add failed: ${e.message}. Add the devices manually through Hubitat, or continue without adding them.`;
+      sync();
+      trace(`experimental device add failed: ${e.message}`,null,"err");
+    }
+  };
+  resetModalPosition("importDeviceWarningModal");
+  modal.classList.remove("hidden");
+  document.addEventListener("keydown",onKeyDown,true);
+  sync();
+  setTimeout(()=>confirm.focus({preventScroll:true}),0);
+  return false;
+}
+function reviewLoadedDashboardDeviceAssignments(layout,pickedAudit){
+  if(!(State.conn.mode==="live"&&State.active)) return true;
+  const label=State.active.label||`dashboard ${State.active.id}`;
+  if(!pickedAudit||!pickedAudit.ok){
+    const reason=pickedAudit&&pickedAudit.error?` (${pickedAudit.error})`:"";
+    trace(`load-time devicesPicked validation unavailable for ${label}${reason}`,null,"err");
+    toast(`Loaded "${label}", but its selected-device list could not be checked. Saving may cause unselected tile assignments to be lost.`,"err");
+    status(`Loaded "${label}" — selected dashboard devices could not be verified.`);
+    return false;
+  }
+  const invalid=invalidLayoutDeviceIdsForCurrentDashboard(layout);
+  if(!invalid.length){
+    trace(`load-time device validation passed for ${label}`,null,"ok");
+    return true;
+  }
+  trace(`load-time device validation → ${invalid.length} unselected device id(s): ${invalid.join(", ")}`,null,"err");
+  return showImportedDeviceWarning({
+    title:"Loaded dashboard uses unselected devices",
+    loadedDashboard:true,
+    requireDecision:true,
+    ids:invalid,
+    onContinue:result=>{
+      if(result&&result.devicesAdded&&result.unresolvedIds&&result.unresolvedIds.length){
+        status(`Loaded "${label}". ${result.addedIds.length} available device${result.addedIds.length===1?" was":"s were"} added; ${result.unresolvedIds.length} tile device assignment${result.unresolvedIds.length===1?" remains":"s remain"} unresolved and may be lost when saved.`);
+      }else if(result&&result.devicesAdded){
+        status(`Loaded "${label}". The missing dashboard devices were added and verified.`);
+      }else{
+        status(`Loaded "${label}" with unselected device assignments. Add them through Hubitat before saving to avoid possible assignment loss.`);
+      }
+    }
+  });
+}
 function confirmFullJsonDeviceValidation(data,onProceed){
   if(!(State.conn.mode==="live"&&State.active)){
     if(onProceed) onProceed();
@@ -7759,10 +8288,10 @@ function confirmFullJsonDeviceValidation(data,onProceed){
   if(!State.devicePickedAvailable){
     showConfirm(
       "Dashboard device validation unavailable",
-      "The selected-device list for the hub dashboard being replaced could not be read, so the replacement JSON cannot be checked against that dashboard's devicesPicked setting. Apply the replacement layout anyway?",
+      "The selected-device list for the hub dashboard being replaced could not be read, so the replacement JSON cannot be checked against that dashboard's selected devices. Device IDs are hub-specific, and saving assignments for unselected devices may cause those assignments to be removed or lost. Add devices manually through Hubitat before saving whenever possible. Apply the replacement layout anyway?",
       onProceed,
       ()=>status("JSON replacement was not applied."),
-      {okText:"Apply anyway",cancelText:"Cancel",defaultButton:"cancel"}
+      {okText:"Apply anyway",cancelText:"Cancel",defaultButton:"cancel",dangerOk:true}
     );
     return false;
   }
@@ -7771,29 +8300,26 @@ function confirmFullJsonDeviceValidation(data,onProceed){
     if(onProceed) onProceed();
     return true;
   }
-  const list=invalid.map(id=>`#${id} - ${hubDeviceDisplayName(id)}`).join("\n");
-  showConfirm(
-    "Replacement layout uses devices not selected for this dashboard",
-    `The replacement JSON contains device ids that are not selected in the current hub dashboard's devicesPicked setting. Hubitat may not render or control those tiles until the devices are selected for this dashboard.\n\n${list}\n\nApply the replacement layout anyway?`,
-    onProceed,
-    ()=>status("JSON replacement was not applied."),
-    {okText:"Apply anyway",cancelText:"Cancel",defaultButton:"cancel"}
-  );
-  return false;
+  return showImportedDeviceWarning({
+    title:"Replacement layout uses unselected devices",
+    subject:"The replacement JSON",
+    ids:invalid,
+    onContinue:()=>{ if(onProceed) onProceed(); },
+    onCancel:()=>status("JSON replacement was not applied.")
+  });
 }
 function warnIfPasteHasUnselectedDevices(cell){
   const pending=State.pending;
   if(!pending || pending.deviceWarningAccepted) return true;
   const invalid=invalidBufferedDeviceIdsForDestination(State.buffer);
   if(!invalid.length) return true;
-  const list=invalid.map(id=>`#${id} - ${hubDeviceDisplayName(id)}`).join("\n");
-  showConfirm(
-    "Pasted tiles use devices not selected for this dashboard",
-    `The tile buffer contains device ids that are not in this dashboard's devicesPicked list. Hubitat may not render or control those tiles until the devices are selected for this dashboard.\n\n${list}\n\nPaste anyway?`,
-    ()=>{ if(State.pending===pending){ pending.deviceWarningAccepted=true; completePasteBuf(cell); } },
-    null,
-    {okText:"Paste anyway", cancelText:"Cancel", defaultButton:"cancel"}
-  );
+  showImportedDeviceWarning({
+    title:"Pasted tiles use unselected devices",
+    subject:"The pasted tiles",
+    ids:invalid,
+    onContinue:()=>{ if(State.pending===pending){ pending.deviceWarningAccepted=true; completePasteBuf(cell); } },
+    onCancel:()=>status("Paste cancelled — review the tile device assignments before trying again.")
+  });
   return false;
 }
 function completePasteBuf(cell){
@@ -10526,17 +11052,60 @@ async function wire(){
   applyTileOpacity(+document.getElementById("prefTileOpacity").value);
   // Note: updatePushModeButtons(false) is called after PUSH_BTNS is defined, further below
   // Preferences slide-down
+  const buildHelpPager=(pane)=>{
+    const pages=[...pane.querySelectorAll(":scope > .help-pages > .help-page")];
+    const nav=pane.querySelector(":scope > .help-page-nav");
+    if(!pages.length||!nav) return;
+    if(pages.length===1){ nav.classList.add("hidden"); return; }
+    nav.classList.remove("hidden");
+    nav.innerHTML=`<button type="button" class="btn ghost help-page-prev">← Previous</button><div class="help-page-status"><span class="help-page-title"></span><span class="help-page-count"></span><span class="help-page-dots" aria-label="Help pages"></span></div><button type="button" class="btn ghost help-page-next">Next →</button>`;
+    const show=(requested)=>{
+      const index=Math.max(0,Math.min(pages.length-1,Number(requested)||0));
+      pane.dataset.helpPage=String(index);
+      pages.forEach((page,i)=>{
+        const active=i===index;
+        page.classList.toggle("active",active);
+        page.setAttribute("aria-hidden",active?"false":"true");
+        if(active) page.scrollTop=0;
+      });
+      nav.querySelector(".help-page-prev").disabled=index===0;
+      nav.querySelector(".help-page-next").disabled=index===pages.length-1;
+      nav.querySelector(".help-page-title").textContent=pages[index].dataset.helpTitle||`Page ${index+1}`;
+      nav.querySelector(".help-page-count").textContent=`Page ${index+1} of ${pages.length}`;
+      nav.querySelectorAll(".help-page-dot").forEach((dot,i)=>dot.classList.toggle("active",i===index));
+    };
+    const dots=nav.querySelector(".help-page-dots");
+    pages.forEach((page,i)=>{
+      const dot=document.createElement("button");
+      dot.type="button";
+      dot.className="help-page-dot";
+      dot.title=page.dataset.helpTitle||`Page ${i+1}`;
+      dot.setAttribute("aria-label",`Open ${dot.title}`);
+      dot.addEventListener("click",()=>show(i));
+      dots.appendChild(dot);
+    });
+    nav.querySelector(".help-page-prev").addEventListener("click",()=>show((+pane.dataset.helpPage||0)-1));
+    nav.querySelector(".help-page-next").addEventListener("click",()=>show((+pane.dataset.helpPage||0)+1));
+    pane._showHelpPage=show;
+    show(0);
+  };
+  const activateHelpPane=(id,resetPage=true)=>{
+    const pane=document.getElementById(id);
+    if(!pane) return;
+    document.querySelectorAll(".help-tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.helpPane===id));
+    document.querySelectorAll(".help-pane").forEach(item=>item.classList.toggle("active",item===pane));
+    if(resetPage&&typeof pane._showHelpPage==="function") pane._showHelpPage(0);
+  };
+  document.querySelectorAll(".help-pane").forEach(buildHelpPager);
   document.getElementById("btnHelp").addEventListener("click",e=>{
     e.stopPropagation();
     resetModalPosition("helpModal");
     document.getElementById("helpModal").classList.remove("hidden");
+    const active=document.querySelector(".help-pane.active")||document.getElementById("helpOverview");
+    if(active&&typeof active._showHelpPage==="function") active._showHelpPage(+active.dataset.helpPage||0);
   });
   document.getElementById("helpClose").addEventListener("click",()=>document.getElementById("helpModal").classList.add("hidden"));
-  document.querySelectorAll(".help-tab").forEach(tab=>tab.addEventListener("click",()=>{
-    const id=tab.dataset.helpPane;
-    document.querySelectorAll(".help-tab").forEach(t=>t.classList.toggle("active",t===tab));
-    document.querySelectorAll(".help-pane").forEach(p=>p.classList.toggle("active",p.id===id));
-  }));
+  document.querySelectorAll(".help-tab").forEach(tab=>tab.addEventListener("click",()=>activateHelpPane(tab.dataset.helpPane,true)));
   document.getElementById("btnPrefs").addEventListener("click",e=>{
     e.stopPropagation();
     document.getElementById("prefsPanel").classList.toggle("hidden");
