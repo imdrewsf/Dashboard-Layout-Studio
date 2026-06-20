@@ -30,7 +30,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Dashboard Layout Studio</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230d1526'/%3E%3Cpath d='M2 2h12v12H2zM2 6h12M6 2v12' fill='none' stroke='%2367e8f9' stroke-width='1.2'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%0A%20%20%3Crect%20width='64'%20height='64'%20rx='12'%20fill='%230b1220'/%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id='g'%20x1='10'%20y1='54'%20x2='54'%20y2='10'%20gradientUnits='userSpaceOnUse'%3E%0A%20%20%20%20%20%20%3Cstop%20stop-color='%2367e8f9'/%3E%0A%20%20%20%20%20%20%3Cstop%20offset='1'%20stop-color='%233aa6c4'/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20x='8'%20y='8'%20width='48'%20height='48'%20rx='11'%20fill='url(%23g)'/%3E%0A%20%20%3Crect%20x='8'%20y='30'%20width='48'%20height='4'%20fill='%230b1220'%20opacity='.85'/%3E%0A%20%20%3Crect%20x='30'%20y='8'%20width='4'%20height='48'%20fill='%230b1220'%20opacity='.85'/%3E%0A%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/png;base64,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" sizes="180x180">
+<meta name="theme-color" content="#0b1220">
 <script>
 (function(){
   "use strict";
@@ -441,6 +443,8 @@
   .tile.grouped{outline:2px solid var(--accent);outline-offset:-1px;box-shadow:0 0 0 3px rgba(103,232,249,.22);cursor:grab;}
   .tile.line-sel{outline:2px solid var(--amber-2);outline-offset:-1px;box-shadow:0 0 0 3px rgba(245,166,35,.2);}
   .tile.conflict{outline:2px solid var(--danger);outline-offset:-1px;box-shadow:0 0 0 3px rgba(239,68,68,.25);}
+  .tile.unknown-device{outline:2px solid var(--danger)!important;outline-offset:-1px;box-shadow:0 0 0 3px rgba(239,68,68,.28),0 0 18px rgba(239,68,68,.38)!important;}
+  .tile.unknown-device:not(.display-snapshot){background:linear-gradient(145deg,rgba(239,68,68,.44),rgba(239,68,68,.18))!important;}
   .tile.dimmed{opacity:.22;}
   .tile.moving{opacity:.5;outline:2px dashed var(--amber-2);}
   .tile.cut-pending{opacity:.45;outline:2px dashed var(--violet);outline-offset:-1px;}
@@ -563,15 +567,21 @@
   .import-device-confirm input{margin-top:3px;}
   .import-device-status{min-height:1.2em;margin:0;color:var(--muted);font-size:.74rem;line-height:1.4;}
   .import-device-status.err{color:#fecaca;}
-  .json-manager-pane{height:52vh;min-height:300px;overflow:auto;border:1px solid var(--border);border-radius:9px;background:rgba(0,0,0,.12);padding:10px;}
+  .json-manager-pane{height:52vh;min-height:300px;overflow:hidden;border:1px solid var(--border);border-radius:9px;background:rgba(0,0,0,.12);padding:0;display:flex;flex-direction:column;}
+  .json-manager-fixed-top,.json-manager-fixed-bottom{flex:0 0 auto;padding:10px;background:rgba(15,23,42,.94);z-index:3;}
+  .json-manager-fixed-top{border-bottom:1px solid var(--border);}
+  .json-manager-fixed-bottom{border-top:1px solid var(--border);}
+  .json-manager-scroll{flex:1 1 auto;min-height:0;overflow:auto;padding:10px;}
+  .json-manager-fixed-top .json-manager-toolbar,.json-manager-fixed-bottom .json-manager-toolbar{margin:0;}
+  .json-manager-fixed-top .json-manager-status{margin:0 0 8px;}
   .json-manager-intro{margin:0 0 10px;color:var(--muted);font-size:.76rem;line-height:1.5;}
   .json-manager-toolbar{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 10px;}
   .json-manager-toolbar-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
   .json-manager-toolbar .btn{width:auto;padding:6px 10px;}
   .json-manager-status{min-height:1.2em;margin:4px 0 8px;color:var(--muted);font-size:.72rem;line-height:1.4;}
   .json-manager-status.err{color:#fecaca;}
-  .json-tile-device-head,.json-tile-device-row{display:grid;grid-template-columns:72px minmax(150px,1fr) minmax(170px,1fr) minmax(270px,1.5fr);gap:10px;align-items:center;}
-  .json-tile-device-head{position:sticky;top:-10px;z-index:2;margin:-10px -10px 0;padding:9px 10px;border-bottom:1px solid var(--border);background:var(--panel);font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);}
+  .json-tile-device-head,.json-tile-device-row{display:grid;grid-template-columns:72px 92px minmax(150px,1fr) minmax(170px,1fr) minmax(270px,1.5fr);gap:10px;align-items:center;}
+  .json-tile-device-head{position:sticky;top:0;z-index:2;margin:-10px -10px 0;padding:9px 10px;border-bottom:1px solid var(--border);background:var(--panel);font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);}
   .json-sort-btn{display:inline-flex;align-items:center;gap:4px;width:max-content;max-width:100%;padding:0;border:0;background:transparent;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;text-align:left;}
   .json-sort-btn:hover,.json-sort-btn:focus-visible{color:var(--text);text-decoration:underline;text-underline-offset:3px;outline:none;}
   .json-sort-btn.active{color:var(--text);}
@@ -585,16 +595,20 @@
   .json-tile-label{min-width:0;color:var(--text);overflow-wrap:anywhere;}
   .json-tile-label small{display:block;margin-top:2px;color:var(--faint);font-size:.66rem;line-height:1.35;}
   .json-css-alt{min-width:0;color:var(--muted);overflow-wrap:anywhere;}
-  .json-css-tab-options{display:flex;align-items:center;justify-content:flex-end;min-height:34px;margin:0 0 8px;padding:6px 9px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.025);}
-  .json-css-tab-options.hidden{display:none;}
   .json-css-alt.has-title{color:#fde68a;}
   .json-tile-device-control{min-width:0;}
-  .json-tile-device-control select{width:100%;min-width:0;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:rgba(2,6,23,.72);color:var(--text);font-size:.72rem;}
-  .json-tile-device-control select option:disabled{color:var(--faint);background:rgba(15,23,42,.95);}
+  .json-tile-device-control select{width:100%;min-width:0;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:#020617;color:#f8fafc;font-size:.72rem;}
+  .json-tile-device-control select option{color:#f8fafc;background:#020617;}
+  .json-tile-device-control select option:disabled{color:#94a3b8;background:#111827;}
   .json-tile-device-control input{width:120px;max-width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:rgba(2,6,23,.72);color:var(--text);font-family:var(--mono);font-size:.74rem;}
   .json-tile-device-control .device-note{display:block;margin-top:3px;color:var(--faint);font-size:.66rem;}
-  .json-dashboard-device-head{position:sticky;top:-10px;z-index:2;display:grid;grid-template-columns:24px minmax(72px,auto) minmax(150px,1fr) auto auto;gap:8px;align-items:center;margin:-10px -10px 8px;padding:9px 10px;border-bottom:1px solid var(--border);background:var(--panel);font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);}
+  .json-dashboard-device-head{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:24px minmax(72px,auto) minmax(150px,1fr) auto auto;gap:8px;align-items:center;margin:-10px -10px 8px;padding:9px 10px;border-bottom:1px solid var(--border);background:var(--panel);font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);}
   .json-dashboard-device-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:6px;}
+  .json-manager-bottom-toolbar{margin:10px 0 0;align-items:flex-end;}
+  .json-view-filter-group{display:flex;gap:4px;align-items:center;flex-wrap:wrap;}
+  .json-view-label{color:var(--faint);font-size:.68rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;margin-right:2px;}
+  .json-view-filter{width:auto!important;padding:5px 9px!important;border-radius:999px!important;font-size:.68rem!important;}
+  .json-view-filter.active{border-color:var(--accent)!important;color:var(--accent)!important;background:rgba(103,232,249,.10)!important;}
   .json-dashboard-device-row{display:grid;grid-template-columns:24px minmax(72px,auto) minmax(150px,1fr) auto auto;gap:8px;align-items:center;min-width:0;padding:7px 9px;border:1px solid rgba(148,163,184,.16);border-radius:7px;background:rgba(255,255,255,.025);font-size:.75rem;}
   .json-dashboard-device-row.selected{border-color:rgba(103,232,249,.30);background:rgba(103,232,249,.07);}
   .json-dashboard-device-row.locked{border-color:rgba(251,191,36,.34);background:rgba(251,191,36,.07);}
@@ -607,7 +621,7 @@
   .json-dashboard-device-row .device-use{justify-self:end;color:var(--faint);font-family:var(--mono);font-size:.62rem;white-space:nowrap;}
   .json-manager-empty{padding:28px;text-align:center;color:var(--faint);font-size:.78rem;}
   .json-mode-btn:disabled{opacity:.35;cursor:not-allowed;filter:none;}
-  @media(max-width:820px){.json-tile-device-head{display:none}.json-tile-device-row{grid-template-columns:70px 1fr;align-items:start}.json-tile-device-control{grid-column:1/-1}.json-css-alt{grid-column:2}.json-dashboard-device-list{grid-template-columns:1fr}.json-dashboard-device-head,.json-dashboard-device-row{grid-template-columns:24px 64px minmax(120px,1fr) auto}.json-dashboard-device-head>span:last-child{display:none}.json-dashboard-device-row .device-use{grid-column:3/-1;justify-self:start}.json-manager-pane{height:55vh}}
+  @media(max-width:820px){.json-tile-device-head{display:none}.json-tile-device-row{grid-template-columns:70px 1fr;align-items:start}.json-tile-location,.json-tile-device-control{grid-column:1/-1}.json-css-alt{grid-column:2}.json-dashboard-device-list{grid-template-columns:1fr}.json-dashboard-device-head,.json-dashboard-device-row{grid-template-columns:24px 64px minmax(120px,1fr) auto}.json-dashboard-device-head>span:last-child{display:none}.json-dashboard-device-row .device-use{grid-column:3/-1;justify-self:start}.json-manager-pane{height:55vh}}
   .trace-body .ok{color:var(--ok);} .trace-body .err{color:var(--danger);} .trace-body .url{color:var(--faint);word-break:break-all;}
 
   /* toast */
@@ -615,6 +629,28 @@
   .toast{padding:9px 16px;border-radius:8px;font-size:.81rem;font-weight:500;background:#28324a;border:1px solid var(--border);
     box-shadow:var(--shadow);animation:tin .25s ease;}
   .toast.ok{border-color:var(--ok);color:var(--ok);} .toast.err{border-color:var(--danger);color:var(--danger);}
+
+  /* Hub operation progress */
+  #hubOperationModal{z-index:12900;background:rgba(0,0,0,.42);}
+  #hubOperationModal .modal-head{cursor:default;}
+  .hub-op-modal{width:min(520px,92vw);}
+  .hub-op-list{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none;}
+  .hub-op-step{display:grid;grid-template-columns:24px 1fr;gap:9px;align-items:start;padding:8px 10px;border:1px solid var(--border);border-radius:9px;background:rgba(255,255,255,.035);color:var(--muted);}
+  .hub-op-step .hub-op-mark{width:20px;height:20px;border-radius:999px;border:1px solid rgba(148,163,184,.42);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:var(--faint);}
+  .hub-op-step.active{border-color:rgba(103,232,249,.42);color:var(--text);background:rgba(103,232,249,.08);}
+  .hub-op-step.active .hub-op-mark{border-color:var(--accent);color:transparent;box-shadow:0 0 0 2px rgba(103,232,249,.08);font-size:0;}
+  .hub-op-step.active .hub-op-mark::before{content:"";width:11px;height:11px;border-radius:50%;border:2px solid rgba(103,232,249,.22);border-top-color:var(--accent);animation:spin .75s linear infinite;}
+  .hub-op-step.done .hub-op-mark{border-color:var(--ok);color:var(--ok);}
+  .hub-op-step.error .hub-op-mark{border-color:var(--danger);color:var(--danger);}
+  .hub-op-step.skipped .hub-op-mark{border-color:var(--faint);color:var(--faint);}
+  .hub-op-step-title{display:block;font-size:.8rem;font-weight:700;line-height:1.25;}
+  .hub-op-step-note{display:block;font-size:.76rem;color:var(--muted);line-height:1.38;margin-top:5px;}
+  .hub-op-message{margin:0 0 12px;color:var(--muted);font-size:.78rem;line-height:1.45;}
+  .hub-op-spinner{display:inline-block;width:11px;height:11px;border:2px solid rgba(103,232,249,.22);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite;margin-right:6px;vertical-align:-1px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .hub-activity-banner{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:50000;display:none;align-items:center;gap:8px;padding:9px 14px;border:1px solid rgba(103,232,249,.55);border-radius:999px;background:rgba(15,23,42,.96);color:var(--text);font-size:.78rem;font-weight:700;box-shadow:0 10px 28px rgba(0,0,0,.45),0 0 0 1px rgba(103,232,249,.08);pointer-events:none;}
+  .hub-activity-banner.show{display:flex;}
+  .json-manager-loading{display:flex;align-items:center;justify-content:center;gap:8px;min-height:160px;color:var(--text);font-size:.82rem;border:1px dashed rgba(103,232,249,.28);border-radius:10px;background:rgba(103,232,249,.055);}
   @keyframes tin{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;}}
 
   /* modal */
@@ -786,7 +822,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.311">0.9.311</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.334">0.9.334</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -973,7 +1009,7 @@
           <button class="tool" id="btnRedo" disabled title="Redo (⌘⇧Z)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 000 10h1"/></svg>
           </button>
-          <button class="tool" id="btnUndoAll" disabled title="Undo all — restore the layout as it was when first loaded">
+          <button class="tool" id="btnUndoAll" disabled title="Undo all — restore the layout as it was when first loaded. Shift+click reloads a hub-loaded dashboard from the hub when Undo All is enabled.">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
           </button>
         </div>
@@ -1060,6 +1096,21 @@
       <div class="trace-body" id="traceBody"></div>
     </div>
     <div class="toast-wrap" id="toastWrap"></div>
+
+    <div class="hub-activity-banner" id="hubActivityBanner"><span class="hub-op-spinner"></span><span id="hubActivityBannerText">Communicating with hub…</span></div>
+    <div class="modal-back hidden" id="hubOperationModal" aria-modal="true" role="dialog">
+      <div class="modal hub-op-modal">
+        <div class="modal-head"><h3 id="hubOperationTitle">Hub operation</h3></div>
+        <div class="modal-body">
+          <p class="hub-op-message" id="hubOperationMessage">Please wait while the operation completes.</p>
+          <ol class="hub-op-list" id="hubOperationSteps"></ol>
+        </div>
+        <div class="modal-foot" style="justify-content:space-between">
+          <span class="hint" id="hubOperationElapsed" style="align-self:center;margin:0"></span>
+          <button class="btn ghost" id="hubOperationAbort" type="button">Abort</button>
+        </div>
+      </div>
+    </div>
   </section>
 </div>
 
@@ -1087,7 +1138,7 @@
 <li>Use Undo/Redo while experimenting.</li>
 <li>Review JSON or CSS if needed.</li>
 <li>Save to the hub, download a file, or copy the finished JSON to the clipboard.</li>
-</ol></article></div>
+</ol></article><article class="help-page" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><h4>Scope and limitations</h4><p>Dashboard Layout Studio is primarily a layout editor for existing Hubitat Dashboard v1 layouts. It can rearrange, resize, duplicate, remove, and reassign existing tiles, and it can change supported presentation details through custom CSS. It does not replace the Hubitat dashboard and tile configuration interface.</p><div class="help-callout warn"><b>Use the Hubitat interface for source creation:</b> Create dashboards, create original tiles, choose templates, and configure template-specific properties in the native Hubitat dashboard editor. Reload the dashboard in Dashboard Layout Studio afterward to continue arranging it.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>It cannot add a completely new original tile from Hubitat's template list. Additional tiles can be created only by copying or duplicating an existing tile and then changing its supported assignment or layout settings.</li><li>It cannot change an existing tile from one Hubitat template to another.</li></ul><h5>Template-property limits</h5><ul><li>The graphical editor does not change template-specific properties such as custom icons, background images, background settings, or other properties that are not exposed through the layout operations or achievable with CSS.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul><div class="help-callout"><b>Full JSON caution:</b> The Full JSON tab allows direct text editing, but unsupported template or property changes are not validated as a substitute for the Hubitat editor and may produce an invalid or unusable tile.</div></article></div>
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
@@ -1144,7 +1195,7 @@
 <div class="k">Unstack and Set All</div><div class="v">Set-menu option that is enabled only when tiles overlap. It breaks overlap stacks apart and sets spacing between individual tiles.</div>
 <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
 </div><h5>History, views, JSON, and Save</h5><div class="help-grid">
-<div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it.</div>
+<div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Undo All is available only when there is undo history. When it is enabled, Shift+click Undo All reloads the current hub-loaded dashboard from the hub. You can also Shift+click the active dashboard in the left-pane dashboard list to reload it from the hub.</div>
 <div class="k">Rendered View compatibility</div><div class="v">Preferences can disable compatibility capture, use it only as an automatic fallback, or always use it. Automatic fallback completes every normal capture attempt and retry before it starts the viewport-based mobile compatibility method.</div>
 <div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
 <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
@@ -1184,12 +1235,12 @@
 <div class="help-pages"><article class="help-page active" data-help-title="JSON editor and applying changes"><div class="help-page-kicker">JSON &amp; CSS</div><h4>JSON editor and applying changes</h4><h5>JSON editor and field views</h5><div class="help-grid">
 <div class="k">JSON editor</div><div class="v">Allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
 <div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
-<div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid label, any tile-scoped CSS content that may supply an alternate title, and its assigned device. Online layouts use the same selected-device choices as Tile Information; offline layouts allow numeric or blank device IDs.</div>
+<div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid label, any tile-scoped CSS content that may supply an alternate title, and its assigned device. The first device choice is Unassigned for blank device IDs. Online layouts use the same selected-device choices as Tile Information; offline layouts allow numeric or blank device IDs.</div>
 <div class="k">Dashboard Devices</div><div class="v">Online only. Manages the devices selected for the Hubitat dashboard, locks devices used by current tiles, and can assign all devices, remove unused devices, reload the selection, or update it on the hub.</div>
 </div><h5>Applying editor changes</h5><p><b>Apply changes</b> validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced.</p><div class="help-card-grid">
 <div class="help-card"><b>Custom field-only edits</b><p>If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed.</p></div>
 <div class="help-card"><b>Full JSON edits</b><p>Full JSON edits still invalidate Rendered View captures.</p></div>
-</div><p>If the layout was loaded from the hub, the hub save target is preserved.</p><div class="help-callout">Use the JSON editor when you want to replace the layout while preserving hub context. Use side panel Load file/Paste JSON when you want to open an offline layout.</div></article><article class="help-page" data-help-title="CSS validation and cleanup"><div class="help-page-kicker">JSON &amp; CSS</div><h4>CSS validation and cleanup</h4><h5>Validate / Format</h5><p>Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customCSS, customHTML, and customJS use very basic formatting and limited sanity checks.</p><p>In customCSS view, the format step opens a review dialog when it finds:</p><div class="help-card-grid">
+</div><p>If the layout was loaded from the hub, the hub save target is preserved.</p><div class="help-callout">Use the JSON editor when you want to replace the layout while preserving hub context. Use side panel Load file/Paste JSON when you want to open an offline layout.</div></article><article class="help-page" data-help-title="CSS validation and cleanup"><div class="help-page-kicker">JSON &amp; CSS</div><h4>CSS validation and cleanup</h4><h5>Validate / Format</h5><p>Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customHTML and customJS use very basic formatting and limited sanity checks. In customCSS view, the button opens choices for Validate / Reg Fmt or Validate / Comp Fmt.</p><p>In customCSS view, the format step opens a review dialog when it finds:</p><div class="help-card-grid">
 <div class="help-card"><b>Duplicates</b><p>Duplicate selector/property declarations.</p></div>
 <div class="help-card"><b>Conflicts</b><p>Conflicting declarations for the same selector/property.</p></div>
 <div class="help-card"><b>Orphans</b><p>Tile rules that reference tiles no longer present.</p></div>
@@ -1201,7 +1252,7 @@
 <li>Duplicates and consolidation choices are listed with preselected checkboxes so you can accept or skip each cleanup.</li>
 <li>Applying selected cleanup to the current working layout creates a normal Undo checkpoint.</li>
 <li>The cleanup dialog applies only the selected fixes unless Reformat after applying fixes is checked.</li>
-<li>Use compact CSS format first runs the regular CSS formatter and then applies the same compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting as the JSON editor Compact CSS option.</li>
+<li>Validate / Comp Fmt first runs the regular CSS formatter and then applies the same compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting as the customCSS tab compact formatter.</li>
 <li>When any selector consolidation is applied, all preserved duplicate comments are removed because every duplicate is already represented by a surviving active declaration. This includes comments inside selectors that were already in a single rule and comments preserved by an earlier cleanup run.</li>
 </ul><h5>CSS status and tile scope</h5><div class="help-grid">
 <div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block. Consolidated selector originals are not preserved. Consolidation is blocked only when related conflicts are skipped.</div>
@@ -1326,7 +1377,7 @@
       <button class="btn ghost" id="importDeviceOpenHub" type="button">Open Hub Dashboards</button>
       <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
         <button class="btn ghost" id="importDeviceCancel" type="button">Cancel</button>
-        <button class="btn ghost danger" id="importDeviceContinue" type="button" disabled>Continue without adding</button>
+        <button class="btn ghost danger" id="importDeviceContinue" type="button">Continue without adding</button>
         <button class="btn primary" id="importDeviceAdd" type="button" disabled>Add devices (experimental)</button>
       </div>
     </div>
@@ -1473,26 +1524,35 @@
         <button class="btn ghost json-mode-btn" id="jsonDashboardDevicesTab" data-json-mode="dashboardDevices" type="button" role="tab" aria-controls="jsonDashboardDevicesPane" aria-selected="false">Dashboard Devices</button>
       </div>
       <div class="json-tab-content">
-      <div class="json-css-tab-options hidden" id="jsonCssTabOptions" role="group" aria-label="customCSS formatting options">
-        <label class="chk" id="jsonCompactCssWrap" title="When formatting customCSS, output compact one-line selector rules like CLI --compact_css"><input type="checkbox" id="jsonCompactCss" disabled /> Compact CSS</label>
-      </div>
       <textarea id="jsonEditor" class="input json-tab-panel" role="tabpanel" aria-hidden="false" spellcheck="false" wrap="off" style="width:100%;height:52vh;resize:vertical;font-family:var(--mono);font-size:.7rem;line-height:1.45;white-space:pre;overflow:auto" placeholder='{ "tiles": [ ... ] }'></textarea>
       <div id="jsonTileDevicesPane" class="json-manager-pane json-tab-panel hidden" role="tabpanel" aria-hidden="true"></div>
       <div id="jsonDashboardDevicesPane" class="json-manager-pane json-tab-panel hidden" role="tabpanel" aria-hidden="true">
-        <div class="json-manager-toolbar">
-          <div class="json-manager-toolbar-group">
-            <label class="chk" id="jsonDashboardMissingOnlyWrap" title="Show only tile-assigned devices missing from the dashboard selection, plus tiles with invalid device assignments"><input type="checkbox" id="jsonDashboardMissingOnly"> Show only missing devices</label>
-            <button class="btn ghost" id="jsonDashboardAssignAll" type="button">Assign all devices</button>
-            <button class="btn ghost" id="jsonDashboardRemoveUnused" type="button">Remove all unused devices</button>
+        <div class="json-manager-fixed-top">
+          <div class="json-manager-toolbar">
+            <div class="json-manager-toolbar-group json-view-filter-group" id="jsonDashboardFilterGroup" aria-label="Dashboard device view filters">
+              <span class="json-view-label">View:</span>
+              <button class="btn ghost json-view-filter active" data-dashboard-filter="all" type="button">Show All</button>
+              <button class="btn ghost json-view-filter" data-dashboard-filter="selected" type="button">Selected</button>
+              <button class="btn ghost json-view-filter" data-dashboard-filter="unselected" type="button">Unselected</button>
+              <button class="btn ghost json-view-filter" data-dashboard-filter="inUse" type="button">In-Use</button>
+              <button class="btn ghost json-view-filter" data-dashboard-filter="unused" type="button">Unused</button>
+            </div>
           </div>
-          <div class="json-manager-toolbar-group">
-            <button class="btn ghost" id="jsonDashboardReload" type="button">Reload from Hub</button>
-            <button class="btn primary" id="jsonDashboardUpdate" type="button" disabled>Update on Hub</button>
+          <p id="jsonDashboardDeviceStatus" class="json-manager-status"></p>
+        </div>
+        <div class="json-manager-scroll">
+          <div class="json-dashboard-device-head"><span aria-hidden="true"></span><button class="json-sort-btn" id="jsonDashboardDeviceIdSort" type="button" title="Sort by device ID">Device ID <span class="json-sort-arrow">↕</span></button><button class="json-sort-btn" id="jsonDashboardDeviceNameSort" type="button" title="Sort by device name">Device name <span class="json-sort-arrow">↕</span></button><span aria-hidden="true"></span><span aria-hidden="true"></span></div>
+          <div id="jsonDashboardDeviceList" class="json-dashboard-device-list"></div>
+        </div>
+        <div class="json-manager-fixed-bottom">
+          <div class="json-manager-toolbar">
+            <div class="json-manager-toolbar-group">
+              <button class="btn ghost" id="jsonDashboardSelectView" type="button">Select all in view</button>
+              <button class="btn ghost" id="jsonDashboardAssignAll" type="button">Assign all devices</button>
+              <button class="btn ghost" id="jsonDashboardRemoveUnused" type="button">Remove all unused devices</button>
+            </div>
           </div>
         </div>
-        <p id="jsonDashboardDeviceStatus" class="json-manager-status"></p>
-        <div class="json-dashboard-device-head"><span aria-hidden="true"></span><button class="json-sort-btn" id="jsonDashboardDeviceIdSort" type="button" title="Sort by device ID">Device ID <span class="json-sort-arrow">↕</span></button><button class="json-sort-btn" id="jsonDashboardDeviceNameSort" type="button" title="Sort by device name">Device name <span class="json-sort-arrow">↕</span></button><span aria-hidden="true"></span><span aria-hidden="true"></span></div>
-        <div id="jsonDashboardDeviceList" class="json-dashboard-device-list"></div>
       </div>
       </div>
       <input type="file" id="jsonEditorFileInput" accept=".json,application/json" style="display:none" />
@@ -1501,13 +1561,19 @@
     <div class="modal-foot" style="justify-content:space-between;gap:10px;flex-wrap:wrap">
       <div id="jsonEditorFileActions" style="display:flex;gap:10px;flex-wrap:wrap">
         <button class="btn ghost" id="jsonLoadFile">Import File</button>
-        <button class="btn ghost" id="jsonRestore">Restore JSON</button>
+        <button class="btn ghost" id="jsonRestore">Undo Tab Changes</button>
         <button class="btn ghost" id="jsonCopy">Copy</button>
         <button class="btn ghost" id="jsonDownload">Download</button>
       </div>
       <div id="jsonEditorApplyActions" style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn ghost" id="jsonFormat">Validate / Format</button>
-        <button class="btn primary" id="jsonApply">Apply changes</button>
+        <div class="holdwrap" id="jsonFormatWrap">
+          <button class="btn ghost" id="jsonFormat" type="button">Validate / Format</button>
+          <div class="holdmenu hidden" id="jsonFormatMenu">
+            <button class="hm-item" id="jsonFormatRegular" type="button">Validate / Reg Fmt</button>
+            <button class="hm-item" id="jsonFormatCompact" type="button">Validate / Comp Fmt</button>
+          </div>
+        </div>
+        <button class="btn primary" id="jsonApply" disabled>Apply changes</button>
         <button class="btn" id="jsonClose">Close</button>
       </div>
     </div>
@@ -1625,13 +1691,14 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v311";
-const APP_VERSION = "0.9.311";
+const BUILD = "v334";
+const APP_VERSION = "0.9.334";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
 const State = {
   conn:{ip:"",appId:"",token:"",mode:"disconnected"},
+  hubOperation:null,             // active hub load/save/update progress dialog and abort token
   hubAvailable:true,              // true only when live hub fetch/save features are available in this page context
   dashboards:[], active:null,
   cfg:{cols:100,rows:80},        // grid extent from the dashboard config
@@ -1846,7 +1913,8 @@ async function loadHubDeviceNames(){
   const url=hubDevicesUrl();
   trace("GET device list",url);
   try{
-    const res=await fetch(url,{credentials:"same-origin"});
+    const op=hubOperationActive()?State.hubOperation:null;
+    const res=op?await hubOperationFetch(op,url,{credentials:"same-origin",timeoutMs:30000}):await fetch(url,{credentials:"same-origin"});
     trace(`device list → ${res.status}`,null,res.ok?"ok":"err");
     if(!res.ok) return 0;
     const text=await res.text();
@@ -1859,6 +1927,7 @@ async function loadHubDeviceNames(){
   }catch(e){
     trace(`device list failed: ${e.message}`,null,"err");
     resetDeviceNames();
+    if(e&&e.aborted) throw e;
     return 0;
   }
 }
@@ -2117,7 +2186,7 @@ function infoDevicePickerOptionsHtml(currentId){
   const current=canonicalDeviceId(currentId);
   const devices=allHubDevicesForAudit();
   const seen=new Set();
-  const parts=[];
+  const parts=[`<option value=""${current?"":" selected"}>Unassigned</option>`];
   for(const d of devices){
     const id=canonicalDeviceId(d.id);
     if(!id || seen.has(id)) continue;
@@ -2127,9 +2196,8 @@ function infoDevicePickerOptionsHtml(currentId){
   }
   if(current && !seen.has(current)){
     const selected=isDeviceSelectedForActiveDashboard(current);
-    parts.unshift(`<option value="${esc(current)}"${selected?"":" disabled"} selected>#${esc(current)} - ${esc(hubDeviceDisplayName(current))}</option>`);
+    parts.splice(1,0,`<option value="${esc(current)}"${selected?"":" disabled"} selected>#${esc(current)} - ${esc(hubDeviceDisplayName(current))}</option>`);
   }
-  if(!parts.length) return `<option disabled selected>No hub devices are available</option>`;
   return parts.join("");
 }
 function tileDeviceIdRawValue(t){
@@ -2161,9 +2229,12 @@ function commitTileDeviceIdChange(tileId, newId){
   const entered=newId==null ? "" : String(newId).trim();
   let next="";
   if(online){
-    next=canonicalDeviceId(entered);
-    if(!next){ toast("Device id must be numeric.","err"); return false; }
-    if(!isDeviceSelectedForActiveDashboard(next)){
+    if(entered && !/^\d+$/.test(entered)){
+      toast("Device id must contain digits only, or be left blank.","err");
+      return false;
+    }
+    next=entered ? canonicalDeviceId(entered) : "";
+    if(next && !isDeviceSelectedForActiveDashboard(next)){
       toast("That device is not selected for this dashboard.","err");
       return false;
     }
@@ -2192,7 +2263,7 @@ function commitTileDeviceIdChange(tileId, newId){
     status(`Changed Tile #${tileId} device id from ${oldId||"N/A"} to ${next||"N/A"}.`);
     return true;
   };
-  if(!online && !next && oldId){
+  if(!next && oldId){
     showConfirm(
       "Save blank device id?",
       `Tile #${tileId} currently has device id #${oldId}. Save a blank device id?`,
@@ -2300,6 +2371,147 @@ function showDevicePickedAuditDialog(meta, layout, pickedInfo){
   resetModalPosition("devicePickedModal");
   modal.classList.remove("hidden");
 }
+
+function hubOperationActive(){ return !!(State.hubOperation&&State.hubOperation.active); }
+function hubOperationAbortError(){ const e=new Error("hub operation aborted"); e.aborted=true; return e; }
+function showHubActivity(message){
+  const b=document.getElementById("hubActivityBanner");
+  const t=document.getElementById("hubActivityBannerText");
+  if(t) t.textContent=message||"Communicating with hub…";
+  if(b) b.classList.add("show");
+}
+function hideHubActivity(){ const b=document.getElementById("hubActivityBanner"); if(b) b.classList.remove("show"); }
+function renderHubOperationDialog(){
+  const op=State.hubOperation;
+  const modal=document.getElementById("hubOperationModal");
+  if(!modal) return;
+  if(!op||!op.active){ modal.classList.add("hidden"); hideHubActivity(); return; }
+  const title=document.getElementById("hubOperationTitle");
+  const msg=document.getElementById("hubOperationMessage");
+  const list=document.getElementById("hubOperationSteps");
+  const abort=document.getElementById("hubOperationAbort");
+  const elapsed=document.getElementById("hubOperationElapsed");
+  if(title) title.textContent=op.title||"Hub operation";
+  if(msg) msg.textContent=op.message||"Please wait while the operation completes.";
+  if(list){
+    list.innerHTML=(op.steps||[]).map(step=>{
+      const state=step.state||"pending";
+      const mark=state==="done"?"✓":state==="error"?"!":state==="skipped"?"–":state==="active"?"•":"";
+      return `<li class="hub-op-step ${esc(state)}"><span class="hub-op-mark">${esc(mark)}</span><span><span class="hub-op-step-title">${esc(step.label||step.id)}</span>${step.note?`<span class="hub-op-step-note">${esc(step.note)}</span>`:""}</span></li>`;
+    }).join("");
+  }
+  if(abort){
+    abort.disabled=!!op.finishing||op.abortable===false;
+    abort.style.visibility=op.abortable===false?"hidden":"";
+    abort.onclick=()=>abortHubOperation();
+  }
+  if(elapsed){
+    const secs=Math.max(0,Math.round((Date.now()-(op.started||Date.now()))/1000));
+    elapsed.textContent=secs>1?`${secs}s elapsed`:"";
+  }
+  modal.classList.remove("hidden");
+  const active=(op.steps||[]).find(s=>s.state==="active");
+  showHubActivity(active?active.label:(op.title||"Communicating with hub…"));
+}
+function beginHubOperation(title, steps, opts={}){
+  if(hubOperationActive()) return null;
+  const op={
+    active:true,
+    title:title||"Hub operation",
+    message:opts.message||"Hub communication is in progress. Other hub actions are blocked until this finishes.",
+    abortable:opts.abortable!==false,
+    token:{aborted:false},
+    aborters:[],
+    steps:(steps||[]).map(s=>typeof s==="string"?{id:s,label:s,state:"pending"}:{...s,state:s.state||"pending"}),
+    started:Date.now()
+  };
+  State.hubOperation=op;
+  renderHubOperationDialog();
+  op.timer=setInterval(()=>{ if(State.hubOperation===op) renderHubOperationDialog(); },1000);
+  return op;
+}
+function finishHubOperation(op, opts={}){
+  if(!op||State.hubOperation!==op) return;
+  if(op.timer) clearInterval(op.timer);
+  op.finishing=true;
+  if(opts.error){
+    const step=(op.steps||[]).find(s=>s.state==="active") || (op.steps||[]).find(s=>s.state==="pending");
+    if(step){ step.state="error"; step.note=opts.error.message||String(opts.error); }
+    op.message=opts.error&&opts.error.aborted?"Operation aborted.":"The operation could not be completed.";
+    renderHubOperationDialog();
+    setTimeout(()=>{ if(State.hubOperation===op){ State.hubOperation=null; renderHubOperationDialog(); } }, opts.error&&opts.error.aborted?500:1600);
+  }else{
+    (op.steps||[]).forEach(s=>{ if(s.state==="active"||s.state==="pending") s.state=opts.skipPending?"skipped":"done"; });
+    op.message=opts.message||"Operation complete.";
+    renderHubOperationDialog();
+    setTimeout(()=>{ if(State.hubOperation===op){ State.hubOperation=null; renderHubOperationDialog(); } }, opts.delayMs==null?650:opts.delayMs);
+  }
+}
+function hubOperationStep(op,id,state="active",note=""){
+  if(!op||State.hubOperation!==op) return;
+  let found=false;
+  for(const s of op.steps||[]){
+    if(s.id===id){ s.state=state; s.note=note||s.note||""; found=true; }
+    else if(state==="active"&&s.state==="active") s.state="done";
+  }
+  if(!found&&id){ op.steps.push({id,label:id,state,note}); }
+  renderHubOperationDialog();
+}
+function hubOperationSkip(op,id,note="") { hubOperationStep(op,id,"skipped",note); }
+function checkHubOperationAbort(op){ if(op&&op.token&&op.token.aborted) throw hubOperationAbortError(); }
+function abortHubOperation(){
+  const op=State.hubOperation;
+  if(!op||op.abortable===false||op.finishing) return;
+  op.token.aborted=true;
+  try{ (op.aborters||[]).forEach(fn=>{ try{ fn(); }catch(_e){} }); }catch(_e){}
+  cancelTileSnapshotCapture("",{status:"none"});
+  op.message="Aborting hub operation…";
+  renderHubOperationDialog();
+}
+function hubOperationFetch(op,url,options={}){
+  checkHubOperationAbort(op);
+  if(!op) return fetch(url,options);
+  const ctrl=new AbortController();
+  let timedOut=false;
+  const timeoutMs=Number(options.timeoutMs)||45000;
+  const aborter=()=>ctrl.abort();
+  const timer=setTimeout(()=>{ timedOut=true; ctrl.abort(); },timeoutMs);
+  op.aborters.push(aborter);
+  const opts={...options,signal:ctrl.signal};
+  delete opts.timeoutMs;
+  return fetch(url,opts).catch(e=>{
+    if(op.token&&op.token.aborted) throw hubOperationAbortError();
+    if(timedOut) throw new Error(`hub request timed out after ${Math.round(timeoutMs/1000)} seconds`);
+    throw e;
+  }).finally(()=>{ clearTimeout(timer); op.aborters=op.aborters.filter(fn=>fn!==aborter); });
+}
+async function captureRenderedSnapshotsForLoadOperation(op){
+  if(!renderedViewEnabled()){ hubOperationSkip(op,"render","Rendered View is not enabled."); setTileDisplayMode("simple",{redraw:false,warn:false}); return 0; }
+  const a=renderedSnapshotAvailability();
+  if(!a.ok){ hubOperationSkip(op,"render",a.reason||"Rendered View unavailable."); setTileDisplayMode("simple",{redraw:false,warn:false}); updateTileDisplayIndicator(); return 0; }
+  hubOperationStep(op,"render","active","Capturing rendered tile images…");
+  State.tileViewMode="snapshot";
+  updateTileDisplayIndicator();
+  await wait(350);
+  checkHubOperationAbort(op);
+  const count=await captureHubTileSnapshots({silent:true,timeoutMs:30000,retryCount:1});
+  hubOperationStep(op,"render","done",count?`${count} tile${count===1?"":"s"} captured.`:"Rendered View unavailable or no captures were produced.");
+  return count;
+}
+async function runHubOperation(title,steps,fn,opts={}){
+  const op=beginHubOperation(title,steps,opts);
+  if(!op){ toast("Another hub operation is already in progress. Wait for it to finish or abort it first.","err"); return null; }
+  try{
+    const result=await fn(op);
+    finishHubOperation(op,{message:opts.doneMessage});
+    return result;
+  }catch(e){
+    finishHubOperation(op,{error:e});
+    if(e&&e.aborted){ toast("Hub operation aborted.","err"); status("Hub operation aborted."); return null; }
+    throw e;
+  }
+}
+
 const Hub = {
   base(){
     if(State.hubAvailable && pageLooksHubHosted()) return `${window.location.origin}/apps/api`;
@@ -2359,24 +2571,36 @@ const Hub = {
     }
   },
   async loadLayout(meta, pin){
+    if(hubOperationActive()){
+      toast("A dashboard load/save is already in progress. Wait for it to finish or abort it first.","err");
+      return;
+    }
+    const op=beginHubOperation(`Loading ${meta.label||"dashboard"}`,[
+      {id:"open",label:"Opening dashboard page"},
+      {id:"layout",label:"Retrieving layout JSON"},
+      {id:"devices",label:"Loading hub device list"},
+      {id:"validate",label:"Validating selected dashboard devices"},
+      {id:"render",label:"Rendering tiles"}
+    ],{message:"Dashboard loading is in progress. Other hub actions are blocked until the layout, device checks, and Rendered View refresh finish."});
     const child=meta.id, dtok=meta.accessToken;
     let href=`${this.base()}/${child}/dashboard/${child}?access_token=${dtok}&local=true`;
     if(pin) href+=`&pin=${encodeURIComponent(pin)}`;
     trace("GET dashboard page"+(pin?" (with pin)":""),href);
     try{
+      hubOperationStep(op,"open","active");
       status(`Loading "${meta.label||"dashboard"}" — opening dashboard page…`, true);
-      const pres=await fetch(href,{credentials:"same-origin"});
+      const pres=await hubOperationFetch(op,href,{credentials:"same-origin"});
+      checkHubOperationAbort(op);
       trace(`dashboard page → ${pres.status}`,null,pres.ok?"ok":"err");
       if(!pres.ok) throw new Error(`dashboard page ${pres.status}`);
       const resolved=pres.url||href;
       const phtml=await pres.text();
+      checkHubOperationAbort(op);
       trace(`dashboard html length=${phtml.length}`,null);
-      // PIN-protected dashboards return a PIN entry FORM instead of the dashboard.
-      // Detect it intelligently (robust to wording changes); if found, prompt and
-      // retry the same URL with &pin=<number> appended.
       if(detectPinForm(phtml)){
         trace("PIN form detected — prompting",null,"ok");
-        if(pin){ // we already supplied a pin and still got the form → wrong pin
+        finishHubOperation(op,{message:"PIN required.",skipPending:true,delayMs:350});
+        if(pin){
           promptForPin(meta, "That PIN was not accepted. Try again:");
           return;
         }
@@ -2386,6 +2610,7 @@ const Hub = {
       const reqTok=extractRequestToken(phtml);
       trace(`extracted requestToken = ${reqTok||"(none)"}`,null,reqTok?"ok":"err");
       if(!reqTok) throw new Error("no requestToken found in dashboard page HTML");
+      hubOperationStep(op,"open","done");
       const candidates=[...new Set([
         layoutUrl(resolved,reqTok,dtok,false,"requestToken"),
         layoutUrl(href,reqTok,dtok,false,"requestToken"),
@@ -2395,35 +2620,53 @@ const Hub = {
         layoutUrl(href,reqTok,dtok,true,"requestToken"),
       ])];
       let loaded=null, lastErr="", successUrl=null;
+      hubOperationStep(op,"layout","active");
       status(`Loading "${meta.label||"dashboard"}" — reading layout JSON…`, true);
       for(const url of candidates){
+        checkHubOperationAbort(op);
         trace("GET layout candidate",url);
         try{
-          const lres=await fetch(url,{credentials:"same-origin"});
+          const lres=await hubOperationFetch(op,url,{credentials:"same-origin"});
+          checkHubOperationAbort(op);
           trace(`layout → ${lres.status}`,null,lres.ok?"ok":"err");
           if(!lres.ok){ lastErr=`${lres.status}`; continue; }
           const text=await lres.text();
+          checkHubOperationAbort(op);
           let j; try{ j=JSON.parse(text); }catch(_){ lastErr="not JSON (HTML page)"; trace("  → not JSON",null,"err"); continue; }
           if(j&&j.tiles){ loaded=j; successUrl=url; trace("  → success (has tiles)",null,"ok"); break; }
           lastErr="response had no tiles";
-        }catch(e){ lastErr=e.message; trace(`  → ${e.message}`,null,"err"); }
+        }catch(e){
+          if(e&&e.aborted) throw e;
+          lastErr=e.message; trace(`  → ${e.message}`,null,"err");
+        }
       }
       if(!loaded) throw new Error(`no candidate returned a valid layout. Last error: ${lastErr}`);
-      State.loadPin = pin || null;        // remember pin (if any) for save reuse
-      State.lastLayoutUrl = successUrl;   // the URL that worked for load → reuse for save
-      State.lastDashUrl = href;           // dashboard page URL → used to refresh requestToken if save fails
+      hubOperationStep(op,"layout","done",`${loaded.tiles.length} tile${loaded.tiles.length===1?"":"s"} loaded.`);
+      State.loadPin = pin || null;
+      State.lastLayoutUrl = successUrl;
+      State.lastDashUrl = href;
+      hubOperationStep(op,"devices","active");
       status(`Loading "${meta.label||"dashboard"}" — loading device names…`, true);
       await loadHubDeviceNames();
+      checkHubOperationAbort(op);
+      hubOperationStep(op,"devices","done",`${State.hubDevices.length||0} hub device${State.hubDevices.length===1?"":"s"} loaded.`);
+      hubOperationStep(op,"validate","active");
       status(`Loading "${meta.label||"dashboard"}" — checking selected dashboard devices…`, true);
       const pickedAudit=await loadDashboardDevicesPicked(meta);
+      checkHubOperationAbort(op);
       State.hubSaveBaseline=cloneLayoutDoc(loaded);
       adoptLayout(meta,loaded);
-      scheduleTileSnapshotCapture();
+      const validationOk=reviewLoadedDashboardDeviceAssignments(loaded,pickedAudit);
+      hubOperationStep(op,"validate",validationOk?"done":"done",pickedAudit&&pickedAudit.ok?"Selected-device check completed.":"Selected-device list could not be verified.");
+      await captureRenderedSnapshotsForLoadOperation(op);
+      checkHubOperationAbort(op);
       status(`Loaded "${meta.label}".`);
-      reviewLoadedDashboardDeviceAssignments(loaded,pickedAudit);
+      finishHubOperation(op,{message:"Dashboard loaded.",delayMs:650});
       // Device inventory and devicesPicked are cached for the Tile Info device picker, load-time audit, and paste validation.
     }catch(e){
       trace(`load failed: ${e.message}`,null,"err");
+      finishHubOperation(op,{error:e});
+      if(e&&e.aborted) return;
       toast(`Could not load layout: ${e.message}`,"err");
     }
   },
@@ -2512,6 +2755,10 @@ const Hub = {
   async saveToHub(){
     if(!State.active) return;
     Hub.orphanGate(async()=>{
+    if(hubOperationActive()){
+      toast("A hub operation is already in progress. Wait for it to finish or abort it first.","err");
+      return;
+    }
     if(!State.lastLayoutUrl){
       toast("Cannot save — no layout URL stored from load. Try reloading the dashboard first.","err");
       return;
@@ -2521,44 +2768,71 @@ const Hub = {
       `Save "${label}" to hub`,
       `This will overwrite the current version of "${label}" on the hub with your edited layout. Before writing, the tool will verify that the hub copy still matches the layout originally loaded into this editor. Download a backup first if you want to keep the original.`,
       async()=>{
+    const op=beginHubOperation(`Saving ${label}`,[
+      {id:"verify",label:"Checking current hub layout"},
+      {id:"devices",label:"Validating tile device assignments"},
+      {id:"save",label:"Writing layout to hub"},
+      {id:"render",label:"Refreshing Rendered View"}
+    ],{message:"Saving is in progress. Other hub actions are blocked until the save and any Rendered View refresh finish."});
+    if(!op){ toast("Another hub operation is already in progress. Wait for it to finish or abort it first.","err"); return; }
     const payload=serializeLayout();
     const body=JSON.stringify(payload);
     trace("POST layout (save) to stored layout URL"+(State.loadPin?" (with pin)":""),State.lastLayoutUrl);
-    if(State.conn.mode!=="live"){
-      if(State.conn.mode==="offline"){
-        toast("Pasted layout — no hub connection. Use Download or Copy to clipboard instead.","err");
-        return;
-      }
-      toast("Not connected to hub — save simulated.","ok");
-      trace("save simulated (no live connection)",null,"ok"); return;
-    }
-    const verified=await this.confirmHubBaselineIsCurrent();
-    if(!verified) return;
-    const devicesValidated=await confirmHubSaveDeviceAssignments(payload);
-    if(!devicesValidated) return;
-    const doPost=async(url)=>{
-      let saveUrl=url;
-      if(State.loadPin && !saveUrl.includes("pin="))
-        saveUrl+=`&pin=${encodeURIComponent(State.loadPin)}`;
-      const res=await fetch(saveUrl,{method:"POST",headers:{"Content-Type":"application/json; charset=utf-8"},body});
-      return res;
-    };
     try{
+      if(State.conn.mode!=="live"){
+        finishHubOperation(op,{skipPending:true,delayMs:350});
+        if(State.conn.mode==="offline"){
+          toast("Pasted layout — no hub connection. Use Download or Copy to clipboard instead.","err");
+          return;
+        }
+        toast("Not connected to hub — save simulated.","ok");
+        trace("save simulated (no live connection)",null,"ok"); return;
+      }
+      hubOperationStep(op,"verify","active");
+      const verified=await this.confirmHubBaselineIsCurrent();
+      checkHubOperationAbort(op);
+      if(!verified){ finishHubOperation(op,{skipPending:true,delayMs:350}); return; }
+      hubOperationStep(op,"verify","done");
+      hubOperationStep(op,"devices","active");
+      const devicesValidated=await confirmHubSaveDeviceAssignments(payload);
+      checkHubOperationAbort(op);
+      if(!devicesValidated){ finishHubOperation(op,{skipPending:true,delayMs:350}); return; }
+      hubOperationStep(op,"devices","done");
+      const doPost=async(url)=>{
+        let saveUrl=url;
+        if(State.loadPin && !saveUrl.includes("pin="))
+          saveUrl+=`&pin=${encodeURIComponent(State.loadPin)}`;
+        return await hubOperationFetch(op,saveUrl,{method:"POST",headers:{"Content-Type":"application/json; charset=utf-8"},body});
+      };
+      hubOperationStep(op,"save","active");
       let res=await doPost(State.lastLayoutUrl);
+      checkHubOperationAbort(op);
       trace(`save → ${res.status}`,null,res.ok?"ok":"err");
       if(!res.ok){
         trace("Save failed, refreshing requestToken and retrying…",null,"err");
         const newLayoutUrl=await this.refreshLayoutUrlForSave();
+        checkHubOperationAbort(op);
         trace("Retrying POST with refreshed token",newLayoutUrl);
         res=await doPost(newLayoutUrl);
+        checkHubOperationAbort(op);
         trace(`save retry → ${res.status}`,null,res.ok?"ok":"err");
         if(!res.ok) throw new Error(`save ${res.status} (after token refresh)`);
       }
       State.hubSaveBaseline=cloneLayoutDoc(payload);
       markLayoutClean();
       toast("Layout saved to hub.","ok");
-      refreshRenderedViewAfterHubSave();
-    }catch(e){ trace(`save failed: ${e.message}`,null,"err"); toast(`Save failed: ${e.message}`,"err"); }
+      hubOperationStep(op,"save","done");
+      hubOperationStep(op,"render","active");
+      await refreshRenderedViewAfterHubSave();
+      checkHubOperationAbort(op);
+      hubOperationStep(op,"render","done","Rendered View refresh completed if available.");
+      finishHubOperation(op,{message:"Layout saved.",delayMs:650});
+    }catch(e){
+      trace(`save failed: ${e.message}`,null,"err");
+      finishHubOperation(op,{error:e});
+      if(e&&e.aborted) return;
+      toast(`Save failed: ${e.message}`,"err");
+    }
     }); // end showSaveConfirm onProceed
     }); // end orphanGate
   },
@@ -3073,7 +3347,7 @@ function refreshRenderedViewAfterHubSave(){
   State.tileViewMode="snapshot";
   updateTileDisplayIndicator();
   status("Layout saved to hub. Refreshing Rendered View…", true);
-  captureHubTileSnapshots({silent:false,timeoutMs:30000,retryCount:1});
+  return captureHubTileSnapshots({silent:false,timeoutMs:30000,retryCount:1});
 }
 function refreshRenderedViewAfterHubRestore(){
   State.tileSnapshotBlockedUntilReload=false;
@@ -4109,6 +4383,18 @@ function deviceNameForTile(t){
   const id=normalizeDeviceId(raw.device);
   return id==null ? "" : mapDeviceNameForId(State.deviceNames,id);
 }
+function tileHasUnknownHubDevice(t){
+  if(!State.deviceNamesAvailable || !t) return false;
+  const raw=t._raw||{};
+  const id=normalizeDeviceId(raw.device);
+  return id!=null && !mapDeviceNameForId(State.deviceNames,id);
+}
+function unknownHubDeviceTitle(t){
+  if(!tileHasUnknownHubDevice(t)) return "";
+  const raw=t&&t._raw?t._raw:{};
+  const id=normalizeDeviceId(raw.device);
+  return id==null ? "" : ` — unknown hub device #${id}`;
+}
 function deviceNameInfoValue(t){
   return deviceNameForTile(t) || "N/A";
 }
@@ -5045,6 +5331,7 @@ function render(){
     el.dataset.idx=i;
     if(conflicts.has(i)) el.classList.add("conflict");
     if(State.conflictHighlight&&State.conflictHighlight.has(t.id)) el.classList.add("conflict");
+    if(tileHasUnknownHubDevice(t)) el.classList.add("unknown-device");
     if((State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.includes(t.id))
       el.classList.add(State.sel.ids.length>1?"grouped":"sel");
     if(State.focusTileId!=null&&Number(t.id)===Number(State.focusTileId)) el.classList.add("info-focus");
@@ -5076,7 +5363,7 @@ function render(){
     }else if(showText && t.colSpan*Z>=26 && t.rowSpan*Z>=16){
       el.innerHTML=`<span class="t-id">#${t.id}</span><span class="t-name">${esc(tileDisplayLabel(t))}</span>`;
     }
-    el.title=`#${t.id} ${tileDisplayLabel(t)} — col ${t.col}-${t.col+t.colSpan-1}, row ${t.row}-${t.row+t.rowSpan-1} (z ${effZ(t)})`;
+    el.title=`#${t.id} ${tileDisplayLabel(t)} — col ${t.col}-${t.col+t.colSpan-1}, row ${t.row}-${t.row+t.rowSpan-1} (z ${effZ(t)})${unknownHubDeviceTitle(t)}`;
     // Resize handle — visible when tile is selected, hidden during drag/pending
     if((State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.includes(t.id)
         &&!State.tileDrag&&!State.pending&&!State.resizeDrag){
@@ -5130,7 +5417,14 @@ function render(){
   updateSelReadout();
   document.getElementById("btnUndo").disabled=State.history.length===0;
   document.getElementById("btnRedo").disabled=State.future.length===0;
-  document.getElementById("btnUndoAll").disabled=!State.original||State.history.length===0;
+  const undoAllBtn=document.getElementById("btnUndoAll");
+  if(undoAllBtn){
+    const canReload=canReloadActiveHubDashboard();
+    undoAllBtn.disabled=!State.original||!State.history.length;
+    undoAllBtn.title=canReload
+      ? "Undo all — restore the layout as it was when first loaded. Shift+click reloads this dashboard from the hub when Undo All is enabled."
+      : "Undo all — restore the layout as it was when first loaded.";
+  }
   updateDirtyIndicator();
   updateSpacingControls();
 }
@@ -8347,7 +8641,10 @@ function showImportedDeviceWarning(opts){
   const unknown=ids.filter(id=>!knownHubDeviceById(id));
   const known=ids.filter(id=>knownHubDeviceById(id));
   const loadedDashboard=!!(opts&&opts.loadedDashboard);
-  const informationalOnly=loadedDashboard||!!(opts&&opts.informationalOnly);
+  // Use the same checkbox-free informational review everywhere this dialog appears
+  // (load checks, paste, and full JSON replacement). The user can still cancel a
+  // pending paste/replacement, or continue/add devices without extra confirmations.
+  const informationalOnly=true;
   const requireDecision=!!(opts&&opts.requireDecision);
   title.textContent=opts.title||"Review tile device assignments";
   intro.textContent=opts.intro||(loadedDashboard
@@ -8402,9 +8699,9 @@ function showImportedDeviceWarning(opts){
         : "These devices are not selected for this dashboard. Add them before saving, or Hubitat may remove the affected tile assignments.")
       : (unknown.length
         ? (known.length
-          ? `${known.length} device${known.length===1?" is":"s are"} available to add, while ${unknown.length} device ID${unknown.length===1?" could":"s could"} not be reconciled with this hub. Check both confirmations to add the available devices and continue with the unresolved tile assignments.`
-          : `No listed device IDs could be reconciled with this hub. You may continue only after reviewing the IDs and acknowledging that those tile assignments may be lost.`)
-        : "Confirm the IDs before continuing or using the experimental add option.");
+          ? `${known.length} device${known.length===1?" is":"s are"} available to add, while ${unknown.length} device ID${unknown.length===1?" could":"s could"} not be reconciled with this hub. You can add the available devices or continue knowing that unresolved tile assignments will remain invalid.`
+          : `No listed device IDs could be reconciled with this hub. Continuing will leave those tile assignments invalid and they may be lost when the dashboard is saved.`)
+        : "These devices are not selected for this dashboard. Add them before saving, or Hubitat may remove the affected tile assignments.");
   statusEl.className="import-device-status"+(unknown.length?" err":"");
   let busy=false, cleaned=false;
   const sync=()=>{
@@ -8441,6 +8738,8 @@ function showImportedDeviceWarning(opts){
     statusEl.textContent=unknown.length
       ? `Attempting to add ${known.length} available device${known.length===1?"":"s"} through Hubitat's undocumented dashboard endpoint…`
       : "Attempting to add the devices through Hubitat's undocumented dashboard endpoint…";
+    const ownsActivity=!hubOperationActive();
+    if(ownsActivity) showHubActivity(unknown.length?`Adding ${known.length} available dashboard device${known.length===1?"":"s"} on hub…`:"Adding dashboard devices on hub…");
     try{
       await experimentallyAddDevicesToActiveDashboard(known);
       statusEl.textContent=unknown.length
@@ -8454,6 +8753,8 @@ function showImportedDeviceWarning(opts){
       statusEl.textContent=`Experimental add failed: ${e.message}. Add the devices manually through Hubitat, or continue without adding them.`;
       sync();
       trace(`experimental device add failed: ${e.message}`,null,"err");
+    }finally{
+      if(ownsActivity) hideHubActivity();
     }
   };
   resetModalPosition("importDeviceWarningModal");
@@ -8521,6 +8822,8 @@ function confirmFullJsonDeviceValidation(data,onProceed){
   return showImportedDeviceWarning({
     title:"Replacement layout uses unselected devices",
     subject:"The replacement JSON",
+    informationalOnly:true,
+    continueText:"Continue",
     ids:invalid,
     onContinue:()=>{ if(onProceed) onProceed(); },
     onCancel:()=>status("JSON replacement was not applied.")
@@ -9216,9 +9519,39 @@ function restoreOriginalLayoutState(){
     _raw:t,
   }));
 }
-function undoAll(){
+function canReloadActiveHubDashboard(){
+  return !!(State.hubAvailable && State.conn.mode==="live" && State.active && State.hubSaveBaseline && currentDashboardUrl());
+}
+function reloadActiveHubDashboardFromUndoAll(){
+  if(!canReloadActiveHubDashboard()) return false;
+  return confirmReloadDashboardFromHub(State.active, "Undo All");
+}
+function confirmReloadDashboardFromHub(d, sourceLabel){
+  if(!d || !canReloadActiveHubDashboard() || !State.active || String(State.active.id)!==String(d.id)) return false;
+  if(hubOperationActive()){
+    toast("A hub operation is already in progress. Wait for it to finish or abort it first.","err");
+    return true;
+  }
+  const label=(d&&d.label)||"dashboard";
+  const origin=sourceLabel ? ` via ${sourceLabel}` : "";
+  showConfirm(
+    "Reload dashboard from hub",
+    `This will reload "${label}" from the hub${origin} and replace the current working layout with the latest hub version. Unsaved local changes will be discarded. Continue?`,
+    ()=>Hub.loadLayout(d, State.loadPin),
+    ()=>status("Hub reload cancelled — current working layout was not replaced."),
+    {
+      defaultButton:"cancel",
+      okText:"Reload from hub",
+      cancelText:"Keep current layout"
+    }
+  );
+  return true;
+}
+function undoAll(event){
   clearConflictHighlight();
+  if(event && event.shiftKey && reloadActiveHubDashboardFromUndoAll()) return;
   if(!State.original){ toast("No original layout to restore.","err"); return; }
+  if(!State.history.length){ toast("No changes to undo.","err"); return; }
   showConfirm(
     "Restore original layout",
     "This will restore the layout to the current clean baseline. For hub-loaded layouts, that is the last hub-loaded or hub-saved state. The restore itself can be undone with Undo.",
@@ -9318,8 +9651,15 @@ function renderDashList(){
     const b=document.createElement("button");
     b.className="dash-item"+(State.active&&State.active.id===d.id?" active":"");
     b.innerHTML=`<span class="nm">${esc(d.label)}</span><span class="id">#${d.id}</span><span class="ct">${d.deviceCount??0}</span>`;
-    b.addEventListener("click",()=>{
-      if(State.active && String(State.active.id)===String(d.id)) return;
+    b.addEventListener("click",(event)=>{
+      if(hubOperationActive()){ toast("A hub operation is already in progress. Wait for it to finish or abort it first.","err"); return; }
+      const sameActive=!!(State.active && String(State.active.id)===String(d.id));
+      if(event && event.shiftKey && sameActive){
+        if(confirmReloadDashboardFromHub(d, "dashboard list")) return;
+        toast("This dashboard cannot be reloaded from the hub in the current state.","err");
+        return;
+      }
+      if(sameActive) return;
       confirmUnsavedLayoutChange(`Loading "${d.label||'the selected dashboard'}"`, ()=>{
         document.querySelectorAll(".dash-item").forEach(x=>x.classList.remove("active")); b.classList.add("active");
         if(State.conn.mode==="demo"||State.conn.mode==="offline") adoptLayout(d, d._layout);
@@ -9625,9 +9965,9 @@ function loadPasted(){
 const JSON_EDITOR_FIELD_MODES=new Set(["customCSS","customHTML","customJS"]);
 const JSON_EDITOR_MANAGER_MODES=new Set(["tileDevices","dashboardDevices"]);
 const JsonEditorState={
-  mode:"json",doc:null,initialText:"",initialComparable:null,dirty:false,
-  tileDevices:{showMissingOnly:false,sortBy:"id",sortDir:"asc"},
-  dashboardDevices:{loaded:false,busy:false,draft:new Set(),initial:new Set(),error:"",showMissingOnly:false,sortBy:"id",sortDir:"asc"}
+  mode:"json",doc:null,initialDoc:null,initialText:"",initialComparable:null,dirty:false,fullJsonTextDirty:false,
+  tileDevices:{view:"all",sortBy:"id",sortDir:"asc"},
+  dashboardDevices:{loaded:false,busy:false,draft:new Set(),initial:new Set(),error:"",filter:"all",sortBy:"id",sortDir:"asc"}
 };
 function setJsonEditorError(msg){
   const el=document.getElementById("jsonEditorErr");
@@ -9635,53 +9975,65 @@ function setJsonEditorError(msg){
   el.textContent=msg||"";
   el.style.display=msg?"block":"none";
 }
-function setJsonEditorDirtyState(dirty){
-  JsonEditorState.dirty=!!dirty;
+function jsonEditorDocumentDirty(){
+  if(!JsonEditorState.doc||!JsonEditorState.initialComparable) return false;
+  const cmp=normalizedJsonForCompare(JsonEditorState.doc);
+  return !!(cmp&&cmp!==JsonEditorState.initialComparable);
+}
+function jsonEditorAnyDirty(){
+  return !!(JsonEditorState.fullJsonTextDirty||jsonEditorDocumentDirty()||jsonDashboardDeviceDraftChanged());
+}
+function setJsonEditorDirtyState(){
+  JsonEditorState.dirty=jsonEditorAnyDirty();
   const apply=document.getElementById("jsonApply");
   const close=document.getElementById("jsonClose");
+  const dashApply=document.getElementById("jsonDashboardUpdate");
+  const st=JsonEditorState.dashboardDevices||{};
+  const dashboardSelectionOk=!jsonDashboardDeviceDraftChanged()||[...(st.draft||new Set())].filter(id=>knownHubDeviceById(id)).length>0;
   if(apply){
-    apply.disabled=!JsonEditorState.dirty;
-    apply.title=JsonEditorState.dirty?"Apply editor changes to the working layout":"No JSON changes to apply";
+    apply.disabled=!JsonEditorState.dirty||!dashboardSelectionOk;
+    apply.textContent=JsonEditorState.dirty?"Apply All Changes":"Apply changes";
+    apply.title=!dashboardSelectionOk?"Select at least one dashboard device before applying":(JsonEditorState.dirty?"Apply all JSON dialog changes":"No changes to apply");
+  }
+  if(dashApply){
+    dashApply.disabled=!JsonEditorState.dirty||JsonEditorState.dashboardDevices.busy||!dashboardSelectionOk;
+    dashApply.textContent="Apply All Changes";
+    dashApply.title=!dashboardSelectionOk?"Select at least one dashboard device before applying":(JsonEditorState.dirty?"Apply all JSON dialog changes":"No changes to apply");
   }
   if(close){
-    close.textContent=JsonEditorState.dirty?"Cancel":"Close";
-    close.title=JsonEditorState.dirty?"Cancel and discard JSON editor changes":"Close JSON editor";
+    close.textContent=JsonEditorState.dirty?"Discard All Changes":"Close";
+    close.title=JsonEditorState.dirty?"Discard all unsaved JSON dialog changes":"Close JSON editor";
   }
 }
 function updateJsonEditorDirtyState(){
   const ed=document.getElementById("jsonEditor");
-  if(!ed){ setJsonEditorDirtyState(false); return false; }
+  if(!ed){ setJsonEditorDirtyState(); return false; }
   if(JSON_EDITOR_FIELD_MODES.has(JsonEditorState.mode) && JsonEditorState.doc){
     JsonEditorState.doc[JsonEditorState.mode]=ed.value;
   }
-  let dirty=false;
   if(JsonEditorState.mode==="json"){
     const raw=ed.value||"";
-    if(raw!==JsonEditorState.initialText) dirty=true;
     try{
       const parsed=normalizeLoadedJson(JSON.parse(raw.trim()||"{}"));
-      const cmp=normalizedJsonForCompare(parsed);
-      if(cmp&&JsonEditorState.initialComparable) dirty=cmp!==JsonEditorState.initialComparable;
       JsonEditorState.doc=cloneJsonDoc(parsed);
+      JsonEditorState.fullJsonTextDirty=false;
     }catch(_e){
-      dirty=raw!==JsonEditorState.initialText;
+      JsonEditorState.fullJsonTextDirty=raw!==JsonEditorState.initialText;
+      // Keep the previous parsed document while the Full JSON view is invalid.
     }
-  }else if(JsonEditorState.doc){
-    const cmp=normalizedJsonForCompare(JsonEditorState.doc);
-    dirty=!!(cmp&&JsonEditorState.initialComparable&&cmp!==JsonEditorState.initialComparable);
   }
-  setJsonEditorDirtyState(dirty);
-  return dirty;
+  setJsonEditorDirtyState();
+  return JsonEditorState.dirty;
 }
 function closeOrCancelJsonEditor(){
   const modal=document.getElementById("jsonModal");
   if(!JsonEditorState.dirty){ if(modal) modal.classList.add("hidden"); return; }
   showConfirm(
-    "Discard JSON changes",
-    "Discard the changes made in the JSON editor?",
-    ()=>{ if(modal) modal.classList.add("hidden"); setJsonEditorDirtyState(false); toast("Changes to JSON discarded.","ok"); },
-    ()=>status("JSON editor changes were not discarded."),
-    {okText:"Discard", cancelText:"Cancel"}
+    "Discard all JSON dialog changes",
+    "Discard all unsaved changes made in the JSON dialog?",
+    ()=>{ if(modal) modal.classList.add("hidden"); setJsonEditorDirtyState(); toast("JSON dialog changes discarded.","ok"); },
+    ()=>status("JSON dialog changes were not discarded."),
+    {okText:"Discard All Changes", cancelText:"Cancel", defaultButton:"cancel", dangerOk:true}
   );
 }
 function placeJsonEditorCaret(pos="start"){
@@ -9714,10 +10066,10 @@ function jsonDashboardDeviceManagerOnline(){
   return !!(State.hubAvailable&&State.conn.mode==="live"&&State.active&&State.deviceNamesAvailable&&State.hubDevices&&State.hubDevices.length);
 }
 function resetJsonTileDeviceManager(){
-  JsonEditorState.tileDevices={showMissingOnly:false,sortBy:"id",sortDir:"asc"};
+  JsonEditorState.tileDevices={view:"all",sortBy:"id",sortDir:"asc"};
 }
 function resetJsonDashboardDeviceManager(){
-  JsonEditorState.dashboardDevices={loaded:false,busy:false,draft:new Set(),initial:new Set(),error:"",showMissingOnly:false,sortBy:"id",sortDir:"asc"};
+  JsonEditorState.dashboardDevices={loaded:false,busy:false,draft:new Set(),initial:new Set(),error:"",filter:"all",sortBy:"id",sortDir:"asc"};
 }
 function jsonNameCompare(a,b,dir="asc"){
   const result=String(a==null?"":a).localeCompare(String(b==null?"":b),undefined,{numeric:true,sensitivity:"base"});
@@ -9725,11 +10077,13 @@ function jsonNameCompare(a,b,dir="asc"){
 }
 function jsonDeviceIdCompare(a,b,dir="asc"){
   const aa=canonicalDeviceId(a),bb=canonicalDeviceId(b);
-  if(!aa&&bb) return 1;
-  if(aa&&!bb) return -1;
-  if(!aa&&!bb) return 0;
-  const an=Number(aa),bn=Number(bb);
-  const result=(Number.isFinite(an)&&Number.isFinite(bn))?an-bn:String(aa).localeCompare(String(bb),undefined,{numeric:true,sensitivity:"base"});
+  let result=0;
+  if(!aa&&bb) result=1;
+  else if(aa&&!bb) result=-1;
+  else if(aa||bb){
+    const an=Number(aa),bn=Number(bb);
+    result=(Number.isFinite(an)&&Number.isFinite(bn))?an-bn:String(aa).localeCompare(String(bb),undefined,{numeric:true,sensitivity:"base"});
+  }
   return dir==="desc"?-result:result;
 }
 function jsonSortArrow(active,dir){ return active?(dir==="desc"?"↓":"↑"):"↕"; }
@@ -9744,43 +10098,83 @@ function jsonTileDeviceId(raw){
   const id=normalizeDeviceId(raw&&raw.device);
   return id==null?"":canonicalDeviceId(id);
 }
+function jsonEditorDashboardDeviceSelected(id){
+  id=canonicalDeviceId(id);
+  if(!id) return false;
+  const st=JsonEditorState.dashboardDevices;
+  if(st&&st.loaded) return st.draft.has(id);
+  return isDeviceSelectedForActiveDashboard(id);
+}
+function jsonTileDevicePickerOptionsHtml(currentId){
+  const current=canonicalDeviceId(currentId);
+  const devices=allHubDevicesForAudit();
+  const seen=new Set();
+  const parts=[`<option value=""${current?"":" selected"}>Unassigned</option>`];
+  for(const d of devices){
+    const id=canonicalDeviceId(d.id);
+    if(!id||seen.has(id)) continue;
+    seen.add(id);
+    const selected=jsonEditorDashboardDeviceSelected(id);
+    parts.push(optionHtmlForHubDevice(d, selected, id===current));
+  }
+  if(current&&!seen.has(current)){
+    const selected=jsonEditorDashboardDeviceSelected(current);
+    parts.splice(1,0,`<option value="${esc(current)}"${selected?"":" disabled"} selected>#${esc(current)} - ${esc(hubDeviceDisplayName(current))}</option>`);
+  }
+  return parts.join("");
+}
+function jsonTileMissingItems(){
+  const online=infoDeviceEditorIsOnline();
+  if(!online) return [];
+  return jsonEditorTiles().map(raw=>{
+    const id=jsonTileDeviceId(raw);
+    const known=id?knownHubDeviceById(id):null;
+    const unassigned=!id;
+    const badAssignment=!!(id&&!known);
+    const missingSelection=!!(id&&known&&!jsonEditorDashboardDeviceSelected(id));
+    return {raw,id,unassigned,badAssignment,missingSelection};
+  }).filter(item=>item.badAssignment||item.missingSelection);
+}
 function renderJsonTileDevicesPane(){
   const pane=document.getElementById("jsonTileDevicesPane");
   if(!pane) return;
   const tiles=jsonEditorTiles().slice();
   const online=infoDeviceEditorIsOnline();
-  const tileState=JsonEditorState.tileDevices||(JsonEditorState.tileDevices={showMissingOnly:false,sortBy:"id",sortDir:"asc"});
+  const tileState=JsonEditorState.tileDevices||(JsonEditorState.tileDevices={view:"all",sortBy:"id",sortDir:"asc"});
   if(!tileState.sortBy) tileState.sortBy="id";
   if(!tileState.sortDir) tileState.sortDir="asc";
-  const showMissingOnly=!!tileState.showMissingOnly;
+  if(!tileState.view) tileState.view="all";
   const classified=tiles.map(raw=>{
     const id=jsonTileDeviceId(raw);
     const known=online&&id?knownHubDeviceById(id):null;
+    const unassigned=!id;
     const badAssignment=!!(online&&id&&!known);
-    const missingSelection=!!(online&&id&&known&&State.devicePickedAvailable&&!isDeviceSelectedForActiveDashboard(id));
-    return {raw,id,badAssignment,missingSelection};
+    const missingSelection=!!(online&&id&&known&&!jsonEditorDashboardDeviceSelected(id));
+    return {raw,id,unassigned,badAssignment,missingSelection};
   });
-  const visible=(showMissingOnly&&online
-    ? classified.filter(item=>item.badAssignment||item.missingSelection)
-    : classified).sort((a,b)=>{
-      let result=0;
-      if(tileState.sortBy==="tileLabel") result=jsonNameCompare(tileGridDisplayLabelValue(a.raw),tileGridDisplayLabelValue(b.raw),tileState.sortDir);
-      else if(tileState.sortBy==="deviceId") result=jsonDeviceIdCompare(a.id,b.id,tileState.sortDir);
-      else{
-        const an=Number(a.raw.id),bn=Number(b.raw.id);
-        result=(Number.isFinite(an)&&Number.isFinite(bn))?an-bn:String(a.raw.id).localeCompare(String(b.raw.id),undefined,{numeric:true});
-        if(tileState.sortDir==="desc") result=-result;
-      }
-      if(result) return result;
+  const unassignedCount=jsonTileDeviceViewCount("unassigned",classified);
+  const invalidCount=jsonTileDeviceViewCount("invalid",classified);
+  if(!["all","unassigned","invalid"].includes(tileState.view)) tileState.view="all";
+  if(tileState.view==="invalid"&&!online) tileState.view="all";
+  const viewForRows=tileState.view;
+  const visible=jsonTileDeviceViewItems(viewForRows,classified).sort((a,b)=>{
+    let result=0;
+    if(tileState.sortBy==="tileLabel") result=jsonNameCompare(tileGridDisplayLabelValue(a.raw),tileGridDisplayLabelValue(b.raw),tileState.sortDir);
+    else if(tileState.sortBy==="deviceId") result=jsonDeviceIdCompare(a.id,b.id,tileState.sortDir);
+    else{
       const an=Number(a.raw.id),bn=Number(b.raw.id);
-      return (Number.isFinite(an)&&Number.isFinite(bn))?an-bn:String(a.raw.id).localeCompare(String(b.raw.id),undefined,{numeric:true});
-    });
-  const filterDisabled=!online;
-  const toolbar=`<div class="json-manager-toolbar"><div class="json-manager-toolbar-group"><label class="chk" id="jsonTileMissingOnlyWrap" title="Show only tiles assigned to devices missing from the dashboard selection, plus invalid device assignments"><input type="checkbox" id="jsonTileMissingOnly" ${showMissingOnly?"checked":""} ${filterDisabled?"disabled":""}> Show only missing devices</label></div></div>`;
-  const intro='<p class="json-manager-intro">Reassign tile devices in one place. The grid label uses the same naming logic as the layout. CSS alternate titles show literal <code>content:</code> values applied to the tile title’s <code>:before</code> or <code>:after</code> pseudo-element.</p>';
+      result=(Number.isFinite(an)&&Number.isFinite(bn))?an-bn:String(a.raw.id).localeCompare(String(b.raw.id),undefined,{numeric:true});
+      if(tileState.sortDir==="desc") result=-result;
+    }
+    if(result) return result;
+    const an=Number(a.raw.id),bn=Number(b.raw.id);
+    return (Number.isFinite(an)&&Number.isFinite(bn))?an-bn:String(a.raw.id).localeCompare(String(b.raw.id),undefined,{numeric:true});
+  });
+  const intro='<p class="json-manager-intro">Reassign tile devices in one place. The tile label uses the same naming logic as the layout. CSS alternate titles show literal <code>content:</code> values applied to the tile title’s <code>:before</code> or <code>:after</code> pseudo-element.</p>';
+  const idSortActive=tileState.sortBy==="id";
   const labelSortActive=tileState.sortBy==="tileLabel";
   const deviceSortActive=tileState.sortBy==="deviceId";
-  const head=`<div class="json-tile-device-head"><div>Tile</div><div><button class="json-sort-btn ${labelSortActive?"active":""}" type="button" data-json-tile-sort="tileLabel" title="Sort by tile label" aria-label="Sort by tile label ${labelSortActive?tileState.sortDir:"ascending"}">Tile label <span class="json-sort-arrow">${jsonSortArrow(labelSortActive,tileState.sortDir)}</span></button></div><div>CSS alternate title</div><div><button class="json-sort-btn ${deviceSortActive?"active":""}" type="button" data-json-tile-sort="deviceId" title="Sort by assigned device ID" aria-label="Sort by assigned device ID ${deviceSortActive?tileState.sortDir:"ascending"}">Device ID / name <span class="json-sort-arrow">${jsonSortArrow(deviceSortActive,tileState.sortDir)}</span></button></div></div>`;
+  const head=`<div class="json-tile-device-head"><div><button class="json-sort-btn ${idSortActive?"active":""}" type="button" data-json-tile-sort="id" title="Sort by tile number" aria-label="Sort by tile number ${idSortActive?tileState.sortDir:"ascending"}">Tile # <span class="json-sort-arrow">${jsonSortArrow(idSortActive,tileState.sortDir)}</span></button></div><div>Row / Col</div><div><button class="json-sort-btn ${labelSortActive?"active":""}" type="button" data-json-tile-sort="tileLabel" title="Sort by tile label" aria-label="Sort by tile label ${labelSortActive?tileState.sortDir:"ascending"}">Tile label <span class="json-sort-arrow">${jsonSortArrow(labelSortActive,tileState.sortDir)}</span></button></div><div>CSS alternate title</div><div><button class="json-sort-btn ${deviceSortActive?"active":""}" type="button" data-json-tile-sort="deviceId" title="Sort by assigned device ID" aria-label="Sort by assigned device ID ${deviceSortActive?tileState.sortDir:"ascending"}">Device ID / name <span class="json-sort-arrow">${jsonSortArrow(deviceSortActive,tileState.sortDir)}</span></button></div></div>`;
   const rows=visible.map(item=>{
     const {raw,id,badAssignment,missingSelection}=item;
     const gridLabel=tileGridDisplayLabelValue(raw);
@@ -9792,22 +10186,25 @@ function renderJsonTileDevicesPane(){
     const invalidNote=badAssignment?`<span class="device-note">Device #${esc(id)} was not found on this hub.</span>`:"";
     const missingNote=missingSelection?'<span class="device-note">This device is not selected for the dashboard.</span>':"";
     const control=online
-      ? `<select class="json-tile-device-select${badAssignment?" bad-assignment":""}" data-tile-id="${esc(raw.id)}" title="${badAssignment?`Device #${esc(id)} was not found on this hub`:`Only devices selected for this dashboard can be chosen`}">${infoDevicePickerOptionsHtml(id)}</select>${invalidNote||missingNote}`
+      ? `<select class="json-tile-device-select${badAssignment?" bad-assignment":""}" data-tile-id="${esc(raw.id)}" title="${badAssignment?`Device #${esc(id)} was not found on this hub`:`Only devices selected for this dashboard can be chosen`}">${jsonTileDevicePickerOptionsHtml(id)}</select>${invalidNote||missingNote}`
       : `<input class="json-tile-device-input" data-tile-id="${esc(raw.id)}" type="text" inputmode="numeric" pattern="[0-9]*" value="${esc(id)}" placeholder="device id"><span class="device-note">Digits only; blank removes the assignment.</span>`;
     const baseNote=gridLabel!==baseLabel?`Layout label: ${baseLabel}`:`Template: ${raw.template||"—"}`;
     const rowTitle=badAssignment?`Device #${id} was not found on this hub.`:(missingSelection?`Device #${id} is not selected for this dashboard.`:"");
-    return `<div class="json-tile-device-row ${badAssignment?"bad-assignment":""} ${missingSelection?"missing-selection":""}" data-tile-row="${esc(raw.id)}"${rowTitle?` title="${esc(rowTitle)}"`:""}><div class="json-tile-id">#${esc(raw.id)}</div><div class="json-tile-label" data-grid-label="${esc(raw.id)}">${esc(gridLabel)}<small>${esc(baseNote)}</small></div>${altHtml}<div class="json-tile-device-control">${control}</div></div>`;
+    return `<div class="json-tile-device-row ${badAssignment?"bad-assignment":""} ${missingSelection?"missing-selection":""}" data-tile-row="${esc(raw.id)}"${rowTitle?` title="${esc(rowTitle)}"`:""}><div class="json-tile-id">#${esc(raw.id)}</div><div class="json-tile-location">R${esc(raw.row||"")} / C${esc(raw.col||"")}<small>${esc((raw.rowSpan||"?")+"×"+(raw.colSpan||"?"))}</small></div><div class="json-tile-label" data-grid-label="${esc(raw.id)}">${esc(gridLabel)}<small>${esc(baseNote)}</small></div>${altHtml}<div class="json-tile-device-control">${control}</div></div>`;
   }).join("");
   const empty=!tiles.length
     ? '<div class="json-manager-empty">No tiles are present in the current layout.</div>'
-    : (!visible.length&&showMissingOnly&&online
-      ? '<div class="json-manager-empty">No tile devices are missing from the dashboard selection, and no invalid tile device assignments were found.</div>'
+    : (!visible.length&&viewForRows!=="all"
+      ? `<div class="json-manager-empty">No tile devices match the ${esc(jsonTileDeviceViewLabel(viewForRows))} view.</div>`
       : "");
-  pane.innerHTML=toolbar+intro+(empty||head+rows);
-  const missingOnly=document.getElementById("jsonTileMissingOnly");
-  if(missingOnly){
-    missingOnly.onchange=()=>{ tileState.showMissingOnly=!!missingOnly.checked; renderJsonTileDevicesPane(); };
-  }
+  const viewButtons=jsonTileDeviceViewButtons(viewForRows,classified,online);
+  const toolbar=`<div class="json-manager-toolbar"><div class="json-manager-toolbar-group json-view-filter-group" aria-label="Tile device view filters"><span class="json-view-label">View:</span>${viewButtons}</div><span class="json-manager-status">${online?`${unassignedCount} unassigned tile device${unassignedCount===1?"":"s"}. ${invalidCount} invalid ID${invalidCount===1?"":"s"}.`:`${unassignedCount} unassigned tile device${unassignedCount===1?"":"s"}. Device status cannot be verified offline.`}</span></div>`;
+  pane.innerHTML=`<div class="json-manager-fixed-top">${intro}${toolbar}</div><div class="json-manager-scroll">${empty||head+rows}</div>`;
+  pane.querySelectorAll("[data-json-tile-view]").forEach(btn=>btn.addEventListener("click",()=>{
+    if(btn.disabled) return;
+    tileState.view=btn.dataset.jsonTileView||"all";
+    renderJsonTileDevicesPane();
+  }));
   pane.querySelectorAll("[data-json-tile-sort]").forEach(btn=>btn.addEventListener("click",()=>{
     setJsonManagerSort(tileState,btn.dataset.jsonTileSort);
     renderJsonTileDevicesPane();
@@ -9815,8 +10212,9 @@ function renderJsonTileDevicesPane(){
   pane.querySelectorAll(".json-tile-device-select").forEach(sel=>sel.addEventListener("change",()=>{
     const raw=jsonEditorTiles().find(t=>Number(t.id)===Number(sel.dataset.tileId));
     const next=canonicalDeviceId(sel.value);
-    if(!raw||!next||!isDeviceSelectedForActiveDashboard(next)){ toast("That device is not selected for this dashboard.","err"); renderJsonTileDevicesPane(); return; }
-    raw.device=next; updateJsonEditorDirtyState(); renderJsonTileDevicesPane();
+    if(!raw) return;
+    if(next&&!jsonEditorDashboardDeviceSelected(next)){ toast("That device is not selected for this dashboard.","err"); renderJsonTileDevicesPane(); return; }
+    raw.device=next; updateJsonEditorDirtyState(); renderJsonTileDevicesPane(); renderJsonDashboardDevicesPane();
   }));
   pane.querySelectorAll(".json-tile-device-input").forEach(inp=>inp.addEventListener("change",()=>{
     const raw=jsonEditorTiles().find(t=>Number(t.id)===Number(inp.dataset.tileId));
@@ -9824,7 +10222,7 @@ function renderJsonTileDevicesPane(){
     if(!raw) return;
     if(entered&&!/^\d+$/.test(entered)){ toast("Device id must contain digits only, or be left blank.","err"); inp.value=jsonTileDeviceId(raw); return; }
     raw.device=entered?canonicalDeviceId(entered):"";
-    updateJsonEditorDirtyState(); renderJsonTileDevicesPane();
+    updateJsonEditorDirtyState(); renderJsonTileDevicesPane(); renderJsonDashboardDevicesPane();
   }));
 }
 function jsonDashboardUsedDeviceIds(){
@@ -9834,24 +10232,85 @@ function jsonDashboardDeviceDraftChanged(){
   const st=JsonEditorState.dashboardDevices;
   return st.loaded&&!deviceIdSetsEqual(st.draft,st.initial);
 }
+function jsonDashboardFilterLabel(filter){
+  return ({all:"Show All",selected:"Selected",unselected:"Unselected",inUse:"In-Use",unused:"Unused"})[filter]||"Show All";
+}
+function jsonTileDeviceViewLabel(view){
+  return ({all:"Show All",unassigned:"Show Unassigned",invalid:"Show Invalid"})[view]||"Show All";
+}
+function jsonTileDeviceViewCount(view,classified){
+  if(view==="unassigned") return classified.filter(item=>item.unassigned).length;
+  if(view==="invalid") return classified.filter(item=>item.badAssignment).length;
+  return classified.length;
+}
+function jsonTileDeviceViewItems(view,classified){
+  if(view==="unassigned") return classified.filter(item=>item.unassigned);
+  if(view==="invalid") return classified.filter(item=>item.badAssignment);
+  return classified;
+}
+function jsonTileDeviceViewButtons(activeView,classified,online){
+  const defs=[
+    ["all","Show All","Show every tile device assignment"],
+    ["unassigned","Show Unassigned","Show tiles whose device id is blank or otherwise unassigned"],
+    ["invalid","Show Invalid","Show tile device IDs that do not exist on this hub"]
+  ];
+  return defs.map(([view,label,title])=>{
+    const count=jsonTileDeviceViewCount(view,classified);
+    const disabled=view==="unassigned" ? count<1 : (view==="invalid" ? (!online||count<1) : false);
+    const active=activeView===view;
+    const labelText=view==="all"?label:`${label} (${count})`;
+    const noItems=view==="unassigned"?"No unassigned tile devices were found":"No invalid tile device IDs were found";
+    const disabledTitle=view==="invalid"&&!online?"Invalid device detection requires a live hub connection":noItems;
+    return `<button class="btn ghost json-view-filter ${active?"active":""}" data-json-tile-view="${esc(view)}" type="button" ${disabled?"disabled":""} title="${esc(disabled?disabledTitle:title)}">${esc(labelText)}</button>`;
+  }).join("");
+}
+function jsonDashboardVisibleDeviceRows(){
+  const st=JsonEditorState.dashboardDevices;
+  const used=jsonDashboardUsedDeviceIds();
+  const counts=new Map();
+  for(const t of jsonEditorTiles()){
+    const id=jsonTileDeviceId(t);
+    if(id) counts.set(id,(counts.get(id)||0)+1);
+  }
+  return allHubDevicesForAudit().slice().map(d=>{
+    const id=canonicalDeviceId(d.id);
+    const locked=used.has(id);
+    const selected=st.initial.has(id);
+    const checked=locked||st.draft.has(id);
+    return {device:d,id,locked,selected,checked,useCount:counts.get(id)||0};
+  }).filter(item=>{
+    if(st.filter==="selected") return item.selected;
+    if(st.filter==="unselected") return !item.selected;
+    if(st.filter==="inUse") return item.locked;
+    if(st.filter==="unused") return !item.locked;
+    return true;
+  }).sort((a,b)=>{
+    let result=st.sortBy==="name"
+      ? jsonNameCompare(a.device.name,b.device.name,st.sortDir)
+      : jsonDeviceIdCompare(a.id,b.id,st.sortDir);
+    if(result) return result;
+    return st.sortBy==="name"?jsonDeviceIdCompare(a.id,b.id,"asc"):jsonNameCompare(a.device.name,b.device.name,"asc");
+  });
+}
 function renderJsonDashboardDevicesPane(){
   const pane=document.getElementById("jsonDashboardDevicesPane");
   const list=document.getElementById("jsonDashboardDeviceList");
   const statusEl=document.getElementById("jsonDashboardDeviceStatus");
-  const missingOnly=document.getElementById("jsonDashboardMissingOnly");
   const idSort=document.getElementById("jsonDashboardDeviceIdSort");
   const nameSort=document.getElementById("jsonDashboardDeviceNameSort");
   const st=JsonEditorState.dashboardDevices;
   if(!st.sortBy) st.sortBy="id";
   if(!st.sortDir) st.sortDir="asc";
+  if(!st.filter) st.filter="all";
   const online=jsonDashboardDeviceManagerOnline();
-  const buttons=["jsonDashboardAssignAll","jsonDashboardRemoveUnused","jsonDashboardReload","jsonDashboardUpdate"].map(id=>document.getElementById(id));
+  const buttons=["jsonDashboardAssignAll","jsonDashboardRemoveUnused","jsonDashboardSelectView"].map(id=>document.getElementById(id));
   if(!pane||!list||!statusEl) return;
-  if(missingOnly){
-    missingOnly.checked=!!st.showMissingOnly;
-    missingOnly.disabled=!online||!st.loaded||st.busy;
-    missingOnly.onchange=()=>{ st.showMissingOnly=!!missingOnly.checked; renderJsonDashboardDevicesPane(); };
-  }
+  document.querySelectorAll("[data-dashboard-filter]").forEach(btn=>{
+    const on=btn.dataset.dashboardFilter===st.filter;
+    btn.classList.toggle("active",on);
+    btn.disabled=!online||!st.loaded||st.busy;
+    btn.onclick=()=>{ if(btn.disabled) return; st.filter=btn.dataset.dashboardFilter||"all"; renderJsonDashboardDevicesPane(); };
+  });
   if(idSort){
     const active=st.sortBy==="id";
     idSort.classList.toggle("active",active);
@@ -9871,81 +10330,65 @@ function renderJsonDashboardDevicesPane(){
   if(!online){
     list.innerHTML='<div class="json-manager-empty">Dashboard device management is available only for a dashboard loaded directly from the connected hub.</div>';
     statusEl.textContent="Offline mode: tile device IDs can still be edited from the Tile Devices tab."; statusEl.className="json-manager-status";
-    buttons.forEach(b=>{if(b)b.disabled=true;}); return;
+    buttons.forEach(b=>{if(b)b.disabled=true;}); setJsonEditorDirtyState(); return;
+  }
+  if(st.busy&&!st.loaded){
+    list.innerHTML='<div class="json-manager-loading"><span class="hub-op-spinner"></span><span>Loading dashboard selected devices from the hub…</span></div>';
+    statusEl.innerHTML='<span class="hub-op-spinner"></span> Loading dashboard devices from hub…'; statusEl.className="json-manager-status";
+    buttons.forEach(b=>{if(b)b.disabled=true;}); setJsonEditorDirtyState(); return;
   }
   const used=jsonDashboardUsedDeviceIds();
   for(const id of used) if(knownHubDeviceById(id)) st.draft.add(id);
   if(!st.loaded){
-    list.innerHTML='<div class="json-manager-empty">Select Reload from Hub to read the dashboard device list.</div>';
+    list.innerHTML='<div class="json-manager-empty">Dashboard device list has not been loaded from the hub.</div>';
     statusEl.textContent=st.error||"The dashboard device list has not been loaded."; statusEl.className="json-manager-status";
   }else{
-    const counts=new Map();
     const badAssignments=[];
     for(const t of jsonEditorTiles()){
       const id=jsonTileDeviceId(t);
-      if(!id) continue;
-      counts.set(id,(counts.get(id)||0)+1);
-      if(!knownHubDeviceById(id)) badAssignments.push({tileId:t.id,deviceId:id,label:tileGridDisplayLabelValue(t)});
+      if(id&&!knownHubDeviceById(id)) badAssignments.push({tileId:t.id,deviceId:id,label:tileGridDisplayLabelValue(t)});
     }
-    const missingAssigned=new Set([...used].filter(id=>knownHubDeviceById(id)&&!st.initial.has(id)));
-    const dashboardDevices=allHubDevicesForAudit().slice().sort((a,b)=>{
-      let result=st.sortBy==="name"
-        ? jsonNameCompare(a.name,b.name,st.sortDir)
-        : jsonDeviceIdCompare(a.id,b.id,st.sortDir);
-      if(result) return result;
-      return st.sortBy==="name"?jsonDeviceIdCompare(a.id,b.id,"asc"):jsonNameCompare(a.name,b.name,"asc");
-    });
-    const deviceRows=dashboardDevices.map(d=>{
-      const id=canonicalDeviceId(d.id);
-      const locked=used.has(id);
-      const checked=locked||st.draft.has(id);
-      if(st.showMissingOnly&&!missingAssigned.has(id)) return "";
-      return `<label class="json-dashboard-device-row ${checked?"selected":""} ${locked?"locked":""}" title="${locked?`Assigned to ${counts.get(id)||1} tile(s); this device cannot be removed.`:"Add or remove this device from the dashboard."}"><input class="json-dashboard-device-check" type="checkbox" data-device-id="${esc(id)}" ${checked?"checked":""} ${locked?"disabled":""}><span class="device-id">#${esc(id)}</span><span class="device-label">${esc(d.name)}</span>${locked?'<span class="device-lock" aria-label="Locked">🔒</span>':""}${locked?`<span class="device-use">${counts.get(id)||1} tile${(counts.get(id)||1)===1?"":"s"}</span>`:""}</label>`;
-    }).filter(Boolean);
-    const sortedBadAssignments=badAssignments.slice().sort((a,b)=>{
-      let result=st.sortBy==="name"
-        ? jsonNameCompare(a.label,b.label,st.sortDir)
-        : jsonDeviceIdCompare(a.deviceId,b.deviceId,st.sortDir);
-      if(result) return result;
-      const an=Number(a.tileId),bn=Number(b.tileId);
-      return (Number.isFinite(an)&&Number.isFinite(bn))?an-bn:String(a.tileId).localeCompare(String(b.tileId),undefined,{numeric:true});
-    });
-    const badRows=st.showMissingOnly?sortedBadAssignments.map(item=>`<div class="json-dashboard-device-row bad-assignment" title="Tile #${esc(item.tileId)} is assigned to device #${esc(item.deviceId)}, which was not found on this hub."><span class="device-lock" aria-label="Invalid assignment">⚠</span><span class="device-id">#${esc(item.deviceId)}</span><span class="device-label">Tile #${esc(item.tileId)} — ${esc(item.label)}</span><span class="device-use">Not found</span></div>`):[];
-    list.innerHTML=[...deviceRows,...badRows].join("")||(st.showMissingOnly
-      ? '<div class="json-manager-empty">No tile-assigned devices are missing from the dashboard selection, and no invalid tile device assignments were found.</div>'
-      : '<div class="json-manager-empty">No hub devices are available.</div>');
+    const visible=jsonDashboardVisibleDeviceRows();
+    const rows=visible.map(item=>`<label class="json-dashboard-device-row ${item.checked?"selected":""} ${item.locked?"locked":""}" title="${item.locked?`Assigned to ${item.useCount||1} tile(s); this device cannot be removed.`:"Add or remove this device from the dashboard."}"><input class="json-dashboard-device-check" type="checkbox" data-device-id="${esc(item.id)}" ${item.checked?"checked":""} ${item.locked?"disabled":""}><span class="device-id">#${esc(item.id)}</span><span class="device-label">${esc(item.device.name)}</span>${item.locked?'<span class="device-lock" aria-label="Locked">🔒</span>':'<span></span>'}${item.locked?`<span class="device-use">${item.useCount||1} tile${(item.useCount||1)===1?"":"s"}</span>`:""}</label>`);
+    list.innerHTML=rows.join("")||`<div class="json-manager-empty">No devices match the ${esc(jsonDashboardFilterLabel(st.filter))} view.</div>`;
     const selectedCount=[...st.draft].filter(id=>knownHubDeviceById(id)).length;
-    const missingCount=allHubDevicesForAudit().reduce((count,d)=>count+(st.draft.has(canonicalDeviceId(d.id))?0:1),0);
-    const missingSummary=st.showMissingOnly
-      ? `${missingAssigned.size} tile-assigned device${missingAssigned.size===1?" is":"s are"} missing from the dashboard selection.${badAssignments.length?` ${badAssignments.length} tile${badAssignments.length===1?" has":"s have"} an invalid device assignment.`:""}`
-      : `${missingCount?` ${missingCount} not selected.`:""}${badAssignments.length?` ${badAssignments.length} tile${badAssignments.length===1?" has":"s have"} a device ID not present in the hub inventory.`:""}`;
-    statusEl.textContent=st.busy?"Updating dashboard devices…":`${selectedCount} of ${State.hubDevices.length} hub devices selected.${missingSummary}${selectedCount<1?" Select at least one device before updating.":""}`;
+    const total=State.hubDevices.length;
+    const unusedCount=allHubDevicesForAudit().filter(d=>!used.has(canonicalDeviceId(d.id))).length;
+    const unselectedCount=allHubDevicesForAudit().filter(d=>!st.initial.has(canonicalDeviceId(d.id))).length;
+    statusEl.textContent=st.busy?"Updating dashboard devices…":`${selectedCount} of ${total} hub devices selected for pending apply. ${unselectedCount} not in the hub's current selected-device list. ${unusedCount} unused.${badAssignments.length?` ${badAssignments.length} tile${badAssignments.length===1?" has":"s have"} a device ID not present in the hub inventory.`:""}${selectedCount<1?" Select at least one device before applying.":""}`;
     statusEl.className="json-manager-status"+(st.error||selectedCount<1?" err":"");
     list.querySelectorAll(".json-dashboard-device-check:not(:disabled)").forEach(cb=>cb.addEventListener("change",()=>{
       const id=canonicalDeviceId(cb.dataset.deviceId);
       if(cb.checked) st.draft.add(id); else st.draft.delete(id);
-      st.error=""; renderJsonDashboardDevicesPane();
+      st.error=""; renderJsonDashboardDevicesPane(); renderJsonTileDevicesPane(); updateJsonEditorDirtyState();
     }));
   }
   const assign=document.getElementById("jsonDashboardAssignAll");
   const remove=document.getElementById("jsonDashboardRemoveUnused");
-  const reload=document.getElementById("jsonDashboardReload");
   const update=document.getElementById("jsonDashboardUpdate");
+  const toggle=document.getElementById("jsonDashboardSelectView");
   const selectedCount=[...st.draft].filter(id=>knownHubDeviceById(id)).length;
+  const visible=st.loaded?jsonDashboardVisibleDeviceRows():[];
+  const mutableVisible=visible.filter(item=>!item.locked);
+  const anyUnchecked=mutableVisible.some(item=>!st.draft.has(item.id));
+  if(toggle){
+    toggle.textContent=anyUnchecked?"Select all in view":"Select none in view";
+    toggle.disabled=st.busy||!st.loaded||!mutableVisible.length;
+    toggle.title=mutableVisible.length?`${anyUnchecked?"Select":"Clear"} all removable devices in the current ${jsonDashboardFilterLabel(st.filter)} view`:"No removable devices in the current view";
+  }
   if(assign) assign.disabled=st.busy||!st.loaded;
   if(remove) remove.disabled=st.busy||!st.loaded;
-  if(reload) reload.disabled=st.busy;
   if(update){
-    const unchanged=!jsonDashboardDeviceDraftChanged();
-    update.disabled=st.busy||!st.loaded||unchanged||selectedCount<1;
-    update.title=selectedCount<1
-      ? "Select at least one dashboard device before updating"
-      : (unchanged?"No dashboard device changes to update":"Update the selected devices on the hub using Hubitat's experimental internal endpoint");
+    update.disabled=st.busy||!JsonEditorState.dirty||selectedCount<1;
+    update.title=selectedCount<1?"Select at least one dashboard device before applying":"Apply all JSON dialog changes";
   }
+  setJsonEditorDirtyState();
 }
 async function reloadJsonDashboardDevices(){
   const st=JsonEditorState.dashboardDevices;
   if(!jsonDashboardDeviceManagerOnline()){ renderJsonDashboardDevicesPane(); return false; }
+  const ownsActivity=!hubOperationActive();
+  if(ownsActivity) showHubActivity("Loading dashboard selected devices from hub…");
   st.busy=true; st.error=""; renderJsonDashboardDevicesPane();
   try{
     const count=await loadHubDeviceNames();
@@ -9961,55 +10404,112 @@ async function reloadJsonDashboardDevices(){
   }catch(e){
     st.loaded=false; st.error=`Reload failed: ${e.message}`;
     return false;
-  }finally{ st.busy=false; renderJsonDashboardDevicesPane(); }
+  }finally{ st.busy=false; if(ownsActivity) hideHubActivity(); renderJsonDashboardDevicesPane(); }
 }
 function assignAllJsonDashboardDevices(){
   const st=JsonEditorState.dashboardDevices; if(!st.loaded||st.busy) return;
-  st.draft=new Set(allHubDevicesForAudit().map(d=>canonicalDeviceId(d.id)).filter(Boolean)); st.error=""; renderJsonDashboardDevicesPane();
+  st.draft=new Set(allHubDevicesForAudit().map(d=>canonicalDeviceId(d.id)).filter(Boolean)); st.error=""; renderJsonDashboardDevicesPane(); renderJsonTileDevicesPane(); updateJsonEditorDirtyState();
 }
 function removeUnusedJsonDashboardDevices(){
   const st=JsonEditorState.dashboardDevices; if(!st.loaded||st.busy) return;
   const used=jsonDashboardUsedDeviceIds();
-  st.draft=new Set([...used].filter(id=>knownHubDeviceById(id))); st.error=""; renderJsonDashboardDevicesPane();
+  st.draft=new Set([...used].filter(id=>knownHubDeviceById(id))); st.error=""; renderJsonDashboardDevicesPane(); renderJsonTileDevicesPane(); updateJsonEditorDirtyState();
 }
-function updateJsonDashboardDevicesOnHub(){
+function toggleJsonDashboardVisibleSelection(){
+  const st=JsonEditorState.dashboardDevices; if(!st.loaded||st.busy) return;
+  const visible=jsonDashboardVisibleDeviceRows().filter(item=>!item.locked);
+  if(!visible.length) return;
+  const selectAll=visible.some(item=>!st.draft.has(item.id));
+  if(selectAll) visible.forEach(item=>st.draft.add(item.id));
+  else visible.forEach(item=>st.draft.delete(item.id));
+  st.error=""; renderJsonDashboardDevicesPane(); renderJsonTileDevicesPane(); updateJsonEditorDirtyState();
+}
+function jsonDashboardAddedDeviceIds(){
   const st=JsonEditorState.dashboardDevices;
-  if(st.busy||!st.loaded||!jsonDashboardDeviceDraftChanged()) return;
+  if(!st.loaded) return new Set();
+  return new Set([...st.draft].map(canonicalDeviceId).filter(id=>id&&!st.initial.has(id)));
+}
+function jsonTilesAssignedToDashboardAddedDevices(){
+  const added=jsonDashboardAddedDeviceIds();
+  if(!added.size) return [];
+  return jsonEditorTiles().filter(t=>added.has(jsonTileDeviceId(t)));
+}
+function resetTileAssignmentsForIdsFromInitial(tiles){
+  if(!tiles||!tiles.length||!JsonEditorState.initialDoc) return;
+  const originalById=new Map((JsonEditorState.initialDoc.tiles||[]).map(t=>[Number(t.id),cloneJsonDoc(t)]));
+  for(const t of tiles){
+    const original=originalById.get(Number(t.id));
+    if(original&&Object.prototype.hasOwnProperty.call(original,"device")) t.device=original.device;
+    else if(t&&Object.prototype.hasOwnProperty.call(t,"device")) delete t.device;
+  }
+}
+function undoJsonDashboardTabChanges(){
+  const st=JsonEditorState.dashboardDevices;
+  if(!st.loaded||st.busy) return;
+  const dependent=jsonTilesAssignedToDashboardAddedDevices();
+  const doUndo=()=>{
+    if(dependent.length) resetTileAssignmentsForIdsFromInitial(dependent);
+    st.draft=new Set(st.initial); st.error="";
+    renderJsonDashboardDevicesPane(); renderJsonTileDevicesPane(); updateJsonEditorDirtyState();
+    toast("Dashboard Devices tab changes undone.","ok");
+  };
+  if(dependent.length){
+    showConfirm(
+      "Undo dashboard device changes",
+      `Undoing this tab will remove newly added dashboard devices from the draft. ${dependent.length} tile assignment${dependent.length===1?"":"s"} currently use those newly added devices and will also be restored to the value from when the JSON editor was opened.`,
+      doUndo,
+      null,
+      {okText:"Undo Tab Changes",cancelText:"Cancel",defaultButton:"cancel"}
+    );
+    return;
+  }
+  doUndo();
+}
+async function applyJsonDashboardDeviceDraftToHub(){
+  const st=JsonEditorState.dashboardDevices;
+  if(!jsonDashboardDeviceDraftChanged()) return {added:[],removed:[]};
   const used=jsonDashboardUsedDeviceIds();
   for(const id of used) if(knownHubDeviceById(id)) st.draft.add(id);
   const before=new Set(st.initial);
   const target=new Set([...st.draft].map(canonicalDeviceId).filter(id=>id&&knownHubDeviceById(id)));
-  if(!target.size){
-    st.error="Select at least one dashboard device before updating.";
-    renderJsonDashboardDevicesPane();
-    toast(st.error,"err");
-    return;
-  }
+  if(!target.size) throw new Error("at least one dashboard device must be selected");
   const added=sortDeviceIds(new Set([...target].filter(id=>!before.has(id))));
   const removed=sortDeviceIds(new Set([...before].filter(id=>!target.has(id))));
-  const msg=`Update the devices selected for "${State.active&&State.active.label||"this dashboard"}"?\n\n${added.length?`Add ${added.length}: ${added.map(id=>`#${id}`).join(", ")}\n`:""}${removed.length?`Remove ${removed.length}: ${removed.map(id=>`#${id}`).join(", ")}\n`:""}\nThis uses an undocumented Hubitat endpoint. All current dashboard settings will be preserved and verified.`;
-  showConfirm("Update dashboard devices",msg,async()=>{
-    st.busy=true; st.error=""; renderJsonDashboardDevicesPane();
-    try{
-      await experimentallySetActiveDashboardDevices(target);
-      st.initial=new Set([...State.devicePickedIds].map(canonicalDeviceId).filter(Boolean));
-      st.draft=new Set(st.initial); st.loaded=true;
-      renderJsonTileDevicesPane(); renderJsonDashboardDevicesPane();
-      toast(`Dashboard devices updated: ${added.length} added, ${removed.length} removed.`,"ok");
-      if(added.length) await refreshRenderedViewAfterDashboardDeviceUpdate(added);
-      else status(`Dashboard device list updated: ${removed.length} unused device${removed.length===1?" was":"s were"} removed.`);
-    }catch(e){
-      st.error=`Update failed: ${e.message}`; toast(st.error,"err"); trace(`dashboard device manager update failed: ${e.message}`,null,"err");
-    }finally{ st.busy=false; renderJsonDashboardDevicesPane(); }
-  },null,{okText:"Update on Hub",cancelText:"Cancel",defaultButton:"cancel"});
+  st.busy=true; st.error=""; renderJsonDashboardDevicesPane();
+  const op=hubOperationActive()?State.hubOperation:beginHubOperation("Updating dashboard devices",[
+    {id:"admin",label:"Reading dashboard administration settings"},
+    {id:"update",label:"Writing selected devices to hub"},
+    {id:"verify",label:"Verifying selected-device list"}
+  ],{message:"Dashboard selected devices are being updated on the hub."});
+  const ownsOp=!!(op&&op.title==="Updating dashboard devices");
+  toast("Updating dashboard selected devices on the hub…","ok");
+  status("Updating dashboard selected devices on the hub…",true);
+  try{
+    if(op) hubOperationStep(op,"admin","active");
+    if(op) hubOperationStep(op,"update","active");
+    await experimentallySetActiveDashboardDevices(target);
+    if(op) hubOperationStep(op,"update","done","Hub update returned successfully.");
+    if(op) hubOperationStep(op,"verify","done","Hub selected-device list verified.");
+    st.initial=new Set([...State.devicePickedIds].map(canonicalDeviceId).filter(Boolean));
+    st.draft=new Set(st.initial); st.loaded=true; st.error="";
+    renderJsonTileDevicesPane(); renderJsonDashboardDevicesPane();
+    toast(`Dashboard devices updated: ${added.length} added, ${removed.length} removed.`,"ok");
+    status(`Dashboard device list updated: ${added.length} added, ${removed.length} removed.`);
+    if(ownsOp) finishHubOperation(op,{message:"Dashboard devices updated.",delayMs:650});
+    return {added,removed};
+  }catch(e){
+    st.error=`Update failed: ${e.message}`;
+    trace(`dashboard device manager update failed: ${e.message}`,null,"err");
+    if(ownsOp) finishHubOperation(op,{error:e});
+    throw e;
+  }finally{ st.busy=false; renderJsonDashboardDevicesPane(); updateJsonEditorDirtyState(); }
 }
 function updateJsonEditorActionVisibility(){
   const mode=JsonEditorState.mode;
   const textMode=mode==="json"||JSON_EDITOR_FIELD_MODES.has(mode);
-  const tileMode=mode==="tileDevices";
   const setVisible=(id,on)=>{const el=document.getElementById(id);if(el)el.classList.toggle("hidden",!on);};
-  setVisible("jsonLoadFile",textMode); setVisible("jsonCopy",textMode); setVisible("jsonDownload",textMode); setVisible("jsonFormat",textMode);
-  setVisible("jsonRestore",textMode||tileMode); setVisible("jsonApply",mode!=="dashboardDevices");
+  setVisible("jsonLoadFile",textMode); setVisible("jsonCopy",textMode); setVisible("jsonDownload",textMode); setVisible("jsonFormatWrap",textMode); setVisible("jsonFormat",textMode);
+  setVisible("jsonRestore",true); setVisible("jsonApply",true);
 }
 function updateJsonEditorModeButtons(){
   document.querySelectorAll(".json-mode-btn").forEach(btn=>{
@@ -10031,13 +10531,15 @@ function updateJsonEditorModeButtons(){
     if(JsonEditorState.mode==="json") ed.placeholder='{ "tiles": [ ... ] }';
     else ed.placeholder=`Contents of the ${JsonEditorState.mode} string field`;
   }
-  const compact=document.getElementById("jsonCompactCss");
-  const compactWrap=document.getElementById("jsonCompactCssWrap");
-  const compactOptions=document.getElementById("jsonCssTabOptions");
-  const canCompact=JsonEditorState.mode==="customCSS";
-  if(compact) compact.disabled=!canCompact;
-  if(compactWrap){ compactWrap.style.opacity="1"; compactWrap.style.pointerEvents="auto"; }
-  if(compactOptions){ compactOptions.classList.toggle("hidden",!canCompact); compactOptions.setAttribute("aria-hidden",canCompact?"false":"true"); }
+  const formatBtn=document.getElementById("jsonFormat");
+  if(formatBtn){
+    const cssMode=JsonEditorState.mode==="customCSS";
+    formatBtn.textContent=cssMode?"Validate / Format ▾":"Validate / Format";
+    formatBtn.title=cssMode?"Choose regular or compact customCSS validation/formatting":"Validate and format the current editor view";
+    formatBtn.setAttribute("aria-haspopup",cssMode?"menu":"false");
+    formatBtn.setAttribute("aria-expanded","false");
+  }
+  document.getElementById("jsonFormatMenu")?.classList.add("hidden");
   updateJsonEditorActionVisibility();
 }
 function showJsonEditorMode(mode, caret="start"){
@@ -10054,8 +10556,14 @@ function showJsonEditorMode(mode, caret="start"){
   else if(JSON_EDITOR_FIELD_MODES.has(mode)) setJsonEditorText((JsonEditorState.doc&&JsonEditorState.doc[mode]!=null)?String(JsonEditorState.doc[mode]):"",caret);
   else if(mode==="tileDevices"){ setJsonEditorError(""); renderJsonTileDevicesPane(); updateJsonEditorDirtyState(); }
   else if(mode==="dashboardDevices"){
-    setJsonEditorError(""); renderJsonDashboardDevicesPane();
-    if(jsonDashboardDeviceManagerOnline()&&!JsonEditorState.dashboardDevices.loaded&&!JsonEditorState.dashboardDevices.busy) reloadJsonDashboardDevices();
+    setJsonEditorError("");
+    if(jsonDashboardDeviceManagerOnline()&&!JsonEditorState.dashboardDevices.loaded&&!JsonEditorState.dashboardDevices.busy){
+      JsonEditorState.dashboardDevices.busy=true;
+      renderJsonDashboardDevicesPane();
+      setTimeout(()=>reloadJsonDashboardDevices(),0);
+    }else{
+      renderJsonDashboardDevicesPane();
+    }
   }
 }
 function restoreJsonEditorOriginal(){
@@ -10065,10 +10573,78 @@ function restoreJsonEditorOriginal(){
     JsonEditorState.initialComparable=normalizedJsonForCompare(doc);
     resetJsonTileDeviceManager();
     resetJsonDashboardDeviceManager();
+    JsonEditorState.fullJsonTextDirty=false;
     showJsonEditorMode("json","start");
-    setJsonEditorDirtyState(false);
+    setJsonEditorDirtyState();
     toast("JSON editor restored to the version shown when it was opened.","ok");
   }catch(e){ setJsonEditorError("Could not restore original JSON: "+e.message); }
+}
+function jsonCustomFieldTabDirty(mode){
+  if(!JsonEditorState.doc||!JsonEditorState.initialDoc) return false;
+  return String(JsonEditorState.doc[mode]||"")!==String(JsonEditorState.initialDoc[mode]||"");
+}
+function jsonTileDevicesTabDirty(){
+  if(!JsonEditorState.doc||!JsonEditorState.initialDoc) return false;
+  const current=new Map((JsonEditorState.doc.tiles||[]).map(t=>[Number(t.id),canonicalDeviceId(t.device)]));
+  const initial=new Map((JsonEditorState.initialDoc.tiles||[]).map(t=>[Number(t.id),canonicalDeviceId(t.device)]));
+  const ids=new Set([...current.keys(),...initial.keys()]);
+  for(const id of ids) if((current.get(id)||"")!==(initial.get(id)||"")) return true;
+  return false;
+}
+function jsonEditorOnlyCustomFieldChanges(){
+  if(!JsonEditorState.doc||!JsonEditorState.initialDoc||!jsonEditorDocumentDirty()) return false;
+  try{
+    const cur=cloneJsonDoc(JsonEditorState.doc);
+    const initial=cloneJsonDoc(JsonEditorState.initialDoc);
+    for(const field of JSON_EDITOR_FIELD_MODES){ cur[field]=""; initial[field]=""; }
+    return normalizedJsonForCompare(cur)===normalizedJsonForCompare(initial);
+  }catch(_e){ return false; }
+}
+function jsonEditorChangedCustomFields(){
+  return [...JSON_EDITOR_FIELD_MODES].filter(field=>jsonCustomFieldTabDirty(field));
+}
+function undoJsonEditorTabChanges(){
+  const mode=JsonEditorState.mode;
+  if(mode==="dashboardDevices"){ undoJsonDashboardTabChanges(); return; }
+  if(!JsonEditorState.initialDoc){ toast("Nothing to undo for this tab.","ok"); return; }
+  const undoNow=()=>{
+    if(mode==="json"){
+      JsonEditorState.doc=cloneJsonDoc(JsonEditorState.initialDoc);
+      resetJsonTileDeviceManager();
+      showJsonEditorMode("json","start");
+      toast("Full JSON tab changes undone.","ok");
+    }else if(JSON_EDITOR_FIELD_MODES.has(mode)){
+      JsonEditorState.doc[mode]=String(JsonEditorState.initialDoc[mode]||"");
+      showJsonEditorMode(mode,"start");
+      toast(`${mode} tab changes undone.`,"ok");
+    }else if(mode==="tileDevices"){
+      const originalById=new Map((JsonEditorState.initialDoc.tiles||[]).map(t=>[Number(t.id),cloneJsonDoc(t)]));
+      for(const t of jsonEditorTiles()){
+        const original=originalById.get(Number(t.id));
+        if(original&&Object.prototype.hasOwnProperty.call(original,"device")) t.device=original.device;
+        else if(Object.prototype.hasOwnProperty.call(t,"device")) delete t.device;
+      }
+      renderJsonTileDevicesPane(); renderJsonDashboardDevicesPane();
+      toast("Tile Devices tab changes undone.","ok");
+    }
+    updateJsonEditorDirtyState();
+  };
+  if(mode==="json"){
+    const changed=[];
+    for(const field of JSON_EDITOR_FIELD_MODES) if(jsonCustomFieldTabDirty(field)) changed.push(field);
+    if(jsonTileDevicesTabDirty()) changed.push("Tile Devices");
+    if(changed.length){
+      showConfirm(
+        "Undo Full JSON tab changes",
+        `Undoing the Full JSON tab will restore the complete JSON text to the version shown when the editor was opened. Unsaved changes in ${changed.join(", ")} will also be lost.`,
+        undoNow,
+        null,
+        {okText:"Undo Tab Changes",cancelText:"Cancel",defaultButton:"cancel"}
+      );
+      return;
+    }
+  }
+  undoNow();
 }
 function promptJsonEditorFixOrDiscard(msg){
   setJsonEditorError(msg);
@@ -10164,15 +10740,17 @@ function openJsonEditor(){
   try{
     const doc=normalizeLoadedJson(serializeLayout());
     JsonEditorState.doc=cloneJsonDoc(doc);
+    JsonEditorState.initialDoc=cloneJsonDoc(doc);
     JsonEditorState.initialText=JSON.stringify(doc,null,2);
     JsonEditorState.initialComparable=normalizedJsonForCompare(doc);
     resetJsonTileDeviceManager();
     resetJsonDashboardDeviceManager();
-    setJsonEditorDirtyState(false);
+    JsonEditorState.fullJsonTextDirty=false;
+    setJsonEditorDirtyState();
     resetModalPosition("jsonModal");
     document.getElementById("jsonModal").classList.remove("hidden");
     showJsonEditorMode("json","start");
-    setJsonEditorDirtyState(false);
+    setJsonEditorDirtyState();
   }catch(e){ toast("Could not open JSON editor: "+e.message,"err"); }
 }
 function parseJsonEditor(opts={}){
@@ -10187,6 +10765,105 @@ function parseJsonEditor(opts={}){
     }
   }
   return data;
+}
+async function promptDashboardDeviceUpdateFailure(error){
+  const dependent=jsonTilesAssignedToDashboardAddedDevices();
+  return await new Promise(resolve=>{
+    const skip=()=>{
+      if(!dependent.length){ resolve({skip:true}); return; }
+      showConfirm(
+        "Skip device update and reset tile assignments?",
+        `Skipping the dashboard device update means ${dependent.length} tile assignment${dependent.length===1?"":"s"} would point to devices that are not selected for the dashboard. Those tile assignments will be restored to the values from when the JSON editor was opened before the remaining changes are applied.`,
+        ()=>{ resetTileAssignmentsForIdsFromInitial(dependent); renderJsonTileDevicesPane(); renderJsonDashboardDevicesPane(); updateJsonEditorDirtyState(); resolve({skip:true,resetDependent:true}); },
+        ()=>resolve({cancel:true}),
+        {okText:"Skip and Reset",cancelText:"Cancel",defaultButton:"cancel",dangerOk:true}
+      );
+    };
+    showConfirm(
+      "Dashboard device update failed",
+      `Device selections on the hub could not be updated.\n\n${error&&error.message?error.message:String(error||"Unknown error")}\n\nRetry the device update, or skip updating devices and continue applying the other JSON dialog changes.`,
+      ()=>resolve({retry:true}),
+      skip,
+      {okText:"Retry",cancelText:"Skip Device Update",defaultButton:"cancel",dangerOk:true}
+    );
+  });
+}
+async function applyDashboardDeviceChangesWithRetry(){
+  while(jsonDashboardDeviceDraftChanged()){
+    try{ await applyJsonDashboardDeviceDraftToHub(); return true; }
+    catch(e){
+      const choice=await promptDashboardDeviceUpdateFailure(e);
+      if(choice&&choice.retry) continue;
+      if(choice&&choice.skip) return true;
+      return false;
+    }
+  }
+  return true;
+}
+function applyJsonEditorAfterDeviceUpdate(data, sourceLabel, opts={}){
+  const docChanged=normalizedJsonForCompare(data)!==JsonEditorState.initialComparable;
+  if(docChanged){
+    applyJsonToCurrentLayout(data,sourceLabel,opts);
+    JsonEditorState.doc=cloneJsonDoc(serializeLayout());
+    JsonEditorState.initialDoc=cloneJsonDoc(normalizeLoadedJson(serializeLayout()));
+    JsonEditorState.initialText=JSON.stringify(normalizeLoadedJson(serializeLayout()),null,2);
+    JsonEditorState.initialComparable=normalizedJsonForCompare(serializeLayout());
+  }else{
+    status("Dashboard device selections applied. No layout JSON changes were made.");
+    toast("Dashboard device selections applied.","ok");
+  }
+  setJsonEditorDirtyState();
+  document.getElementById("jsonModal").classList.add("hidden");
+}
+async function applyJsonEditorAllChanges(){
+  let data;
+  try{ data=parseJsonEditor({promptDiscard:true}); }
+  catch(e){ return; }
+  const fullJsonReplace=JsonEditorState.mode==="json";
+  const tileDeviceEdit=jsonTileDevicesTabDirty();
+  const docChanged=normalizedJsonForCompare(data)!==JsonEditorState.initialComparable;
+  const dashboardChanged=jsonDashboardDeviceDraftChanged();
+  if(!docChanged&&!dashboardChanged){ setJsonEditorDirtyState(); return; }
+  if(fullJsonReplace&&State.conn.mode==="live"&&State.active){
+    data=prepareFullJsonForCurrentHubTarget(data);
+  }
+  const proceed=async()=>{
+    if(dashboardChanged){
+      const ok=await applyDashboardDeviceChangesWithRetry();
+      if(!ok) return;
+      try{ data=parseJsonEditor({promptDiscard:true}); }
+      catch(e){ return; }
+    }
+    const preserveRenderedSnapshots=jsonEditorOnlyCustomFieldChanges();
+    const changedFields=preserveRenderedSnapshots?jsonEditorChangedCustomFields():[];
+    const doApply=()=>applyJsonEditorAfterDeviceUpdate(data,tileDeviceEdit?"tile device assignments":"edited JSON",{preserveRenderedSnapshots, changedFields});
+    if(tileDeviceEdit&&!infoDeviceEditorIsOnline()){
+      let original={};
+      try{ original=normalizeLoadedJson(JSON.parse(JsonEditorState.initialText||"{}")); }catch(_){ original={tiles:[]}; }
+      const oldById=new Map((original.tiles||[]).map(t=>[Number(t.id),canonicalDeviceId(t.device)]));
+      const cleared=(data.tiles||[]).filter(t=>oldById.get(Number(t.id))&&!canonicalDeviceId(t.device));
+      if(cleared.length){
+        showConfirm("Apply blank device IDs?",`${cleared.length} tile device assignment${cleared.length===1?" will":"s will"} be cleared: ${cleared.map(t=>`#${t.id}`).join(", ")}. Apply these blank device IDs?`,doApply,null,{okText:"Apply blanks",cancelText:"Cancel",defaultButton:"cancel"});
+        return;
+      }
+    }
+    if(fullJsonReplace&&State.conn.mode==="live"&&State.active){
+      confirmFullJsonDeviceValidation(data,doApply);
+      return;
+    }
+    doApply();
+  };
+  if(dashboardChanged){
+    const added=sortDeviceIds(jsonDashboardAddedDeviceIds());
+    const removed=sortDeviceIds(new Set([...JsonEditorState.dashboardDevices.initial].filter(id=>!JsonEditorState.dashboardDevices.draft.has(id))));
+    showConfirm(
+      "Apply all JSON dialog changes",
+      `Apply all pending changes?\n\nDashboard device selections will be written to the hub first${added.length||removed.length?` (${added.length} added, ${removed.length} removed)`:""}. Dashboard device selection changes cannot be undone with the app Undo button. Other layout changes are applied as one undoable edit; using Undo will discard the JSON, customCSS, customHTML, customJS, and tile-device assignment changes applied from this dialog.`,
+      proceed,
+      null,
+      {okText:"Apply All Changes",cancelText:"Cancel",defaultButton:"cancel"}
+    );
+  }else proceed();
 }
 function applyJsonToCurrentLayout(data, sourceLabel, opts={}){
   data=normalizeLoadedJson(data);
@@ -10859,15 +11536,19 @@ function buildCustomCssCleanupDialogHtml(analysis){
     parts.push(`</div>`);
   }
   if(analysis.consolidationGroups&&analysis.consolidationGroups.length){
-    parts.push(`<div class="css-cleanup-section" data-category-section="consolidations"><h4>Consolidate selectors</h4><p class="css-cleanup-note">Repeated rules for the same selector can be combined into one rule. Cleanup runs in order: conflicts first, duplicates second, consolidation third. Consolidation remains available when the related conflicts are selected for cleanup, but is automatically skipped if those conflicts are skipped.</p>`);
+    parts.push(`<div class="css-cleanup-section" data-category-section="consolidations"><h4>Consolidate selectors</h4><p class="css-cleanup-note">Repeated rules for the same selector can be combined into one rule. Cleanup runs in order: conflicts first, duplicates second, consolidation third. Consolidation rows that still have related conflicts are disabled. Resolve those conflicts first, then reopen CSS Cleanup to consolidate the selector.</p>`);
     analysis.consolidationGroups.forEach((g,i)=>{
       const ruleList=g.rules.slice(0,4).map(r=>`<code>${htmlEscape(g.selector)} { ${htmlEscape(r.body)} }</code>`).join(`<br>`);
       const more=g.rules.length>4?`<br><span class="css-conflict-meta">…${g.rules.length-4} more rule${g.rules.length-4!==1?"s":""}</span>`:"";
       const hasRelatedConflicts=!!g.blockedByConflicts;
       const relatedKeys=(g.conflictDetails||[]).map(d=>d.key).filter(Boolean).join("||");
-      const conflictMsg=hasRelatedConflicts?`<span class="css-blocked-ind css-consolidate-pending-ind">Conflicts selected first</span><span class="css-blocked-ind css-consolidate-skipped-ind" style="display:none">Cannot consolidate</span><span class="css-consolidate-block-reason">This selector has rule conflicts: ${htmlEscape(cssConsolidationConflictSummary(g.conflictDetails))}. It will be consolidated only if those conflicts are resolved in this cleanup pass.</span>`:"";
+      const conflictMsg=hasRelatedConflicts?`<span class="css-blocked-ind css-consolidate-pending-ind">Conflicts Found</span><span class="css-consolidate-block-reason">This selector has rule conflicts: ${htmlEscape(cssConsolidationConflictSummary(g.conflictDetails))}. Resolve those conflicts first, then reopen CSS Cleanup to consolidate this selector.</span>`:"";
       const preview=`<span class="css-consolidate-preview">Consolidate to: <code>${htmlEscape(g.selector)} { ${htmlEscape(g.consolidatedBody)} }</code></span>`;
-      parts.push(`<div class="css-cleanup-choice-row"><input type="checkbox" class="css-consolidate-choice" data-consolidate-key="${htmlEscape(g.key)}" data-related-conflict-keys="${htmlEscape(relatedKeys)}" checked aria-label="Consolidate selector rules"><div class="css-cleanup-card css-consolidate-row"><code>${htmlEscape(g.selector)}${g.atPath&&g.atPath.length?` [${htmlEscape(g.atPath.join(" > "))}]`:""}</code><span class="css-skip-ind">Skip</span>${conflictMsg}<br>${ruleList}${more}${preview}</div></div>`);
+      const rowState=hasRelatedConflicts?" is-disabled is-skipped":"";
+      const checkedAttr=hasRelatedConflicts?"":" checked";
+      const disabledAttr=hasRelatedConflicts?" disabled":"";
+      const conflictAttr=hasRelatedConflicts?' data-conflicts-found="1"':"";
+      parts.push(`<div class="css-cleanup-choice-row${rowState}"><input type="checkbox" class="css-consolidate-choice" data-consolidate-key="${htmlEscape(g.key)}" data-related-conflict-keys="${htmlEscape(relatedKeys)}"${conflictAttr}${checkedAttr}${disabledAttr} aria-label="Consolidate selector rules"><div class="css-cleanup-card css-consolidate-row"><code>${htmlEscape(g.selector)}${g.atPath&&g.atPath.length?` [${htmlEscape(g.atPath.join(" > "))}]`:""}</code><span class="css-skip-ind">Skip</span>${conflictMsg}<br>${ruleList}${more}${preview}</div></div>`);
     });
     parts.push(`</div>`);
   }
@@ -10909,9 +11590,10 @@ function wireCssCleanupDialogControls(body){
     const skipped=skippedConflictKeys();
     body.querySelectorAll('.css-consolidate-choice').forEach(input=>{
       const row=input.closest('.css-cleanup-choice-row');
-      const card=row ? row.querySelector('.css-consolidate-row') : null;
       const keys=String(input.getAttribute('data-related-conflict-keys')||'').split('||').filter(Boolean);
-      const blocked=keys.some(k=>skipped.has(k));
+      const hasUnresolvedConflicts=input.dataset.conflictsFound==="1";
+      const blockedBySkippedConflict=keys.some(k=>skipped.has(k));
+      const blocked=hasUnresolvedConflicts || blockedBySkippedConflict;
       if(blocked){
         if(input.checked) input.dataset.autoSkippedByConflict="1";
         input.checked=false;
@@ -10924,12 +11606,6 @@ function wireCssCleanupDialogControls(body){
           delete input.dataset.autoSkippedByConflict;
         }
         if(row) row.classList.remove('is-disabled');
-      }
-      if(card){
-        const pending=card.querySelector('.css-consolidate-pending-ind');
-        const skippedInd=card.querySelector('.css-consolidate-skipped-ind');
-        if(pending) pending.style.display=blocked?'none':'';
-        if(skippedInd) skippedInd.style.display=blocked?'':'none';
       }
     });
   }
@@ -11174,7 +11850,7 @@ function cleanCustomCssProblems(css, existingIds){
   const consolidations=new Set((analysis.consolidationGroups||[]).filter(g=>!g.blockedByConflicts).map(g=>g.key));
   return cleanCustomCssProblemsWithChoices(css||"", analysis, {conflicts, duplicates, consolidations, removeOrphans:true, commentCleaned:false, conflictCleanupEnabled:true, duplicateCleanupEnabled:true, existingIds:existingIds||new Set()});
 }
-function showCustomCssCleanupDialog(text, analysis, done){
+function showCustomCssCleanupDialog(text, analysis, done, options={}){
   const modal=document.getElementById("cssCleanupModal");
   const body=document.getElementById("cssCleanupBody");
   const intro=document.getElementById("cssCleanupIntro");
@@ -11192,10 +11868,12 @@ function showCustomCssCleanupDialog(text, analysis, done){
   const modalBody=body.closest(".modal-body");
   if(modalBody) modalBody.scrollTop=0;
   resetModalPosition("cssCleanupModal");
-  reformatAfter.checked=false;
-  compactFormat.checked=false;
-  compactFormat.disabled=true;
-  compactWrap.classList.add("disabled");
+  const defaultReformat=options&&Object.prototype.hasOwnProperty.call(options,"reformat") ? !!options.reformat : false;
+  const defaultCompact=!!(options&&options.compact);
+  reformatAfter.checked=defaultReformat;
+  compactFormat.checked=defaultReformat&&defaultCompact;
+  compactFormat.disabled=!defaultReformat;
+  compactWrap.classList.toggle("disabled",!defaultReformat);
   reformatAfter.onchange=()=>{
     const enabled=!!reformatAfter.checked;
     compactFormat.disabled=!enabled;
@@ -11242,16 +11920,16 @@ function showCustomCssCleanupDialog(text, analysis, done){
   };
   setTimeout(()=>apply.focus({preventScroll:true}),0);
 }
-function formatCustomCssAfterReview(text, done){
+function formatCustomCssAfterReview(text, done, options={}){
   const existing=customCssExistingTileIds();
   const analysis=analyzeCustomCssCleanup(text||"", existing, {includeConsolidation:true});
   if(!hasCustomCssCleanupIssues(analysis)){ done(text||"", false, null); return; }
   setJsonEditorError("");
   status("customCSS review found issues. Review the cleanup dialog before formatting.");
-  showCustomCssCleanupDialog(text||"", analysis, done);
+  showCustomCssCleanupDialog(text||"", analysis, done, options);
 }
 
-function isCompactCssEnabled(){ const el=document.getElementById("jsonCompactCss"); return !!(el&&el.checked&&!el.disabled); }
+function isCompactCssEnabled(){ return false; }
 function formatJsBasic(js){ return formatBraceCodeBasic(js,{js:true}); }
 function formatHtmlBasic(html){
   html=(html||"").replace(/\r\n?/g,"\n").trim();
@@ -11279,13 +11957,14 @@ function formatHtmlBasic(html){
   if(tail) out.push(unit.repeat(indent)+tail);
   return out.join("\n").replace(/\n{3,}/g,"\n\n")+"\n";
 }
-function formatCustomField(mode, text){
-  if(mode==="customCSS") return isCompactCssEnabled()?formatCssCompact(text):formatCssBasic(text);
+function formatCustomField(mode, text, options={}){
+  if(mode==="customCSS") return options.compact?formatCssCompact(text):formatCssBasic(text);
   if(mode==="customHTML") return formatHtmlBasic(text);
   if(mode==="customJS") return formatJsBasic(text);
   return text;
 }
-function formatJsonEditor(){
+function formatJsonEditor(options={}){
+  const cssCompact=JsonEditorState.mode==="customCSS" && !!(options&&options.cssCompact);
   if(JsonEditorState.mode!=="json"){
     const ed=document.getElementById("jsonEditor");
     const text=ed?ed.value:"";
@@ -11295,7 +11974,7 @@ function formatJsonEditor(){
       return;
     }
     const finishFormat=(sourceText, cleaned=false, warning=null, reviewOptions=null)=>{
-      const formatted=reviewOptions&&reviewOptions.formatHandled ? sourceText : formatCustomField(JsonEditorState.mode,sourceText);
+      const formatted=reviewOptions&&reviewOptions.formatHandled ? sourceText : formatCustomField(JsonEditorState.mode,sourceText,{compact:cssCompact});
       setJsonEditorText(formatted,"start");
       syncJsonEditorView({promptDiscard:true});
       let liveUndo=false;
@@ -11304,12 +11983,12 @@ function formatJsonEditor(){
       }
       if(warning) setJsonEditorError(warning);
       const reformatted=reviewOptions&&reviewOptions.formatHandled ? !!reviewOptions.reformatted : true;
-      const compacted=reviewOptions&&reviewOptions.formatHandled ? !!reviewOptions.compact : (JsonEditorState.mode==="customCSS"&&isCompactCssEnabled());
+      const compacted=reviewOptions&&reviewOptions.formatHandled ? !!reviewOptions.compact : cssCompact;
       const actionText=reformatted ? `validated and formatted${compacted?" compactly":""}` : "validated; CSS fixes applied without reformatting";
       toast(`${JsonEditorState.mode} ${actionText}${cleaned?"; CSS cleanup applied":""}${liveUndo?"; Undo available":""}.`,"ok");
     };
     if(JsonEditorState.mode==="customCSS"){
-      formatCustomCssAfterReview(text, finishFormat);
+      formatCustomCssAfterReview(text, finishFormat, {reformat:true,compact:cssCompact});
       return;
     }
     finishFormat(text);
@@ -12139,21 +12818,28 @@ async function wire(){
   document.getElementById("btnJson").addEventListener("click",openJsonEditor);
   document.getElementById("jsonClose").addEventListener("click",closeOrCancelJsonEditor);
   document.querySelectorAll(".json-mode-btn").forEach(btn=>btn.addEventListener("click",()=>switchJsonEditorMode(btn.dataset.jsonMode)));
-  document.getElementById("jsonRestore").addEventListener("click",()=>{
-    showConfirm(
-      "Restore JSON editor contents",
-      "Restore the JSON exactly as it was when this editor was opened? This discards all edits made in Full JSON, customCSS, customHTML, and customJS editor views.",
-      restoreJsonEditorOriginal
-    );
+  document.getElementById("jsonRestore").addEventListener("click",undoJsonEditorTabChanges);
+  document.getElementById("jsonFormat").addEventListener("click",e=>{
+    if(JsonEditorState.mode==="customCSS"){
+      e.preventDefault();
+      const menu=document.getElementById("jsonFormatMenu");
+      const btn=e.currentTarget;
+      if(!menu) return;
+      if(menu.classList.contains("hidden")){ showHoldMenu(btn,menu,"left"); btn.setAttribute("aria-expanded","true"); }
+      else{ menu.classList.add("hidden"); btn.setAttribute("aria-expanded","false"); }
+      return;
+    }
+    formatJsonEditor();
   });
-  document.getElementById("jsonFormat").addEventListener("click",formatJsonEditor);
+  document.getElementById("jsonFormatRegular")?.addEventListener("click",()=>{ document.getElementById("jsonFormatMenu")?.classList.add("hidden"); document.getElementById("jsonFormat")?.setAttribute("aria-expanded","false"); formatJsonEditor({cssCompact:false}); });
+  document.getElementById("jsonFormatCompact")?.addEventListener("click",()=>{ document.getElementById("jsonFormatMenu")?.classList.add("hidden"); document.getElementById("jsonFormat")?.setAttribute("aria-expanded","false"); formatJsonEditor({cssCompact:true}); });
   document.getElementById("jsonLoadFile").addEventListener("click",()=>document.getElementById("jsonEditorFileInput").click());
   document.getElementById("jsonEditorFileInput").addEventListener("change",e=>{ if(e.target.files[0]) loadJsonFileIntoEditor(e.target.files[0]); e.target.value=""; });
   document.getElementById("jsonEditor").addEventListener("input",()=>{ setJsonEditorError(""); updateJsonEditorDirtyState(); });
   document.getElementById("jsonDashboardAssignAll")?.addEventListener("click",assignAllJsonDashboardDevices);
   document.getElementById("jsonDashboardRemoveUnused")?.addEventListener("click",removeUnusedJsonDashboardDevices);
-  document.getElementById("jsonDashboardReload")?.addEventListener("click",reloadJsonDashboardDevices);
-  document.getElementById("jsonDashboardUpdate")?.addEventListener("click",updateJsonDashboardDevicesOnHub);
+  document.getElementById("jsonDashboardUpdate")?.addEventListener("click",applyJsonEditorAllChanges);
+  document.getElementById("jsonDashboardSelectView")?.addEventListener("click",toggleJsonDashboardVisibleSelection);
   document.getElementById("jsonEditor").addEventListener("paste",e=>{
     const ed=e.currentTarget;
     const pasted=e.clipboardData?e.clipboardData.getData("text/plain"):"";
@@ -12164,44 +12850,7 @@ async function wire(){
     // scrolled to an arbitrary middle position.
     setTimeout(()=>placeJsonEditorCaret(start+pasted.length),0);
   });
-  document.getElementById("jsonApply").addEventListener("click",()=>{
-    let data;
-    try{ data=parseJsonEditor({promptDiscard:true}); }
-    catch(e){ return; }
-    const fullJsonReplace=JsonEditorState.mode==="json";
-    const tileDeviceEdit=JsonEditorState.mode==="tileDevices";
-    if(fullJsonReplace&&State.conn.mode==="live"&&State.active){
-      data=prepareFullJsonForCurrentHubTarget(data);
-    }
-    const applyNow=()=>{
-      // Treat JSON editor commits as normal edits to the current working layout.
-      // applyJsonToCurrentLayout creates the undo checkpoint before replacing layout data,
-      // so prior unsaved work can be restored with Undo instead of being treated as discarded.
-      const preserveRenderedSnapshots=JSON_EDITOR_FIELD_MODES.has(JsonEditorState.mode);
-      const changedFields=preserveRenderedSnapshots?[JsonEditorState.mode]:[];
-      applyJsonToCurrentLayout(data,tileDeviceEdit?"tile device assignments":"edited JSON",{preserveRenderedSnapshots, changedFields});
-      JsonEditorState.doc=cloneJsonDoc(serializeLayout());
-      JsonEditorState.initialText=JSON.stringify(normalizeLoadedJson(serializeLayout()),null,2);
-      JsonEditorState.initialComparable=normalizedJsonForCompare(serializeLayout());
-      setJsonEditorDirtyState(false);
-      document.getElementById("jsonModal").classList.add("hidden");
-    };
-    if(tileDeviceEdit&&!infoDeviceEditorIsOnline()){
-      let original={};
-      try{ original=normalizeLoadedJson(JSON.parse(JsonEditorState.initialText||"{}")); }catch(_){ original={tiles:[]}; }
-      const oldById=new Map((original.tiles||[]).map(t=>[Number(t.id),canonicalDeviceId(t.device)]));
-      const cleared=(data.tiles||[]).filter(t=>oldById.get(Number(t.id))&&!canonicalDeviceId(t.device));
-      if(cleared.length){
-        showConfirm("Apply blank device IDs?",`${cleared.length} tile device assignment${cleared.length===1?" will":"s will"} be cleared: ${cleared.map(t=>`#${t.id}`).join(", ")}. Apply these blank device IDs?`,applyNow,null,{okText:"Apply blanks",cancelText:"Cancel",defaultButton:"cancel"});
-        return;
-      }
-    }
-    if(fullJsonReplace&&State.conn.mode==="live"&&State.active){
-      confirmFullJsonDeviceValidation(data,applyNow);
-      return;
-    }
-    applyNow();
-  });
+  document.getElementById("jsonApply").addEventListener("click",applyJsonEditorAllChanges);
   document.getElementById("jsonCopy").addEventListener("click",()=>{
     const ed=document.getElementById("jsonEditor");
     if(!ed) return;
