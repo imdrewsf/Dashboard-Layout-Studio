@@ -572,12 +572,21 @@
   .json-manager-fixed-top{border-bottom:1px solid var(--border);}
   .json-manager-fixed-bottom{border-top:1px solid var(--border);}
   .json-manager-scroll{flex:1 1 auto;min-height:0;overflow:auto;padding:10px;}
+  #jsonTileDevicesPane .json-manager-fixed-top{padding-bottom:0;}
+  #jsonTileDevicesPane .json-manager-scroll{padding:0 10px 10px;background:rgba(15,23,42,.94);}
+  #jsonTileDevicesPane .json-tile-device-head{margin:0 -10px 0;top:0;}
   .json-manager-fixed-top .json-manager-toolbar,.json-manager-fixed-bottom .json-manager-toolbar{margin:0;}
   .json-manager-fixed-top .json-manager-status{margin:0 0 8px;}
   .json-manager-intro{margin:0 0 10px;color:var(--muted);font-size:.76rem;line-height:1.5;}
   .json-manager-toolbar{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 10px;}
   .json-manager-toolbar-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
   .json-manager-toolbar .btn{width:auto;padding:6px 10px;}
+  .json-editor-foot{justify-content:space-between!important;gap:6px!important;flex-wrap:nowrap!important;align-items:center;}
+  .json-editor-foot .btn{width:auto;padding:6px 8px;font-size:.72rem;white-space:nowrap;}
+  .json-editor-foot #jsonEditorFileActions,.json-editor-foot #jsonEditorApplyActions{display:flex!important;gap:6px!important;flex-wrap:nowrap!important;align-items:center;min-width:0;}
+  .json-editor-foot #jsonEditorFileActions{flex:1 1 auto;}
+  .json-editor-foot #jsonEditorApplyActions{flex:0 0 auto;}
+  .json-editor-foot .holdwrap{flex:0 0 auto;}
   .json-manager-status{min-height:1.2em;margin:4px 0 8px;color:var(--muted);font-size:.72rem;line-height:1.4;}
   .json-manager-status.err{color:#fecaca;}
   .json-tile-device-head,.json-tile-device-row{display:grid;grid-template-columns:72px 92px minmax(150px,1fr) minmax(170px,1fr) minmax(270px,1.5fr);gap:10px;align-items:center;}
@@ -591,6 +600,9 @@
   .json-tile-device-row.bad-assignment{margin:3px 0;padding:8px;border:1px solid rgba(248,113,113,.52);border-radius:8px;background:rgba(248,113,113,.10);}
   .json-tile-device-row.bad-assignment .json-tile-id,.json-tile-device-row.bad-assignment .device-note{color:#fca5a5;}
   .json-tile-device-row.bad-assignment .json-tile-device-control select{border-color:#f87171;background:rgba(127,29,29,.28);color:#fecaca;}
+  .json-tile-device-row.missing-selection:not(.bad-assignment){margin:3px 0;padding:8px;border:1px solid rgba(251,191,36,.58);border-radius:8px;background:rgba(251,191,36,.12);}
+  .json-tile-device-row.missing-selection:not(.bad-assignment) .json-tile-id,.json-tile-device-row.missing-selection:not(.bad-assignment) .device-note{color:#fbbf24;}
+  .json-tile-device-row.missing-selection:not(.bad-assignment) .json-tile-device-control select{border-color:#fbbf24;background:rgba(113,63,18,.25);}
   .json-tile-id{font-family:var(--mono);font-weight:700;color:var(--accent);}
   .json-tile-label{min-width:0;color:var(--text);overflow-wrap:anywhere;}
   .json-tile-label small{display:block;margin-top:2px;color:var(--faint);font-size:.66rem;line-height:1.35;}
@@ -611,7 +623,10 @@
   .json-view-filter.active{border-color:var(--accent)!important;color:var(--accent)!important;background:rgba(103,232,249,.10)!important;}
   .json-dashboard-device-row{display:grid;grid-template-columns:24px minmax(72px,auto) minmax(150px,1fr) auto auto;gap:8px;align-items:center;min-width:0;padding:7px 9px;border:1px solid rgba(148,163,184,.16);border-radius:7px;background:rgba(255,255,255,.025);font-size:.75rem;}
   .json-dashboard-device-row.selected{border-color:rgba(103,232,249,.30);background:rgba(103,232,249,.07);}
-  .json-dashboard-device-row.locked{border-color:rgba(251,191,36,.34);background:rgba(251,191,36,.07);}
+  .json-dashboard-device-row.locked,.json-dashboard-device-row.used-selected{border-color:rgba(103,232,249,.24);background:rgba(103,232,249,.045);opacity:.86;}
+  .json-dashboard-device-row.used-unselected{border-color:rgba(250,204,21,.58);background:rgba(250,204,21,.12);}
+  .json-dashboard-device-row.used-unselected .device-id,.json-dashboard-device-row.used-unselected .device-label,.json-dashboard-device-row.used-unselected .device-use{color:#fde68a;}
+  .json-dashboard-device-row.used-selected .device-use,.json-dashboard-device-row.locked .device-use,.json-dashboard-device-row.locked .device-lock{color:rgba(103,232,249,.72);}
   .json-dashboard-device-row.bad-assignment{border-color:rgba(248,113,113,.42);background:rgba(248,113,113,.08);}
   .json-dashboard-device-row.bad-assignment .device-label{white-space:normal;}
   .json-dashboard-device-row input{justify-self:center;}
@@ -672,6 +687,7 @@
   .info-nav{background:var(--panel-2);border:1px solid var(--border);color:var(--text);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:1.1rem;line-height:1;}
   .orphan-ind{display:inline-flex;align-items:center;gap:7px;margin-left:12px;padding:3px 10px;border-radius:14px;cursor:pointer;
     background:rgba(245,166,35,.14);border:1px solid rgba(245,166,35,.4);color:var(--amber-2);font-size:.72rem;}
+  .device-status-ind{margin-left:8px;}
   .orphan-ind.cleanup{background:rgba(52,211,153,.13);border-color:rgba(52,211,153,.42);color:var(--ok);}
   .orphan-ind.warn{background:rgba(245,166,35,.14);border-color:rgba(245,166,35,.4);color:var(--amber-2);}
   .orphan-ind.danger{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.5);color:#fecaca;}
@@ -761,9 +777,10 @@
   .help-page p{margin:0 0 11px;line-height:1.56;color:var(--muted);font-size:.82rem;}
   .help-page ul,.help-page ol{margin:7px 0 13px 20px;padding:0;color:var(--muted);font-size:.82rem;line-height:1.55;}
   .help-page li{margin:4px 0;}
-  .help-page-nav{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--border);background:rgba(0,0,0,.13);flex:none;}
-  .help-page-nav .btn{width:auto;min-width:104px;padding:7px 12px;}
-  .help-page-nav .btn:disabled{opacity:.28;}
+  .help-page-nav{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid rgba(103,232,249,.24);background:linear-gradient(180deg,rgba(15,23,42,.94),rgba(2,6,23,.70));flex:none;box-shadow:0 -8px 22px rgba(0,0,0,.20);}
+  .help-page-nav .btn{width:auto;min-width:118px;padding:9px 15px;border-color:rgba(103,232,249,.45);background:rgba(103,232,249,.12);color:var(--text);font-weight:750;box-shadow:0 0 0 1px rgba(103,232,249,.10),0 6px 16px rgba(0,0,0,.22);}
+  .help-page-nav .btn:hover:not(:disabled){border-color:var(--accent);background:rgba(103,232,249,.20);color:#fff;box-shadow:0 0 0 1px rgba(103,232,249,.20),0 0 16px rgba(103,232,249,.18);}
+  .help-page-nav .btn:disabled{opacity:.38;border-color:rgba(148,163,184,.16);background:rgba(148,163,184,.06);color:var(--faint);box-shadow:none;}
   .help-page-status{text-align:center;min-width:0;}
   .help-page-title{display:block;color:var(--text);font-size:.75rem;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .help-page-count{display:block;font-family:var(--mono);font-size:.58rem;color:var(--faint);margin-top:2px;}
@@ -792,7 +809,7 @@
     .help-tab{width:auto;white-space:nowrap;margin:0;padding:7px 9px;}
     .help-page{padding:16px;}
     .help-page-nav{gap:6px;padding:8px;}
-    .help-page-nav .btn{min-width:0;padding:7px 9px;font-size:.72rem;}
+    .help-page-nav .btn{min-width:82px;padding:8px 10px;font-size:.72rem;}
   }
 
   .view-mode-cluster{display:inline-flex;align-items:center;gap:4px;z-index:4;white-space:nowrap;flex:none;}
@@ -804,6 +821,7 @@
   .view-mode-btn.active{color:#ffffff;text-shadow:0 0 9px rgba(103,232,249,.55);font-weight:800;}
   .view-mode-btn.dim{color:rgba(103,232,249,.42);}
   .view-mode-btn.unavailable{color:#64748b;text-shadow:none;cursor:pointer;}
+  .view-mode-btn:disabled{cursor:not-allowed;opacity:.52;text-shadow:none;}
   .view-mode-btn.hidden,.view-mode-sep.hidden{display:none!important;}
   .view-mode-sep{color:rgba(103,232,249,.35);font-size:.72rem;}
   .view-refresh-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:1.5px solid rgba(52,211,153,.78);border-radius:999px;background:rgba(15,23,42,.58);color:#86efac;cursor:pointer;font-size:1.02rem;font-weight:900;line-height:1;margin-left:2px;opacity:1;text-shadow:0 0 7px rgba(52,211,153,.72);box-shadow:0 0 0 1px rgba(52,211,153,.12),0 0 10px rgba(52,211,153,.30),inset 0 0 10px rgba(52,211,153,.08);}
@@ -822,7 +840,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.334">0.9.334</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 0.9.350">0.9.350</span><span class="brand-beta" id="brandBeta">beta</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -839,6 +857,10 @@
     <span class="orphan-ind" id="orphanInd" style="display:none" title="Review orphaned CSS">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
       <span class="oi-txt">CSS Status</span>
+    </span>
+    <span class="orphan-ind device-status-ind" id="deviceStatusInd" style="display:none" title="Review tile device assignments">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      <span class="oi-txt">Device Status</span>
     </span>
     <span class="spacer"></span>
     <span class="conn-dot" id="connDot"></span>
@@ -1146,13 +1168,13 @@
 <div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
 <div class="k">Gear beside Connect</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
 <div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
-<div class="k">Dashboard list</div><div class="v">After discovery, choose a dashboard to load its layout into the editor.</div>
+<div class="k">Dashboard list</div><div class="v">After discovery, choose a dashboard to load its layout into the editor. Shift-click the active dashboard in the list to reload that same dashboard directly from the hub after confirmation.</div>
 </div><h5>Opening offline layouts</h5><div class="help-card-grid">
 <div class="help-card"><b>Load file</b><p>Loads a JSON file as an offline layout. This is useful for editing backups, but it does not create a hub save target.</p></div>
 <div class="help-card"><b>Paste dashboard JSON</b><p>Loads pasted JSON as an offline layout. Like file load, this does not create a hub save target.</p></div>
-</div><div class="help-callout">Offline layouts can be edited, downloaded, or copied to the clipboard, but they cannot be saved directly to a hub dashboard unless a hub-loaded layout context is already being preserved through the JSON editor.</div></article><article class="help-page" data-help-title="Saving and preserving hub context"><div class="help-page-kicker">Load &amp; Save</div><h4>Saving and preserving hub context</h4><h5>Saving and preserving hub context</h5><div class="help-grid">
+</div><div class="help-callout">Offline layouts can be edited, downloaded, or copied to the clipboard, but they cannot be saved directly to a hub dashboard unless a hub-loaded layout context is already being preserved through the JSON editor. When you connect to the hub from an offline layout, the offline workspace is closed, the grid and undo history are cleared, and unsaved offline changes require confirmation.</div></article><article class="help-page" data-help-title="Saving and preserving hub context"><div class="help-page-kicker">Load &amp; Save</div><h4>Saving and preserving hub context</h4><h5>Saving and preserving hub context</h5><div class="help-grid">
 <div class="k">Save</div><div class="v">Opens save options: Save to hub, Download as file, or Copy to clipboard. Save to hub is available only when the active layout was loaded from the hub.</div>
-</div><h5>Important hub-save distinction</h5><p>If you load a layout with the side panel file/paste tools, the tool treats it as offline JSON.</p><p>If you instead load from the hub and then use the JSON editor to replace or edit the layout, the existing hub save target is preserved.</p></article></div>
+</div><h5>Important hub-save distinction</h5><p>If you load a layout with the side panel file/paste tools, the tool treats it as offline JSON.</p><p>If you instead load from the hub and then use the JSON editor to replace or edit the layout, the existing hub save target is preserved.</p><div class="help-callout warn"><b>JSON editor replacement warning:</b> When a hub-loaded layout is replaced from the JSON editor, the editor warns that it is still attached to the online dashboard. Saving afterward will overwrite that same hub dashboard with the replacement layout. Use the side-panel file/paste tools when you want to open JSON as an offline layout instead.</div></article></div>
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpSelect">
@@ -1195,7 +1217,7 @@
 <div class="k">Unstack and Set All</div><div class="v">Set-menu option that is enabled only when tiles overlap. It breaks overlap stacks apart and sets spacing between individual tiles.</div>
 <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
 </div><h5>History, views, JSON, and Save</h5><div class="help-grid">
-<div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Undo All is available only when there is undo history. When it is enabled, Shift+click Undo All reloads the current hub-loaded dashboard from the hub. You can also Shift+click the active dashboard in the left-pane dashboard list to reload it from the hub.</div>
+<div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. Undo All follows undo history and remains disabled when there is no undo checkpoint. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Shift-click Undo All reloads the current dashboard from the hub when the layout originated from the hub and Undo All is enabled; otherwise it performs the normal Undo All action.</div>
 <div class="k">Rendered View compatibility</div><div class="v">Preferences can disable compatibility capture, use it only as an automatic fallback, or always use it. Automatic fallback completes every normal capture attempt and retry before it starts the viewport-based mobile compatibility method.</div>
 <div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
 <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
@@ -1214,7 +1236,7 @@
 <div class="k">Overlaps: push</div><div class="v">Moves affected tiles to make room, using the Push buf value as an added gap.</div>
 <div class="k">Dup CSS</div><div class="v">When copying tiles, duplicates tile-scoped custom CSS for the new tile ids.</div>
 </div></article><article class="help-page" data-help-title="Spacing and direct manipulation"><div class="help-page-kicker">Move, Copy &amp; Spacing</div><h4>Spacing and direct manipulation</h4><h5>Spacing and unstacking</h5><p>Spacing Set normally treats touching or overlapping tiles as connected clusters, so spacing is adjusted between clusters without breaking them apart.</p><div class="help-callout"><b>Unstack and Set All</b> is available only when the layout has actual overlapping tiles. It treats every tile as its own unit, moves tiles as needed, and sets the requested spacing while removing overlaps.</div><p>This is the GUI equivalent of using spacing set with overlap removal for all tiles.</p><h5>Dragging and resizing</h5><div class="help-card-grid">
-<div class="help-card"><b>Move by dragging</b><p>Drag selected tiles directly on the grid to move them.</p></div>
+<div class="help-card"><b>Move by dragging</b><p>Drag selected tiles directly on the grid to move them. If the dragged tile is already overlapped with another tile, Overlaps is temporarily treated as Allow for that drag so the tile can be moved while remaining overlapped. The previous Overlaps setting is restored when the mouse button is released.</p></div>
 <div class="help-card"><b>Resize by dragging</b><p>Drag the resize handle at the bottom-right of a selected tile to resize the selection.</p></div>
 <div class="help-card"><b>Mouse-resize behavior</b><p>Mouse resizing grows from the upper-left corner and adjusts neighboring selected tiles to avoid growing over each other.</p></div>
 <div class="help-card"><b>Exact size</b><p>The Resize dialog does the same kind of spacing-aware resize, but uses an exact height and width entered by the user.</p></div>
@@ -1235,8 +1257,8 @@
 <div class="help-pages"><article class="help-page active" data-help-title="JSON editor and applying changes"><div class="help-page-kicker">JSON &amp; CSS</div><h4>JSON editor and applying changes</h4><h5>JSON editor and field views</h5><div class="help-grid">
 <div class="k">JSON editor</div><div class="v">Allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
 <div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
-<div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid label, any tile-scoped CSS content that may supply an alternate title, and its assigned device. The first device choice is Unassigned for blank device IDs. Online layouts use the same selected-device choices as Tile Information; offline layouts allow numeric or blank device IDs.</div>
-<div class="k">Dashboard Devices</div><div class="v">Online only. Manages the devices selected for the Hubitat dashboard, locks devices used by current tiles, and can assign all devices, remove unused devices, reload the selection, or update it on the hub.</div>
+<div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid location and size, any tile-scoped CSS content that may supply an alternate title, and its assigned device. Location and size are shown as row/column followed by size in parentheses. The first device choice is Unassigned for blank device IDs. Online layouts use the same selected-device choices as Tile Information; offline layouts allow numeric or blank device IDs. In online mode, tiles with a nonblank, nonzero device ID that has no matching hub device are treated as unknown-device tiles and highlighted in red; tile-device rows for valid hub devices that are not selected for the dashboard are highlighted in yellow and remain unselected until you explicitly add them in Dashboard Devices. Show Invalid and Unassign Invalid are online-only tools. Unassign Invalid clears every tile device assignment whose device ID does not exist on the hub after confirmation.</div>
+<div class="k">Dashboard Devices</div><div class="v">Online only. Manages the devices selected for the Hubitat dashboard, locks devices used by current tiles, and can assign all devices, remove unused devices, reload the selection, or update it on the hub. Devices with assigned tiles that are not currently selected are marked yellow and remain unchecked until explicitly selected. Devices that are selected and assigned to tiles are shown in a slightly faded blue locked state.</div>
 </div><h5>Applying editor changes</h5><p><b>Apply changes</b> validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced.</p><div class="help-card-grid">
 <div class="help-card"><b>Custom field-only edits</b><p>If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed.</p></div>
 <div class="help-card"><b>Full JSON edits</b><p>Full JSON edits still invalidate Rendered View captures.</p></div>
@@ -1248,14 +1270,15 @@
 </div><p>Conflicts are grouped with value bubbles and the current cascade winner selected automatically. Each issue row has a consistent skip checkbox, and the Preserve removed CSS footer option can keep removed duplicates, conflicts, and orphans inactive instead of deleting them.</p><h5>CSS cleanup processing and options</h5><ul>
 <li>Duplicate declarations are removed before selector consolidation.</li>
 <li>Consolidation rewrites repeated selector rules into one rule and does not preserve the original repeated rules.</li>
-<li>Consolidation rows tied to skipped conflicts are disabled; rows tied to selected conflicts stay enabled because conflict cleanup runs first.</li>
+<li>Consolidation rows with unresolved related conflicts are labeled <b>Conflicts Found</b>, unchecked, and disabled. Resolve the related conflicts first, then reopen or reanalyze CSS Cleanup before applying that consolidation.</li>
 <li>Duplicates and consolidation choices are listed with preselected checkboxes so you can accept or skip each cleanup.</li>
 <li>Applying selected cleanup to the current working layout creates a normal Undo checkpoint.</li>
 <li>The cleanup dialog applies only the selected fixes unless Reformat after applying fixes is checked.</li>
 <li>Validate / Comp Fmt first runs the regular CSS formatter and then applies the same compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting as the customCSS tab compact formatter.</li>
 <li>When any selector consolidation is applied, all preserved duplicate comments are removed because every duplicate is already represented by a surviving active declaration. This includes comments inside selectors that were already in a single rule and comments preserved by an earlier cleanup run.</li>
 </ul><h5>CSS status and tile scope</h5><div class="help-grid">
-<div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block. Consolidated selector originals are not preserved. Consolidation is blocked only when related conflicts are skipped.</div>
+<div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block. Consolidated selector originals are not preserved. Consolidation is blocked whenever related conflicts are found, and those rows show Conflicts Found until the conflicts are resolved.</div>
+<div class="k">Device status indicator</div><div class="v">Appears next to CSS Status in online mode when tile device assignments need review. Red indicates one or more tile device IDs do not exist on the hub; clicking it opens the JSON Editor to Tile Devices. Yellow indicates valid hub devices are assigned to tiles but are not selected for the dashboard; clicking it opens the JSON Editor to Dashboard Devices.</div>
 <div class="k">Tile-scoped CSS</div><div class="v">Rules such as <code>#tile-40</code>, <code>#tile_40</code>, or <code>.tile-40</code> are treated as tile-scoped CSS for copy/cleanup operations.</div>
 </div></article></div>
 <div class="help-page-nav"></div>
@@ -1280,13 +1303,15 @@
 <div class="k">Ctrl/Cmd-click tile</div><div class="v">Toggle tile in multi-selection; repeated clicks on overlapped cells cycle/toggle layers.</div>
 <div class="k">Alt-click tile</div><div class="v">Select the connected cluster.</div>
 <div class="k">Double-click tile/cell</div><div class="v">Select the connected cluster.</div>
-<div class="k">Drag selected tile</div><div class="v">Move the selected tile or selected group.</div>
+<div class="k">Drag selected tile</div><div class="v">Move the selected tile or selected group. Already-overlapped tiles can be dragged while temporarily allowing the existing overlap; the previous Overlaps setting returns after drop.</div>
 <div class="k">Drag resize handle</div><div class="v">Resize selected tiles from their lower-right edge.</div>
 <div class="k">Drag grid background</div><div class="v">Create a rectangular tile selection.</div>
 <div class="k">Ctrl/Cmd-drag grid</div><div class="v">Add a rectangular selection to the existing selection.</div>
 <div class="k">Click/drag header</div><div class="v">Select one row/column or a contiguous row/column range.</div>
 <div class="k">Shift-click header</div><div class="v">Extend row/column selection from the previous header anchor.</div>
 <div class="k">Right-click grid/header</div><div class="v">Open the context menu.</div>
+<div class="k">Shift-click active dashboard</div><div class="v">Reload the currently active dashboard from the hub from the left dashboard list, after confirmation.</div>
+<div class="k">Shift-click Undo All</div><div class="v">For a hub-originated layout, reload the current dashboard from the hub when Undo All is enabled. For other layouts, perform normal Undo All.</div>
 <div class="k">Press and hold toolbar buttons</div><div class="v">Open alternate options on buttons with a dropdown arrow, such as push placement, trim direction, spacing scope, and save destination.</div>
 </div></article></div>
 <div class="help-page-nav"></div>
@@ -1558,14 +1583,14 @@
       <input type="file" id="jsonEditorFileInput" accept=".json,application/json" style="display:none" />
       <p class="hint" id="jsonEditorErr" style="color:var(--danger);margin:8px 0 0;display:none"></p>
     </div>
-    <div class="modal-foot" style="justify-content:space-between;gap:10px;flex-wrap:wrap">
-      <div id="jsonEditorFileActions" style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn ghost" id="jsonLoadFile">Import File</button>
+    <div class="modal-foot json-editor-foot" style="justify-content:space-between;gap:6px;flex-wrap:nowrap">
+      <div id="jsonEditorFileActions" style="display:flex;gap:6px;flex-wrap:nowrap">
         <button class="btn ghost" id="jsonRestore">Undo Tab Changes</button>
+        <button class="btn ghost" id="jsonLoadFile">Import File</button>
         <button class="btn ghost" id="jsonCopy">Copy</button>
         <button class="btn ghost" id="jsonDownload">Download</button>
       </div>
-      <div id="jsonEditorApplyActions" style="display:flex;gap:10px;flex-wrap:wrap">
+      <div id="jsonEditorApplyActions" style="display:flex;gap:6px;flex-wrap:nowrap">
         <div class="holdwrap" id="jsonFormatWrap">
           <button class="btn ghost" id="jsonFormat" type="button">Validate / Format</button>
           <div class="holdmenu hidden" id="jsonFormatMenu">
@@ -1691,8 +1716,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2025 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v334";
-const APP_VERSION = "0.9.334";
+const BUILD = "v350";
+const APP_VERSION = "0.9.350";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -2381,6 +2406,28 @@ function showHubActivity(message){
   if(b) b.classList.add("show");
 }
 function hideHubActivity(){ const b=document.getElementById("hubActivityBanner"); if(b) b.classList.remove("show"); }
+function hubOperationProgressText(msg){
+  return String(msg||"")
+    .replace(/<[^>]*>/g," ")
+    .replace(/&nbsp;/gi," ")
+    .replace(/&amp;/gi,"&")
+    .replace(/&lt;/gi,"<")
+    .replace(/&gt;/gi,">")
+    .replace(/&quot;/gi,'"')
+    .replace(/&#39;/g,"'")
+    .replace(/\s+/g," ")
+    .trim();
+}
+function mirrorHubOperationProgress(msg){
+  const op=State.hubOperation;
+  if(!op||!op.active||op.finishing) return;
+  const text=hubOperationProgressText(msg);
+  if(!text) return;
+  const step=(op.steps||[]).find(s=>s.state==="active");
+  if(!step) return;
+  step.note=text;
+  renderHubOperationDialog();
+}
 function renderHubOperationDialog(){
   const op=State.hubOperation;
   const modal=document.getElementById("hubOperationModal");
@@ -2656,12 +2703,18 @@ const Hub = {
       checkHubOperationAbort(op);
       State.hubSaveBaseline=cloneLayoutDoc(loaded);
       adoptLayout(meta,loaded);
-      const validationOk=reviewLoadedDashboardDeviceAssignments(loaded,pickedAudit);
-      hubOperationStep(op,"validate",validationOk?"done":"done",pickedAudit&&pickedAudit.ok?"Selected-device check completed.":"Selected-device list could not be verified.");
+      const deviceReview=loadedDashboardDeviceAssignmentReview(loaded,pickedAudit);
+      hubOperationStep(op,"validate","done",deviceReview.note||"Selected-device check completed.");
       await captureRenderedSnapshotsForLoadOperation(op);
       checkHubOperationAbort(op);
       status(`Loaded "${meta.label}".`);
       finishHubOperation(op,{message:"Dashboard loaded.",delayMs:650});
+      if(deviceReview.run){
+        setTimeout(()=>{
+          if(!hubOperationActive()) deviceReview.run();
+          else setTimeout(()=>{ if(!hubOperationActive()) deviceReview.run(); },700);
+        },760);
+      }
       // Device inventory and devicesPicked are cached for the Tile Info device picker, load-time audit, and paste validation.
     }catch(e){
       trace(`load failed: ${e.message}`,null,"err");
@@ -3084,6 +3137,7 @@ function setSnapshotRefreshStatus(msg="", busy=false){
     btn.classList.toggle("busy", !!busy);
     if(msg) btn.title=msg;
   }
+  if(msg) mirrorHubOperationProgress(msg);
 }
 function tileDisplayMode(){
   return State.tileViewMode || "simple";
@@ -3113,6 +3167,28 @@ function updateTileDisplayIndicator(){
   if(!cluster||!wrap||!simple) return;
   cluster.classList.remove("hidden");
   wrap.classList.remove("hidden");
+  const hasLayout=!!State.active;
+  simple.disabled=false;
+  if(rendered) rendered.disabled=false;
+  if(!hasLayout){
+    if(State.tileViewMode!=="simple") State.tileViewMode="simple";
+    simple.className="view-mode-btn unavailable";
+    simple.textContent="Simple View";
+    simple.disabled=true;
+    simple.title="Load a dashboard before choosing a view.";
+    if(rendered){
+      rendered.classList.remove("hidden");
+      rendered.className="view-mode-btn unavailable";
+      rendered.disabled=true;
+      rendered.title="Load a hub dashboard before using Rendered View.";
+    }
+    if(sep) sep.classList.remove("hidden");
+    if(refreshTop) refreshTop.classList.add("hidden");
+    if(refreshPref) refreshPref.disabled=true;
+    if(legend) legend.classList.add("hidden");
+    setSnapshotRefreshStatus("", false);
+    return;
+  }
   if(offlineLayout){
     if(State.tileViewMode!=="simple") State.tileViewMode="simple";
     simple.className="view-mode-btn active";
@@ -4120,6 +4196,49 @@ function updateOrphanIndicator(){
     txt.textContent=counts.consolidations===1?"CSS Cleanup Suggested":`${counts.consolidations} CSS Cleanup Suggestions`;
     el.title="Click to review suggested customCSS optimizations.";
   }
+}
+function tileDeviceStatusForCurrentLayout(){
+  const invalid=new Set();
+  const unselected=new Set();
+  if(!State.active || !infoDeviceEditorIsOnline()) return {invalid,unselected};
+  for(const t of State.tiles||[]){
+    const raw=t&&t._raw?t._raw:t;
+    const id=normalizeDeviceId(raw&&raw.device);
+    if(id==null) continue;
+    const cid=canonicalDeviceId(id);
+    if(!cid) continue;
+    const known=knownHubDeviceById(cid);
+    if(!known){ invalid.add(cid); continue; }
+    if(State.devicePickedAvailable && !isDeviceSelectedForActiveDashboard(cid)) unselected.add(cid);
+  }
+  return {invalid,unselected};
+}
+function updateDeviceStatusIndicator(){
+  const el=document.getElementById("deviceStatusInd"); if(!el) return;
+  if(!State.active){ el.style.display="none"; return; }
+  const {invalid,unselected}=tileDeviceStatusForCurrentLayout();
+  if(!invalid.size && !unselected.size){ el.style.display="none"; return; }
+  el.style.display="inline-flex";
+  el.classList.remove("cleanup","warn","danger");
+  const txt=el.querySelector(".oi-txt");
+  if(invalid.size){
+    el.classList.add("danger");
+    el.dataset.deviceStatus="invalid";
+    if(txt) txt.textContent=`${invalid.size} Invalid Device${invalid.size!==1?"s":""} Found - Fix`;
+    el.title="Click to open JSON Editor → Tile Devices and review device IDs that do not exist on the hub.";
+  }else{
+    el.classList.add("warn");
+    el.dataset.deviceStatus="unselected";
+    if(txt) txt.textContent=`${unselected.size} Device${unselected.size!==1?"s":""} Not Selected`;
+    el.title="Click to open JSON Editor → Dashboard Devices and review valid tile devices that are not selected for this dashboard.";
+  }
+}
+function openDeviceStatusFromIndicator(){
+  if(!State.active){ toast("No dashboard loaded.","err"); return; }
+  const {invalid,unselected}=tileDeviceStatusForCurrentLayout();
+  if(invalid.size){ openJsonEditor("tileDevices"); return; }
+  if(unselected.size){ openJsonEditor("dashboardDevices"); return; }
+  toast("No tile device issues found.","ok");
 }
 function openCssCleanupReviewFromIndicator(){
   if(!State.active){ toast("No dashboard loaded.","err"); return; }
@@ -5156,6 +5275,12 @@ function stackOrder(indices){
 
 /* ---------- geometry ---------- */
 function overlaps(a,b){return a.col<b.col+b.colSpan&&a.col+a.colSpan>b.col&&a.row<b.row+b.rowSpan&&a.row+a.rowSpan>b.row;}
+function selectedTilesHaveExistingOverlap(ids){
+  const idSet=new Set((ids||[]).map(Number));
+  const selected=State.tiles.filter(t=>idSet.has(Number(t.id)));
+  if(!selected.length) return false;
+  return selected.some(t=>State.tiles.some(o=>Number(o.id)!==Number(t.id)&&overlaps(t,o)));
+}
 
 /* ============================================================
    PLACEMENT / CLUSTER ENGINE  (per DTU spec p.21, p.30)
@@ -5414,17 +5539,9 @@ function render(){
   renderStackCard();
   renderSelCard();
   updateOrphanIndicator();
+  updateDeviceStatusIndicator();
   updateSelReadout();
-  document.getElementById("btnUndo").disabled=State.history.length===0;
-  document.getElementById("btnRedo").disabled=State.future.length===0;
-  const undoAllBtn=document.getElementById("btnUndoAll");
-  if(undoAllBtn){
-    const canReload=canReloadActiveHubDashboard();
-    undoAllBtn.disabled=!State.original||!State.history.length;
-    undoAllBtn.title=canReload
-      ? "Undo all — restore the layout as it was when first loaded. Shift+click reloads this dashboard from the hub when Undo All is enabled."
-      : "Undo all — restore the layout as it was when first loaded.";
-  }
+  updateUndoControls();
   updateDirtyIndicator();
   updateSpacingControls();
 }
@@ -5860,13 +5977,16 @@ function onGridMouseMove(e){
     const arm=State.drag._tileDragArm;
     State.drag=null;
     const savedOverlaps=State.overlaps;
-    // During drag: suppress push; force warn unless allow
-    const effectiveOverlaps = (State.overlaps==="allow") ? "allow" : "none";
+    // During drag: suppress push; force warn unless allow.
+    // If the selected tile(s) are already overlapped, temporarily allow overlaps so
+    // they can be repositioned without being blocked by their existing stack.
+    const autoAllowExistingOverlap=selectedTilesHaveExistingOverlap(arm.ids);
+    const effectiveOverlaps = (State.overlaps==="allow" || autoAllowExistingOverlap) ? "allow" : "none";
     State.tileDrag={
       ids:arm.ids, anchorRow:arm.anchorRow, anchorCol:arm.anchorCol,
       offsetRow:arm.offsetRow, offsetCol:arm.offsetCol,
       curRow:cell.row-arm.offsetRow, curCol:cell.col-arm.offsetCol,
-      savedOverlaps, effectiveOverlaps, hasConflict:false
+      savedOverlaps, effectiveOverlaps, autoAllowExistingOverlap, hasConflict:false
     };
     // Reflect effective mode in the dropdown for the duration of the drag
     const overlapsSel=document.getElementById("overlaps");
@@ -8764,23 +8884,30 @@ function showImportedDeviceWarning(opts){
   setTimeout(()=>{ const target=informationalOnly?proceed:confirm; if(target) target.focus({preventScroll:true}); },0);
   return false;
 }
-function reviewLoadedDashboardDeviceAssignments(layout,pickedAudit){
-  if(!(State.conn.mode==="live"&&State.active)) return true;
+function loadedDashboardDeviceAssignmentReview(layout,pickedAudit){
+  const review={ok:true,note:"Selected-device check completed.",run:null};
+  if(!(State.conn.mode==="live"&&State.active)) return review;
   const label=State.active.label||`dashboard ${State.active.id}`;
   if(!pickedAudit||!pickedAudit.ok){
     const reason=pickedAudit&&pickedAudit.error?` (${pickedAudit.error})`:"";
     trace(`load-time devicesPicked validation unavailable for ${label}${reason}`,null,"err");
-    toast(`Loaded "${label}", but its selected-device list could not be checked. Saving may cause unselected tile assignments to be lost.`,"err");
-    status(`Loaded "${label}" — selected dashboard devices could not be verified.`);
-    return false;
+    review.ok=false;
+    review.note="Selected-device list could not be verified.";
+    review.run=()=>{
+      toast(`Loaded "${label}", but its selected-device list could not be checked. Saving may cause unselected tile assignments to be lost.`,"err");
+      status(`Loaded "${label}" — selected dashboard devices could not be verified.`);
+    };
+    return review;
   }
   const invalid=invalidLayoutDeviceIdsForCurrentDashboard(layout);
   if(!invalid.length){
     trace(`load-time device validation passed for ${label}`,null,"ok");
-    return true;
+    return review;
   }
   trace(`load-time device validation → ${invalid.length} unselected device id(s): ${invalid.join(", ")}`,null,"err");
-  return showImportedDeviceWarning({
+  review.ok=false;
+  review.note=`${invalid.length} unselected dashboard device${invalid.length===1?"":"s"} found.`;
+  review.run=()=>showImportedDeviceWarning({
     title:"Loaded dashboard uses unselected devices",
     loadedDashboard:true,
     requireDecision:true,
@@ -8798,6 +8925,28 @@ function reviewLoadedDashboardDeviceAssignments(layout,pickedAudit){
       }
     }
   });
+  return review;
+}
+function reviewLoadedDashboardDeviceAssignments(layout,pickedAudit){
+  const review=loadedDashboardDeviceAssignmentReview(layout,pickedAudit);
+  if(review.run) review.run();
+  return review.ok;
+}
+function confirmFullJsonHubTargetReplacement(data,onProceed){
+  if(!(State.conn.mode==="live"&&State.active)){
+    if(onProceed) onProceed();
+    return true;
+  }
+  const label=State.active.label||`dashboard ${State.active.id}`;
+  const replacementName=data&&data.name?String(data.name):"the imported JSON";
+  showConfirm(
+    "Online dashboard still attached",
+    `This editor is still attached to the hub dashboard "${label}". Applying "${replacementName}" through the JSON editor will replace the working layout but keep that same hub save target.\n\nIf you later choose Save to Hub, "${label}" on the hub will be overwritten with this replacement layout. This is useful when you intentionally want to sideload a layout into an existing hub dashboard, but it is different from opening an offline file.\n\nTo keep this JSON offline instead, cancel and load it with the side-panel file/paste tools.`,
+    ()=>{ if(onProceed) onProceed(); },
+    ()=>status("JSON replacement was not applied — hub dashboard target was preserved unchanged."),
+    {okText:"Apply replacement",cancelText:"Cancel",defaultButton:"cancel",dangerOk:true}
+  );
+  return false;
 }
 function confirmFullJsonDeviceValidation(data,onProceed){
   if(!(State.conn.mode==="live"&&State.active)){
@@ -9638,6 +9787,92 @@ ${actionLabel} will discard those changes. Continue?`,
   );
 }
 
+function resetOfflineWorkspaceForHubConnect(){
+  if(State.tileDrag){ removeTileDragGhost(); State.tileDrag=null; }
+  if(State.resizeDrag) State.resizeDrag=null;
+  resetTileSnapshots(false,{skipIndicator:true});
+  State.active=null;
+  State.original=null;
+  State.hubSaveBaseline=null;
+  State.baseDoc=null;
+  State.savedSnapshot=null;
+  State.lastLayoutUrl=null;
+  State.lastDashUrl=null;
+  State.loadPin=null;
+  State.cfg={cols:100,rows:80};
+  State.customCSS="";
+  State.zMap=parseCssZ("");
+  State.tiles=[];
+  State.selKind=null;
+  State.sel={type:null,ids:[],lines:[],rect:null};
+  State.anchor=null;
+  State.drag=null;
+  State.stackInfo=null;
+  State.stackCycle={key:null,idx:0};
+  State.pending=null;
+  State.history=[];
+  State.future=[];
+  State.conflictHighlight=null;
+  State.focusTileId=null;
+  State.infoDeviceEdit=null;
+  State.infoCssEdit=null;
+  State.pendingRemoval=null;
+  State.buffer=null;
+  State.bufferUsed=false;
+  resetDeviceNames();
+  const empty=document.getElementById("emptyStage");
+  const frame=document.getElementById("mapFrame");
+  const sel=document.getElementById("selSection");
+  const crumb=document.getElementById("crumb");
+  if(empty) empty.style.display="";
+  if(frame) frame.style.display="none";
+  if(sel) sel.style.display="none";
+  if(crumb) crumb.textContent="No dashboard loaded";
+  document.title="Dashboard Layout Studio";
+  enableTools(false);
+  updateDirtyIndicator();
+  updateDashboardJumpState();
+  updateSaveHubState();
+  updateOrphanIndicator();
+  updateDeviceStatusIndicator();
+  updateTileDisplayIndicator();
+  updateSelReadout();
+  status("Offline layout closed. Connect to the hub, then select a dashboard to load.");
+}
+
+function connectToHubFromButton(){
+  const ip=document.getElementById("hubIp").value.trim();
+  const appId=document.getElementById("appId").value.trim();
+  const token=document.getElementById("token").value.trim();
+  const start=()=>{
+    if(State.conn.mode==="offline") resetOfflineWorkspaceForHubConnect();
+    State.conn.ip=ip;
+    State.conn.appId=appId;
+    State.conn.token=token;
+    saveConn();
+    Hub.discover();
+  };
+  if(!ip||!appId||!token){
+    State.conn.ip=ip;
+    State.conn.appId=appId;
+    State.conn.token=token;
+    saveConn();
+    Hub.discover();
+    return;
+  }
+  if(State.conn.mode==="offline" && State.active && hasUnsavedChanges()){
+    showConfirm(
+      "Close offline layout and connect",
+      "The current offline layout has unsaved changes. Connecting to the hub will close this offline workspace, clear the grid, and discard its undo history. Continue?",
+      start,
+      ()=>status("Hub connection cancelled — offline layout was not closed."),
+      {defaultButton:"cancel",okText:"Discard and connect",cancelText:"Stay offline",dangerOk:true}
+    );
+    return;
+  }
+  start();
+}
+
 /* ---------- UI plumbing ---------- */
 function renderDashList(){
   const el=document.getElementById("dashList");
@@ -9669,8 +9904,26 @@ function renderDashList(){
     el.appendChild(b);
   });
 }
-function enableTools(on){ document.querySelectorAll("#btnJson,#btnSave,#btnSelectAll,#btnTrim,#btnSpacing,#btnLayoutScale,#btnSetTileSize").forEach(b=>b.disabled=!on); updateActionButtons(); updateSaveHubState(); updateSpacingControls(); }
-function status(msg,busy){ document.getElementById("statusMsg").innerHTML=(busy?`<span class="pip"></span>`:"")+esc(msg); }
+function updateUndoControls(){
+  const undoBtn=document.getElementById("btnUndo");
+  const redoBtn=document.getElementById("btnRedo");
+  const undoAllBtn=document.getElementById("btnUndoAll");
+  const hasLayout=!!State.active;
+  if(undoBtn) undoBtn.disabled=!hasLayout || State.history.length===0;
+  if(redoBtn) redoBtn.disabled=!hasLayout || State.future.length===0;
+  if(undoAllBtn){
+    const canReload=hasLayout && canReloadActiveHubDashboard();
+    undoAllBtn.disabled=!hasLayout || !State.original || !State.history.length;
+    undoAllBtn.title=canReload
+      ? "Undo all — restore the layout as it was when first loaded. Shift+click reloads this dashboard from the hub when Undo All is enabled."
+      : (hasLayout ? "Undo all — restore the layout as it was when first loaded." : "Load a dashboard before using Undo All.");
+  }
+}
+function enableTools(on){ document.querySelectorAll("#btnJson,#btnSave,#btnSelectAll,#btnTrim,#btnSpacing,#btnLayoutScale,#btnSetTileSize").forEach(b=>b.disabled=!on); updateActionButtons(); updateUndoControls(); updateSaveHubState(); updateSpacingControls(); }
+function status(msg,busy){
+  document.getElementById("statusMsg").innerHTML=(busy?`<span class="pip"></span>`:"")+esc(msg);
+  mirrorHubOperationProgress(msg);
+}
 function setConn(mode,label){ const d=document.getElementById("connDot"),l=document.getElementById("connLabel");
   d.className="conn-dot "+(mode==="live"?"live":mode==="offline"?"demo":"");
   l.textContent=mode==="live"?"live · "+label:mode==="offline"?"offline (pasted)":"disconnected";
@@ -9940,6 +10193,7 @@ function loadOfflineLayout(data, sourceLabel){
   State.loadPin=null;
   State.hubSaveBaseline=null;
   setConn("offline",sourceLabel||"pasted");
+  resetConnectButton();
   const meta={id:"offline-"+Date.now(),label:data.name||sourceLabel||"Offline dashboard",accessToken:"",_layout:data};
   State.dashboards=[meta]; renderDashList();
   document.querySelectorAll(".dash-item").forEach(x=>x.classList.add("active"));
@@ -10190,7 +10444,7 @@ function renderJsonTileDevicesPane(){
       : `<input class="json-tile-device-input" data-tile-id="${esc(raw.id)}" type="text" inputmode="numeric" pattern="[0-9]*" value="${esc(id)}" placeholder="device id"><span class="device-note">Digits only; blank removes the assignment.</span>`;
     const baseNote=gridLabel!==baseLabel?`Layout label: ${baseLabel}`:`Template: ${raw.template||"—"}`;
     const rowTitle=badAssignment?`Device #${id} was not found on this hub.`:(missingSelection?`Device #${id} is not selected for this dashboard.`:"");
-    return `<div class="json-tile-device-row ${badAssignment?"bad-assignment":""} ${missingSelection?"missing-selection":""}" data-tile-row="${esc(raw.id)}"${rowTitle?` title="${esc(rowTitle)}"`:""}><div class="json-tile-id">#${esc(raw.id)}</div><div class="json-tile-location">R${esc(raw.row||"")} / C${esc(raw.col||"")}<small>${esc((raw.rowSpan||"?")+"×"+(raw.colSpan||"?"))}</small></div><div class="json-tile-label" data-grid-label="${esc(raw.id)}">${esc(gridLabel)}<small>${esc(baseNote)}</small></div>${altHtml}<div class="json-tile-device-control">${control}</div></div>`;
+    return `<div class="json-tile-device-row ${badAssignment?"bad-assignment":""} ${missingSelection?"missing-selection":""}" data-tile-row="${esc(raw.id)}"${rowTitle?` title="${esc(rowTitle)}"`:""}><div class="json-tile-id">#${esc(raw.id)}</div><div class="json-tile-location">R${esc(raw.row||"")} / C${esc(raw.col||"")} <small>(${esc((raw.rowSpan||"?")+"×"+(raw.colSpan||"?"))})</small></div><div class="json-tile-label" data-grid-label="${esc(raw.id)}">${esc(gridLabel)}<small>${esc(baseNote)}</small></div>${altHtml}<div class="json-tile-device-control">${control}</div></div>`;
   }).join("");
   const empty=!tiles.length
     ? '<div class="json-manager-empty">No tiles are present in the current layout.</div>'
@@ -10199,12 +10453,15 @@ function renderJsonTileDevicesPane(){
       : "");
   const viewButtons=jsonTileDeviceViewButtons(viewForRows,classified,online);
   const toolbar=`<div class="json-manager-toolbar"><div class="json-manager-toolbar-group json-view-filter-group" aria-label="Tile device view filters"><span class="json-view-label">View:</span>${viewButtons}</div><span class="json-manager-status">${online?`${unassignedCount} unassigned tile device${unassignedCount===1?"":"s"}. ${invalidCount} invalid ID${invalidCount===1?"":"s"}.`:`${unassignedCount} unassigned tile device${unassignedCount===1?"":"s"}. Device status cannot be verified offline.`}</span></div>`;
-  pane.innerHTML=`<div class="json-manager-fixed-top">${intro}${toolbar}</div><div class="json-manager-scroll">${empty||head+rows}</div>`;
+  const bottom=online?`<div class="json-manager-fixed-bottom"><div class="json-manager-toolbar json-manager-bottom-toolbar"><div class="json-manager-toolbar-group"><button class="btn ghost danger" id="jsonTileUnassignInvalid" type="button" ${invalidCount<1?"disabled":""} title="${invalidCount<1?"No invalid tile device IDs were found":"Clear device IDs from tiles assigned to devices that do not exist on this hub"}">Unassign Invalid</button></div><span class="json-manager-status">${invalidCount?`Clears ${invalidCount} invalid tile device assignment${invalidCount===1?"":"s"} after confirmation.`:"No invalid hub-device assignments found."}</span></div></div>`:"";
+  pane.innerHTML=`<div class="json-manager-fixed-top">${intro}${toolbar}</div><div class="json-manager-scroll">${empty||head+rows}</div>${bottom}`;
   pane.querySelectorAll("[data-json-tile-view]").forEach(btn=>btn.addEventListener("click",()=>{
     if(btn.disabled) return;
     tileState.view=btn.dataset.jsonTileView||"all";
     renderJsonTileDevicesPane();
   }));
+  const unassignInvalidBtn=pane.querySelector("#jsonTileUnassignInvalid");
+  if(unassignInvalidBtn) unassignInvalidBtn.addEventListener("click",unassignInvalidTileDevices);
   pane.querySelectorAll("[data-json-tile-sort]").forEach(btn=>btn.addEventListener("click",()=>{
     setJsonManagerSort(tileState,btn.dataset.jsonTileSort);
     renderJsonTileDevicesPane();
@@ -10224,6 +10481,29 @@ function renderJsonTileDevicesPane(){
     raw.device=entered?canonicalDeviceId(entered):"";
     updateJsonEditorDirtyState(); renderJsonTileDevicesPane(); renderJsonDashboardDevicesPane();
   }));
+}
+function unassignInvalidTileDevices(){
+  if(!infoDeviceEditorIsOnline()){ toast("Unassign Invalid is only available in online mode.","err"); return; }
+  const invalid=jsonEditorTiles().filter(raw=>{
+    const id=jsonTileDeviceId(raw);
+    return !!(id&&!knownHubDeviceById(id));
+  });
+  if(!invalid.length){ toast("No invalid tile device assignments were found.","ok"); renderJsonTileDevicesPane(); return; }
+  showConfirm(
+    "Unassign invalid tile devices",
+    `Clear the device ID from ${invalid.length} tile${invalid.length===1?"":"s"} whose assigned device does not exist on this hub?
+
+This changes the JSON editor draft only. Apply All Changes is still required before the working layout is updated, and hub save is still required before the dashboard on the hub is changed.`,
+    ()=>{
+      invalid.forEach(raw=>{ raw.device=""; });
+      updateJsonEditorDirtyState();
+      renderJsonTileDevicesPane();
+      renderJsonDashboardDevicesPane();
+      toast(`Unassigned ${invalid.length} invalid tile device assignment${invalid.length===1?"":"s"}.`,"ok");
+    },
+    ()=>status("Invalid tile device assignments were not changed."),
+    {okText:"Unassign Invalid",cancelText:"Cancel",defaultButton:"cancel",dangerOk:true}
+  );
 }
 function jsonDashboardUsedDeviceIds(){
   return new Set(layoutDeviceIds(JsonEditorState.doc||serializeLayout()).map(canonicalDeviceId).filter(Boolean));
@@ -10274,15 +10554,16 @@ function jsonDashboardVisibleDeviceRows(){
   }
   return allHubDevicesForAudit().slice().map(d=>{
     const id=canonicalDeviceId(d.id);
-    const locked=used.has(id);
     const selected=st.initial.has(id);
-    const checked=locked||st.draft.has(id);
-    return {device:d,id,locked,selected,checked,useCount:counts.get(id)||0};
+    const useCount=counts.get(id)||0;
+    const locked=selected&&useCount>0;
+    const checked=st.draft.has(id);
+    return {device:d,id,locked,selected,checked,useCount};
   }).filter(item=>{
     if(st.filter==="selected") return item.selected;
     if(st.filter==="unselected") return !item.selected;
-    if(st.filter==="inUse") return item.locked;
-    if(st.filter==="unused") return !item.locked;
+    if(st.filter==="inUse") return item.useCount>0;
+    if(st.filter==="unused") return item.useCount<1;
     return true;
   }).sort((a,b)=>{
     let result=st.sortBy==="name"
@@ -10338,7 +10619,6 @@ function renderJsonDashboardDevicesPane(){
     buttons.forEach(b=>{if(b)b.disabled=true;}); setJsonEditorDirtyState(); return;
   }
   const used=jsonDashboardUsedDeviceIds();
-  for(const id of used) if(knownHubDeviceById(id)) st.draft.add(id);
   if(!st.loaded){
     list.innerHTML='<div class="json-manager-empty">Dashboard device list has not been loaded from the hub.</div>';
     statusEl.textContent=st.error||"The dashboard device list has not been loaded."; statusEl.className="json-manager-status";
@@ -10349,13 +10629,28 @@ function renderJsonDashboardDevicesPane(){
       if(id&&!knownHubDeviceById(id)) badAssignments.push({tileId:t.id,deviceId:id,label:tileGridDisplayLabelValue(t)});
     }
     const visible=jsonDashboardVisibleDeviceRows();
-    const rows=visible.map(item=>`<label class="json-dashboard-device-row ${item.checked?"selected":""} ${item.locked?"locked":""}" title="${item.locked?`Assigned to ${item.useCount||1} tile(s); this device cannot be removed.`:"Add or remove this device from the dashboard."}"><input class="json-dashboard-device-check" type="checkbox" data-device-id="${esc(item.id)}" ${item.checked?"checked":""} ${item.locked?"disabled":""}><span class="device-id">#${esc(item.id)}</span><span class="device-label">${esc(item.device.name)}</span>${item.locked?'<span class="device-lock" aria-label="Locked">🔒</span>':'<span></span>'}${item.locked?`<span class="device-use">${item.useCount||1} tile${(item.useCount||1)===1?"":"s"}</span>`:""}</label>`);
+    const rows=visible.map(item=>{
+      const inUse=item.useCount>0;
+      const pendingAdd=inUse&&!item.selected&&item.checked;
+      const usedSelected=inUse&&item.checked;
+      const usedUnselected=inUse&&!item.checked;
+      const title=item.locked
+        ? `Assigned to ${item.useCount} tile${item.useCount===1?"":"s"}; this selected dashboard device cannot be removed while tiles use it.`
+        : (usedUnselected
+          ? `Assigned to ${item.useCount} tile${item.useCount===1?"":"s"}, but not selected for this dashboard. Check it to add it explicitly.`
+          : (pendingAdd
+            ? `Assigned to ${item.useCount} tile${item.useCount===1?"":"s"} and will be added to the dashboard when applied.`
+            : "Add or remove this device from the dashboard."));
+      const useText=inUse?`<span class="device-use">${item.useCount} tile${item.useCount===1?"":"s"}${usedUnselected?" — not selected":(pendingAdd?" — pending add":"")}</span>`:"";
+      return `<label class="json-dashboard-device-row ${item.checked?"selected":""} ${item.locked?"locked":""} ${usedSelected?"used-selected":""} ${usedUnselected?"used-unselected":""}" title="${esc(title)}"><input class="json-dashboard-device-check" type="checkbox" data-device-id="${esc(item.id)}" ${item.checked?"checked":""} ${item.locked?"disabled":""}><span class="device-id">#${esc(item.id)}</span><span class="device-label">${esc(item.device.name)}</span>${item.locked?'<span class="device-lock" aria-label="Locked">🔒</span>':'<span></span>'}${useText}</label>`;
+    });
     list.innerHTML=rows.join("")||`<div class="json-manager-empty">No devices match the ${esc(jsonDashboardFilterLabel(st.filter))} view.</div>`;
     const selectedCount=[...st.draft].filter(id=>knownHubDeviceById(id)).length;
     const total=State.hubDevices.length;
     const unusedCount=allHubDevicesForAudit().filter(d=>!used.has(canonicalDeviceId(d.id))).length;
     const unselectedCount=allHubDevicesForAudit().filter(d=>!st.initial.has(canonicalDeviceId(d.id))).length;
-    statusEl.textContent=st.busy?"Updating dashboard devices…":`${selectedCount} of ${total} hub devices selected for pending apply. ${unselectedCount} not in the hub's current selected-device list. ${unusedCount} unused.${badAssignments.length?` ${badAssignments.length} tile${badAssignments.length===1?" has":"s have"} a device ID not present in the hub inventory.`:""}${selectedCount<1?" Select at least one device before applying.":""}`;
+    const usedUnselectedCount=[...used].filter(id=>knownHubDeviceById(id)&&!st.draft.has(id)).length;
+    statusEl.textContent=st.busy?"Updating dashboard devices…":`${selectedCount} of ${total} hub devices selected for pending apply. ${unselectedCount} not in the hub's current selected-device list. ${unusedCount} unused.${usedUnselectedCount?` ${usedUnselectedCount} valid in-use device${usedUnselectedCount===1?" is":"s are"} not selected and will remain unchecked until explicitly selected.`:""}${badAssignments.length?` ${badAssignments.length} tile${badAssignments.length===1?" has":"s have"} a device ID not present in the hub inventory.`:""}${selectedCount<1?" Select at least one device before applying.":""}`;
     statusEl.className="json-manager-status"+(st.error||selectedCount<1?" err":"");
     list.querySelectorAll(".json-dashboard-device-check:not(:disabled)").forEach(cb=>cb.addEventListener("change",()=>{
       const id=canonicalDeviceId(cb.dataset.deviceId);
@@ -10397,7 +10692,6 @@ async function reloadJsonDashboardDevices(){
     if(!picked.ok) throw new Error(picked.error||"the dashboard selected-device list could not be read");
     st.initial=new Set([...picked.ids].map(canonicalDeviceId).filter(Boolean));
     st.draft=new Set(st.initial);
-    for(const id of jsonDashboardUsedDeviceIds()) if(knownHubDeviceById(id)) st.draft.add(id);
     st.loaded=true; st.error="";
     renderJsonTileDevicesPane();
     return true;
@@ -10413,7 +10707,7 @@ function assignAllJsonDashboardDevices(){
 function removeUnusedJsonDashboardDevices(){
   const st=JsonEditorState.dashboardDevices; if(!st.loaded||st.busy) return;
   const used=jsonDashboardUsedDeviceIds();
-  st.draft=new Set([...used].filter(id=>knownHubDeviceById(id))); st.error=""; renderJsonDashboardDevicesPane(); renderJsonTileDevicesPane(); updateJsonEditorDirtyState();
+  st.draft=new Set([...st.initial].filter(id=>used.has(id)&&knownHubDeviceById(id))); st.error=""; renderJsonDashboardDevicesPane(); renderJsonTileDevicesPane(); updateJsonEditorDirtyState();
 }
 function toggleJsonDashboardVisibleSelection(){
   const st=JsonEditorState.dashboardDevices; if(!st.loaded||st.busy) return;
@@ -10469,7 +10763,6 @@ async function applyJsonDashboardDeviceDraftToHub(){
   const st=JsonEditorState.dashboardDevices;
   if(!jsonDashboardDeviceDraftChanged()) return {added:[],removed:[]};
   const used=jsonDashboardUsedDeviceIds();
-  for(const id of used) if(knownHubDeviceById(id)) st.draft.add(id);
   const before=new Set(st.initial);
   const target=new Set([...st.draft].map(canonicalDeviceId).filter(id=>id&&knownHubDeviceById(id)));
   if(!target.size) throw new Error("at least one dashboard device must be selected");
@@ -10736,7 +11029,7 @@ function switchJsonEditorMode(mode){
   showJsonEditorMode(mode,"start");
   updateJsonEditorDirtyState();
 }
-function openJsonEditor(){
+function openJsonEditor(initialMode="json"){
   try{
     const doc=normalizeLoadedJson(serializeLayout());
     JsonEditorState.doc=cloneJsonDoc(doc);
@@ -10749,7 +11042,10 @@ function openJsonEditor(){
     setJsonEditorDirtyState();
     resetModalPosition("jsonModal");
     document.getElementById("jsonModal").classList.remove("hidden");
-    showJsonEditorMode("json","start");
+    let mode=(initialMode&&String(initialMode))||"json";
+    if(mode!=="tileDevices" && mode!=="dashboardDevices" && !JSON_EDITOR_FIELD_MODES.has(mode)) mode="json";
+    if(mode==="dashboardDevices"&&!jsonDashboardDeviceManagerOnline()) mode="json";
+    showJsonEditorMode(mode,"start");
     setJsonEditorDirtyState();
   }catch(e){ toast("Could not open JSON editor: "+e.message,"err"); }
 }
@@ -10848,7 +11144,7 @@ async function applyJsonEditorAllChanges(){
       }
     }
     if(fullJsonReplace&&State.conn.mode==="live"&&State.active){
-      confirmFullJsonDeviceValidation(data,doApply);
+      confirmFullJsonHubTargetReplacement(data,()=>confirmFullJsonDeviceValidation(data,doApply));
       return;
     }
     doApply();
@@ -12279,19 +12575,35 @@ function wireUpdateModal(){
 
 async function wire(){
   const savedConn=restoreConn();
+  updateUndoControls();
   updateTileDisplayIndicator();
   applyTileOpacity(+document.getElementById("prefTileOpacity").value);
   // Note: updatePushModeButtons(false) is called after PUSH_BTNS is defined, further below
   // Preferences slide-down
+  const helpPaneOrder=()=>[...document.querySelectorAll(".help-tab")].map(tab=>tab.dataset.helpPane).filter(id=>document.getElementById(id));
+  const helpPaneTitle=(id)=>{
+    const tab=document.querySelector(`.help-tab[data-help-pane="${id}"]`);
+    return tab ? tab.textContent.trim() : "Help";
+  };
+  const showHelpPanePage=(paneId,pageIndex)=>{
+    const target=document.getElementById(paneId);
+    if(!target) return;
+    activateHelpPane(paneId,false);
+    if(typeof target._showHelpPage==="function") target._showHelpPage(pageIndex);
+  };
   const buildHelpPager=(pane)=>{
     const pages=[...pane.querySelectorAll(":scope > .help-pages > .help-page")];
     const nav=pane.querySelector(":scope > .help-page-nav");
     if(!pages.length||!nav) return;
-    if(pages.length===1){ nav.classList.add("hidden"); return; }
+    pane._helpPageCount=pages.length;
     nav.classList.remove("hidden");
     nav.innerHTML=`<button type="button" class="btn ghost help-page-prev">← Previous</button><div class="help-page-status"><span class="help-page-title"></span><span class="help-page-count"></span><span class="help-page-dots" aria-label="Help pages"></span></div><button type="button" class="btn ghost help-page-next">Next →</button>`;
     const show=(requested)=>{
       const index=Math.max(0,Math.min(pages.length-1,Number(requested)||0));
+      const order=helpPaneOrder();
+      const paneIndex=Math.max(0,order.indexOf(pane.id));
+      const firstOverall=paneIndex===0 && index===0;
+      const lastOverall=paneIndex===order.length-1 && index===pages.length-1;
       pane.dataset.helpPage=String(index);
       pages.forEach((page,i)=>{
         const active=i===index;
@@ -12299,11 +12611,35 @@ async function wire(){
         page.setAttribute("aria-hidden",active?"false":"true");
         if(active) page.scrollTop=0;
       });
-      nav.querySelector(".help-page-prev").disabled=index===0;
-      nav.querySelector(".help-page-next").disabled=index===pages.length-1;
+      const prevBtn=nav.querySelector(".help-page-prev");
+      const nextBtn=nav.querySelector(".help-page-next");
+      prevBtn.disabled=firstOverall;
+      nextBtn.disabled=lastOverall;
+      const prevTopic=order[paneIndex-1];
+      const nextTopic=order[paneIndex+1];
+      prevBtn.textContent=index===0 && prevTopic ? `← ${helpPaneTitle(prevTopic)}` : "← Previous";
+      nextBtn.textContent=index===pages.length-1 && nextTopic ? `${helpPaneTitle(nextTopic)} →` : "Next →";
       nav.querySelector(".help-page-title").textContent=pages[index].dataset.helpTitle||`Page ${index+1}`;
-      nav.querySelector(".help-page-count").textContent=`Page ${index+1} of ${pages.length}`;
+      nav.querySelector(".help-page-count").textContent=`${helpPaneTitle(pane.id)} • Page ${index+1} of ${pages.length}`;
       nav.querySelectorAll(".help-page-dot").forEach((dot,i)=>dot.classList.toggle("active",i===index));
+    };
+    const goPrevious=()=>{
+      const index=+pane.dataset.helpPage||0;
+      if(index>0){ show(index-1); return; }
+      const order=helpPaneOrder();
+      const prevId=order[order.indexOf(pane.id)-1];
+      if(!prevId) return;
+      const prevPane=document.getElementById(prevId);
+      const lastIndex=Math.max(0,(prevPane?._helpPageCount||prevPane?.querySelectorAll(":scope > .help-pages > .help-page").length||1)-1);
+      showHelpPanePage(prevId,lastIndex);
+    };
+    const goNext=()=>{
+      const index=+pane.dataset.helpPage||0;
+      if(index<pages.length-1){ show(index+1); return; }
+      const order=helpPaneOrder();
+      const nextId=order[order.indexOf(pane.id)+1];
+      if(!nextId) return;
+      showHelpPanePage(nextId,0);
     };
     const dots=nav.querySelector(".help-page-dots");
     pages.forEach((page,i)=>{
@@ -12315,8 +12651,8 @@ async function wire(){
       dot.addEventListener("click",()=>show(i));
       dots.appendChild(dot);
     });
-    nav.querySelector(".help-page-prev").addEventListener("click",()=>show((+pane.dataset.helpPage||0)-1));
-    nav.querySelector(".help-page-next").addEventListener("click",()=>show((+pane.dataset.helpPage||0)+1));
+    nav.querySelector(".help-page-prev").addEventListener("click",goPrevious);
+    nav.querySelector(".help-page-next").addEventListener("click",goNext);
     pane._showHelpPage=show;
     show(0);
   };
@@ -12475,13 +12811,7 @@ async function wire(){
   const connectBtn=document.getElementById("btnDiscover");
   connectBtn.addEventListener("mouseenter",()=>handleConnectButtonHover(true));
   connectBtn.addEventListener("mouseleave",()=>handleConnectButtonHover(false));
-  connectBtn.addEventListener("click",()=>{
-    State.conn.ip=document.getElementById("hubIp").value.trim();
-    State.conn.appId=document.getElementById("appId").value.trim();
-    State.conn.token=document.getElementById("token").value.trim();
-    saveConn();
-    Hub.discover();
-  });
+  connectBtn.addEventListener("click",connectToHubFromButton);
   document.getElementById("btnPaste").addEventListener("click",()=>{
     document.getElementById("pasteErr").style.display="none";
     resetModalPosition("pasteModal"); document.getElementById("pasteModal").classList.remove("hidden");
@@ -12701,6 +13031,7 @@ async function wire(){
   const preserveCssHelpOk=document.getElementById("preserveCssHelpOk");
   if(preserveCssHelpOk) preserveCssHelpOk.addEventListener("click",()=>document.getElementById("preserveCssHelpModal")?.classList.add("hidden"));
   document.getElementById("orphanInd").addEventListener("click",openCssCleanupReviewFromIndicator);
+  document.getElementById("deviceStatusInd")?.addEventListener("click",openDeviceStatusFromIndicator);
   document.getElementById("orphanIgnore").addEventListener("click",()=>{ document.getElementById("orphanModal").classList.add("hidden"); });
   document.getElementById("orphanCancel").addEventListener("click",()=>{ document.getElementById("orphanModal").classList.add("hidden"); });
   document.getElementById("orphanDownload").addEventListener("click",()=>{
