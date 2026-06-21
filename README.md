@@ -1,160 +1,237 @@
 # Dashboard Layout Studio
 
-**Dashboard Layout Studio** is a visual editor for Hubitat Dashboard v1 layout JSON. It lets you move, copy, resize, trim, space, inspect, and save dashboard tiles without manually editing row, column, `rowSpan`, and `colSpan` values.
+**Dashboard Layout Studio** is a visual layout editor for **Hubitat Dashboard v1** layouts.
 
-> **Compatibility:** Dashboard Layout Studio works with **v1 layouts from the built-in Hubitat Dashboards app**. It is **not compatible with Hubitat EZ Dashboards**.
+## Main Features
 
-![Dashboard Layout Studio overview](docs/assets/dls-overview.png)
+### Visual Layout Editing
 
-## What it is for
+Dashboard Layout Studio lets you edit dashboard tile layouts visually instead of manually changing JSON values such as `row`, `col`, `rowSpan`, and `colSpan`.
 
-Use Dashboard Layout Studio when you want to:
+Tiles can be selected by:
 
-- Rearrange tiles on a Hubitat dashboard.
-- Move or copy groups of tiles without rebuilding a dashboard by hand.
-- Insert or delete rows and columns in a spreadsheet-like way.
-- Resize selected tiles while preserving spacing.
-- Push nearby tiles out of the way instead of creating overlaps.
-- Clean up spacing and unstack overlapping tiles.
-- Review tile information, custom CSS, and raw JSON before saving.
-- Save back to the hub or download/copy edited JSON for backup.
+- Clicking a single tile
+- Shift-clicking multiple tiles
+- Alt-clicking a connected tile cluster
+- Dragging a rectangular selection range
+- Selecting one or more rows
+- Selecting one or more columns
 
-## Quick start
+Selected tiles can be moved, copied, resized, cleared, deleted, spaced, or adjusted as a group.
 
-### Option 1: Use with a Hubitat hub
+---
+
+### Move, Copy, Paste, and Duplicate Tiles
+
+Dashboard Layout Studio supports operations that are difficult or unavailable in the standard Hubitat dashboard editor:
+
+- Move groups of tiles
+- Drag tiles to new locations
+- Copy tiles within the same dashboard
+- Copy tiles between dashboards
+- Paste tiles into another dashboard layout
+- Clear tiles while leaving empty space
+- Insert rows or columns
+- Delete rows or columns
+- Push tiles right or down
+- Pull tiles left or up
+- Choose how conflicts with existing tiles should be handled
+
+When tiles are copied, the tool assigns new tile IDs that do not conflict with existing tiles or tile-scoped CSS rules.
+
+---
+
+### Copy Tiles with Their CSS
+
+For dashboards that use custom CSS, Dashboard Layout Studio can duplicate tile-scoped CSS when tiles are copied.
+
+For example, CSS rules targeting a copied tile can be replicated and retargeted to the new tile ID.
+
+This allows you to duplicate styled tiles without manually finding and editing every `#tile-123` rule.
+
+---
+
+### Merge Tiles from Other Dashboards
+
+Dashboard Layout Studio can help reuse sections of one dashboard inside another.
+
+When copying or importing tiles from another dashboard, it can:
+
+- Assign safe new tile IDs
+- Preserve related tile-scoped CSS
+- Retarget copied CSS to the new tile IDs
+- Check assigned devices against the destination dashboard
+- Warn when copied tiles use devices that are not selected for the destination dashboard
+
+---
+
+### Tile Spacing and Layout Cleanup
+
+Dashboard Layout Studio includes tools for cleaning up and reorganizing dashboard layouts:
+
+- Set uniform spacing between tiles or groups
+- Increase existing spacing
+- Decrease existing spacing
+- Preserve clusters and nested groups
+- Unstack overlapping tiles and spread them out
+- Enlarge or reduce tiles while preserving layout and spacing
+- Resize selected tiles to a uniform size
+- Resize tiles by dragging tile corners
+- Resize container-style tile groups while preserving their internal layout
+- Trim unused rows and columns
+
+These tools are useful when a dashboard has grown over time and needs to be aligned, enlarged, spaced out, or reorganized.
+
+---
+
+### Workspace Editing with Undo/Redo
+
+Dashboard Layout Studio provides a workspace separate from the live Hubitat dashboard.
+
+You can:
+
+- Make layout changes without immediately changing the hub dashboard
+- Undo and redo individual steps
+- Undo all changes back to the loaded layout
+- Review changes before saving back to the hub
+
+The hub dashboard is not changed until you explicitly save the updated layout.
+
+---
+
+## Online Mode and Offline Mode
+
+Dashboard Layout Studio does not require or use any cloud resources.  It can be used in two modes.
+
+### Online Mode
+
+Online Mode is available when the HTML file is hosted on the Hubitat hub and opened from the hub.
+
+Online Mode can:
+
+- Load layouts directly from the hub
+- Save layouts directly back to the hub
+- Capture rendered snapshots of actual dashboard tiles
+- Show hub device names
+- Check tile device assignments against the dashboard’s selected devices
+- Add missing devices to the dashboard’s selected device list
+- Remove unused devices from the dashboard’s selected device list
+- Use all Offline Mode editing capabilities
+
+Online Mode is the most powerful mode because the tool can communicate with the hub and validate the layout against real dashboard and device information.
+
+### Offline Mode
+
+Offline Mode is available when working with local files or clipboard JSON.
+
+Offline Mode can:
+
+- Load layouts from files
+- Save layouts to files
+- Load layout JSON from the clipboard
+- Copy layout JSON to the clipboard
+- Edit layouts using placeholder tiles
+- Use the main layout, spacing, resize, undo, JSON, and CSS tools
+
+Offline Mode is useful for working from backups, experimenting, or editing layouts without connecting to the hub.
+
+---
+
+## Device Management
+
+Dashboard Layout Studio includes device-management tools for layouts.
+
+It can:
+
+- Show the device assigned to each tile
+- Show device names from the hub
+- Identify missing, blank, invalid, unknown, or unselected device IDs
+- Highlight invalid device assignments
+- Highlight valid devices assigned to tiles but not selected for the dashboard
+- Reassign tile devices
+- Add devices to the dashboard’s selected device list
+- Remove unused devices from the dashboard’s selected device list
+- Warn before saving if tile devices are not selected for the dashboard
+
+This is especially useful when copying tiles between dashboards, importing JSON, or cleaning up older dashboards.
+
+---
+
+## CSS Tools
+
+Dashboard Layout Studio includes CSS tools for dashboards that use custom styling.
+
+It can:
+
+- View tile-specific CSS
+- Edit CSS rules associated with a tile
+- Replicate tile-scoped CSS when duplicating tiles
+- Remove tile-scoped CSS when tiles are removed
+- Detect duplicate CSS
+- Detect conflicting CSS
+- Find orphaned tile CSS
+- Consolidate repeated selector rules
+- Optionally preserve removed or changed CSS as comments
+
+The CSS Cleanup tool checks for:
+
+- **Conflicts** — the same selector and property has different values
+- **Duplicates** — repeated declarations with the same value
+- **Consolidation** — repeated selector rules that can be combined
+- **Orphans** — tile-scoped rules that reference tile IDs no longer present in the layout
+
+For dashboards with a lot of hand-written CSS, this can save substantial cleanup time.
+
+---
+
+## JSON Editor
+
+Dashboard Layout Studio includes a JSON Editor for users who want direct access to the dashboard JSON.
+
+It supports:
+
+- Backing up layouts
+- Importing layouts
+- Full JSON editing
+- Viewing and editing `customHTML` separately
+- Viewing and editing `customJS` separately
+- Viewing and editing `customCSS` separately
+- Formatting and validating JSON
+- Basic validation and formatting for `customHTML` and `customJS`
+- Enhanced validation and formatting for `customCSS`
+- Tile Devices review
+- Dashboard Devices review
+
+The visual editor and JSON editor are designed to work together.---
+
+## Installation
+
+Dashboard Layout Studio is distributed as a single HTML file.
+
+### Online Mode Installation
 
 1. Download the latest `dashboard-layout-studio-v###.html` file.
-2. In Hubitat, open **Settings → File Manager**.
-3. Upload the HTML file to the hub.
-4. Open it from the hub, for example:
+2. Upload it to the Hubitat hub’s file storage so it is available under `/local/`.
+3. Open the file from the hub in a browser.
 
-   ```text
-   http://<hub-ip>/local/dashboard-layout-studio-v201.html
-   ```
+Example URL format:
 
-5. Click **Connect To Hub**.
-6. Select a discovered v1 dashboard.
-7. Edit the layout.
-8. Use **Save → Save to hub** when you are ready.
+```text
+http://<hub-ip>/local/dashboard-layout-studio.html
+```
 
-### Option 2: Work offline
+Replace `<hub-ip>` with your hub’s IP address.
 
-You can also use the tool without a live hub connection:
+### Offline Use
 
-- Click **Paste dashboard JSON** to paste a layout.
-- Click **Load file** to open a `.json` file.
-- Drag a dashboard JSON file onto the load area.
+1. Download the latest HTML file.
+2. Open it directly in a browser.
+3. Load dashboard JSON from a file or the clipboard.
+4. Save edited layouts back to a file or clipboard.
 
-Offline layouts can be downloaded or copied to the clipboard, but they cannot be saved directly to the hub unless the layout was originally loaded from the hub.
+Offline Mode does not provide direct hub load/save, rendered snapshots, or hub device validation.
 
-## Basic workflow
+---
 
-![Dashboard Layout Studio workflow](docs/assets/dls-workflow.png)
+---
 
-1. **Load** a dashboard from the hub, a file, or pasted JSON.
-2. **Select** tiles, rows, columns, or a rectangular area.
-3. **Choose an action** from the toolbar.
-4. **Review** warnings, highlights, and results.
-5. **Save** to the hub, download a file, or copy JSON.
-
-## Main features
-
-### Spreadsheet-style selection
-
-- Click a tile to select it.
-- Drag on the grid to select a rectangular area.
-- Drag row or column headers to select a range.
-- Use Ctrl/Cmd-click to add or remove tiles from the selection.
-- Use Alt-click or double-click to select a connected cluster.
-
-![Selection methods](docs/assets/dls-selection.png)
-
-### Toolbar actions
-
-The toolbar is organized around the way people normally edit a layout:
-
-- **Selection actions:** Info, Insert, Delete, Clear, Move to, Copy to, Resize.
-- **Layout tools:** Trim and Spacing.
-- **Options:** Selection mode, Overlaps behavior, Push buffer, Duplicate CSS.
-- **History and output:** Cut, Copy, Paste, Undo, Redo, JSON, Save.
-
-![Toolbar map](docs/assets/dls-toolbar-map.png)
-
-### Move, copy, paste, and push
-
-Use **Move to**, **Copy to**, or **Paste** to place tiles at a new destination. If the placement would overlap another tile, the **Overlaps** setting controls what happens:
-
-- **warn** — stop and show the conflict.
-- **allow** — allow overlaps.
-- **skip** — skip conflicting tiles when possible.
-- **push** — move nearby tiles to make room.
-
-![Push behavior](docs/assets/dls-push.png)
-
-### Resize selected tiles
-
-The **Resize** dialog can change selected tiles to an exact height and width. It can also:
-
-- Preserve spacing between resized tiles.
-- Push surrounding tiles when tiles grow.
-- Pull the layout closed when tiles shrink.
-
-![Resize behavior](docs/assets/dls-resize.png)
-
-### Tile information and device names
-
-When connected to the hub, Dashboard Layout Studio can use the hub device list to show friendly device names. The Tile Info dialog shows tile id, device id, device name, template, position, size, and tile-related CSS. Offline layouts continue to work, with hub-only details shown as `N/A`.
-
-### JSON and CSS tools
-
-The built-in JSON editor lets you review or edit:
-
-- Full layout JSON.
-- `customCSS`.
-- `customHTML`.
-- `customJS`.
-
-It also supports Validate / Format, Compact CSS, Copy, Download, Restore JSON, and Apply changes.
-
-![JSON and Tile Info](docs/assets/dls-json-info.png)
-
-## Important saving behavior
-
-Dashboard Layout Studio does not change your hub dashboard until you choose **Save to hub**.
-
-Recommended safe workflow:
-
-1. Load from the hub.
-2. Make edits.
-3. Use **Save → Download as file** to keep a backup.
-4. Use **Save → Save to hub** when you are ready.
-5. Refresh the Hubitat dashboard page to confirm the result.
-
-## Keyboard and mouse shortcuts
-
-| Shortcut | Action |
-|---|---|
-| Ctrl/Cmd + Z | Undo |
-| Ctrl/Cmd + Shift + Z | Redo |
-| Ctrl/Cmd + Y | Redo |
-| Ctrl/Cmd + A | Select all tiles when not typing in an editor |
-| Ctrl/Cmd + C | Copy selected tiles to the internal buffer |
-| Ctrl/Cmd + X | Cut selected tiles to the internal buffer |
-| Ctrl/Cmd + V | Begin paste from the internal buffer |
-| Ctrl/Cmd + Shift + V | Begin paste with push when eligible |
-| Delete / Backspace | Clear selected tiles without shifting |
-| Shift + Delete | Delete selected rows or columns and shift the layout |
-| Shift held | Temporarily use push mode when eligible |
-| Esc | Cancel pending placement or active resize |
-
-## Notes and limitations
-
-- Only Hubitat Dashboard v1 layout JSON is supported.
-- Hub connection requires the HTML file to be hosted by the hub. Browser security rules can block hub access when the file is opened directly from disk or from another web server.
-- Save to hub is available only for layouts loaded from the hub.
-- Offline file/paste editing still works without a hub connection.
-- The editor focuses on layout JSON. It is not a replacement for Hubitat’s live dashboard runtime.
-
-## License
-
-See the project license file for details.
