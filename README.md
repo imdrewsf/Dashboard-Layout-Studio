@@ -2,6 +2,9 @@
 
 **Dashboard Layout Studio** is a visual layout editor for **Hubitat Dashboard v1** layouts.
 
+<img width="3013" height="1695" alt="image" src="https://github.com/user-attachments/assets/bc827bbe-fbec-4021-a873-f8c23f540348" />
+
+
 ## Main Features
 
 ### Visual Layout Editing
