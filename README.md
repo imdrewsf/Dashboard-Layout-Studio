@@ -9,8 +9,6 @@
 
 ### Visual Layout Editing
 
-Dashboard Layout Studio lets you edit dashboard tile layouts visually instead of manually changing JSON values such as `row`, `col`, `rowSpan`, and `colSpan`.
-
 Tiles can be selected by:
 
 - Clicking a single tile
