@@ -12476,9 +12476,40 @@ async function maybeAutofillDashboardConnectionFromHubData(opts={}){
 }
 
 /* ---------- version check ---------- */
+function versionBuildNumber(v){
+  const s=String(v||"").trim();
+  const nums=s.match(/\d+/g)||[];
+  return nums.length ? String(Number(nums[nums.length-1])) : "";
+}
+function versionParts(v){
+  const nums=String(v||"").trim().match(/\d+/g)||[];
+  return nums.length>=3 ? nums.slice(0,3).map(n=>String(Number(n))) : null;
+}
+function normalizedVersionLabel(v){
+  const parts=versionParts(v);
+  if(parts) return parts.join(".");
+  const b=versionBuildNumber(v);
+  return b ? b : String(v||"").trim();
+}
+function sameDashboardLayoutStudioVersion(a,b){
+  const ap=versionParts(a);
+  const bp=versionParts(b);
+  if(ap && bp) return ap.join(".")===bp.join(".");
+  if(ap || bp){
+    const semverParts=ap||bp;
+    const buildOnly=ap?versionBuildNumber(b):versionBuildNumber(a);
+    return !!buildOnly && buildOnly===semverParts[2];
+  }
+  const an=normalizedVersionLabel(a);
+  const bn=normalizedVersionLabel(b);
+  return !!an && !!bn && an===bn;
+}
+function currentVersionLabel(){
+  return APP_VERSION || BUILD;
+}
 function showUpdateDialog(latest, releaseUrl, isMock){
   const el = id => document.getElementById(id);
-  if(el("updateCurrentBuild")) el("updateCurrentBuild").textContent = BUILD;
+  if(el("updateCurrentBuild")) el("updateCurrentBuild").textContent = currentVersionLabel();
   if(el("updateVersionLine")) el("updateVersionLine").textContent = isMock
     ? `${latest} is available  (test mode)`
     : `Version ${latest} is available`;
@@ -12509,14 +12540,14 @@ async function checkForUpdate(force=false){
       if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }
       return;
     }
-    if(latest === BUILD){
+    if(sameDashboardLayoutStudioVersion(latest, currentVersionLabel()) || sameDashboardLayoutStudioVersion(latest, BUILD)){
       if(btnCheck){ btnCheck.textContent="Up to date ✓"; btnCheck.disabled=false; setTimeout(()=>{ if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }},2500); }
       return;
     }
     if(!force){
       let skipped="";
       try{ skipped=localStorage.getItem(VERSION_SKIP_KEY)||""; }catch(_){}
-      if(skipped===latest){
+      if(skipped===latest || sameDashboardLayoutStudioVersion(skipped, latest)){
         if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }
         return;
       }
@@ -12564,7 +12595,7 @@ function wireUpdateModal(){
       clearTimeout(clickTimer);
       if(clickCount>=5){
         clickCount=0;
-        const nextMinor = BUILD.replace(/\d+$/, n => String(+n+1));
+        const nextMinor = currentVersionLabel().replace(/\d+$/, n => String(+n+1));
         showUpdateDialog(nextMinor, "#", true);
       } else {
         clickTimer=setTimeout(()=>{ clickCount=0; }, 1500);
