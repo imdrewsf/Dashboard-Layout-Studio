@@ -4,37 +4,7 @@
 
 **Dashboard Layout Studio** is a visual layout editor for **Hubitat Dashboard v1** layouts.
 
-It is designed for Hubitat users who have outgrown the built-in dashboard editor and need a faster, safer way to reorganize dashboards, duplicate styled tiles, copy tiles between dashboards, preserve tile-specific CSS, clean up CSS, manage device assignments, and work in a separate editing workspace before saving changes back to the hub.
-
 > **Dashboard Layout Studio is for Hubitat Dashboard v1 layouts. It is not for EZ Dashboards.**
-
----
-
-## Why Use Dashboard Layout Studio?
-
-The built-in Hubitat dashboard editor is useful for small edits, but larger layout changes can become tedious:
-
-- Tiles have to be adjusted one at a time.
-- There is no practical group selection workflow.
-- There is no drag-and-drop workspace for moving groups of tiles.
-- There is no easy way to duplicate a styled tile.
-- Custom CSS has to be copied, retargeted, and maintained by hand.
-- There is no CSS cleanup or conflict checking.
-- There is no easy way to merge tiles from another dashboard.
-- There are no bulk spacing, resizing, or layout cleanup tools.
-- Edits in the hub are live, with no separate workspace or undo stack.
-
-Dashboard Layout Studio provides a separate visual workspace where you can load a dashboard, edit it, experiment, undo changes, validate device assignments, clean up CSS, and then save the finished layout back to the hub.
-
----
-
-## Current Version
-
-**Version:** `1.0.353`
-
-Dashboard Layout Studio is distributed as a single HTML file.
-
-Back up dashboards before using any tool that can modify dashboard JSON.
 
 ---
 
@@ -48,7 +18,7 @@ Online Mode means the layout was loaded directly from the Hubitat hub.
 
 Online Mode requires the Dashboard Layout Studio HTML file to be hosted from the Hubitat hub, normally from the hub's `/local/` file storage.
 
-Online Mode does **not** use the Hubitat cloud. Hub communication is local network communication with your hub.
+Online Mode ***does **not** use the Hubitat cloud***. Hub communication is local network communication with your hub.
 
 Online Mode can:
 
@@ -329,14 +299,14 @@ Dashboard Layout Studio is distributed as a single HTML file.
 
 ### Online Mode Installation
 
-1. Download the latest `dashboard-layout-studio-v###.html` file.
+1. Download the latest `dashboard-layout-studio.html` file.
 2. Upload it to the Hubitat hub's file storage so it is available under `/local/`.
 3. Open the file from the hub in a browser.
 
 Example URL format:
 
 ```text
-http://<hub-ip>/local/dashboard-layout-studio-v###.html
+http://<hub-ip>/local/dashboard-layout-studio.html
 ```
 
 Replace `<hub-ip>` with the hub's IP address and `v###` with the build number.
@@ -352,63 +322,4 @@ Offline Mode does not provide direct hub load/save, rendered snapshots, or hub d
 
 ---
 
-## Basic Workflow
 
-### Online Workflow
-
-1. Open Dashboard Layout Studio from the hub.
-2. Connect to the hub if needed.
-3. Load a dashboard from the dashboard list.
-4. Make layout changes in the visual editor.
-5. Review device and CSS indicators.
-6. Use the JSON Editor or CSS tools if needed.
-7. Save the finished layout back to the hub.
-
-### Offline Workflow
-
-1. Open Dashboard Layout Studio locally.
-2. Load dashboard JSON from a file or clipboard.
-3. Edit the layout using placeholder tiles.
-4. Use JSON/CSS tools if needed.
-5. Save the edited layout back to a file or clipboard.
-
----
-
-## Requirements and Limitations
-
-- Dashboard Layout Studio is for **Hubitat Dashboard v1** only.
-- It is **not for EZ Dashboards**.
-- Rendered View requires the file to be hosted from the Hubitat hub.
-- Direct hub load/save requires Online Mode.
-- Offline Mode cannot validate against live hub device lists.
-- Backups are strongly recommended before saving large changes back to the hub.
-
----
-
-## Repository Contents
-
-Typical repository contents may include:
-
-```text
-dashboard-layout-studio-v###.html
-README.md
-CHANGELOG.md
-assets/
-docs/
-```
-
-The application itself is contained in the HTML file.
-
----
-
-## Changelog
-
-See `CHANGELOG.md` if included.
-
----
-
-## License
-
-Add the project license here.
-
-If no license is included, the default copyright restrictions apply.
