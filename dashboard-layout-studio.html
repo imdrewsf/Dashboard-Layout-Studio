@@ -967,7 +967,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.1.388">1.1.388</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.1.389">1.1.389</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1983,8 +1983,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v388";
-const APP_VERSION = "1.1.388";
+const BUILD = "v389";
+const APP_VERSION = "1.1.389";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -7495,7 +7495,22 @@ function pushBlockedToast(){
   toast("Push is blocked for disconnected multi-cluster selections or clipboards.","err");
   status("Push disabled — use one tile/cluster, or clear the selection/clipboard to preselect push mode.");
 }
+function releasePendingUiLockIfNeeded(){
+  if(State.pending) return;
+  const controls=document.querySelectorAll("#toolbar button,#toolbar select,#toolbar input,#topbar button,.topbar button,.side button");
+  controls.forEach(el=>{
+    if(el.dataset.pendingLocked==="1"){
+      if(el.dataset.wasDisabled==="1") el.disabled=true;
+      else if(el.dataset.wasDisabled==="0") el.disabled=false;
+    }
+    delete el.dataset.pendingLocked;
+    delete el.dataset.wasDisabled;
+  });
+  const dz=document.getElementById("dropZone");
+  if(dz){ dz.classList.remove("disabled"); dz.setAttribute("aria-disabled","false"); }
+}
 function updateActionButtons(){
+  releasePendingUiLockIfNeeded();
   const s=State.sel;
   const lineSel=s.type==="line"&&s.lines.length>0&&!State.pending;
   const anySel=lineSel||(s.type==="rect"&&s.ids.length>0)||(s.type==="tile"&&s.ids.length>0);
@@ -7582,26 +7597,25 @@ function updateActionButtons(){
   if(trimBtn) trimBtn.disabled=!State.active||State.pending;
   updateSpacingControls();
   updateGridControls();
+  updateSaveHubState();
   applyPendingUiLock();
 }
 function applyPendingUiLock(){
   const pending=!!State.pending;
-  const cancelId=State.pending
-    ? ((State.pending.action==="moveTiles"||State.pending.action==="move")?"btnMoveTo":(State.pending.action==="copyTiles"||State.pending.action==="copyLines")?"btnCopyTo":State.pending.action==="pasteBuf"?"btnPasteBuf":null)
-    : null;
+  if(!pending){
+    releasePendingUiLockIfNeeded();
+    return;
+  }
+  const cancelId=(State.pending.action==="moveTiles"||State.pending.action==="move")?"btnMoveTo":(State.pending.action==="copyTiles"||State.pending.action==="copyLines")?"btnCopyTo":State.pending.action==="pasteBuf"?"btnPasteBuf":null;
   const controls=document.querySelectorAll("#toolbar button,#toolbar select,#toolbar input,#topbar button,.topbar button,.side button");
   controls.forEach(el=>{
-    if(!pending){
-      delete el.dataset.pendingLocked; delete el.dataset.wasDisabled;
-      return;
-    }
     if(el.id===cancelId){ el.disabled=false; return; }
     if(el.dataset.pendingLocked!=="1") el.dataset.wasDisabled=el.disabled?"1":"0";
     el.dataset.pendingLocked="1";
     el.disabled=true;
   });
   const dz=document.getElementById("dropZone");
-  if(dz){ dz.classList.toggle("disabled",pending); dz.setAttribute("aria-disabled",pending?"true":"false"); }
+  if(dz){ dz.classList.add("disabled"); dz.setAttribute("aria-disabled","true"); }
 }
 
 /* ---------- operations ---------- */
@@ -12094,11 +12108,18 @@ function updateSideToggleIcon(){
   btn.setAttribute("aria-label",btn.title);
 }
 function updateSaveHubState(){
+  const main=document.getElementById("btnSave");
+  if(main){
+    const canOpen=!!State.active && !State.pending;
+    main.disabled=!canOpen;
+    main.title=canOpen ? "Save options: save to hub, download as file, or copy to clipboard" : (State.pending?"Complete or cancel the pending action before saving.":"Load a dashboard before saving.");
+  }
   const b=document.getElementById("saveHub");
   if(!b) return;
-  const usable=!!State.hubAvailable && State.conn.mode==="live" && !!State.active && !!State.lastLayoutUrl;
+  const usable=!!State.hubAvailable && State.conn.mode==="live" && !!State.active && !!State.lastLayoutUrl && !State.pending;
   b.disabled=!usable;
-  if(!State.hubAvailable) b.title="Save to hub is unavailable unless this page is hosted from the hub.";
+  if(State.pending) b.title="Complete or cancel the pending action before saving to the hub.";
+  else if(!State.hubAvailable) b.title="Save to hub is unavailable unless this page is hosted from the hub.";
   else if(!State.active) b.title="Load a hub dashboard first.";
   else if(State.conn.mode!=="live"||!State.lastLayoutUrl) b.title="This layout was loaded offline or the hub connection changed. Use Download as file or Copy to clipboard.";
   else b.title="Save this layout back to the hub.";
