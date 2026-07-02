@@ -452,6 +452,8 @@
   .tile.display-snapshot.snap-image-loaded .snap-dom{display:none;}
   .tile.display-snapshot:not(.snap-image-loaded) .snap-img{display:none;}
   .tile.display-snapshot .t-id,.tile.display-snapshot .t-name{display:none;}
+  .tile.snapshot-placeholder{border-style:dashed;opacity:.92;}
+  .tile.snapshot-placeholder::after{content:"Simple placeholder";position:absolute;right:3px;bottom:2px;font-size:.48rem;color:rgba(255,255,255,.45);pointer-events:none;}
   .tile.sel{outline:2px solid #fff;outline-offset:-1px;box-shadow:0 0 0 3px rgba(255,255,255,.2),0 6px 16px rgba(0,0,0,.5);cursor:grab;}
   .tile.grouped{outline:2px solid var(--accent);outline-offset:-1px;box-shadow:0 0 0 3px rgba(103,232,249,.22);cursor:grab;}
   .tile.line-sel{outline:2px solid var(--amber-2);outline-offset:-1px;box-shadow:0 0 0 3px rgba(245,166,35,.2);}
@@ -967,7 +969,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.1.389">1.1.389</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.1.394">1.1.394</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1203,13 +1205,14 @@
         <input type="range" id="prefTileOpacity" min="20" max="100" value="100" /></label>
       <label class="pp-row"><span>Enable Rendered View</span>
         <input type="checkbox" id="prefRenderedViewEnabled" /></label>
-      <label class="pp-row" id="prefRenderedViewCompatibilityRow"><span>Compatibility mode</span>
-        <select id="prefRenderedViewCompatibility" title="Choose how Rendered View uses the mobile-compatible capture method">
-          <option value="off">Off</option>
-          <option value="auto" selected>Automatic fallback</option>
-          <option value="always">Always</option>
+      <label class="pp-row" id="prefRenderedViewEngineRow"><span>Rendered View start mode</span>
+        <select id="prefRenderedViewEngine" title="Choose which rendering engine Rendered View tries first">
+          <option value="style-copy" selected>Style Copy</option>
+          <option value="image-snapshot">Image Snapshot</option>
+          <option value="compatibility">Compatibility Mode</option>
+          <option value="simple">Simple View Only</option>
         </select></label>
-      <p class="hint" style="margin:8px 0 0">Automatic fallback finishes all normal capture attempts before retrying with the mobile-compatible method. Auto-connect runs Discover automatically when the page loads. Grid gaps are shown by default so DLS matches dashboard spacing; use Don't show grid gap for a tighter editing view. Auto-size dashboard bounds keeps declared rows/columns fit to the used layout plus optional padding.</p>
+      <p class="hint" style="margin:8px 0 0">Rendered View start mode controls what DLS tries first for hub-loaded layouts: Style Copy clones the rendered dashboard tile HTML with computed styles, Image Snapshot renders each tile as an image-style snapshot and keeps a styled fallback for icon-font tiles, Compatibility Mode uses the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. Auto-connect runs Discover automatically when the page loads. Grid gaps are shown by default so DLS matches dashboard spacing; use Don't show grid gap for a tighter editing view. Auto-size dashboard bounds keeps declared rows/columns fit to the used layout plus optional padding.</p>
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
         <button class="btn ghost" id="prefCheckUpdate" style="width:100%">Check for updates</button>
       </div>
@@ -1365,7 +1368,7 @@
 <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
 </div><h5>History, views, JSON, and Save</h5><div class="help-grid">
 <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. Undo All follows undo history and remains disabled when there is no undo checkpoint. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Shift-click Undo All reloads the current dashboard from the hub when the layout originated from the hub and Undo All is enabled; otherwise it performs the normal Undo All action.</div>
-<div class="k">Rendered View compatibility</div><div class="v">Preferences can disable compatibility capture, use it only as an automatic fallback, or always use it. Automatic fallback completes every normal capture attempt and retry before it starts the viewport-based mobile compatibility method.</div>
+<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. Render status now includes elapsed capture time so engines can be compared.</div>
 <div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
 <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
 </div></article></div>
@@ -1404,7 +1407,7 @@
 <div class="help-pages"><article class="help-page active" data-help-title="JSON editor and applying changes"><div class="help-page-kicker">JSON &amp; CSS</div><h4>JSON editor and applying changes</h4><h5>JSON editor and field views</h5><div class="help-grid">
 <div class="k">JSON editor</div><div class="v">Allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
 <div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
-<div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid location and size, any tile-scoped CSS content that may supply an alternate title, and its assigned device. Location and size are shown as row/column followed by size in parentheses. The first device choice is Unassigned for blank device IDs. Online layouts use the same selected-device choices as Tile Information; offline layouts allow numeric or blank device IDs. In online mode, tiles with a nonblank, nonzero device ID that has no matching hub device are treated as unknown-device tiles and highlighted in red, except Mode and Text Tile templates because those device fields are not validated as regular hub-device assignments. Tile-device rows for valid hub devices that are not selected for the dashboard are highlighted in yellow and remain unselected until you explicitly add them in Dashboard Devices. Show Invalid and Unassign Invalid are online-only tools. Unassign Invalid clears every non-exempt tile device assignment whose device ID does not exist on the hub after confirmation.</div>
+<div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid location and size, any tile-scoped CSS content that may supply an alternate title, and its assigned device. Location and size are shown as row/column followed by size in parentheses. The first device choice is Unassigned for blank device IDs. Online layouts use the same selected-device choices as Tile Information; device dropdowns are sorted by device name with the device number shown in parentheses. Offline layouts allow numeric or blank device IDs. In online mode, tiles with a nonblank, nonzero device ID that has no matching hub device are treated as unknown-device tiles and highlighted in red, except Mode and Text Tile templates because those device fields are not validated as regular hub-device assignments. Tile-device rows for valid hub devices that are not selected for the dashboard are highlighted in yellow and remain unselected until you explicitly add them in Dashboard Devices. Show Invalid and Unassign Invalid are online-only tools. Unassign Invalid clears every non-exempt tile device assignment whose device ID does not exist on the hub after confirmation.</div>
 <div class="k">Dashboard Devices</div><div class="v">Online only. Manages the devices selected for the Hubitat dashboard, locks devices used by current tiles, and can assign all devices, remove unused devices, reload the selection, or update it on the hub. Devices with assigned tiles that are not currently selected are marked yellow and remain unchecked until explicitly selected. Devices that are selected and assigned to tiles are shown in a slightly faded blue locked state.</div>
 </div><h5>Applying editor changes</h5><p><b>Apply changes</b> validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced.</p><div class="help-card-grid">
 <div class="help-card"><b>Custom field-only edits</b><p>If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed.</p></div>
@@ -1983,8 +1986,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v389";
-const APP_VERSION = "1.1.389";
+const BUILD = "v394";
+const APP_VERSION = "1.1.394";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -2010,12 +2013,16 @@ const State = {
   tileSnapshotCapture:null,       // active snapshot capture promise
   tileSnapshotCancelToken:null,   // active snapshot capture cancellation token
   tileSnapshotLastError:"",       // last rendered snapshot capture error
+  tileSnapshotLastDurationMs:0,    // elapsed time for the most recent successful rendered capture
+  tileSnapshotLastSummary:"",       // most recent rendered capture summary for status/load messages
+  tileSnapshotIconFallbackCount:0,   // image-snapshot tiles rendered as styled HTML because icon fonts cannot be safely rasterized
   tileSnapshotStatus:"none",      // none|loading|ready|failed
   tileSnapshotBlockedUntilReload:false, // manual JSON edits invalidate rendered snapshots until hub save + reload
   tileSnapshotsStaleReason:"",     // custom field edits can leave existing snapshots usable but stale until refresh
   tileViewMode:"simple",         // actual current tile view: simple|snapshot; preference only enables rendered mode
   renderedViewPreference:false,  // saved preference: offer Rendered View when hosted by the hub
-  renderedViewCompatibility:"auto", // off|auto|always; auto retries compatibility only after normal retries fail
+  renderedViewEngine:"style-copy", // style-copy|image-snapshot|compatibility|simple; first Rendered View engine to try
+  renderedViewCompatibility:"auto", // legacy compatibility preference; normalized into renderedViewEngine when restored
   tiles:[],                      // working layout; array order = tiebreak within same z
   selKind:null,                  // 'col'|'row' — set automatically by what you click; drives col/row ops
   selMode:"default",             // 'default'|'include_partial'|'exclude_partial'|'only_partial' (per spec)
@@ -2449,7 +2456,9 @@ function isDeviceSelectedForActiveDashboard(id){
   return !!(State.devicePickedAvailable && deviceIdSetHas(State.devicePickedIds,id));
 }
 function hubDeviceOptionLabel(device){
-  return `#${device.id} - ${device.name}`;
+  const name=String(device&&device.name?device.name:`Device ${device&&device.id?device.id:""}`).trim();
+  const id=canonicalDeviceId(device&&device.id);
+  return id ? `${name} (#${id})` : name;
 }
 async function confirmHubSaveDeviceAssignments(payload){
   if(!(State.conn.mode==="live"&&State.active)) return true;
@@ -2504,7 +2513,7 @@ function infoDevicePickerOptionsHtml(currentId){
   }
   if(current && !seen.has(current)){
     const selected=isDeviceSelectedForActiveDashboard(current);
-    parts.splice(1,0,`<option value="${esc(current)}"${selected?"":" disabled"} selected>#${esc(current)} - ${esc(hubDeviceDisplayName(current))}</option>`);
+    parts.splice(1,0,`<option value="${esc(current)}"${selected?"":" disabled"} selected>${esc(hubDeviceDisplayName(current))} (#${esc(current)})</option>`);
   }
   return parts.join("");
 }
@@ -2558,17 +2567,12 @@ function commitTileDeviceIdChange(tileId, newId){
     pushHistory();
     if(!t._raw) t._raw={id:t.id,template:t.template};
     t._raw.device=next;
-    State.tileSnapshotBlockedUntilReload=true;
-    if(tileDisplayMode()==="snapshot"){
-      forceSimpleTileDisplay("Tile device id changed; save to the hub and reload the dashboard before using Rendered View",{warn:true,redraw:false});
-    }else{
-      resetTileSnapshots(false);
-    }
+    invalidateRenderedSnapshotsForTiles([tileId],`Tile #${tileId} device id change`,{message:false});
     State.infoDeviceEdit=null;
     updateActionButtons();
     render();
     showTileInfo(tileId);
-    status(`Changed Tile #${tileId} device id from ${oldId||"N/A"} to ${next||"N/A"}.`);
+    status(`Changed Tile #${tileId} device id from ${oldId||"N/A"} to ${next||"N/A"}. ${tileDisplayMode()==="snapshot"?"That tile is shown as a Simple View placeholder until Rendered View is refreshed; other rendered tiles remain visible.":""}`.trim());
     return true;
   };
   if(!next && oldId){
@@ -2819,13 +2823,14 @@ async function captureRenderedSnapshotsForLoadOperation(op){
   if(!renderedViewEnabled()){ hubOperationSkip(op,"render","Rendered View is not enabled."); setTileDisplayMode("simple",{redraw:false,warn:false}); return 0; }
   const a=renderedSnapshotAvailability();
   if(!a.ok){ hubOperationSkip(op,"render",a.reason||"Rendered View unavailable."); setTileDisplayMode("simple",{redraw:false,warn:false}); updateTileDisplayIndicator(); return 0; }
-  hubOperationStep(op,"render","active","Capturing rendered tile images…");
+  hubOperationStep(op,"render","active",`Refreshing Rendered View with ${renderedViewEngineLabel()}…`);
   State.tileViewMode="snapshot";
   updateTileDisplayIndicator();
   await wait(350);
   checkHubOperationAbort(op);
   const count=await captureHubTileSnapshots({silent:true,timeoutMs:30000,retryCount:1});
-  hubOperationStep(op,"render","done",count?`${count} tile${count===1?"":"s"} captured.`:"Rendered View unavailable or no captures were produced.");
+  const summary=State.tileSnapshotLastSummary||"";
+  hubOperationStep(op,"render","done",count?(summary||`${count} tile${count===1?"":"s"} captured.`):"Rendered View unavailable or no captures were produced.");
   return count;
 }
 async function runHubOperation(title,steps,fn,opts={}){
@@ -2990,8 +2995,10 @@ const Hub = {
       hubOperationStep(op,"validate","done",deviceReview.note||"Selected-device check completed.");
       await captureRenderedSnapshotsForLoadOperation(op);
       checkHubOperationAbort(op);
-      status(`Loaded "${meta.label}".`);
-      finishHubOperation(op,{message:"Dashboard loaded.",delayMs:650});
+      const renderSummary=State.tileSnapshotLastSummary||"";
+      const loadedMsg=`Dashboard loaded.${renderSummary?` ${renderSummary}`:""}`;
+      status(loadedMsg);
+      finishHubOperation(op,{message:loadedMsg,delayMs:650});
       if(deviceReview.run){
         setTimeout(()=>{
           if(!hubOperationActive()) deviceReview.run();
@@ -3394,27 +3401,40 @@ function normalizeRenderedViewCompatibility(value){
   const mode=String(value||"auto").toLowerCase();
   return mode==="off"||mode==="always"?mode:"auto";
 }
+function normalizeRenderedViewEngine(value){
+  const mode=String(value||"style-copy").toLowerCase();
+  return mode==="image-snapshot"||mode==="compatibility"||mode==="simple" ? mode : "style-copy";
+}
+function renderedViewEngineLabel(mode=State.renderedViewEngine){
+  mode=normalizeRenderedViewEngine(mode);
+  return mode==="image-snapshot" ? "Image Snapshot" : mode==="compatibility" ? "Compatibility Mode" : mode==="simple" ? "Simple View Only" : "Style Copy";
+}
+function renderedViewSnapshotKind(){
+  const mode=normalizeRenderedViewEngine(State.renderedViewEngine);
+  return mode==="image-snapshot" ? "image-snapshot" : "style-copy";
+}
 function renderedViewCaptureStrategies(){
-  const mode=normalizeRenderedViewCompatibility(State.renderedViewCompatibility);
-  if(mode==="always") return ["compatibility"];
-  if(mode==="off") return ["standard"];
+  const engine=normalizeRenderedViewEngine(State.renderedViewEngine);
+  if(engine==="simple") return [];
+  if(engine==="compatibility") return ["compatibility"];
   return ["standard","compatibility"];
 }
-function updateRenderedViewCompatibilityAvailability(){
-  const select=document.getElementById("prefRenderedViewCompatibility");
+function updateRenderedViewEngineAvailability(){
+  const select=document.getElementById("prefRenderedViewEngine");
   if(!select) return;
-  State.renderedViewCompatibility=normalizeRenderedViewCompatibility(State.renderedViewCompatibility);
-  select.value=State.renderedViewCompatibility;
+  State.renderedViewEngine=normalizeRenderedViewEngine(State.renderedViewEngine);
+  select.value=State.renderedViewEngine;
   const enabled=isPageHostedByHubForRenderedView() && !!State.renderedViewPreference;
   select.disabled=!enabled;
-  const row=document.getElementById("prefRenderedViewCompatibilityRow")||select.closest(".pp-row");
+  const row=document.getElementById("prefRenderedViewEngineRow")||select.closest(".pp-row");
   if(row){
     row.classList.toggle("disabled", !enabled);
     row.title=enabled
-      ? "Off uses only standard capture. Automatic fallback completes all standard attempts before trying compatibility mode. Always uses compatibility mode first."
-      : "Enable Rendered View to configure compatibility mode.";
+      ? "Choose the Rendered View engine DLS starts with. Style Copy clones tile HTML and styles; Image Snapshot uses image-style snapshots; Compatibility Mode uses the mobile-compatible capture frame; Simple View Only disables Rendered View."
+      : "Enable Rendered View to choose a startup rendering engine.";
   }
 }
+function updateRenderedViewCompatibilityAvailability(){ updateRenderedViewEngineAvailability(); }
 function updateRenderedViewPreferenceAvailability(){
   const el=document.getElementById("prefRenderedViewEnabled");
   if(!el) return false;
@@ -3444,7 +3464,7 @@ function updateRenderedViewPreferenceAvailability(){
 }
 function renderedViewEnabled(){
   const el=document.getElementById("prefRenderedViewEnabled");
-  return !!(el && State.renderedViewPreference && !el.disabled && isPageHostedByHubForRenderedView());
+  return !!(el && State.renderedViewPreference && !el.disabled && isPageHostedByHubForRenderedView() && normalizeRenderedViewEngine(State.renderedViewEngine)!=="simple");
 }
 function setSnapshotRefreshStatus(msg="", busy=false){
   const st=document.getElementById("viewRefreshStatus");
@@ -3545,10 +3565,11 @@ function updateTileDisplayIndicator(){
     }else{
       rendered.className="view-mode-btn "+(mode==="snapshot"?"active":"dim");
       const st=State.tileSnapshotStatus||"none";
-      const stale=State.tileSnapshotsStaleReason ? ` Rendered images do not reflect ${State.tileSnapshotsStaleReason}. Refresh Rendered View to update them.` : "";
+      const stale=State.tileSnapshotsStaleReason ? ` Rendered tiles do not reflect ${State.tileSnapshotsStaleReason}. Refresh Rendered View to update them.` : "";
+      const engineLabel=renderedViewEngineLabel();
       rendered.title=mode==="snapshot"
-        ? (st==="loading" ? "Rendered View is active. Capturing tile snapshots…" : `Rendered View is active. Tiles use captured Hubitat tile appearances.${stale}`)
-        : "Switch to Rendered View.";
+        ? (st==="loading" ? `Rendered View is active. Capturing tiles with ${engineLabel}…` : `Rendered View is active using ${engineLabel}.${stale}`)
+        : `Switch to Rendered View using ${engineLabel}.`;
     }
   }
   const showRefresh=mode==="snapshot" || (enabled && State.active && !a.ok);
@@ -3594,7 +3615,7 @@ function setTileDisplayMode(mode, opts={}){
   mode = mode==="snapshot" ? "snapshot" : "simple";
   if(mode==="snapshot"){
     if(!renderedViewEnabled()){
-      if(opts.warn!==false) toast("Rendered View Mode is not enabled in Preferences.","err");
+      if(opts.warn!==false) toast(normalizeRenderedViewEngine(State.renderedViewEngine)==="simple" ? "Rendered View is disabled because Simple View Only is selected in Preferences." : "Rendered View Mode is not enabled in Preferences.","err");
       return false;
     }
     const a=renderedSnapshotAvailability();
@@ -3660,12 +3681,46 @@ function removeSnapshotCaptureFrame(){
   const host=document.getElementById("tileSnapshotCaptureHost");
   if(host) host.remove();
 }
+function reusableSnapshotFrame(url, captureMode="standard", opts={}){
+  const f=document.getElementById("tileSnapshotFrame");
+  if(!f || !f.isConnected) return null;
+  const wantMode=captureMode==="compatibility"?"compatibility":"standard";
+  const sameUrl=String(f.dataset.snapshotUrl||"")===String(url||"");
+  const sameMode=String(f.dataset.captureMode||"standard")===wantMode;
+  if(!sameUrl) return null;
+  if(!sameMode && !opts.allowAnyMode) return null;
+  if(f.dataset.loaded!=="1" || f.dataset.loadError) return null;
+  try{
+    const doc=f.contentDocument || (f.contentWindow&&f.contentWindow.document);
+    if(!doc) return null;
+    const nodes=[...doc.querySelectorAll('[id^="tile-"]')].filter(n=>/^tile-\d+$/.test(n.id||"") && n.getBoundingClientRect().width>0 && n.getBoundingClientRect().height>0);
+    if(!nodes.length) return null;
+  }catch(_){ return null; }
+  return f;
+}
+function clearTileSnapshotsKeepCaptureFrame(){
+  if(State.tileSnapshotCancelToken) State.tileSnapshotCancelToken.cancelled=true;
+  State.tileSnapshots={};
+  State.tileSnapshotStatus="none";
+  State.tileSnapshotsStaleReason="";
+  State.tileSnapshotLastError="";
+  State.tileSnapshotLastSummary="";
+  State.tileSnapshotCapture=null;
+  State.tileSnapshotCancelToken=null;
+  setSnapshotRefreshStatus("", false);
+  const st=document.getElementById("snapshotScopedTileCss");
+  if(st) st.remove();
+  const fs=document.getElementById("snapshotFontCss");
+  if(fs) fs.remove();
+  updateTileDisplayIndicator();
+}
 function resetTileSnapshots(redraw=false, opts={}){
   if(State.tileSnapshotCancelToken) State.tileSnapshotCancelToken.cancelled=true;
   State.tileSnapshots={};
   State.tileSnapshotStatus="none";
   State.tileSnapshotsStaleReason="";
   State.tileSnapshotLastError="";
+  State.tileSnapshotLastSummary="";
   State.tileSnapshotCapture=null;
   State.tileSnapshotCancelToken=null;
   setSnapshotRefreshStatus("", false);
@@ -3690,6 +3745,37 @@ function markRenderedSnapshotsStale(reason, opts={}){
   }else{
     State.tileSnapshotsStaleReason="";
   }
+}
+
+function invalidateRenderedSnapshotsForTiles(tileIds, reason="tile changes", opts={}){
+  const ids=[...new Set((tileIds||[]).map(id=>String(id)).filter(Boolean))];
+  if(!ids.length) return 0;
+  State.tileSnapshotBlockedUntilReload=false;
+  let removed=0;
+  if(!State.tileSnapshots) State.tileSnapshots={};
+  ids.forEach(id=>{ if(Object.prototype.hasOwnProperty.call(State.tileSnapshots,id)){ delete State.tileSnapshots[id]; removed++; } });
+  if(State.tileSnapshotStatus!=="loading"){
+    State.tileSnapshotStatus=Object.keys(State.tileSnapshots||{}).length?"ready":"none";
+  }
+  State.tileSnapshotsStaleReason=String(reason||"tile changes");
+  updateTileDisplayIndicator();
+  if(tileDisplayMode()==="snapshot" && opts.message!==false){
+    const txt=ids.length===1?`Tile #${ids[0]} is shown as a Simple View placeholder until Rendered View is refreshed.`:`${ids.length} changed tiles are shown as Simple View placeholders until Rendered View is refreshed.`;
+    status(txt);
+  }
+  return removed;
+}
+function changedTileDeviceIdsBetweenDocs(oldDoc,newDoc){
+  const oldTiles=(oldDoc&&oldDoc.tiles)||[];
+  const newTiles=(newDoc&&newDoc.tiles)||[];
+  const oldById=new Map(oldTiles.map(t=>[String(t.id),canonicalDeviceId(t.device)]));
+  const out=[];
+  for(const t of newTiles){
+    const id=String(t&&t.id);
+    if(!id || !oldById.has(id)) continue;
+    if((oldById.get(id)||"") !== (canonicalDeviceId(t.device)||"")) out.push(id);
+  }
+  return out;
 }
 
 function cloneRenderedSnapshotForTileId(sourceId, newId, sourceSnapshots){
@@ -4010,24 +4096,44 @@ html,body,.dls-snap-surface{margin:0!important;padding:0!important;width:${w}px!
     `</div></foreignObject></svg>`;
   return {id,width:w,height:h,svg,dataUrl:"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg)};
 }
-function captureTileSnapshot(tileEl, cssText){
+function snapshotTileHasIconFont(tileEl){
+  if(!tileEl || !tileEl.querySelectorAll) return false;
+  const nodes=[tileEl,...tileEl.querySelectorAll("i,.material-icons,[class*=\"material-icons\"],[class*=\"he-\"],[class*=\"icon\"],[class*=\"Icon\"]")];
+  for(const n of nodes){
+    if(!n || n.nodeType!==1) continue;
+    const cls=String(n.className||"");
+    if(/(?:material-icons|he-|hubitat|icon)/i.test(cls)) return true;
+    try{
+      const ff=String(n.ownerDocument.defaultView.getComputedStyle(n).fontFamily||"");
+      if(/(?:Material Icons|hubitat|Hubitat)/i.test(ff)) return true;
+    }catch(_){ }
+  }
+  return false;
+}
+function captureTileSnapshot(tileEl, cssText, snapshotKind="style-copy"){
   const idMatch=String(tileEl&&tileEl.id||"").match(/^tile-(\d+)$/);
   if(!idMatch) return null;
   const id=+idMatch[1];
   const rect=tileEl.getBoundingClientRect ? tileEl.getBoundingClientRect() : {width:tileEl.offsetWidth,height:tileEl.offsetHeight};
   const w=Math.max(1, Math.ceil(rect.width || tileEl.offsetWidth || 1));
   const h=Math.max(1, Math.ceil(rect.height || tileEl.offsetHeight || 1));
+  const common={id,width:w,height:h,className:String(tileEl.className||""),root:styleSummary(tileEl)};
   const html=serializeSnapshotClone(tileEl);
-  return {
-    id,
-    kind:"computed-dom",
-    width:w,
-    height:h,
-    imageDataUrl:"",
-    html,
-    className:String(tileEl.className||""),
-    root:styleSummary(tileEl)
-  };
+  if(snapshotKind==="image-snapshot"){
+    // SVG/foreignObject image snapshots cannot reliably carry Hubitat/Material icon
+    // web fonts once converted into an <img> data URL.  Icon tiles therefore keep
+    // the styled DOM capture so icons remain faithful, while non-icon tiles still
+    // use the faster/flat image layer with the styled DOM kept as a load fallback.
+    if(snapshotTileHasIconFont(tileEl)){
+      return {...common,kind:"image-snapshot",imageDataUrl:"",html,iconFallback:true};
+    }
+    const img=buildTileSnapshotSvg(tileEl, cssText);
+    if(img){
+      return {...common,kind:"image-snapshot",imageDataUrl:img.dataUrl||"",svg:img.svg||"",html,iconFallback:false};
+    }
+    return {...common,kind:"image-snapshot",imageDataUrl:"",html,iconFallback:true};
+  }
+  return {...common,kind:"style-copy",imageDataUrl:"",html};
 }
 function applySnapshotVars(el,snap){
   const set=(k,v)=>{ if(v&&v!=="rgba(0, 0, 0, 0)"&&v!=="none") el.style.setProperty(k,v); };
@@ -4148,6 +4254,7 @@ function syncSnapshotScopedCss(){
 }
 function renderSnapshotHtml(t,snap){
   const captured=sanitizeSnapshotInnerHtml(snap && snap.html || "");
+  let domFallback="";
   if(captured){
     const M=gridDisplayMetrics();
     const targetW=M.tileW(Number(t.colSpan)||1);
@@ -4156,8 +4263,12 @@ function renderSnapshotHtml(t,snap){
     const srcH=Math.max(1, Number(snap&&snap.height)||targetH);
     const sx=targetW/srcW;
     const sy=targetH/srcH;
-    return `<div class="snap-dom"><div class="snap-scale" style="width:${srcW}px;height:${srcH}px;transform:scale(${sx},${sy});">${captured}</div></div>`;
+    domFallback=`<div class="snap-dom"><div class="snap-scale" style="width:${srcW}px;height:${srcH}px;transform:scale(${sx},${sy});">${captured}</div></div>`;
   }
+  if(snap && snap.imageDataUrl){
+    return `${domFallback}<img class="snap-img" src="${esc(snap.imageDataUrl)}" alt="" onload="this.closest('.tile')&&this.closest('.tile').classList.add('snap-image-loaded')" onerror="this.closest('.tile')&&this.closest('.tile').classList.remove('snap-image-loaded')" />`;
+  }
+  if(domFallback) return domFallback;
   const title=(snap&&snap.title&&snap.title.text) || "";
   let main=(snap&&snap.main&&snap.main.text) || "";
   let sub=(snap&&snap.sub&&snap.sub.text) || "";
@@ -4176,6 +4287,26 @@ function renderSnapshotHtml(t,snap){
 function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
 function snapshotCaptureCancelledError(){ const e=new Error("rendered snapshot capture cancelled"); e.cancelled=true; return e; }
 function snapshotCaptureTimeoutError(){ const e=new Error("rendered snapshot capture timed out"); e.timeout=true; return e; }
+function formatRenderedCaptureDuration(ms){
+  ms=Number(ms)||0;
+  if(ms<=0) return "";
+  const sec=ms/1000;
+  if(sec<10) return `${sec.toFixed(1)}s`;
+  if(sec<60) return `${Math.round(sec)}s`;
+  const m=Math.floor(sec/60);
+  const r=Math.round(sec-(m*60));
+  return `${m}m ${String(r).padStart(2,"0")}s`;
+}
+function renderedCaptureSummaryText(count, opts={}){
+  count=Number(count)||0;
+  if(!count) return "";
+  const engine=opts.engineLabel||renderedViewEngineLabel();
+  const elapsedText=opts.elapsedText || formatRenderedCaptureDuration(opts.elapsedMs!=null?opts.elapsedMs:State.tileSnapshotLastDurationMs);
+  const compat=opts.compatibility ? " in compatibility mode" : "";
+  const iconCount=Number(opts.iconFallbackCount)||0;
+  const iconSuffix=iconCount?` (${iconCount} icon tile${iconCount===1?"":"s"} kept as styled HTML fallback)`:"";
+  return `${engine} captured ${count} tile${count===1?"":"s"}${compat}${elapsedText?` in ${elapsedText}`:""}${iconSuffix}.`;
+}
 function throwIfSnapshotCaptureCancelled(token){ if(token&&token.cancelled) throw snapshotCaptureCancelledError(); }
 function waitForSnapshotDelay(ms, token){
   return new Promise((resolve,reject)=>{
@@ -4295,6 +4426,7 @@ async function makeSnapshotFrame(url, token=null, captureMode="standard"){
   frame.dataset.loaded="0";
   frame.dataset.loadError="";
   frame.dataset.captureMode=mode;
+  frame.dataset.snapshotUrl=String(url||"");
   if(mode==="compatibility"){
     const host=document.createElement("div");
     host.id="tileSnapshotCaptureHost";
@@ -4340,15 +4472,20 @@ async function captureHubTileSnapshots(opts={}){
   const timeoutMs=Math.max(6000, Number(opts.timeoutMs)||30000);
   const retryCount=Number.isFinite(Number(opts.retryCount)) ? Math.max(0, Number(opts.retryCount)) : 1;
   const strategies=renderedViewCaptureStrategies();
+  const snapshotKind=renderedViewSnapshotKind();
+  if(!strategies.length){ forceSimpleTileDisplay("Simple View Only is selected in Preferences",{warn:!opts.silent,redraw:true}); return 0; }
   const token={cancelled:false};
+  const captureStartedAt=Date.now();
   State.tileSnapshotCancelToken=token;
   State.tileSnapshotStatus="loading";
   State.tileSnapshotLastError="";
-  setSnapshotRefreshStatus("Opening dashboard…", true);
+  State.tileSnapshotLastSummary="";
+  State.tileSnapshotIconFallbackCount=0;
+  setSnapshotRefreshStatus(`Opening dashboard for ${renderedViewEngineLabel()}…`, true);
   updateTileDisplayIndicator();
   if(!opts.silent) status("Opening dashboard for rendered snapshot refresh…",true);
   trace("snapshot capture URL", url);
-  trace(`snapshot capture strategies: ${strategies.join(" → ")}`,null,"ok");
+  trace(`rendered capture engine: ${renderedViewEngineLabel()} (${snapshotKind}); strategies: ${strategies.join(" → ")}`,null,"ok");
   const run=(async()=>{
     let lastErr=null;
     let standardErr=null;
@@ -4377,10 +4514,13 @@ async function captureHubTileSnapshots(opts={}){
             if(!opts.silent) status(`Retrying ${label} Rendered View capture (${attempt+1}/${retryCount+1})…`, true);
             await waitForSnapshotDelay(900, token);
           }
-          frame=await makeSnapshotFrame(url, token, captureMode);
-          setSnapshotRefreshStatus(compatibility?"Loading compatibility dashboard frame…":"Loading dashboard frame…", true);
-          if(!opts.silent) status(compatibility?"Loading dashboard frame in compatibility mode…":"Loading dashboard frame for rendered snapshot capture…",true);
-          await waitForSnapshotFrameLoad(frame, Math.min(8000, remaining()), token);
+          const allowReuse=!!opts.reuseLoadedFrame;
+          frame=allowReuse ? reusableSnapshotFrame(url, captureMode, {allowAnyMode:true}) : null;
+          const reusedFrame=!!frame;
+          if(!frame) frame=await makeSnapshotFrame(url, token, captureMode);
+          setSnapshotRefreshStatus(reusedFrame?"Using already-loaded dashboard frame…":(compatibility?"Loading compatibility dashboard frame…":"Loading dashboard frame…"), true);
+          if(!opts.silent) status(reusedFrame?"Re-rendering from the already-loaded dashboard frame…":(compatibility?"Loading dashboard frame in compatibility mode…":"Loading dashboard frame for rendered snapshot capture…"),true);
+          if(!reusedFrame) await waitForSnapshotFrameLoad(frame, Math.min(8000, remaining()), token);
           check();
           setSnapshotRefreshStatus(compatibility?"Compatibility mode: waiting for tiles…":"Waiting for tiles…", true);
           if(!opts.silent) status(compatibility?"Compatibility mode: waiting for dashboard tiles to render…":"Waiting for dashboard tiles to render…",true);
@@ -4399,14 +4539,14 @@ async function captureHubTileSnapshots(opts={}){
           if(!opts.silent) status("Letting dashboard layout settle…",true);
           await waitForSnapshotDelay(Math.min(opts.settleMs||1800, remaining()), token);
           check();
-          setSnapshotRefreshStatus("Capturing tiles…", true);
-          if(!opts.silent) status("Capturing rendered tile appearances…",true);
+          setSnapshotRefreshStatus(snapshotKind==="image-snapshot"?"Creating image snapshots…":"Copying tile HTML and styles…", true);
+          if(!opts.silent) status(snapshotKind==="image-snapshot"?"Creating rendered tile image snapshots…":"Copying rendered tile HTML and computed styles…",true);
           const nodes=[...frameDoc.querySelectorAll('[id^="tile-"]')].filter(n=>/^tile-\d+$/.test(n.id||"") && n.getBoundingClientRect().width>0 && n.getBoundingClientRect().height>0);
           if(!nodes.length) throw new Error("dashboard rendered no visible tile DOM nodes");
           const snapshotCss=collectSnapshotDocumentCss(frameDoc);
           syncSnapshotFontCss(collectSnapshotFontCss(frameDoc));
           const snaps={};
-          nodes.forEach(n=>{ const snap=captureTileSnapshot(n, snapshotCss); if(snap) snaps[String(snap.id)]=snap; });
+          nodes.forEach(n=>{ const snap=captureTileSnapshot(n, snapshotCss, snapshotKind); if(snap) snaps[String(snap.id)]=snap; });
           if(!Object.keys(snaps).length) throw new Error("dashboard tiles could not be captured");
           throwIfSnapshotCaptureCancelled(token);
           State.tileSnapshots=snaps;
@@ -4414,10 +4554,17 @@ async function captureHubTileSnapshots(opts={}){
           State.tileSnapshotLastError="";
           State.tileSnapshotsStaleReason="";
           const count=Object.keys(snaps).length;
-          setSnapshotRefreshStatus(`Captured ${count} tile${count===1?"":"s"}${compatibility?" in compatibility mode":""}.`, false);
+          const iconFallbackCount=snapshotKind==="image-snapshot" ? Object.values(snaps).filter(s=>s&&s.iconFallback).length : 0;
+          State.tileSnapshotIconFallbackCount=iconFallbackCount;
+          const elapsedMs=Date.now()-captureStartedAt;
+          State.tileSnapshotLastDurationMs=elapsedMs;
+          const elapsedText=formatRenderedCaptureDuration(elapsedMs);
+          const summary=renderedCaptureSummaryText(count,{engineLabel:renderedViewEngineLabel(),compatibility,elapsedText,iconFallbackCount});
+          State.tileSnapshotLastSummary=summary;
+          setSnapshotRefreshStatus(summary, false);
           updateTileDisplayIndicator();
           render();
-          if(!opts.silent) status(`Rendered View refreshed${compatibility?" in compatibility mode":""}: ${count} tile${count===1?"":"s"} captured.`);
+          if(!opts.silent) status(`Rendered View refreshed. ${summary}`);
           setTimeout(()=>{
             if(State.tileSnapshotStatus==="ready") setSnapshotRefreshStatus("", false);
           },2600);
@@ -4445,7 +4592,9 @@ async function captureHubTileSnapshots(opts={}){
     const msg=lastErr&&lastErr.message?lastErr.message:"unknown rendered snapshot error";
     State.tileSnapshotStatus="failed";
     State.tileSnapshotLastError=msg;
+    State.tileSnapshotLastSummary="";
     State.tileSnapshots={};
+    State.tileSnapshotIconFallbackCount=0;
     setSnapshotRefreshStatus("", false);
     updateTileDisplayIndicator();
     trace(`snapshot capture failed: ${msg}`,null,"err");
@@ -4454,9 +4603,9 @@ async function captureHubTileSnapshots(opts={}){
   })().finally(()=>{
     State.tileSnapshotCapture=null;
     if(State.tileSnapshotCancelToken===token) State.tileSnapshotCancelToken=null;
-    if(document.getElementById("tileSnapshotFrame")||document.getElementById("tileSnapshotCaptureHost")){
-      setTimeout(removeSnapshotCaptureFrame,1000);
-    }
+    // Keep a successfully loaded hidden dashboard frame available so switching
+    // Rendered View engines can re-render from the existing DOM instead of
+    // refetching the dashboard. reset/cancel/failure paths still remove it.
     updateTileDisplayIndicator();
   });
   State.tileSnapshotCapture=run;
@@ -4803,10 +4952,14 @@ function normalizeHubDeviceListPayload(payload){
   return Object.values(payload).filter(v=>v && typeof v==="object");
 }
 function hubDeviceListSort(a,b){
-  const an=Number(a.id), bn=Number(b.id);
-  const af=Number.isFinite(an), bf=Number.isFinite(bn);
-  if(af&&bf) return an-bn;
-  return String(a.id).localeCompare(String(b.id), undefined, {numeric:true});
+  const an=String(a&&a.name?a.name:hubDeviceDisplayName(a&&a.id)||"").trim();
+  const bn=String(b&&b.name?b.name:hubDeviceDisplayName(b&&b.id)||"").trim();
+  const byName=an.localeCompare(bn,undefined,{numeric:true,sensitivity:"base"});
+  if(byName) return byName;
+  const aid=canonicalDeviceId(a&&a.id), bid=canonicalDeviceId(b&&b.id);
+  const ai=Number(aid), bi=Number(bid);
+  if(Number.isFinite(ai)&&Number.isFinite(bi)) return ai-bi;
+  return String(aid||"").localeCompare(String(bid||""),undefined,{numeric:true});
 }
 function resetDeviceNames(){
   State.deviceNames=new Map();
@@ -6047,8 +6200,12 @@ function render(){
         else applySnapshotVars(el,snap);
         el.innerHTML=renderSnapshotHtml(t,snap);
       }else{
-        el.classList.add("display-snapshot",`tile-${t.id}`);
-        el.innerHTML="";
+        el.classList.add("snapshot-placeholder");
+        if(showText && M.tileW(t.colSpan)>=26 && M.tileH(t.rowSpan)>=16){
+          el.innerHTML=`<span class="t-id">#${t.id}</span><span class="t-name">${esc(tileDisplayLabel(t))}</span>`;
+        }else{
+          el.innerHTML=`<span class="t-id">#${t.id}</span>`;
+        }
       }
     }else if(showText && M.tileW(t.colSpan)>=26 && M.tileH(t.rowSpan)>=16){
       el.innerHTML=`<span class="t-id">#${t.id}</span><span class="t-name">${esc(tileDisplayLabel(t))}</span>`;
@@ -12500,7 +12657,7 @@ function jsonTileDevicePickerOptionsHtml(currentId){
   }
   if(current&&!seen.has(current)){
     const selected=jsonEditorDashboardDeviceSelected(current);
-    parts.splice(1,0,`<option value="${esc(current)}"${selected?"":" disabled"} selected>#${esc(current)} - ${esc(hubDeviceDisplayName(current))}</option>`);
+    parts.splice(1,0,`<option value="${esc(current)}"${selected?"":" disabled"} selected>${esc(hubDeviceDisplayName(current))} (#${esc(current)})</option>`);
   }
   return parts.join("");
 }
@@ -13264,7 +13421,8 @@ async function applyJsonEditorAllChanges(){
     }
     const preserveRenderedSnapshots=jsonEditorOnlyCustomFieldChanges();
     const changedFields=preserveRenderedSnapshots?jsonEditorChangedCustomFields():[];
-    const doApply=()=>applyJsonEditorAfterDeviceUpdate(data,tileDeviceEdit?"tile device assignments":"edited JSON",{preserveRenderedSnapshots, changedFields});
+    const preserveUnchangedRenderedTiles=tileDeviceEdit && JsonEditorState.mode==="tileDevices";
+    const doApply=()=>applyJsonEditorAfterDeviceUpdate(data,tileDeviceEdit?"tile device assignments":"edited JSON",{preserveRenderedSnapshots, changedFields, preserveUnchangedRenderedTiles});
     if(tileDeviceEdit&&!infoDeviceEditorIsOnline()){
       let original={};
       try{ original=normalizeLoadedJson(JSON.parse(JsonEditorState.initialText||"{}")); }catch(_){ original={tiles:[]}; }
@@ -13294,6 +13452,7 @@ async function applyJsonEditorAllChanges(){
   }else proceed();
 }
 function applyJsonToCurrentLayout(data, sourceLabel, opts={}){
+  const previousDoc=normalizeLoadedJson(serializeLayout());
   data=normalizeLoadedJson(data);
   if(sameAsCurrentLayoutData(data)){
     status("JSON editor changes already match the working layout.");
@@ -13318,10 +13477,14 @@ function applyJsonToCurrentLayout(data, sourceLabel, opts={}){
     updateDashboardJumpState();
   }
   const preserveRenderedSnapshots=!!opts.preserveRenderedSnapshots;
+  const preserveUnchangedRenderedTiles=!!opts.preserveUnchangedRenderedTiles;
   if(preserveRenderedSnapshots){
     State.tileSnapshotBlockedUntilReload=false;
     const changedFields=(opts.changedFields&&opts.changedFields.length)?opts.changedFields.join("/"):"custom field changes";
     markRenderedSnapshotsStale(`manual ${changedFields} changes`, {message:true});
+  }else if(preserveUnchangedRenderedTiles){
+    const changedTileIds=changedTileDeviceIdsBetweenDocs(previousDoc,doc);
+    invalidateRenderedSnapshotsForTiles(changedTileIds,"tile device assignment changes",{message:false});
   }else{
     State.tileSnapshotBlockedUntilReload=true;
     if(tileDisplayMode()==="snapshot"){
@@ -13333,7 +13496,8 @@ function applyJsonToCurrentLayout(data, sourceLabel, opts={}){
   clearSelection(); State.pending=null; State.stackInfo=null;
   render();
   updateSaveHubState();
-  status(`Applied JSON · ${State.tiles.length} tiles · ${State.cfg.cols}×${State.cfg.rows} grid. Use Undo to restore the previous layout.${preserveRenderedSnapshots&&State.tileSnapshotsStaleReason?" Rendered View images were kept but need refresh to reflect the manual custom field change.":""}`);
+  const partialRenderedNote=preserveUnchangedRenderedTiles?" Changed tile-device tiles use Simple View placeholders until Rendered View is refreshed; other rendered tiles remain visible.":"";
+  status(`Applied JSON · ${State.tiles.length} tiles · ${State.cfg.cols}×${State.cfg.rows} grid. Use Undo to restore the previous layout.${preserveRenderedSnapshots&&State.tileSnapshotsStaleReason?" Rendered View images were kept but need refresh to reflect the manual custom field change.":""}${partialRenderedNote}`);
   toast(`Applied ${sourceLabel||"edited JSON"} to current layout. Undo is available.`,"ok");
   return true;
 }
@@ -14458,6 +14622,7 @@ function saveConn(){
       autoConnect:document.getElementById("prefAutoConnect").checked,
       tileOpacity:+document.getElementById("prefTileOpacity").value,
       renderedViewEnabled:!!State.renderedViewPreference,
+      renderedViewEngine:normalizeRenderedViewEngine(State.renderedViewEngine),
       renderedViewCompatibility:normalizeRenderedViewCompatibility(State.renderedViewCompatibility),
       gridPreviewMode:normalizeGridPreviewMode(State.gridPreviewMode),
       hideGridGap:!!State.hideGridGap,
@@ -14495,6 +14660,7 @@ function restoreConn(){
       else if(c.tileDisplay) State.renderedViewPreference=(c.tileDisplay==="snapshot");
       rve.checked=!!State.renderedViewPreference;
     }
+    State.renderedViewEngine=normalizeRenderedViewEngine(c.renderedViewEngine || (normalizeRenderedViewCompatibility(c.renderedViewCompatibility)==="always"?"compatibility":"style-copy"));
     State.renderedViewCompatibility=normalizeRenderedViewCompatibility(c.renderedViewCompatibility);
     if(c.gridPreviewMode!=null) State.gridPreviewMode=normalizeGridPreviewMode(c.gridPreviewMode);
     State.hideGridGap=!!c.hideGridGap;
@@ -14517,6 +14683,8 @@ function restoreConn(){
     const autoPad=document.getElementById("prefAutoResizePadding");
     if(autoPad) autoPad.value=String(State.autoResizeDashboardPadding);
     try{ updateAutoResizeDashboardPreferenceControls(); }catch(_e){}
+    const rveMode=document.getElementById("prefRenderedViewEngine");
+    if(rveMode) rveMode.value=State.renderedViewEngine;
     const rvc=document.getElementById("prefRenderedViewCompatibility");
     if(rvc) rvc.value=State.renderedViewCompatibility;
     if(c.pushBuf!=null) document.getElementById("pushBufInput").value=c.pushBuf;
@@ -14906,8 +15074,21 @@ async function wire(){
     if(!State.renderedViewPreference){
       setTileDisplayMode("simple",{redraw:true,warn:false});
     }else{
-      if(renderedSnapshotAvailability().ok) setTileDisplayMode("snapshot",{redraw:true,warn:true,silent:false});
+      if(State.renderedViewEngine!=="simple" && renderedSnapshotAvailability().ok) setTileDisplayMode("snapshot",{redraw:true,warn:true,silent:false});
       else { State.tileViewMode="simple"; updateTileDisplayIndicator(); }
+    }
+  });
+  document.getElementById("prefRenderedViewEngine")?.addEventListener("change",e=>{
+    State.renderedViewEngine=normalizeRenderedViewEngine(e.target.value);
+    e.target.value=State.renderedViewEngine;
+    saveConn();
+    updateTileDisplayIndicator();
+    if(State.renderedViewEngine==="simple"){
+      setTileDisplayMode("simple",{redraw:true,warn:false});
+      status("Rendered View disabled; Simple View Only is selected.");
+    }else if(tileDisplayMode()==="snapshot"){
+      clearTileSnapshotsKeepCaptureFrame();
+      captureHubTileSnapshots({silent:false,timeoutMs:30000,retryCount:1,reuseLoadedFrame:true});
     }
   });
   document.getElementById("prefRenderedViewCompatibility")?.addEventListener("change",e=>{
@@ -14924,7 +15105,7 @@ async function wire(){
     setTileDisplayMode("snapshot",{redraw:true,warn:true,silent:false});
   });
   const refreshSnapshots=()=>{
-    if(tileDisplayMode()!=="snapshot"){ toast("Switch to Rendered View before refreshing snapshots.","err"); return; }
+    if(tileDisplayMode()!=="snapshot"){ toast("Switch to Rendered View before refreshing rendered tiles.","err"); return; }
     const a=renderedSnapshotAvailability();
     if(!a.ok){ toast(`Rendered View is unavailable: ${a.reason}.`,"err"); updateTileDisplayIndicator(); return; }
     captureHubTileSnapshots({silent:false,timeoutMs:30000,retryCount:1});
