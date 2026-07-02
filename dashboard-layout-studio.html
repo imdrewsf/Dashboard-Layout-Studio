@@ -501,6 +501,7 @@
   .info-device-select{min-width:280px;max-width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:7px;background:rgba(2,6,23,.72);color:var(--text);font-size:.76rem;}
   .info-device-select option:disabled{color:var(--faint);background:rgba(15,23,42,.95);}
   .info-device-input{width:110px;padding:5px 8px;border:1px solid var(--border);border-radius:7px;background:rgba(2,6,23,.72);color:var(--text);font-family:var(--mono);font-size:.78rem;}
+  .info-template-extra-input{min-width:280px;max-width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:7px;background:rgba(2,6,23,.72);color:var(--text);font-family:var(--mono);font-size:.78rem;}
   .info-icon-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;font-size:.76rem;line-height:1;}
   .info-icon-btn:hover{background:rgba(255,255,255,.1);}
   .info-icon-btn.ok{color:#86efac;border-color:rgba(134,239,172,.35);}
@@ -509,6 +510,7 @@
   .info-css-label{font-family:var(--mono);font-size:.72rem;color:var(--muted);}
   .info-css-edit-btn{display:inline-flex;align-items:center;gap:5px;width:auto;padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);font-size:.72rem;cursor:pointer;}
   .info-css-edit-btn:hover{border-color:var(--accent);background:rgba(103,232,249,.10);}
+  .info-css-pre{margin:0;white-space:pre-wrap;line-height:1.35;}
   .info-css-edit-shell{display:flex;flex-direction:column;flex:1;min-height:0;}
   .info-css-instructions{flex:none;margin:0 0 10px;padding:12px 14px;border:1px solid rgba(103,232,249,.28);border-radius:9px;background:rgba(103,232,249,.07);color:var(--muted);font-size:.76rem;line-height:1.5;max-height:none;overflow:visible;}
   .info-css-instructions b{color:var(--text);}
@@ -969,7 +971,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.1.394">1.1.394</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.1.398">1.1.398</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1199,6 +1201,8 @@
         <input type="checkbox" id="prefHideGridGap" /></label>
       <label class="pp-row"><span>Auto-size dashboard bounds</span>
         <input type="checkbox" id="prefAutoResizeDashboard" checked /></label>
+      <label class="pp-row"><span>Skip device checks on save</span>
+        <input type="checkbox" id="prefSkipDeviceChecksOnSave" /></label>
       <label class="pp-row" id="prefAutoResizePaddingRow"><span>Bounds padding</span>
         <input class="modesel" type="number" id="prefAutoResizePadding" min="0" max="99" value="0" style="width:54px;text-align:center" /></label>
       <label class="pp-row"><span>Tile opacity <span id="tileOpacityVal">100%</span></span>
@@ -1212,7 +1216,7 @@
           <option value="compatibility">Compatibility Mode</option>
           <option value="simple">Simple View Only</option>
         </select></label>
-      <p class="hint" style="margin:8px 0 0">Rendered View start mode controls what DLS tries first for hub-loaded layouts: Style Copy clones the rendered dashboard tile HTML with computed styles, Image Snapshot renders each tile as an image-style snapshot and keeps a styled fallback for icon-font tiles, Compatibility Mode uses the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. Auto-connect runs Discover automatically when the page loads. Grid gaps are shown by default so DLS matches dashboard spacing; use Don't show grid gap for a tighter editing view. Auto-size dashboard bounds keeps declared rows/columns fit to the used layout plus optional padding.</p>
+      <p class="hint" style="margin:8px 0 0">Rendered View start mode controls what DLS tries first for hub-loaded layouts: Style Copy clones the rendered dashboard tile HTML with computed styles, Image Snapshot renders each tile as an image-style snapshot and keeps a styled fallback for icon-font tiles, Compatibility Mode uses the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. Auto-connect runs Discover automatically when the page loads. Grid gaps are shown by default so DLS matches dashboard spacing; use Don't show grid gap for a tighter editing view. Auto-size dashboard bounds keeps declared rows/columns fit to the used layout plus optional padding. Skip device checks on save bypasses the save-time selected-device validation step for faster saves when you intentionally manage dashboard devices yourself.</p>
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
         <button class="btn ghost" id="prefCheckUpdate" style="width:100%">Check for updates</button>
       </div>
@@ -1323,7 +1327,7 @@
 <div class="help-card"><b>Load file</b><p>Loads a JSON file as an offline layout. Changes to layouts loaded offline cannot be saved directly back to the hub.</p></div>
 <div class="help-card"><b>Paste dashboard JSON</b><p>Loads pasted JSON as an offline layout. Like file load, this does not create a hub save target.</p></div>
 </div><div class="help-callout">Offline layouts can be edited, downloaded, or copied to the clipboard, but they cannot be saved directly to a hub dashboard unless a hub-loaded layout context is already being preserved through the JSON editor. When you connect to the hub from an offline layout, the offline workspace is closed, the grid and undo history are cleared, and unsaved offline changes require confirmation.</div></article><article class="help-page" data-help-title="Saving and preserving hub context"><div class="help-page-kicker">Load &amp; Save</div><h4>Saving and preserving hub context</h4><h5>Saving and preserving hub context</h5><div class="help-grid">
-<div class="k">Save</div><div class="v">Opens save options: Save to hub, Download as file, or Copy to clipboard. Save to hub is available only when the active layout was loaded from the hub.</div>
+<div class="k">Save</div><div class="v">Opens save options: Save to hub, Download as file, or Copy to clipboard. Save to hub is available only when the active layout was loaded from the hub. Preferences can skip save-time device checks when you intentionally manage selected dashboard devices yourself.</div>
 </div><h5>Important hub-save distinction</h5><p>If you load a layout with the side panel file/paste tools, the tool treats it as offline JSON.</p><p>If you instead load from the hub and then use the JSON editor to replace or edit the layout, the existing hub save target is preserved.</p><div class="help-callout warn"><b>JSON editor replacement warning:</b> When a hub-loaded layout is replaced from the JSON editor, the editor warns that it is still attached to the online dashboard. Saving afterward will overwrite that same hub dashboard with the replacement layout. Use the side-panel file/paste tools when you want to open JSON as an offline layout instead.</div></article></div>
 <div class="help-page-nav"></div>
 </section>
@@ -1352,7 +1356,7 @@
 <div class="help-pages"><article class="help-page active" data-help-title="Selection and tile actions"><div class="help-page-kicker">Toolbar Buttons</div><h4>Selection and tile actions</h4><h5>How the toolbar is organized</h5><p>The first toolbar group in the top row contains actions that operate on the current selection: tiles, rows, columns, or selected areas.</p><p>The next top-row group contains whole-layout actions such as Trim and Spacing.</p><div class="help-callout">Select first, then act. Selection actions use the current tile, row, column, or rectangular selection; whole-layout actions operate across the dashboard layout.</div><h5>Selection and structural actions</h5><div class="help-grid">
 <div class="k">Select</div><div class="v">Selects all tiles in the layout. This is the toolbar equivalent of Ctrl/Cmd+A.</div>
 <div class="k">Info</div><div class="v">Shows tile id, position, size, device id from the layout JSON, hub device name when available, template details, and tile-scoped custom CSS for the selected tile. The scoped CSS section can be edited directly; every saved selector must remain scoped to the current tile.</div>
-<div class="k">Insert</div><div class="v">For row/column selections, inserts rows or columns before the selected line range and shifts affected tiles.</div>
+<div class="k">Insert</div><div class="v">For row/column selections, inserts rows or columns before the selected line range and shifts affected tiles. With incl partial, tiles that start before the inserted line but cross into the selected range move with the selected tiles.</div>
 <div class="k">Delete</div><div class="v">Deletes selected rows/columns and shifts later tiles to close the gap. For tile selections, use Clear to remove without shifting.</div>
 <div class="k">Clear</div><div class="v">Removes selected tiles or tiles in the selected area without shifting other tiles.</div>
 </div><h5>Placement and clipboard actions</h5><div class="help-grid">
@@ -1368,7 +1372,7 @@
 <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
 </div><h5>History, views, JSON, and Save</h5><div class="help-grid">
 <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. Undo All follows undo history and remains disabled when there is no undo checkpoint. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Shift-click Undo All reloads the current dashboard from the hub when the layout originated from the hub and Undo All is enabled; otherwise it performs the normal Undo All action.</div>
-<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. Render status now includes elapsed capture time so engines can be compared.</div>
+<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. Render status includes elapsed capture time so engines can be compared. Saving while Simple View is active stays in Simple View; saving layout-only changes in Rendered View keeps existing rendered tiles instead of recapturing. Refresh warns when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the hub-rendered capture.</div>
 <div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
 <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
 </div></article></div>
@@ -1407,7 +1411,7 @@
 <div class="help-pages"><article class="help-page active" data-help-title="JSON editor and applying changes"><div class="help-page-kicker">JSON &amp; CSS</div><h4>JSON editor and applying changes</h4><h5>JSON editor and field views</h5><div class="help-grid">
 <div class="k">JSON editor</div><div class="v">Allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
 <div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
-<div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid location and size, any tile-scoped CSS content that may supply an alternate title, and its assigned device. Location and size are shown as row/column followed by size in parentheses. The first device choice is Unassigned for blank device IDs. Online layouts use the same selected-device choices as Tile Information; device dropdowns are sorted by device name with the device number shown in parentheses. Offline layouts allow numeric or blank device IDs. In online mode, tiles with a nonblank, nonzero device ID that has no matching hub device are treated as unknown-device tiles and highlighted in red, except Mode and Text Tile templates because those device fields are not validated as regular hub-device assignments. Tile-device rows for valid hub devices that are not selected for the dashboard are highlighted in yellow and remain unselected until you explicitly add them in Dashboard Devices. Show Invalid and Unassign Invalid are online-only tools. Unassign Invalid clears every non-exempt tile device assignment whose device ID does not exist on the hub after confirmation.</div>
+<div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid location and size, any tile-scoped CSS content that may supply an alternate title, and its assigned device. Location and size are shown as row/column followed by size in parentheses. The first device choice is Unassigned for blank device IDs. Online layouts use the same selected-device choices as Tile Information; device dropdowns are sorted by device name with the device number shown in parentheses. Offline layouts allow numeric or blank device IDs. In online mode, tiles with a nonblank, nonzero device ID that has no matching hub device are treated as unknown-device tiles and highlighted in red, except Mode and Text Tile templates because those device fields are not validated as regular hub-device assignments. Tile-device rows for valid hub devices that are not selected for the dashboard are highlighted in yellow and remain unselected until you explicitly add them in Dashboard Devices. A Preferences option can skip this save-time device validation while leaving the editor review tools available. Show Invalid and Unassign Invalid are online-only tools. Unassign Invalid clears every non-exempt tile device assignment whose device ID does not exist on the hub after confirmation.</div>
 <div class="k">Dashboard Devices</div><div class="v">Online only. Manages the devices selected for the Hubitat dashboard, locks devices used by current tiles, and can assign all devices, remove unused devices, reload the selection, or update it on the hub. Devices with assigned tiles that are not currently selected are marked yellow and remain unchecked until explicitly selected. Devices that are selected and assigned to tiles are shown in a slightly faded blue locked state.</div>
 </div><h5>Applying editor changes</h5><p><b>Apply changes</b> validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced.</p><div class="help-card-grid">
 <div class="help-card"><b>Custom field-only edits</b><p>If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed.</p></div>
@@ -1986,8 +1990,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v394";
-const APP_VERSION = "1.1.394";
+const BUILD = "v398";
+const APP_VERSION = "1.1.398";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -2045,6 +2049,7 @@ const State = {
   gridAutoFitCustom:{width:1024,height:768,zoom:100}, // remembered custom Auto Fit target
   gridAutoFitPresetChosen:false,   // true after user explicitly chooses an Auto Fit target preset/custom size
   gridDynamicNoticeSuppress:false, // user preference: do not show dynamic sizing notice on load
+  skipDeviceChecksOnSave:false, // user preference: skip selected-device validation during hub save
   dynamicGridTargetVisible:true, // show simulated target viewport for dashboards using 0-sized dynamic cells
   overlaps:"none",               // 'none'|'allow'|'skip'|'push' — move conflict handling (spec --overlaps)
   pushForcedRestore:null,             // remembers push when temporarily forced back to warn because the source is not push-eligible
@@ -2059,6 +2064,7 @@ const State = {
   focusTileId:null,              // tile id currently focused from Tile Info / left pane; highlighted on map + side panes
   infoDeviceEdit:null,           // {tileId} while Tile Info is editing a tile device id
   infoCssEdit:null,              // {tileId,initialCss} while Tile Info is editing tile-scoped customCSS
+  infoTemplateExtraEdit:null,    // {tileId,initialValue} while Tile Info is editing texttile templateExtra
   pendingRemoval:null,           // {removedIds, commitFn, preview} during CSS-review
   buffer:null,                   // {tiles:[full snapshots], css, sourceId, mode:'cut'|'copy', cutIds:Set}
   bufferUsed:false,              // whether the current (cut) buffer has been pasted once
@@ -2538,6 +2544,72 @@ function renderInfoDeviceIdCell(t){
   }
   return `<span class="info-device-edit"><input id="infoDeviceInput" class="info-device-input" type="text" inputmode="numeric" pattern="[0-9]*" value="${esc(id)}" placeholder="device id"><button class="info-icon-btn ok" id="infoDeviceSaveBtn" type="button" title="Save device id">✓</button><button class="info-icon-btn cancel" id="infoDeviceCancelBtn" type="button" title="Cancel device id change">✕</button></span>`;
 }
+function isTextTileTemplate(t){
+  const raw=t&&t._raw ? t._raw : (t||{});
+  const template=String(raw.template||t&&t.template||"").trim().toLowerCase();
+  return template==="texttile" || template==="text-tile" || template==="text tile";
+}
+function tileTemplateExtraRawValue(t){
+  if(!t) return "";
+  const raw=t._raw||{};
+  const v=raw.templateExtra;
+  return v==null ? "" : String(v);
+}
+function renderInfoTemplateExtraCell(t){
+  const value=tileTemplateExtraRawValue(t);
+  const editing=State.infoTemplateExtraEdit && Number(State.infoTemplateExtraEdit.tileId)===Number(t.id);
+  if(!editing){
+    const shown=value ? value : "N/A";
+    return `<span class="info-device-view"><span class="info-device-static" id="infoTemplateExtraValue">${esc(shown)}</span><button class="info-icon-btn" id="infoTemplateExtraEditBtn" type="button" title="Edit text tile templateExtra">✎</button></span>`;
+  }
+  return `<span class="info-device-edit"><input id="infoTemplateExtraInput" class="info-template-extra-input" type="text" value="${esc(value)}" placeholder="templateExtra"><button class="info-icon-btn ok" id="infoTemplateExtraSaveBtn" type="button" title="Save templateExtra">✓</button><button class="info-icon-btn cancel" id="infoTemplateExtraCancelBtn" type="button" title="Cancel templateExtra change">✕</button></span>`;
+}
+function commitTileTemplateExtraChange(tileId, newValue){
+  const t=State.tiles.find(x=>Number(x.id)===Number(tileId));
+  if(!t) return false;
+  if(!isTextTileTemplate(t)){
+    toast("templateExtra editing is available for Text Tile templates only.","err");
+    return false;
+  }
+  const oldValue=tileTemplateExtraRawValue(t);
+  const next=newValue==null ? "" : String(newValue);
+  if(oldValue===next){ State.infoTemplateExtraEdit=null; showTileInfo(tileId); return true; }
+  pushHistory();
+  if(!t._raw) t._raw={id:t.id,template:t.template||"texttile"};
+  t._raw.templateExtra=next;
+  t.label=next || t._raw.label || t.template || "";
+  invalidateRenderedSnapshotsForTiles([tileId],`Tile #${tileId} text changed`,{message:false});
+  State.infoTemplateExtraEdit=null;
+  updateActionButtons();
+  updateSaveHubState();
+  render();
+  showTileInfo(tileId);
+  status(`Changed Tile #${tileId} templateExtra.${tileDisplayMode()==="snapshot"?" That tile is shown as a Simple View placeholder until Rendered View is refreshed; other rendered tiles remain visible.":""}`.trim());
+  toast(`Updated Tile #${tileId} templateExtra.`,"ok");
+  return true;
+}
+function wireInfoTemplateExtraEditor(tileId){
+  const edit=document.getElementById("infoTemplateExtraEditBtn");
+  if(edit) edit.addEventListener("click",()=>{
+    guardInfoEditDiscard("edit this text tile's templateExtra",()=>{
+      State.infoDeviceEdit=null;
+      State.infoCssEdit=null;
+      const t=State.tiles.find(x=>Number(x.id)===Number(tileId));
+      State.infoTemplateExtraEdit={tileId,initialValue:tileTemplateExtraRawValue(t)};
+      showTileInfo(tileId);
+      setTimeout(()=>document.getElementById("infoTemplateExtraInput")?.focus(),0);
+    });
+  });
+  const cancel=document.getElementById("infoTemplateExtraCancelBtn");
+  if(cancel) cancel.addEventListener("click",()=>{ State.infoTemplateExtraEdit=null; showTileInfo(tileId); });
+  const save=document.getElementById("infoTemplateExtraSaveBtn");
+  if(save) save.addEventListener("click",()=>commitTileTemplateExtraChange(tileId,document.getElementById("infoTemplateExtraInput")?.value||""));
+  const inp=document.getElementById("infoTemplateExtraInput");
+  if(inp) inp.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){ e.preventDefault(); commitTileTemplateExtraChange(tileId, inp.value); }
+    if(e.key==="Escape"){ e.preventDefault(); State.infoTemplateExtraEdit=null; showTileInfo(tileId); }
+  });
+}
 function commitTileDeviceIdChange(tileId, newId){
   const t=State.tiles.find(x=>Number(x.id)===Number(tileId));
   if(!t) return false;
@@ -2590,19 +2662,21 @@ function commitTileDeviceIdChange(tileId, newId){
 function clearInfoEditStates(){
   State.infoDeviceEdit=null;
   State.infoCssEdit=null;
+  State.infoTemplateExtraEdit=null;
 }
 function guardInfoEditDiscard(actionLabel, onDiscard){
   const deviceEdit=State.infoDeviceEdit;
   const cssEdit=State.infoCssEdit;
-  if(!deviceEdit && !cssEdit){
+  const templateExtraEdit=State.infoTemplateExtraEdit;
+  if(!deviceEdit && !cssEdit && !templateExtraEdit){
     clearInfoEditStates();
     if(onDiscard) onDiscard();
     return true;
   }
-  const editState=cssEdit||deviceEdit;
+  const editState=cssEdit||deviceEdit||templateExtraEdit;
   const editTileId=Number(editState&&editState.tileId);
   const tileLabel=Number.isFinite(editTileId) ? `Tile #${editTileId}` : "This tile";
-  const editLabel=cssEdit ? "tile-scoped CSS" : "device id";
+  const editLabel=cssEdit ? "tile-scoped CSS" : (templateExtraEdit ? "templateExtra" : "device id");
   showConfirm(
     `Discard ${editLabel} changes?`,
     `${tileLabel}'s ${editLabel} is currently being edited. Discard the unsaved changes and ${actionLabel}?`,
@@ -2623,6 +2697,7 @@ function wireInfoDeviceEditor(tileId){
   if(edit) edit.addEventListener("click",()=>{
     guardInfoEditDiscard("edit this tile's device id",()=>{
       State.infoCssEdit=null;
+      State.infoTemplateExtraEdit=null;
       State.infoDeviceEdit={tileId};
       showTileInfo(tileId);
     });
@@ -3136,11 +3211,16 @@ const Hub = {
       checkHubOperationAbort(op);
       if(!verified){ finishHubOperation(op,{skipPending:true,delayMs:350}); return; }
       hubOperationStep(op,"verify","done");
-      hubOperationStep(op,"devices","active");
-      const devicesValidated=await confirmHubSaveDeviceAssignments(payload);
-      checkHubOperationAbort(op);
-      if(!devicesValidated){ finishHubOperation(op,{skipPending:true,delayMs:350}); return; }
-      hubOperationStep(op,"devices","done");
+      if(State.skipDeviceChecksOnSave){
+        trace("pre-save device validation skipped by preference",null,"ok");
+        hubOperationStep(op,"devices","skipped","Device validation skipped by preference.");
+      }else{
+        hubOperationStep(op,"devices","active");
+        const devicesValidated=await confirmHubSaveDeviceAssignments(payload);
+        checkHubOperationAbort(op);
+        if(!devicesValidated){ finishHubOperation(op,{skipPending:true,delayMs:350}); return; }
+        hubOperationStep(op,"devices","done");
+      }
       const doPost=async(url)=>{
         let saveUrl=url;
         if(State.loadPin && !saveUrl.includes("pin="))
@@ -3161,15 +3241,30 @@ const Hub = {
         trace(`save retry → ${res.status}`,null,res.ok?"ok":"err");
         if(!res.ok) throw new Error(`save ${res.status} (after token refresh)`);
       }
+      const renderAffectingChanged=hasRenderAffectingChangesSinceHubBaseline(payload);
+      const renderRefreshNeeded=shouldRefreshRenderedViewAfterHubSave(payload);
+      const renderRefreshSkipReason=renderRefreshNeeded?"":renderedViewSaveSkipReason(payload);
       State.hubSaveBaseline=cloneLayoutDoc(payload);
       markLayoutClean();
       toast("Layout saved to hub.","ok");
       hubOperationStep(op,"save","done");
-      hubOperationStep(op,"render","active");
-      await refreshRenderedViewAfterHubSave();
-      checkHubOperationAbort(op);
-      hubOperationStep(op,"render","done","Rendered View refresh completed if available.");
-      finishHubOperation(op,{message:"Layout saved.",delayMs:650});
+      let finishMessage="Layout saved.";
+      if(renderRefreshNeeded){
+        hubOperationStep(op,"render","active");
+        await refreshRenderedViewAfterHubSave({force:true});
+        checkHubOperationAbort(op);
+        const summary=State.tileSnapshotLastSummary||"Rendered View refresh completed.";
+        hubOperationStep(op,"render","done",summary);
+        finishMessage=`Layout saved. ${summary}`;
+      }else{
+        if(renderAffectingChanged && tileDisplayMode()!=="snapshot"){
+          resetTileSnapshots(false);
+        }else{
+          clearLayoutOnlyRenderedStaleAfterSave(payload);
+        }
+        hubOperationStep(op,"render","skipped",renderRefreshSkipReason||"Rendered View refresh not needed.");
+      }
+      finishHubOperation(op,{message:finishMessage,delayMs:650});
     }catch(e){
       trace(`save failed: ${e.message}`,null,"err");
       finishHubOperation(op,{error:e});
@@ -3815,7 +3910,30 @@ function snapshotSelectionRenderedImages(ids){
   }
   return out;
 }
-function refreshRenderedViewAfterHubSave(){
+function shouldRefreshRenderedViewAfterHubSave(payload=serializeLayout()){
+  if(tileDisplayMode()!=="snapshot") return false;
+  if(!renderedViewEnabled() || !(State.conn.mode==="live" && State.active)) return false;
+  const a=renderedSnapshotAvailability();
+  if(!a.ok) return false;
+  return hasRenderAffectingChangesSinceHubBaseline(payload);
+}
+function renderedViewSaveSkipReason(payload=serializeLayout()){
+  if(tileDisplayMode()!=="snapshot") return "Simple View is active; Rendered View was not refreshed.";
+  if(!renderedViewEnabled()) return "Rendered View is not enabled.";
+  if(!(State.conn.mode==="live" && State.active)) return "Rendered View is unavailable for this layout.";
+  const a=renderedSnapshotAvailability();
+  if(!a.ok) return `Rendered View unavailable: ${a.reason}.`;
+  if(!hasRenderAffectingChangesSinceHubBaseline(payload)) return "Only layout/grid placement changed; existing rendered tiles were kept.";
+  return "Rendered View refresh not needed.";
+}
+function clearLayoutOnlyRenderedStaleAfterSave(payload=serializeLayout()){
+  if(!hasRenderAffectingChangesSinceHubBaseline(payload)){
+    State.tileSnapshotBlockedUntilReload=false;
+    State.tileSnapshotsStaleReason="";
+    updateTileDisplayIndicator();
+  }
+}
+function refreshRenderedViewAfterHubSave(opts={}){
   State.tileSnapshotBlockedUntilReload=false;
   State.tileSnapshotsStaleReason="";
   if(!renderedViewEnabled() || !(State.conn.mode==="live" && State.active)){
@@ -3824,7 +3942,7 @@ function refreshRenderedViewAfterHubSave(){
   }
   const a=renderedSnapshotAvailability();
   if(!a.ok){ updateTileDisplayIndicator(); return; }
-  if(tileDisplayMode()!=="snapshot" && !State.renderedViewPreference){
+  if(tileDisplayMode()!=="snapshot" && !opts.force){
     updateTileDisplayIndicator();
     return;
   }
@@ -5437,6 +5555,15 @@ function scanCssSourceNodes(css){
   }
   return nodes;
 }
+function normalizeTileInfoCssText(css){
+  return String(css||"")
+    .replace(/\r\n?/g,"\n")
+    .split("\n")
+    .map(line=>line.replace(/[ \t]+$/,""))
+    .join("\n")
+    .replace(/\n[ \t]*\n[ \t]*\n+/g,"\n\n")
+    .trim();
+}
 function extractTileScopedCssForEditor(css,tileId){
   const id=Number(tileId);
   function rec(text){
@@ -5459,7 +5586,7 @@ function extractTileScopedCssForEditor(css,tileId){
     }
     return parts.join("\n\n");
   }
-  return rec(String(css||"")).trim();
+  return normalizeTileInfoCssText(rec(String(css||"")));
 }
 function transformTileScopedCssSource(css,tileId){
   const id=Number(tileId);
@@ -6875,7 +7002,7 @@ function tileInfoCssEditorHtml(tileId,css,rulesCount,commentsCount){
   const editing=State.infoCssEdit&&Number(State.infoCssEdit.tileId)===Number(tileId);
   const head=`<div class="info-css-head"><span class="info-css-label">scoped customCSS · ${rulesCount} rule(s), ${commentsCount} comment(s)</span>${editing?"":`<button type="button" class="info-css-edit-btn" id="infoCssEditBtn" title="Edit CSS scoped to Tile #${esc(tileId)}">✎ Edit</button>`}</div>`;
   if(!editing){
-    return head+(css?`<pre>${esc(css)}</pre>`:`<p class="hint">No tile-scoped CSS for this tile.</p>`);
+    return head+(css?`<pre class="info-css-pre">${esc(normalizeTileInfoCssText(css))}</pre>`:`<p class="hint">No tile-scoped CSS for this tile.</p>`);
   }
   const renderedNote=(State.conn.mode==="live"&&!!State.lastLayoutUrl)
     ? `<li>Rendered View will not show these edits until the dashboard is saved back to the hub and Rendered View is refreshed.</li>`
@@ -6889,7 +7016,7 @@ function tileInfoCssEditorHtml(tileId,css,rulesCount,commentsCount){
     renderedNote+
     `</ul></div>`+
     head+
-    `<textarea id="infoCssEditor" class="info-css-editor" spellcheck="false" wrap="off" aria-label="Tile #${esc(tileId)} scoped customCSS">${esc(css)}</textarea>`+
+    `<textarea id="infoCssEditor" class="info-css-editor" spellcheck="false" wrap="off" aria-label="Tile #${esc(tileId)} scoped customCSS">${esc(normalizeTileInfoCssText(css))}</textarea>`+
     `<div id="infoCssError" class="info-css-error"></div>`+
     `<div class="info-css-actions"><button type="button" class="btn ghost" id="infoCssCancelBtn">Cancel</button><button type="button" class="btn primary" id="infoCssSaveBtn">Save CSS</button></div>`+
     `</div>`;
@@ -6958,6 +7085,7 @@ function wireInfoCssEditor(tileId){
   if(edit) edit.addEventListener("click",()=>{
     guardInfoEditDiscard("edit this tile's CSS",()=>{
       State.infoDeviceEdit=null;
+      State.infoTemplateExtraEdit=null;
       const initialCss=extractTileScopedCssForEditor(State.customCSS||"",tileId);
       State.infoCssEdit={tileId,initialCss};
       showTileInfo(tileId);
@@ -6979,6 +7107,7 @@ function showTileInfo(tileId){
   const t=State.tiles.find(x=>Number(x.id)===Number(tileId)); if(!t) return;
   if(State.infoDeviceEdit&&Number(State.infoDeviceEdit.tileId)!==Number(tileId)) State.infoDeviceEdit=null;
   if(State.infoCssEdit&&Number(State.infoCssEdit.tileId)!==Number(tileId)) State.infoCssEdit=null;
+  if(State.infoTemplateExtraEdit&&Number(State.infoTemplateExtraEdit.tileId)!==Number(tileId)) State.infoTemplateExtraEdit=null;
   setFocusedTile(t.id,{render:true,scroll:true,updateStack:true});
   // selection list for prev/next paging through Info
   const selList = (State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.length>1 ? [...State.sel.ids] : [tileId];
@@ -7003,6 +7132,7 @@ function showTileInfo(tileId){
     ["device id",renderInfoDeviceIdCell(t),true],
     ["device name",esc(String(deviceNameInfoValue(t)))],
     ["template",esc(String(t.template||"—"))],
+    ...(isTextTileTemplate(t)?[["templateExtra",renderInfoTemplateExtraCell(t),true]]:[]),
     ["position",esc(`row ${t.row}, col ${t.col}`)],
     ["span",esc(`${t.colSpan} × ${t.rowSpan} (w×h)`) ],
     ["placement",esc(String(placement))],
@@ -7019,6 +7149,7 @@ function showTileInfo(tileId){
     (editingCss?"":`<div class="kv">${rows.map(([k,v])=>`<div class="k">${esc(k)}</div><div>${v}</div>`).join("")}</div>`)+
     tileInfoCssEditorHtml(tileId,css,rules.length,comments.length);
   wireInfoDeviceEditor(tileId);
+  wireInfoTemplateExtraEditor(tileId);
   wireInfoCssEditor(tileId);
   restoreModalPosition("infoModal"); document.getElementById("infoModal").classList.remove("hidden");
 }
@@ -8347,12 +8478,23 @@ function doInsert(){
   clearConflictHighlight();
   const lines=State.sel.lines; if(!lines.length) return;
   pushHistory();
+  const kind=State.selKind;
   const at=Math.min(...lines), n=lines.length, ax=axisOf();
-  for(const t of State.tiles) if(t[ax]>=at) t[ax]+=n;
+  const movePartial=(State.selMode==="include_partial"||State.selMode==="only_partial");
+  const partialIdx=movePartial ? new Set(selectIndices(targetFromLines(lines,kind), State.selMode)) : new Set();
+  let partialMoved=0;
+  State.tiles.forEach((t,i)=>{
+    const startsAtOrAfter=t[ax]>=at;
+    const selectedPartial=partialIdx.has(i) && t[ax]<at;
+    if(startsAtOrAfter||selectedPartial){
+      t[ax]+=n;
+      if(selectedPartial) partialMoved++;
+    }
+  });
   // grid dimensions (cols/rows) are a fixed property of the dashboard — do NOT change them
   State.sel.lines=[]; State.sel.type=null;
   updateActionButtons(); render();
-  status(`Inserted ${n} ${State.selKind}(s) before ${State.selKind} ${at}.`);
+  status(`Inserted ${n} ${kind}(s) before ${kind} ${at}${partialMoved?`; moved ${partialMoved} partial-crossing tile(s) with the selected range`:""}.`);
 }
 /* DELETE (spec p.12): remove tiles whose UPPER-LEFT CORNER is in the target
    rows/cols (or, with include_partial, whose span crosses the start boundary),
@@ -12015,6 +12157,41 @@ function hasUnsavedChanges(){
   const cur=currentLayoutSnapshot();
   return cur!=null && cur!==State.savedSnapshot;
 }
+const RENDER_LAYOUT_ONLY_TOP_LEVEL_FIELDS=new Set(["tiles","cols","rows","colWidth","rowHeight","gridGap"]);
+const RENDER_LAYOUT_ONLY_TILE_FIELDS=new Set(["row","col","rowSpan","colSpan"]);
+function renderSensitiveLayoutSignature(doc){
+  if(!doc) return null;
+  try{
+    const out={};
+    Object.keys(doc||{}).sort().forEach(k=>{
+      if(RENDER_LAYOUT_ONLY_TOP_LEVEL_FIELDS.has(k)) return;
+      out[k]=doc[k];
+    });
+    out.tiles=(doc.tiles||[]).map(t=>{
+      const nt={};
+      Object.keys(t||{}).sort().forEach(k=>{
+        if(RENDER_LAYOUT_ONLY_TILE_FIELDS.has(k)) return;
+        nt[k]=t[k];
+      });
+      return nt;
+    }).sort((a,b)=>{
+      const ai=Number(a&&a.id), bi=Number(b&&b.id);
+      if(Number.isFinite(ai)&&Number.isFinite(bi)&&ai!==bi) return ai-bi;
+      return String(a&&a.id).localeCompare(String(b&&b.id),undefined,{numeric:true,sensitivity:"base"});
+    });
+    return stableStringifyForCompare(out);
+  }catch(_){ return null; }
+}
+function hasRenderAffectingChangesSinceHubBaseline(doc=serializeLayout()){
+  if(!State.hubSaveBaseline) return hasUnsavedChanges();
+  const a=renderSensitiveLayoutSignature(doc);
+  const b=renderSensitiveLayoutSignature(State.hubSaveBaseline);
+  return a==null||b==null ? hasUnsavedChanges() : a!==b;
+}
+function renderAffectingUnsavedChangeMessage(){
+  if(!hasUnsavedChanges() || !hasRenderAffectingChangesSinceHubBaseline()) return "";
+  return "The working layout has unsaved changes that affect what Hubitat renders, such as tile content, device assignments, custom CSS/HTML/JS, or tile definitions. Refreshing Rendered View captures the current hub dashboard, so those unsaved changes will not be reflected until the dashboard is saved to the hub.";
+}
 function markLayoutClean(){
   State.savedSnapshot=currentLayoutSnapshot();
   updateDirtyIndicator();
@@ -14637,6 +14814,7 @@ function saveConn(){
       },
       gridAutoFitPresetChosen:!!State.gridAutoFitPresetChosen,
       gridDynamicNoticeSuppress:!!State.gridDynamicNoticeSuppress,
+      skipDeviceChecksOnSave:!!State.skipDeviceChecksOnSave,
       pushBuf:+document.getElementById("pushBufInput").value||0,
     }));
   }catch(_){ /* storage unavailable — ignore */ }
@@ -14670,6 +14848,7 @@ function restoreConn(){
     State.gridAutoFitOrientation=normalizeGridAutoFitOrientation(c.gridAutoFitOrientation||State.gridAutoFitOrientation);
     State.gridAutoFitPresetChosen=!!c.gridAutoFitPresetChosen;
     State.gridDynamicNoticeSuppress=!!c.gridDynamicNoticeSuppress;
+    State.skipDeviceChecksOnSave=!!c.skipDeviceChecksOnSave;
     if(c.gridAutoFitCustom) State.gridAutoFitCustom={
       width:Math.max(1,Math.round(Number(c.gridAutoFitCustom.width)||1024)),
       height:Math.max(1,Math.round(Number(c.gridAutoFitCustom.height)||768)),
@@ -14683,6 +14862,8 @@ function restoreConn(){
     const autoPad=document.getElementById("prefAutoResizePadding");
     if(autoPad) autoPad.value=String(State.autoResizeDashboardPadding);
     try{ updateAutoResizeDashboardPreferenceControls(); }catch(_e){}
+    const skipDeviceChecks=document.getElementById("prefSkipDeviceChecksOnSave");
+    if(skipDeviceChecks) skipDeviceChecks.checked=!!State.skipDeviceChecksOnSave;
     const rveMode=document.getElementById("prefRenderedViewEngine");
     if(rveMode) rveMode.value=State.renderedViewEngine;
     const rvc=document.getElementById("prefRenderedViewCompatibility");
@@ -15042,6 +15223,11 @@ async function wire(){
     document.getElementById("prefsPanel").classList.toggle("hidden");
   });
   document.getElementById("prefAutoConnect").addEventListener("change",saveConn);
+  document.getElementById("prefSkipDeviceChecksOnSave")?.addEventListener("change",e=>{
+    State.skipDeviceChecksOnSave=!!e.target.checked;
+    saveConn();
+    status(State.skipDeviceChecksOnSave ? "Save-time device checks will be skipped." : "Save-time device checks enabled.");
+  });
   document.getElementById("prefHideGridGap")?.addEventListener("change",e=>{
     State.hideGridGap=!!e.target.checked;
     syncZoomInputs();
@@ -15108,7 +15294,19 @@ async function wire(){
     if(tileDisplayMode()!=="snapshot"){ toast("Switch to Rendered View before refreshing rendered tiles.","err"); return; }
     const a=renderedSnapshotAvailability();
     if(!a.ok){ toast(`Rendered View is unavailable: ${a.reason}.`,"err"); updateTileDisplayIndicator(); return; }
-    captureHubTileSnapshots({silent:false,timeoutMs:30000,retryCount:1});
+    const warn=renderAffectingUnsavedChangeMessage();
+    const run=()=>captureHubTileSnapshots({silent:false,timeoutMs:30000,retryCount:1});
+    if(warn){
+      showConfirm(
+        "Refresh Rendered View?",
+        `${warn}\n\nRefresh anyway?`,
+        run,
+        ()=>status("Rendered View refresh cancelled — unsaved render-affecting changes were kept local."),
+        {okText:"Refresh Anyway",cancelText:"Cancel",defaultButton:"cancel"}
+      );
+      return;
+    }
+    run();
   };
   document.getElementById("prefRefreshSnapshots")?.addEventListener("click",()=>{
     if(document.getElementById("prefRefreshSnapshots")?.disabled) return;
