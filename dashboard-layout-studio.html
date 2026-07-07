@@ -511,6 +511,14 @@
   .info-css-edit-btn{display:inline-flex;align-items:center;gap:5px;width:auto;padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);font-size:.72rem;cursor:pointer;}
   .info-css-edit-btn:hover{border-color:var(--accent);background:rgba(103,232,249,.10);}
   .info-css-pre{margin:0;white-space:pre-wrap;line-height:1.35;}
+  .info-css-external{margin-top:10px;border:1px dashed rgba(245,166,35,.45);border-radius:9px;background:rgba(245,166,35,.07);padding:9px 10px;}
+  .info-css-external .info-css-label{color:var(--amber-2);font-weight:800;}
+  .info-css-external-note{font-size:.7rem;color:var(--muted);line-height:1.35;margin:0 0 6px;}
+  .external-css-pane{display:none;margin-top:10px;border:1px dashed rgba(245,166,35,.45);border-radius:9px;background:rgba(245,166,35,.07);padding:9px 10px;color:var(--muted);font-size:.72rem;line-height:1.4;}
+  .external-css-pane.active{display:block;}
+  .external-css-pane h4{margin:0 0 5px;color:var(--amber-2);font-size:.78rem;}
+  .external-css-pane pre{margin:6px 0 0;max-height:180px;overflow:auto;white-space:pre-wrap;font-family:var(--mono);font-size:.66rem;line-height:1.35;color:var(--text);}
+  .external-css-source-tag{display:inline-flex;align-items:center;border:1px solid rgba(245,166,35,.38);background:rgba(245,166,35,.09);color:var(--amber-2);border-radius:999px;padding:1px 6px;font-family:var(--mono);font-size:.58rem;font-weight:800;margin-right:6px;}
   .info-css-edit-shell{display:flex;flex-direction:column;flex:1;min-height:0;}
   .info-css-instructions{flex:none;margin:0 0 10px;padding:12px 14px;border:1px solid rgba(103,232,249,.28);border-radius:9px;background:rgba(103,232,249,.07);color:var(--muted);font-size:.76rem;line-height:1.5;max-height:none;overflow:visible;}
   .info-css-instructions b{color:var(--text);}
@@ -971,7 +979,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.1.398">1.1.398</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.402">1.2.402</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -992,6 +1000,10 @@
     <span class="orphan-ind device-status-ind" id="deviceStatusInd" style="display:none" title="Review tile device assignments">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
       <span class="oi-txt">Device Status</span>
+    </span>
+    <span class="orphan-ind external-css-ind" id="externalCssInd" style="display:none" title="Review imported tile-scoped CSS rules">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      <span class="oi-txt">External CSS Rules</span>
     </span>
     <span class="spacer"></span>
     <span class="conn-dot" id="connDot"></span>
@@ -1431,9 +1443,9 @@
 <li>Validate / Comp Fmt first runs the regular CSS formatter and then applies the same compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting as the customCSS tab compact formatter.</li>
 <li>When any selector consolidation is applied, all preserved duplicate comments are removed because every duplicate is already represented by a surviving active declaration. This includes comments inside selectors that were already in a single rule and comments preserved by an earlier cleanup run.</li>
 </ul><h5>CSS status and tile scope</h5><div class="help-grid">
-<div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block. Consolidated selector originals are not preserved. Consolidation is blocked whenever related conflicts are found, and those rows show Conflicts Found until the conflicts are resolved.</div>
+<div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block. CSS cleanup checks use the merged effective stylesheet, including imported @import rules plus editable customCSS, for conflicts, duplicates, and selector consolidation. Imported conflicts, duplicates, and consolidation candidates are separated from editable customCSS items because imported rules are read-only. Consolidated selector originals are not preserved. Consolidation is blocked whenever related conflicts are found, and those rows show Conflicts Found until the conflicts are resolved.</div>
 <div class="k">Device status indicator</div><div class="v">Appears next to CSS Status in online mode when tile device assignments need review. Red indicates one or more non-exempt tile device IDs do not exist on the hub; clicking it opens the JSON Editor to Tile Devices. Yellow indicates valid hub devices are assigned to non-exempt tiles but are not selected for the dashboard; clicking it opens the JSON Editor to Dashboard Devices. Mode and Text Tile templates are excluded from these validity checks.</div>
-<div class="k">Tile-scoped CSS</div><div class="v">Rules such as <code>#tile-40</code>, <code>#tile_40</code>, or <code>.tile-40</code> are treated as tile-scoped CSS for copy/cleanup operations.</div>
+<div class="k">Tile-scoped CSS</div><div class="v">Rules such as <code>#tile-40</code>, <code>#tile_40</code>, or <code>.tile-40</code> are treated as tile-scoped CSS for copy/cleanup operations. If customCSS contains <code>@import</code> stylesheets, DLS loads imported tile-scoped rules as read-only external CSS. Imported rules are displayed in the customCSS editor and Tile Info, included in merged CSS conflict, duplicate, and consolidation checks with editable customCSS, and copied into editable customCSS when matching tiles are duplicated. External conflicts are shown separately with options to discard the editable customCSS declaration or accept the conflict. The External CSS Rules indicator appears when imported tile-scoped rules are active.</div>
 </div></article></div>
 <div class="help-page-nav"></div>
 </section>
@@ -1704,6 +1716,7 @@
       </div>
       <div class="json-tab-content">
       <textarea id="jsonEditor" class="input json-tab-panel" role="tabpanel" aria-hidden="false" spellcheck="false" wrap="off" style="width:100%;height:52vh;resize:vertical;font-family:var(--mono);font-size:.7rem;line-height:1.45;white-space:pre;overflow:auto" placeholder='{ "tiles": [ ... ] }'></textarea>
+      <div id="jsonExternalCssPane" class="external-css-pane" aria-live="polite"></div>
       <div id="jsonTileDevicesPane" class="json-manager-pane json-tab-panel hidden" role="tabpanel" aria-hidden="true"></div>
       <div id="jsonDashboardDevicesPane" class="json-manager-pane json-tab-panel hidden" role="tabpanel" aria-hidden="true">
         <div class="json-manager-fixed-top">
@@ -1990,8 +2003,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v398";
-const APP_VERSION = "1.1.398";
+const BUILD = "v402";
+const APP_VERSION = "1.2.402";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -2006,6 +2019,7 @@ const State = {
   baseDoc:null,                  // editable full dashboard JSON base used for serialize/save after JSON editor replacement
   savedSnapshot:null,             // compact serialized layout snapshot used to detect unsaved changes
   customCSS:"",                  // dashboard customCSS (drives z-index overrides)
+  externalCSS:{imports:[],rulesText:"",tileScopedCount:0,conflictCount:0,loading:false,error:"",signature:""}, // read-only CSS loaded from @import rules
   zMap:{tile:{}, cls:{}},        // parsed z-index: by tile id, by template class
   deviceNames:new Map(),          // hub device id -> preferred device name (displayName, fallback name)
   hubDevices:[],                  // complete hub device inventory from /device/listJson?capability=capability.*
@@ -3461,8 +3475,9 @@ function adoptLayout(meta,layout){
   State.original = JSON.parse(JSON.stringify(doc));
   State.baseDoc = JSON.parse(JSON.stringify(doc));
   setCurrentGridCfg(dashboardGridCfgFromDoc(doc));
+  State.externalCSS = externalCssDefaultState();
   State.customCSS = doc.customCSS || "";
-  State.zMap = parseCssZ(State.customCSS);
+  State.zMap = parseCssZ(currentCssForCascade());
   const raw = doc.tiles || [];
   // Working tiles carry editable geometry plus a reference to the FULL original
   // tile object (_raw) so per-tile fields we don't edit — device, bgImage,
@@ -4749,17 +4764,23 @@ function currentOrphans(){
   return orphanBreakdown(State.customCSS, existing);
 }
 function cssCleanupAnalysisForCurrentLayout(){
-  if(!State.customCSS) return analyzeCustomCssCleanup("", new Set(), {includeConsolidation:true});
   const existing=new Set((State.tiles||[]).map(t=>Number(t.id)).filter(n=>Number.isFinite(n)));
-  return analyzeCustomCssCleanup(State.customCSS||"", existing, {includeConsolidation:true});
+  const analysis=analyzeCustomCssCleanup(State.customCSS||"", existing, {includeConsolidation:true, includeExternal:true});
+  return analysis;
 }
 function cssCleanupActionableCounts(analysis){
-  const conflicts=analysis&&analysis.conflictGroups?analysis.conflictGroups.length:0;
-  const duplicates=analysis&&analysis.duplicateGroups?analysis.duplicateGroups.length:0;
-  const consolidations=analysis&&analysis.consolidationGroups?analysis.consolidationGroups.length:0;
+  const localConflicts=analysis&&analysis.conflictGroups?analysis.conflictGroups.length:0;
+  const externalConflicts=analysis&&analysis.externalConflictGroups?analysis.externalConflictGroups.length:0;
+  const conflicts=localConflicts+externalConflicts;
+  const localDuplicates=analysis&&analysis.duplicateGroups?analysis.duplicateGroups.length:0;
+  const externalDuplicates=analysis&&analysis.externalDuplicateGroups?analysis.externalDuplicateGroups.length:0;
+  const duplicates=localDuplicates+externalDuplicates;
+  const localConsolidations=analysis&&analysis.consolidationGroups?analysis.consolidationGroups.length:0;
+  const externalConsolidations=analysis&&analysis.externalConsolidationGroups?analysis.externalConsolidationGroups.length:0;
+  const consolidations=localConsolidations+externalConsolidations;
   const activeOrphans=analysis&&analysis.ruleOrphans?analysis.ruleOrphans.size:0;
   const commentOrphans=analysis&&analysis.commentOnlyOrphans?analysis.commentOnlyOrphans.size:0;
-  return {conflicts, duplicates, consolidations, activeOrphans, commentOrphans,
+  return {conflicts, localConflicts, externalConflicts, duplicates, localDuplicates, externalDuplicates, consolidations, localConsolidations, externalConsolidations, activeOrphans, commentOrphans,
     nonCritical:duplicates+activeOrphans+commentOrphans,
     total:conflicts+duplicates+consolidations+activeOrphans+commentOrphans};
 }
@@ -4775,7 +4796,9 @@ function updateOrphanIndicator(){
   if(counts.conflicts){
     el.classList.add("danger");
     txt.textContent=`${counts.conflicts} CSS Conflict${counts.conflicts!==1?"s":""} Found - Fix`;
-    el.title="Click to review conflicting customCSS declarations.";
+    el.title=counts.externalConflicts
+      ? "Click to review conflicts found in merged imported CSS plus editable customCSS."
+      : "Click to review conflicting customCSS declarations.";
   }else if(counts.nonCritical){
     el.classList.add("warn");
     txt.textContent=`${counts.nonCritical} CSS Cleanup Item${counts.nonCritical!==1?"s":""} Found`;
@@ -4838,7 +4861,7 @@ function openCssCleanupReviewFromIndicator(){
     if(!changed){ status("customCSS cleanup review closed without changes."); return; }
     pushHistory();
     State.customCSS=cleanedText||"";
-    State.zMap=parseCssZ(State.customCSS);
+    State.zMap=parseCssZ(currentCssForCascade());
     render();
     toast("customCSS cleanup applied.","ok");
   });
@@ -4849,7 +4872,7 @@ function doScrubCss(){
   const ids=[...ruleOrphans];
   pushHistory();
   State.customCSS=cleanupCssForTileIds(State.customCSS, ids);
-  State.zMap=parseCssZ(State.customCSS);
+  State.zMap=parseCssZ(currentCssForCascade());
   render();
   toast(`Scrubbed ${ids.length} orphan rule set(s) from customCSS.`,"ok");
 }
@@ -4921,7 +4944,7 @@ function hideOrphans(){
     const [css2]=processStandaloneCommentsForRemovedTiles(css, [...commentOnlyOrphans], false);
     css=css2;
   }
-  State.customCSS=css; State.zMap=parseCssZ(css);
+  State.customCSS=css; State.zMap=parseCssZ(currentCssForCascade());
   render();
   toast(`Hid orphan references (neutralized to tile_id form).`,"ok");
 }
@@ -4959,7 +4982,8 @@ function finishAdopt(meta){
   }else{
     status(`Loaded ${State.tiles.length} tiles · ${State.cfg.cols}×${State.cfg.rows} grid. Click a tile, a header, or drag to select.`);
   }
-  // orphan presence is shown by the indicator; no toast needed.
+  refreshExternalCssImports({status:false});
+  // orphan/external CSS presence is shown by the indicators; no toast needed.
 }
 
 /* template → colour family */
@@ -5503,6 +5527,252 @@ function collectRulesForTileIds(css, tileIds){
   }
   rec(css);
   return found;
+}
+
+/* ---------- External @import CSS merge layer ----------
+   @import rules in customCSS may reference styles generated by other apps.
+   Imported CSS is treated as read-only source: it is visible in editors and
+   included in checks/copy duplication, but edits are always written only to
+   dashboard customCSS. */
+function externalCssDefaultState(){ return {imports:[],rulesText:"",tileScopedCount:0,conflictCount:0,loading:false,error:"",signature:""}; }
+function stripCssImportStatements(css){ return String(css||"").replace(/@import\s+(?:url\(\s*)?(?:"[^"]+"|'[^']+'|[^;)\s]+)\s*\)?[^;]*;/gi,""); }
+function extractCssImports(css){
+  const out=[]; const re=/@import\s+(?:url\(\s*)?(?:"([^"]+)"|'([^']+)'|([^;)\s]+))\s*\)?([^;]*);/gi;
+  let m; while((m=re.exec(String(css||"")))){ const url=(m[1]||m[2]||m[3]||"").trim(); if(url) out.push({url,media:(m[4]||"").trim(),text:m[0]}); }
+  return out;
+}
+function resolveCssImportUrl(url,base){
+  try{ return new URL(String(url||""), base||location.href).href; }catch(_){ return String(url||""); }
+}
+function externalCssRulesText(){ return String(State.externalCSS&&State.externalCSS.rulesText||""); }
+function currentCssForCascade(){
+  const imported=externalCssRulesText();
+  const local=String(State.customCSS||"");
+  return (imported?imported.replace(/\s+$/,"\n"):"")+local;
+}
+function cssSourceForTileDuplication(){ return currentCssForCascade(); }
+function externalCssTileScopedCount(cssText=externalCssRulesText()){
+  try{ return selectorTileIdsInCss(cssText||"").size; }catch(_){ return 0; }
+}
+function externalCssRuleCountsBySelector(css){
+  const counts=new Map();
+  function scan(cssText,atPath=[]){
+    for(const node of parseCssNodes(cssText||"")){
+      if(node.kind!=="block") continue;
+      const pre=(node.prelude||"").trim();
+      if(!pre) continue;
+      if(pre.startsWith("@")){ scan(node.body||"",[...atPath,pre]); continue; }
+      for(const sel of splitSelectorList(pre).map(x=>x.trim()).filter(Boolean)){
+        if(!selectorTileIds(sel).size) continue;
+        const key=cssSelectorContextKey(atPath,sel);
+        const cur=counts.get(key)||{key,selector:sel,atPath:[...atPath],count:0};
+        cur.count++;
+        counts.set(key,cur);
+      }
+    }
+  }
+  scan(css||"");
+  return counts;
+}
+function externalCssMergedAnalysisFor(customCss){
+  const imported=externalCssRulesText();
+  if(!String(imported||"").trim()) return {conflicts:[],duplicates:[],consolidations:[]};
+  customCss=String(customCss==null?State.customCSS||"":customCss);
+  const custom=collectCssDeclarationProblemData(customCss||"");
+  const ext=collectCssDeclarationProblemData(imported||"");
+  const conflicts=[];
+  const duplicates=[];
+  const keys=new Set([...ext.groups.keys(),...custom.groups.keys()]);
+  for(const key of keys){
+    const eg=ext.groups.get(key), cg=custom.groups.get(key);
+    const base=eg||cg;
+    if(!base || !selectorTileIds(base.selector||"").size) continue;
+    const eVals=eg?[...eg.values.values()].map(v=>String(v).trim()):[];
+    const cVals=cg?[...cg.values.values()].map(v=>String(v).trim()):[];
+    const eNorm=eg?new Set([...eg.values.keys()]):new Set();
+    const cNorm=cg?new Set([...cg.values.keys()]):new Set();
+    const allNorm=new Set([...eNorm,...cNorm]);
+    const externalCount=eg?eg.items.length:0;
+    const customCount=cg?cg.items.length:0;
+    if(eg && cg){
+      const differs=[...cNorm].some(v=>!eNorm.has(v)) || eNorm.size!==cNorm.size;
+      if(differs){
+        conflicts.push({key,selector:base.selector,prop:base.prop,atPath:base.atPath||[],customValues:cVals,externalValues:eVals,customCount,externalCount,externalOnly:false});
+      }else if(allNorm.size===1 && customCount+externalCount>1){
+        duplicates.push({key,selector:base.selector,prop:base.prop,atPath:base.atPath||[],values:[...(eg?eg.values:cg.values).values()].map(v=>String(v).trim()),customCount,externalCount,externalOnly:false,canDiscard:customCount>0});
+      }
+    }else if(eg){
+      if(eNorm.size>1){
+        conflicts.push({key,selector:base.selector,prop:base.prop,atPath:base.atPath||[],customValues:[],externalValues:eVals,customCount:0,externalCount,externalOnly:true});
+      }else if(externalCount>1){
+        duplicates.push({key,selector:base.selector,prop:base.prop,atPath:base.atPath||[],values:eVals,customCount:0,externalCount,externalOnly:true,canDiscard:false});
+      }
+    }
+  }
+  const customRuleCounts=externalCssRuleCountsBySelector(customCss||"");
+  const extRuleCounts=externalCssRuleCountsBySelector(imported||"");
+  const mergedCssForAnalysis=(imported?String(imported).replace(/\s+$/,"\n"):"")+customCss;
+  const mergedConsolidations=collectCssConsolidationGroups(mergedCssForAnalysis).filter(g=>{
+    if(!selectorTileIds(g.selector||"").size) return false;
+    const extCount=(extRuleCounts.get(g.key)||{}).count||0;
+    if(!extCount) return false;
+    return ((customRuleCounts.get(g.key)||{}).count||0)+extCount>1;
+  }).map(g=>({
+    ...g,
+    customCount:(customRuleCounts.get(g.key)||{}).count||0,
+    externalCount:(extRuleCounts.get(g.key)||{}).count||0,
+    externalOnly:!((customRuleCounts.get(g.key)||{}).count||0)
+  }));
+  const sortProp=(a,b)=>String(a.selector).localeCompare(String(b.selector),undefined,{numeric:true,sensitivity:"base"})||String(a.prop||"").localeCompare(String(b.prop||""));
+  conflicts.sort(sortProp); duplicates.sort(sortProp);
+  mergedConsolidations.sort((a,b)=>String(a.selector).localeCompare(String(b.selector),undefined,{numeric:true,sensitivity:"base"}));
+  return {conflicts,duplicates,consolidations:mergedConsolidations};
+}
+function externalCssConflictGroups(customCss){
+  return externalCssMergedAnalysisFor(customCss).conflicts;
+}
+function externalCssDuplicateGroups(customCss){
+  return externalCssMergedAnalysisFor(customCss).duplicates;
+}
+function externalCssConsolidationGroups(customCss){
+  return externalCssMergedAnalysisFor(customCss).consolidations;
+}
+function updateExternalCssStats(){
+  if(!State.externalCSS) State.externalCSS=externalCssDefaultState();
+  State.externalCSS.tileScopedCount=externalCssTileScopedCount();
+  State.externalCSS.conflictCount=externalCssConflictGroups().length;
+}
+function updateExternalCssIndicator(){
+  const el=document.getElementById("externalCssInd"); if(!el) return;
+  if(!State.active || !State.externalCSS || !State.externalCSS.tileScopedCount){ el.style.display="none"; return; }
+  el.style.display="inline-flex";
+  el.classList.remove("cleanup","warn","danger");
+  el.classList.add(State.externalCSS.conflictCount?"danger":"warn");
+  const txt=el.querySelector(".oi-txt");
+  if(txt) txt.textContent=State.externalCSS.conflictCount?`${State.externalCSS.conflictCount} External CSS Conflict${State.externalCSS.conflictCount!==1?"s":""}`:"External CSS Rules";
+  el.title=State.externalCSS.conflictCount
+    ? "Imported tile-scoped CSS conflicts with customCSS. Click to review."
+    : "Imported tile-scoped CSS rules are active but read-only. Click to review.";
+}
+function externalCssDisplayTextForTile(tileId){
+  const out=[];
+  for(const imp of (State.externalCSS&&State.externalCSS.imports)||[]){
+    const scoped=collectRulesForTileIds(imp.css||"",[tileId]);
+    if(!scoped.length) continue;
+    out.push(`/* Imported from ${imp.url} — read-only in DLS */`);
+    for(const r of scoped){
+      if(r.kind==="rule") out.push(`${r.selector} {
+  ${String(r.body||"").trim()}
+}`);
+      else if(r.kind==="comment") out.push(String(r.text||"").trim());
+    }
+  }
+  return normalizeTileInfoCssText(out.join("\n\n"));
+}
+function externalCssSummaryHtml(){
+  const ex=State.externalCSS||externalCssDefaultState();
+  if(!ex.imports.length && !ex.loading) return "";
+  const srcs=(ex.imports||[]).map(i=>`<span class="external-css-source-tag">${esc((i.url||"").split("/").pop()||i.url)}</span>`).join(" ");
+  const note=ex.loading?"Loading imported CSS…":`${ex.tileScopedCount||0} imported tile-scoped rule reference${(ex.tileScopedCount||0)!==1?"s":""}. Imported rules are read-only; duplicated tiles receive editable copies in customCSS.`;
+  const text=(ex.imports||[]).map(i=>`/* Imported from ${i.url} — read-only */
+${normalizeTileInfoCssText(i.css||"")}`).join("\n\n");
+  return `<h4>Imported customCSS rules</h4><div>${srcs}</div><p style="margin:6px 0 0">${esc(note)}${ex.error?` <span style="color:#fecaca">${esc(ex.error)}</span>`:""}</p>${text?`<pre>${esc(text)}</pre>`:""}`;
+}
+function updateJsonExternalCssPane(){
+  const pane=document.getElementById("jsonExternalCssPane"); if(!pane) return;
+  const on=JsonEditorState&&JsonEditorState.mode==="customCSS" && State.externalCSS && (State.externalCSS.imports.length||State.externalCSS.loading||State.externalCSS.error);
+  pane.classList.toggle("active",!!on);
+  pane.innerHTML=on?externalCssSummaryHtml():"";
+}
+async function refreshExternalCssImports(opts={}){
+  if(!State.externalCSS) State.externalCSS=externalCssDefaultState();
+  const imports=extractCssImports(State.customCSS||"");
+  const signature=imports.map(i=>i.url+"|"+i.media).join("\n");
+  if(signature===State.externalCSS.signature && !opts.force){ updateExternalCssStats(); updateExternalCssIndicator(); updateJsonExternalCssPane(); return State.externalCSS; }
+  if(!imports.length){ State.externalCSS=externalCssDefaultState(); updateExternalCssIndicator(); updateJsonExternalCssPane(); State.zMap=parseCssZ(currentCssForCascade()); return State.externalCSS; }
+  State.externalCSS={...externalCssDefaultState(),loading:true,signature,imports:imports.map(i=>({url:resolveCssImportUrl(i.url,location.href),media:i.media,css:"",error:""}))};
+  updateExternalCssIndicator(); updateJsonExternalCssPane();
+  const loaded=[]; const errors=[];
+  async function loadOne(url,depth=0){
+    const abs=resolveCssImportUrl(url,location.href);
+    if(loaded.some(x=>x.url===abs) || depth>2) return;
+    try{
+      const res=await fetch(abs,{cache:"no-store"});
+      if(!res.ok) throw new Error(`${res.status} ${res.statusText||""}`.trim());
+      const css=await res.text();
+      loaded.push({url:abs,css,error:""});
+      for(const child of extractCssImports(css)) await loadOne(resolveCssImportUrl(child.url,abs),depth+1);
+    }catch(e){ errors.push(`${abs}: ${e&&e.message?e.message:e}`); loaded.push({url:abs,css:"",error:e&&e.message?e.message:String(e)}); }
+  }
+  for(const imp of imports) await loadOne(imp.url,0);
+  State.externalCSS.imports=loaded;
+  State.externalCSS.rulesText=loaded.map(i=>i.css||"").filter(Boolean).join("\n\n");
+  State.externalCSS.loading=false;
+  State.externalCSS.error=errors.length?`Could not load ${errors.length} import${errors.length!==1?"s":""}.`:"";
+  updateExternalCssStats();
+  State.zMap=parseCssZ(currentCssForCascade());
+  updateExternalCssIndicator(); updateJsonExternalCssPane();
+  if(State.active) render();
+  if(opts.status && State.externalCSS.tileScopedCount) status(`Loaded ${State.externalCSS.tileScopedCount} imported tile-scoped CSS rule reference${State.externalCSS.tileScopedCount!==1?"s":""}.`);
+  return State.externalCSS;
+}
+function cssRemoveCustomDeclarationsByConflictKeys(css, keys){
+  keys=new Set(keys||[]); if(!keys.size) return css||"";
+  function clean(cssText,atPath=[]){
+    const out=[];
+    for(const node of parseCssNodes(cssText||"")){
+      if(node.kind!=="block"){ out.push(node); continue; }
+      const pre=(node.prelude||"").trim();
+      if(pre.startsWith("@")){ const inner=clean(node.body||"",[...atPath,pre]).replace(/\s+$/g,""); if(inner) out.push(new CssBlock(node.prelude,inner)); continue; }
+      const selectors=splitSelectorList(pre).map(x=>x.trim()).filter(Boolean);
+      const kept=[];
+      for(const part of splitCssDeclarationsForProblems(node.body||"")){
+        const d=parseCssDeclarationForProblems(part);
+        if(!d){ kept.push(cssBodyPartOutputText(part)); continue; }
+        const hit=selectors.some(sel=>keys.has(cssProblemContextKey(atPath,sel,d.prop)));
+        if(!hit) kept.push(cssBodyPartOutputText(part));
+      }
+      const body=kept.map(x=>String(x||"").trim()).filter(Boolean).join("\n");
+      if(body) out.push(new CssBlock(pre,body));
+    }
+    return renderCssNodes(out);
+  }
+  return clean(css||"");
+}
+function openExternalCssRulesReview(){
+  if(!State.active){ toast("No dashboard loaded.","err"); return; }
+  updateExternalCssStats();
+  const conflicts=externalCssConflictGroups();
+  const ex=State.externalCSS||externalCssDefaultState();
+  const srcs=(ex.imports||[]).map(i=>i.url).join("\n");
+  if(conflicts.length){
+    const lines=conflicts.slice(0,10).map(g=>`- ${g.selector}${g.atPath&&g.atPath.length?` [${g.atPath.join(" > ")}]`:""} → ${g.prop}
+  customCSS: ${g.customValues.join(" | ")}
+  imported: ${g.externalValues.join(" | ")}`);
+    showConfirm(
+      "External CSS conflicts",
+      `Imported tile-scoped CSS conflicts with editable customCSS. Imported rules are read-only.
+
+Choose "Discard customCSS rules" to remove the conflicting editable declarations, or choose "Accept conflict" to leave both rules in place.
+
+${lines.join("\n")}
+${conflicts.length>10?`
+…${conflicts.length-10} more`:""}
+
+Imports:
+${srcs}`,
+      ()=>{ pushHistory(); State.customCSS=cssRemoveCustomDeclarationsByConflictKeys(State.customCSS||"", conflicts.map(g=>g.key)); if(State.baseDoc) State.baseDoc.customCSS=State.customCSS; State.zMap=parseCssZ(currentCssForCascade()); updateExternalCssStats(); render(); status("Discarded customCSS declarations that conflicted with imported CSS rules."); },
+      ()=>status("Accepted external CSS conflict; customCSS was left unchanged."),
+      {okText:"Discard customCSS rules",cancelText:"Accept conflict",defaultButton:"cancel",dangerOk:true}
+    );
+    return;
+  }
+  showConfirm("External CSS Rules",`This dashboard imports CSS from ${ex.imports.length} external stylesheet${ex.imports.length!==1?"s":""}. DLS found ${ex.tileScopedCount||0} imported tile-scoped rule reference${(ex.tileScopedCount||0)!==1?"s":""}.
+
+Imported rules are shown as read-only in CSS views and Tile Info. When a tile is duplicated, matching imported tile-scoped rules are copied into editable customCSS for the new tile.
+
+Imports:
+${srcs||"(none)"}`,null,null,{okText:"OK",hideCancel:true});
 }
 
 
@@ -6388,6 +6658,7 @@ function render(){
   renderStackCard();
   renderSelCard();
   updateOrphanIndicator();
+  updateExternalCssIndicator();
   updateDeviceStatusIndicator();
   updateSelReadout();
   updateUndoControls();
@@ -6998,11 +7269,12 @@ function setInfoCssEditorError(message){
   el.textContent=text;
   el.style.display=text?"block":"none";
 }
-function tileInfoCssEditorHtml(tileId,css,rulesCount,commentsCount){
+function tileInfoCssEditorHtml(tileId,css,rulesCount,commentsCount,externalCss=""){
   const editing=State.infoCssEdit&&Number(State.infoCssEdit.tileId)===Number(tileId);
+  const externalBlock=externalCss?`<div class="info-css-external"><div class="info-css-head"><span class="info-css-label">imported tile-scoped CSS · read-only</span></div><p class="info-css-external-note">These rules come from customCSS <code>@import</code> stylesheets. They cannot be edited here, but copies are written into editable customCSS when this tile is duplicated.</p><pre class="info-css-pre">${esc(externalCss)}</pre></div>`:"";
   const head=`<div class="info-css-head"><span class="info-css-label">scoped customCSS · ${rulesCount} rule(s), ${commentsCount} comment(s)</span>${editing?"":`<button type="button" class="info-css-edit-btn" id="infoCssEditBtn" title="Edit CSS scoped to Tile #${esc(tileId)}">✎ Edit</button>`}</div>`;
   if(!editing){
-    return head+(css?`<pre class="info-css-pre">${esc(normalizeTileInfoCssText(css))}</pre>`:`<p class="hint">No tile-scoped CSS for this tile.</p>`);
+    return head+(css?`<pre class="info-css-pre">${esc(normalizeTileInfoCssText(css))}</pre>`:`<p class="hint">No editable tile-scoped customCSS for this tile.</p>`)+externalBlock;
   }
   const renderedNote=(State.conn.mode==="live"&&!!State.lastLayoutUrl)
     ? `<li>Rendered View will not show these edits until the dashboard is saved back to the hub and Rendered View is refreshed.</li>`
@@ -7011,7 +7283,8 @@ function tileInfoCssEditorHtml(tileId,css,rulesCount,commentsCount){
     `<div class="info-css-instructions"><b>Editing CSS for Tile #${esc(tileId)}</b><ul>`+
     `<li>Every active selector must include <code>#tile-${esc(tileId)}</code> or <code>.tile-${esc(tileId)}</code>.</li>`+
     `<li>Unscoped selectors and selectors for other tile IDs cannot be saved.</li>`+
-    `<li>Blank content removes all CSS scoped to this tile. Shared comments that reference multiple tiles remain outside this editor.</li>`+
+    `<li>Imported <code>@import</code> rules shown below are read-only. Duplicate this tile to copy those rules into editable customCSS for the new tile.</li>`+
+    `<li>Blank content removes all editable CSS scoped to this tile. Shared comments that reference multiple tiles remain outside this editor.</li>`+
     `<li>Save validates the CSS and warns before keeping duplicate or conflicting declarations.</li>`+
     renderedNote+
     `</ul></div>`+
@@ -7019,13 +7292,15 @@ function tileInfoCssEditorHtml(tileId,css,rulesCount,commentsCount){
     `<textarea id="infoCssEditor" class="info-css-editor" spellcheck="false" wrap="off" aria-label="Tile #${esc(tileId)} scoped customCSS">${esc(normalizeTileInfoCssText(css))}</textarea>`+
     `<div id="infoCssError" class="info-css-error"></div>`+
     `<div class="info-css-actions"><button type="button" class="btn ghost" id="infoCssCancelBtn">Cancel</button><button type="button" class="btn primary" id="infoCssSaveBtn">Save CSS</button></div>`+
+    externalBlock+
     `</div>`;
 }
 function applyTileScopedCssChange(tileId,editedCss){
   const nextCss=replaceTileScopedCssPreserveSource(State.customCSS||"",tileId,editedCss);
   pushHistory();
   State.customCSS=nextCss;
-  State.zMap=parseCssZ(State.customCSS||"");
+  State.zMap=parseCssZ(currentCssForCascade());
+  refreshExternalCssImports({force:true});
   if(State.baseDoc) State.baseDoc.customCSS=State.customCSS;
   if(State.active&&State.active._layout) State.active._layout.customCSS=State.customCSS;
   State.tileSnapshotBlockedUntilReload=false;
@@ -7120,7 +7395,10 @@ function showTileInfo(tileId){
   const idx=State.tiles.findIndex(x=>x.id===tileId);
   const placement=pm.get(idx)?.placement||"independent";
   const scoped = State.customCSS ? collectRulesForTileIds(State.customCSS,[tileId]) : [];
+  const externalCss=externalCssDisplayTextForTile(tileId);
+  const externalScoped = externalCss ? collectRulesForTileIds(externalCss,[tileId]) : [];
   const rules=scoped.filter(x=>x.kind==="rule"), comments=scoped.filter(x=>x.kind==="comment");
+  const externalRules=externalScoped.filter(x=>x.kind==="rule"), externalComments=externalScoped.filter(x=>x.kind==="comment");
   const editingCss=State.infoCssEdit&&Number(State.infoCssEdit.tileId)===Number(tileId);
   const css=editingCss ? String(State.infoCssEdit.initialCss||"") : extractTileScopedCssForEditor(State.customCSS||"",tileId);
   const cssAlt=cssAlternateTitleSummary(State.customCSS||"",tileId);
@@ -7137,7 +7415,7 @@ function showTileInfo(tileId){
     ["span",esc(`${t.colSpan} × ${t.rowSpan} (w×h)`) ],
     ["placement",esc(String(placement))],
     ["z-index",esc(String(effZ(t)))],
-    ["CSS rules",esc(`${rules.length} rule(s), ${comments.length} comment(s)`) ],
+    ["CSS rules",esc(`${rules.length} editable rule(s), ${comments.length} comment(s)`+(externalRules.length||externalComments.length?`; ${externalRules.length} imported rule(s), ${externalComments.length} imported comment(s)`:"")) ],
   ];
   const posLabel = State.infoNav.ids.length>1 ? ` (${State.infoNav.pos+1} of ${State.infoNav.ids.length})` : "";
   const infoModal=document.getElementById("infoModal");
@@ -7147,7 +7425,7 @@ function showTileInfo(tileId){
     : `Tile #${t.id} — ${tileDisplayLabel(t)}${posLabel}`;
   document.getElementById("infoBody").innerHTML=
     (editingCss?"":`<div class="kv">${rows.map(([k,v])=>`<div class="k">${esc(k)}</div><div>${v}</div>`).join("")}</div>`)+
-    tileInfoCssEditorHtml(tileId,css,rules.length,comments.length);
+    tileInfoCssEditorHtml(tileId,css,rules.length,comments.length,externalCss);
   wireInfoDeviceEditor(tileId);
   wireInfoTemplateExtraEditor(tileId);
   wireInfoCssEditor(tileId);
@@ -7929,7 +8207,7 @@ function restore(s){
   if(Object.prototype.hasOwnProperty.call(o,"tileSnapshotsStaleReason")) State.tileSnapshotsStaleReason=o.tileSnapshotsStaleReason||"";
   if(Object.prototype.hasOwnProperty.call(o,"tileViewMode")) State.tileViewMode=o.tileViewMode==="snapshot"?"snapshot":"simple";
   if(Object.prototype.hasOwnProperty.call(o,"tileSnapshotStatus")) State.tileSnapshotStatus=o.tileSnapshotStatus||"none";
-  State.zMap=parseCssZ(State.customCSS||"");
+  State.zMap=parseCssZ(currentCssForCascade());
   syncZoomInputs();
   updateTileDisplayIndicator();
 }
@@ -8594,7 +8872,7 @@ function cssReviewResolve(removeCss){
     const [css2,rem,rew]=processStandaloneCommentsForRemovedTiles(css, pr.removedIds, true); // remove comments
     css=css2;
     State.customCSS=css;
-    State.zMap=parseCssZ(css);
+    State.zMap=parseCssZ(currentCssForCascade());
     render();
     toast(`Removed CSS for ${pr.removedIds.length} tile(s).`,"ok");
   }else{
@@ -8846,7 +9124,7 @@ function appendLineCopiesFromSnapshots(baseTiles, sourceTiles, kind, fromLine, d
   const ax=kind==="col"?"col":"row";
   const dRow=kind==="row" ? destLine-fromLine : 0;
   const dCol=kind==="col" ? destLine-fromLine : 0;
-  const reserved=tileIdsInCss(State.customCSS||"");
+  const reserved=tileIdsInCss(cssSourceForTileDuplication());
   const {used,nextId:startId}=nextIdState(baseTiles,reserved);
   let nextId=startId;
   const idMap=new Map();
@@ -8869,7 +9147,7 @@ function appendLineCopiesFromSnapshots(baseTiles, sourceTiles, kind, fromLine, d
   }
   let newCss=State.customCSS||"";
   if(!cssIgnore && idMap.size){
-    const dup=generateCssForIdMapForCopy(State.customCSS||"",idMap,newCss);
+    const dup=generateCssForIdMapForCopy(cssSourceForTileDuplication(),idMap,newCss);
     if(dup.trim()) newCss=(newCss.replace(/\s+$/,"")+"\n"+dup+"\n");
   }
   return {ok:true, tiles:baseTiles.concat(copies), newCss, idMap, appendedIds:copies.map(t=>Number(t.id)), appended:copies.length};
@@ -8892,7 +9170,7 @@ function completeCopyLinesWithPush(dest){
   }
   pushHistory();
   State.tiles=res.tiles;
-  State.customCSS=res.newCss; State.zMap=parseCssZ(State.customCSS);
+  State.customCSS=res.newCss; State.zMap=parseCssZ(currentCssForCascade());
   cloneRenderedSnapshotsForIdMap(res.idMap);
   State.conflictHighlight=null; State.pending=null; restorePendingLineSelection(pend,dest); updateActionButtons(); render();
   status(`Inserted ${count} ${kind}(s) at ${kind} ${dest}; copied ${res.appended} tile(s) with push.`);
@@ -9017,7 +9295,7 @@ function completeCopyTiles(cell){
   if(doPush){
     pushHistory();
     State.tiles=res.newTiles;
-    if(res.newCss!==undefined){ State.customCSS=res.newCss; State.zMap=parseCssZ(State.customCSS); }
+    if(res.newCss!==undefined){ State.customCSS=res.newCss; State.zMap=parseCssZ(currentCssForCascade()); }
     const buf=pend.buffer||0;
     const preserve=pend.preserve||false;
     const placed=State.tiles.filter(t=>res.appendedIds.includes(Number(t.id)));
@@ -9053,7 +9331,7 @@ function completeCopyLines(dest){
   }
   pushHistory();
   State.tiles=res.newTiles;
-  if(res.newCss!==undefined){ State.customCSS=res.newCss; State.zMap=parseCssZ(State.customCSS); }
+  if(res.newCss!==undefined){ State.customCSS=res.newCss; State.zMap=parseCssZ(currentCssForCascade()); }
   cloneRenderedSnapshotsForIdMap(res.idMap);
   State.conflictHighlight=null; State.pending=null; restorePendingLineSelection(pend,dest); updateActionButtons(); render();
   status(`Copied ${res.appended} tile(s) to ${pend.kind} ${dest}${res.skipped?`; skipped ${res.skipped} conflicting`:""}.`);
@@ -9180,7 +9458,7 @@ function ensureUniqueId(tile, used, nextId){
    mutating State (caller commits). On a 'none' conflict, ok=false + conflictIds. */
 function computeCopy(selIdx, deltaRow, deltaCol, overlapsMode, cssIgnore){
   const dest=State.tiles;
-  const reserved = tileIdsInCss(State.customCSS||""); // ignores comments, per CLI
+  const reserved = tileIdsInCss(cssSourceForTileDuplication()); // ignores comments, per CLI
   const {used, nextId:startId} = nextIdState(dest, reserved);
   let nextId=startId;
   const idMap=new Map();
@@ -9215,7 +9493,7 @@ function computeCopy(selIdx, deltaRow, deltaCol, overlapsMode, cssIgnore){
   const landedMap=new Map([...idMap].filter(([,v])=>appendedIds.has(v)));
   let newCss=State.customCSS||"";
   if(!cssIgnore && landedMap.size){
-    const dup=generateCssForIdMapForCopy(State.customCSS||"", landedMap, newCss);
+    const dup=generateCssForIdMapForCopy(cssSourceForTileDuplication(), landedMap, newCss);
     if(dup.trim()) newCss = (newCss.replace(/\s+$/,"") + "\n" + dup + "\n");
   }
   return { ok:true, newTiles:dest.concat(appended), newCss, idMap:landedMap, skipped, appended:appended.length, appendedIds:appended.map(t=>Number(t.id)) };
@@ -9225,7 +9503,7 @@ function computeCopy(selIdx, deltaRow, deltaCol, overlapsMode, cssIgnore){
 function commitCopy(result){
   pushHistory();
   State.tiles=result.newTiles;
-  if(result.newCss!==undefined){ State.customCSS=result.newCss; State.zMap=parseCssZ(State.customCSS); }
+  if(result.newCss!==undefined){ State.customCSS=result.newCss; State.zMap=parseCssZ(currentCssForCascade()); }
   cloneRenderedSnapshotsForIdMap(result.idMap);
   State.conflictHighlight=null;
   if(result.appendedIds&&result.appendedIds.length) selectTileIds(result.appendedIds); else clearSelection();
@@ -9259,7 +9537,7 @@ function snapshotSelectionToBuffer(mode){
     _raw:t._raw?JSON.parse(JSON.stringify(t._raw)):null,
   }));
   // snapshot the CSS and rendered tile images scoped to these ids (so they survive a dashboard switch)
-  const css=State.customCSS||"";
+  const css=cssSourceForTileDuplication();
   const snapshots=snapshotSelectionRenderedImages(ids);
   State.buffer={ tiles, css, snapshots, sourceId: State.active?State.active.id:null, mode, cutIds:idset };
   State.bufferUsed=false;
@@ -9956,7 +10234,7 @@ function completePasteBuf(cell){
   // Rule (matches the CLI): newID = 1 + max(highest DESTINATION tile-id, highest
   // tile-id referenced in the DESTINATION customCSS). The SOURCE/buffer CSS ids
   // are NOT reserved — they get remapped to the new destination ids anyway.
-  const reserved = tileIdsInCss(State.customCSS||"");      // destination CSS only
+  const reserved = tileIdsInCss(cssSourceForTileDuplication());      // destination CSS only
   const used=new Set([...existing, ...reserved]);
   let nextId = used.size ? Math.max(...used)+1 : 1;
   const copies=[];
@@ -10003,7 +10281,7 @@ function completePasteBuf(cell){
     const cssIgnore=!document.getElementById("chkDupCss").checked;
     if(!cssIgnore){ const landed=new Map([...idMap]);
       const dup=generateCssForIdMapForCopy(b.css||"", landed, State.customCSS||"");
-      if(dup.trim()){ State.customCSS=(State.customCSS||"").replace(/\s+$/,"")+"\n"+dup+"\n"; State.zMap=parseCssZ(State.customCSS); } }
+      if(dup.trim()){ State.customCSS=(State.customCSS||"").replace(/\s+$/,"")+"\n"+dup+"\n"; State.zMap=parseCssZ(currentCssForCascade()); } }
     State.bufferUsed=true; State.conflictHighlight=null; State.pending=null;
     selectTileIds(copies.map(t=>Number(t.id))); render();
     status(`Pasted ${copies.length} tile(s) with push (${pushDown?"down":"right"}).`);
@@ -10027,7 +10305,7 @@ function completePasteBuf(cell){
   const cssIgnore=!document.getElementById("chkDupCss").checked;
   if(!cssIgnore){
     if(landed.size){ const dup=generateCssForIdMapForCopy(b.css||"", landed, State.customCSS||"");
-      if(dup.trim()){ State.customCSS=(State.customCSS||"").replace(/\s+$/,"")+"\n"+dup+"\n"; State.zMap=parseCssZ(State.customCSS); } }
+      if(dup.trim()){ State.customCSS=(State.customCSS||"").replace(/\s+$/,"")+"\n"+dup+"\n"; State.zMap=parseCssZ(currentCssForCascade()); } }
   }
   State.bufferUsed=true; State.conflictHighlight=null; State.pending=null;
   selectTileIds(keep.map(t=>Number(t.id))); render();
@@ -10457,6 +10735,7 @@ function updateLayoutScaleControls(){
       hint.textContent=`This will ${rowWord} and ${colWord} for the entire layout.`;
     }
   }
+  updateJsonExternalCssPane();
 }
 
 function fitGridZoomToViewport(opts={}){
@@ -11258,7 +11537,7 @@ function gridCssIssueFixLabel(kind){
 }
 function gridCssIssueRecords(cfg,tiles){
   const records=[];
-  const css=String(State.customCSS||"");
+  const css=String(currentCssForCascade());
   if(!css.trim()) return records;
   const oldCfg=currentGridCfg();
   const scale=gridCssScaleFactor(oldCfg,cfg);
@@ -11303,7 +11582,7 @@ function gridCssIssueRecords(cfg,tiles){
         }
       }
     }
-  }catch(e){ add("parse","customCSS","","","customCSS could not be fully scanned for grid-size compatibility."); }
+  }catch(e){ add("parse","customCSS","","","Merged customCSS/imported CSS could not be fully scanned for grid-size compatibility."); }
   return records;
 }
 function gridCssIssueGroups(records,candidate){
@@ -11923,7 +12202,7 @@ function applyGridDialogChanges(force=false){
   }
   if(changedCss){
     State.customCSS=cssFix.css||"";
-    State.zMap=parseCssZ(State.customCSS||"");
+    State.zMap=parseCssZ(currentCssForCascade());
   }
   if(State.baseDoc){
     State.baseDoc.cols=newCfg.cols; State.baseDoc.rows=newCfg.rows; State.baseDoc.colWidth=newCfg.colWidth; State.baseDoc.rowHeight=newCfg.rowHeight; State.baseDoc.gridGap=gridGapJsonValue(newCfg.gridGap);
@@ -12059,7 +12338,7 @@ function restoreOriginalLayoutState(){
   State.baseDoc=JSON.parse(JSON.stringify(doc));
   setCurrentGridCfg(dashboardGridCfgFromDoc(doc));
   State.customCSS=doc.customCSS||"";
-  State.zMap=parseCssZ(State.customCSS);
+  State.zMap=parseCssZ(currentCssForCascade());
   const raw=doc.tiles||[];
   State.tiles=raw.map(t=>({
     id:t.id, row:t.row, col:t.col, rowSpan:t.rowSpan, colSpan:t.colSpan,
@@ -12274,6 +12553,7 @@ function resetOfflineWorkspaceForHubConnect(){
   updateDashboardJumpState();
   updateSaveHubState();
   updateOrphanIndicator();
+  updateExternalCssIndicator();
   updateDeviceStatusIndicator();
   updateTileDisplayIndicator();
   updateSelReadout();
@@ -13300,6 +13580,7 @@ function updateJsonEditorModeButtons(){
   }
   document.getElementById("jsonFormatMenu")?.classList.add("hidden");
   updateJsonEditorActionVisibility();
+  updateJsonExternalCssPane();
 }
 function showJsonEditorMode(mode, caret="start"){
   JsonEditorState.mode=mode;
@@ -13324,6 +13605,7 @@ function showJsonEditorMode(mode, caret="start"){
       renderJsonDashboardDevicesPane();
     }
   }
+  updateJsonExternalCssPane();
 }
 function restoreJsonEditorOriginal(){
   try{
@@ -13471,7 +13753,7 @@ function liveApplyCustomCssFromEditor(css, label="customCSS cleanup"){
   if(String(State.customCSS||"")===css) return false;
   pushHistory();
   State.customCSS=css;
-  State.zMap=parseCssZ(State.customCSS||"");
+  State.zMap=parseCssZ(currentCssForCascade());
   if(State.baseDoc) State.baseDoc.customCSS=css;
   if(State.active&&State.active._layout) State.active._layout.customCSS=css;
   State.tileSnapshotBlockedUntilReload=false;
@@ -13641,7 +13923,8 @@ function applyJsonToCurrentLayout(data, sourceLabel, opts={}){
   State.baseDoc=JSON.parse(JSON.stringify(doc));
   setCurrentGridCfg(dashboardGridCfgFromDoc(doc));
   State.customCSS=doc.customCSS||"";
-  State.zMap=parseCssZ(State.customCSS);
+  State.zMap=parseCssZ(currentCssForCascade());
+  refreshExternalCssImports({force:true});
   State.tiles=(doc.tiles||[]).map(t=>({
     id:t.id, row:t.row, col:t.col, rowSpan:t.rowSpan, colSpan:t.colSpan,
     template:t.template||"", label:t.templateExtra||t.label||"",
@@ -14211,10 +14494,18 @@ function analyzeCustomCssCleanup(css, existingIds, opts={}){
   const orph=orphanBreakdown(css||"", existingIds||new Set());
   const decls=collectCssDeclarationProblemData(css||"");
   const consolidationGroups=opts.includeConsolidation ? collectCssConsolidationGroups(css||"") : [];
-  return {cssText:css||"", ruleOrphans:orph.ruleOrphans, commentOnlyOrphans:orph.commentOnlyOrphans, duplicateGroups:decls.duplicateGroups, conflictGroups:decls.conflictGroups, consolidationGroups, declData:decls};
+  const analysis={cssText:css||"", ruleOrphans:orph.ruleOrphans, commentOnlyOrphans:orph.commentOnlyOrphans, duplicateGroups:decls.duplicateGroups, conflictGroups:decls.conflictGroups, consolidationGroups, declData:decls};
+  if(opts.includeExternal){
+    const merged=externalCssMergedAnalysisFor(css||"");
+    analysis.externalConflictGroups=merged.conflicts||[];
+    analysis.externalDuplicateGroups=merged.duplicates||[];
+    analysis.externalConsolidationGroups=merged.consolidations||[];
+    analysis.mergedCssText=(externalCssRulesText()?String(externalCssRulesText()).replace(/\s+$/,"\n"):"")+(css||"");
+  }
+  return analysis;
 }
 function hasCustomCssCleanupIssues(analysis){
-  return !!(analysis && (analysis.ruleOrphans.size || analysis.commentOnlyOrphans.size || analysis.duplicateGroups.length || analysis.conflictGroups.length || (analysis.consolidationGroups&&analysis.consolidationGroups.length)));
+  return !!(analysis && (analysis.ruleOrphans.size || analysis.commentOnlyOrphans.size || analysis.duplicateGroups.length || analysis.conflictGroups.length || ((analysis.externalConflictGroups||[]).length) || ((analysis.externalDuplicateGroups||[]).length) || ((analysis.externalConsolidationGroups||[]).length) || (analysis.consolidationGroups&&analysis.consolidationGroups.length)));
 }
 function customCssCleanupMessage(analysis){
   const lines=[];
@@ -14222,11 +14513,17 @@ function customCssCleanupMessage(analysis){
   if(analysis.commentOnlyOrphans.size) lines.push(`${analysis.commentOnlyOrphans.size} orphan reference${analysis.commentOnlyOrphans.size!==1?"s":""} found only in comments.`);
   if(analysis.duplicateGroups.length) lines.push(`${analysis.duplicateGroups.length} duplicate selector/property group${analysis.duplicateGroups.length!==1?"s":""} found.`);
   if(analysis.conflictGroups.length) lines.push(`${analysis.conflictGroups.length} conflicting selector/property group${analysis.conflictGroups.length!==1?"s":""} found.`);
+  if((analysis.externalConflictGroups||[]).length) lines.push(`${analysis.externalConflictGroups.length} merged imported/customCSS conflict${analysis.externalConflictGroups.length!==1?"s":""} found.`);
+  if((analysis.externalDuplicateGroups||[]).length) lines.push(`${analysis.externalDuplicateGroups.length} merged imported/customCSS duplicate${analysis.externalDuplicateGroups.length!==1?"s":""} found.`);
+  if((analysis.externalConsolidationGroups||[]).length) lines.push(`${analysis.externalConsolidationGroups.length} merged imported/customCSS selector consolidation candidate${analysis.externalConsolidationGroups.length!==1?"s":""} found.`);
   if(analysis.consolidationGroups&&analysis.consolidationGroups.length) lines.push(`${analysis.consolidationGroups.length} selector consolidation group${analysis.consolidationGroups.length!==1?"s":""} found.`);
   const detail=[];
   if(analysis.conflictGroups.length){ detail.push("", "Conflicts:", ...summarizeCssProblemGroups(analysis.conflictGroups)); }
+  if((analysis.externalConflictGroups||[]).length){ detail.push("", "External/imported conflicts:", ...analysis.externalConflictGroups.slice(0,6).map(g=>`- ${g.selector}${g.atPath&&g.atPath.length?` [${g.atPath.join(" > ")}]`:""} → ${g.prop}: customCSS ${g.customValues.join(" | ")} / imported ${g.externalValues.join(" | ")}`)); if(analysis.externalConflictGroups.length>6) detail.push(`- …${analysis.externalConflictGroups.length-6} more`); }
+  if((analysis.externalDuplicateGroups||[]).length){ detail.push("", "External/imported duplicates:", ...analysis.externalDuplicateGroups.slice(0,6).map(g=>`- ${g.selector}${g.atPath&&g.atPath.length?` [${g.atPath.join(" > ")}]`:""} → ${g.prop}: ${g.customCount||0} customCSS / ${g.externalCount||0} imported`)); if(analysis.externalDuplicateGroups.length>6) detail.push(`- …${analysis.externalDuplicateGroups.length-6} more`); }
   if(analysis.duplicateGroups.length){ detail.push("", "Duplicates:", ...summarizeCssProblemGroups(analysis.duplicateGroups)); }
   if(analysis.consolidationGroups&&analysis.consolidationGroups.length){ detail.push("", "Consolidations:", ...analysis.consolidationGroups.slice(0,6).map(g=>`- ${g.selector}${g.atPath&&g.atPath.length?` [${g.atPath.join(" > ")}]`:""} → ${g.rules.length} rules can become 1`)); if(analysis.consolidationGroups.length>6) detail.push(`- …${analysis.consolidationGroups.length-6} more`); }
+  if((analysis.externalConsolidationGroups||[]).length){ detail.push("", "External/imported consolidation candidates:", ...analysis.externalConsolidationGroups.slice(0,6).map(g=>`- ${g.selector}${g.atPath&&g.atPath.length?` [${g.atPath.join(" > ")}]`:""} → ${(g.customCount||0)+(g.externalCount||0)} merged rules`)); if(analysis.externalConsolidationGroups.length>6) detail.push(`- …${analysis.externalConsolidationGroups.length-6} more`); }
   if(analysis.ruleOrphans.size){ detail.push("", `Active orphan tile ids: ${[...analysis.ruleOrphans].sort((a,b)=>a-b).slice(0,20).join(", ")}${analysis.ruleOrphans.size>20?", …":""}`); }
   if(analysis.commentOnlyOrphans.size){ detail.push("", `Comment-only orphan ids: ${[...analysis.commentOnlyOrphans].sort((a,b)=>a-b).slice(0,20).join(", ")}${analysis.commentOnlyOrphans.size>20?", …":""}`); }
   return `customCSS review found:\n\n${lines.join("\n")}${detail.join("\n")}`;
@@ -14272,13 +14569,53 @@ function cssCleanupOrphanExportText(analysis){
 }
 function buildCustomCssCleanupDialogHtml(analysis){
   const parts=[];
+  const externalConflicts=analysis.externalConflictGroups||[];
+  const externalDuplicates=analysis.externalDuplicateGroups||[];
+  const externalConsolidations=analysis.externalConsolidationGroups||[];
   parts.push(`<div class="css-cleanup-summary">`+
-    cssCleanupCountBox("conflicts","conflicts",analysis.conflictGroups.length,`conflict group${analysis.conflictGroups.length!==1?"s":""}`)+
-    cssCleanupCountBox("duplicates","duplicates",analysis.duplicateGroups.length,`duplicate group${analysis.duplicateGroups.length!==1?"s":""}`)+
-    cssCleanupCountBox("consolidations","consolidations",(analysis.consolidationGroups||[]).length,`consolidation group${(analysis.consolidationGroups||[]).length!==1?"s":""}`)+
+    cssCleanupCountBox("conflicts","conflicts",analysis.conflictGroups.length,`editable conflict group${analysis.conflictGroups.length!==1?"s":""}`)+
+    cssCleanupCountBox("externalConflicts","externalConflicts",externalConflicts.length,`merged conflict${externalConflicts.length!==1?"s":""}`, false, false)+
+    cssCleanupCountBox("duplicates","duplicates",analysis.duplicateGroups.length,`editable duplicate group${analysis.duplicateGroups.length!==1?"s":""}`)+
+    cssCleanupCountBox("externalDuplicates","externalDuplicates",externalDuplicates.length,`merged duplicate${externalDuplicates.length!==1?"s":""}`, false, false)+
+    cssCleanupCountBox("consolidations","consolidations",(analysis.consolidationGroups||[]).length,`editable consolidation${(analysis.consolidationGroups||[]).length!==1?"s":""}`)+
+    cssCleanupCountBox("externalConsolidations","externalConsolidations",externalConsolidations.length,`merged consolidation${externalConsolidations.length!==1?"s":""}`, false, false)+
     cssCleanupCountBox("orphans","orphans",analysis.ruleOrphans.size,`active orphan id${analysis.ruleOrphans.size!==1?"s":""}`)+
     cssCleanupCountBox("commentOrphans","commentOrphans",analysis.commentOnlyOrphans.size,`comment-only orphan id${analysis.commentOnlyOrphans.size!==1?"s":""}`)+
     `</div>`);
+  if(externalConflicts.length){
+    parts.push(`<div class="css-cleanup-section" data-category-section="externalConflicts"><h4>External CSS conflicts</h4><p class="css-cleanup-note">These conflicts are detected from the merged stylesheet: imported @import CSS plus editable customCSS. Imported rules are read-only. Choose Accept conflict to leave both in place, or Discard customCSS rule to remove the editable declaration that conflicts with the imported rule.</p>`);
+    externalConflicts.forEach((g,i)=>{
+      const ctx=g.atPath&&g.atPath.length?` [${htmlEscape(g.atPath.join(" > "))}]`:"";
+      const customVals=(g.customValues||[]).join(" | ")||"(none)";
+      const externalVals=(g.externalValues||[]).join(" | ")||"(none)";
+      const canDiscard=Number(g.customCount||0)>0;
+      const discardOption=canDiscard?`<label class="css-bubble"><input type="radio" name="externalCssConflict${i}" data-external-conflict-key="${htmlEscape(g.key)}" value="discard"><span>Discard customCSS rule</span></label>`:`<span class="css-conflict-meta">Imported-only conflict; no editable customCSS declaration can be discarded.</span>`;
+      parts.push(`<div class="css-cleanup-card css-conflict-group external-css-conflict-row"><div class="css-conflict-title">${htmlEscape(g.selector)}${ctx} → ${htmlEscape(g.prop)}<span class="css-conflict-meta">merged CSS conflict</span></div><div class="css-bubble-row"><span class="css-bubble"><b>Imported:</b> ${htmlEscape(externalVals)}</span>${canDiscard?`<span class="css-bubble"><b>customCSS:</b> ${htmlEscape(customVals)}</span>`:""}</div><div class="css-bubble-row"><label class="css-bubble"><input type="radio" name="externalCssConflict${i}" data-external-conflict-key="${htmlEscape(g.key)}" value="accept" checked><span>Accept conflict</span></label>${discardOption}</div></div>`);
+    });
+    parts.push(`</div>`);
+  }
+  if(externalDuplicates.length){
+    parts.push(`<div class="css-cleanup-section" data-category-section="externalDuplicates"><h4>Merged CSS duplicates</h4><p class="css-cleanup-note">These duplicates are detected from the effective stylesheet: imported @import CSS plus editable customCSS. Imported declarations are read-only. If the duplicate exists in editable customCSS, you can discard the customCSS copy; imported-only duplicates are shown for awareness.</p>`);
+    externalDuplicates.forEach((g,i)=>{
+      const ctx=g.atPath&&g.atPath.length?` [${htmlEscape(g.atPath.join(" > "))}]`:"";
+      const vals=(g.values||[]).join(" | ")||"(same value)";
+      const canDiscard=!!g.canDiscard;
+      const discardOption=canDiscard?`<label class="css-bubble"><input type="checkbox" class="css-external-duplicate-discard" data-external-duplicate-key="${htmlEscape(g.key)}"><span>Discard customCSS duplicate</span></label>`:`<span class="css-conflict-meta">Imported-only duplicate; no editable customCSS declaration can be discarded.</span>`;
+      parts.push(`<div class="css-cleanup-card css-dup-row external-css-duplicate-row"><div class="css-conflict-title">${htmlEscape(g.selector)}${ctx} → ${htmlEscape(g.prop)}<span class="css-conflict-meta">${Number(g.customCount)||0} customCSS / ${Number(g.externalCount)||0} imported</span></div><div class="css-bubble-row"><span class="css-bubble"><b>Value:</b> ${htmlEscape(vals)}</span>${discardOption}</div></div>`);
+    });
+    parts.push(`</div>`);
+  }
+  if(externalConsolidations.length){
+    parts.push(`<div class="css-cleanup-section" data-category-section="externalConsolidations"><h4>Merged selector consolidation</h4><p class="css-cleanup-note">These repeated tile-scoped selectors are detected from imported CSS plus editable customCSS. Imported rules are read-only, so DLS cannot consolidate them in place. They are shown so you can see the effective duplicated selector structure; duplicated tiles still receive editable copies of matching imported rules.</p>`);
+    externalConsolidations.forEach(g=>{
+      const ctx=g.atPath&&g.atPath.length?` [${htmlEscape(g.atPath.join(" > "))}]`:"";
+      const conflictMsg=g.blockedByConflicts?`<span class="css-blocked-ind css-consolidate-pending-ind">Conflicts Found</span><span class="css-consolidate-block-reason">Merged selector has conflicts: ${htmlEscape(cssConsolidationConflictSummary(g.conflictDetails))}.</span>`:"";
+      const ruleList=(g.rules||[]).slice(0,4).map(r=>`<code>${htmlEscape(g.selector)} { ${htmlEscape(r.body)} }</code>`).join(`<br>`);
+      const more=(g.rules||[]).length>4?`<br><span class="css-conflict-meta">…${(g.rules||[]).length-4} more rule${(g.rules||[]).length-4!==1?"s":""}</span>`:"";
+      parts.push(`<div class="css-cleanup-choice-row is-disabled"><input type="checkbox" disabled aria-label="Merged imported selector consolidation is read-only"><div class="css-cleanup-card css-consolidate-row"><code>${htmlEscape(g.selector)}${ctx}</code><span class="css-conflict-meta">${Number(g.customCount)||0} customCSS / ${Number(g.externalCount)||0} imported</span>${conflictMsg}<br>${ruleList}${more}<span class="css-consolidate-preview">Read-only merged candidate; imported rules cannot be edited in DLS.</span></div></div>`);
+    });
+    parts.push(`</div>`);
+  }
   if(analysis.conflictGroups.length){
     parts.push(`<div class="css-cleanup-section" data-category-section="conflicts"><h4>Conflicts</h4><p class="css-cleanup-note">Each bubble is a different value for the same selector and CSS property. The current CSS cascade winner is selected automatically. Uncheck the row checkbox to skip that conflict group.</p>`);
     analysis.conflictGroups.forEach((g,i)=>{
@@ -14629,7 +14966,7 @@ function showCustomCssCleanupDialog(text, analysis, done, options={}){
   const compactFormat=document.getElementById("cssCleanupCompactFormat");
   const compactWrap=document.getElementById("cssCleanupCompactWrap");
   if(!modal||!body||!intro||!cancel||!apply||!reformatAfter||!compactFormat||!compactWrap){ done(text||"", false, customCssCleanupMessage(analysis)); return; }
-  intro.textContent="Review the detected customCSS items before applying fixes. Use row checkboxes to skip items, category checkboxes to skip entire types, and Preserve removed CSS to keep removed duplicates, conflicts, and orphans inactive instead of deleting them. Reformatting is optional and uses the same normal or compact CSS formatter as the JSON editor. Cleanup runs in order: conflicts first, selected duplicates second, selector consolidation third, and a final selected-duplicate pass after consolidation. Unchecked rows and unchecked categories are never fixed indirectly by later cleanup stages.";
+  intro.textContent="Review the detected customCSS items before applying fixes. Conflicts, duplicates, and selector consolidation are checked against the merged effective stylesheet, including imported @import CSS plus editable customCSS. Imported rules are read-only; merged conflicts can be accepted or resolved by discarding the matching editable customCSS declaration, and merged duplicates can discard only the editable customCSS copy. Use row checkboxes to skip normal customCSS items, category checkboxes to skip entire types, and Preserve removed CSS to keep removed duplicates, conflicts, and orphans inactive instead of deleting them. Reformatting is optional and uses the same normal or compact CSS formatter as the JSON editor.";
   body.innerHTML=buildCustomCssCleanupDialogHtml(analysis);
   wireCssCleanupDialogControls(body);
   body.scrollTop=0;
@@ -14680,7 +15017,15 @@ function showCustomCssCleanupDialog(text, analysis, done, options={}){
     const consolidations=new Set();
     body.querySelectorAll('.css-consolidate-choice:checked').forEach(el=>consolidations.add(el.getAttribute("data-consolidate-key")));
     const removeOrphans=!!(body.querySelector("#cssCleanupRemoveOrphans")&&body.querySelector("#cssCleanupRemoveOrphans").checked);
-    const cleanedText=cleanCustomCssProblemsWithChoices(text||"", analysis, {conflicts, duplicates, skippedDuplicates, consolidations, removeOrphans, commentCleaned, conflictCleanupEnabled, duplicateCleanupEnabled, existingIds:customCssExistingTileIds()});
+    let cleanedText=cleanCustomCssProblemsWithChoices(text||"", analysis, {conflicts, duplicates, skippedDuplicates, consolidations, removeOrphans, commentCleaned, conflictCleanupEnabled, duplicateCleanupEnabled, existingIds:customCssExistingTileIds()});
+    const externalDiscardKeys=[];
+    body.querySelectorAll('input[type="radio"][data-external-conflict-key]:checked').forEach(el=>{
+      if(el.value==="discard") externalDiscardKeys.push(el.getAttribute("data-external-conflict-key")||"");
+    });
+    body.querySelectorAll('.css-external-duplicate-discard:checked').forEach(el=>{
+      externalDiscardKeys.push(el.getAttribute("data-external-duplicate-key")||"");
+    });
+    if(externalDiscardKeys.length) cleanedText=cssRemoveCustomDeclarationsByConflictKeys(cleanedText, externalDiscardKeys);
     const shouldReformat=!!reformatAfter.checked;
     const useCompact=shouldReformat&&!!compactFormat.checked;
     const resultText=shouldReformat ? (useCompact?formatCssCompact(cleanedText):formatCssBasic(cleanedText)) : cleanedText;
@@ -14690,7 +15035,7 @@ function showCustomCssCleanupDialog(text, analysis, done, options={}){
 }
 function formatCustomCssAfterReview(text, done, options={}){
   const existing=customCssExistingTileIds();
-  const analysis=analyzeCustomCssCleanup(text||"", existing, {includeConsolidation:true});
+  const analysis=analyzeCustomCssCleanup(text||"", existing, {includeConsolidation:true, includeExternal:true});
   if(!hasCustomCssCleanupIssues(analysis)){ done(text||"", false, null); return; }
   setJsonEditorError("");
   status("customCSS review found issues. Review the cleanup dialog before formatting.");
@@ -15652,6 +15997,7 @@ async function wire(){
   const preserveCssHelpOk=document.getElementById("preserveCssHelpOk");
   if(preserveCssHelpOk) preserveCssHelpOk.addEventListener("click",()=>document.getElementById("preserveCssHelpModal")?.classList.add("hidden"));
   document.getElementById("orphanInd").addEventListener("click",openCssCleanupReviewFromIndicator);
+  document.getElementById("externalCssInd")?.addEventListener("click",openExternalCssRulesReview);
   document.getElementById("deviceStatusInd")?.addEventListener("click",openDeviceStatusFromIndicator);
   document.getElementById("orphanIgnore").addEventListener("click",()=>{ document.getElementById("orphanModal").classList.add("hidden"); });
   document.getElementById("orphanCancel").addEventListener("click",()=>{ document.getElementById("orphanModal").classList.add("hidden"); });
