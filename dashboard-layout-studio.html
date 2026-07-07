@@ -979,7 +979,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.402">1.2.402</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.404">1.2.404</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1443,7 +1443,7 @@
 <li>Validate / Comp Fmt first runs the regular CSS formatter and then applies the same compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting as the customCSS tab compact formatter.</li>
 <li>When any selector consolidation is applied, all preserved duplicate comments are removed because every duplicate is already represented by a surviving active declaration. This includes comments inside selectors that were already in a single rule and comments preserved by an earlier cleanup run.</li>
 </ul><h5>CSS status and tile scope</h5><div class="help-grid">
-<div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block. CSS cleanup checks use the merged effective stylesheet, including imported @import rules plus editable customCSS, for conflicts, duplicates, and selector consolidation. Imported conflicts, duplicates, and consolidation candidates are separated from editable customCSS items because imported rules are read-only. Consolidated selector originals are not preserved. Consolidation is blocked whenever related conflicts are found, and those rows show Conflicts Found until the conflicts are resolved.</div>
+<div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block, and orphaned tile-scoped comments are removed or preserved with the related orphan cleanup. CSS cleanup checks use the merged effective stylesheet, including imported @import rules plus editable customCSS, for conflicts, duplicates, and selector consolidation. Imported conflicts, duplicates, and consolidation candidates are separated from editable customCSS items because imported rules are read-only. Consolidated selector originals are not preserved. Consolidation is blocked whenever related conflicts are found, and those rows show Conflicts Found until the conflicts are resolved.</div>
 <div class="k">Device status indicator</div><div class="v">Appears next to CSS Status in online mode when tile device assignments need review. Red indicates one or more non-exempt tile device IDs do not exist on the hub; clicking it opens the JSON Editor to Tile Devices. Yellow indicates valid hub devices are assigned to non-exempt tiles but are not selected for the dashboard; clicking it opens the JSON Editor to Dashboard Devices. Mode and Text Tile templates are excluded from these validity checks.</div>
 <div class="k">Tile-scoped CSS</div><div class="v">Rules such as <code>#tile-40</code>, <code>#tile_40</code>, or <code>.tile-40</code> are treated as tile-scoped CSS for copy/cleanup operations. If customCSS contains <code>@import</code> stylesheets, DLS loads imported tile-scoped rules as read-only external CSS. Imported rules are displayed in the customCSS editor and Tile Info, included in merged CSS conflict, duplicate, and consolidation checks with editable customCSS, and copied into editable customCSS when matching tiles are duplicated. External conflicts are shown separately with options to discard the editable customCSS declaration or accept the conflict. The External CSS Rules indicator appears when imported tile-scoped rules are active.</div>
 </div></article></div>
@@ -1600,7 +1600,7 @@
   <div class="modal" style="width:520px">
     <div class="modal-head"><h3>Preserve removed CSS</h3></div>
     <div class="modal-body">
-      <p style="margin:0;line-height:1.6">When checked, duplicate and conflicting declarations are placed in CSS comment blocks instead of being deleted. Duplicate comments are retained only when no selector consolidation is applied. When consolidation runs, all preserved duplicate comments are removed because each duplicate is already represented by a surviving active declaration, including comments inside selectors that were already in one rule and comments preserved by an earlier cleanup run. Orphaned tile rules and related orphan comments are moved into one <b>Removed Orphaned Rules and comments.</b> comment block, with active tile selectors such as <code>#tile-5</code> or <code>.tile-5</code> changed to inactive selectors such as <code>#tile_5</code> or <code>.tile_5</code>. Consolidated selector rules are not preserved; consolidation always replaces repeated selector rules with one combined rule after conflicts and duplicates have been processed.</p>
+      <p style="margin:0;line-height:1.6">When checked, duplicate and conflicting declarations are placed in CSS comment blocks instead of being deleted. Duplicate comments are retained only when no selector consolidation is applied. When consolidation runs, all preserved duplicate comments are removed because each duplicate is already represented by a surviving active declaration, including comments inside selectors that were already in one rule and comments preserved by an earlier cleanup run. Orphaned tile rules and orphaned tile-scoped comments are removed together, or moved into one <b>Removed Orphaned Rules and comments.</b> comment block when Preserve removed CSS is checked, with active tile selectors such as <code>#tile-5</code> or <code>.tile-5</code> changed to inactive selectors such as <code>#tile_5</code> or <code>.tile_5</code>. Consolidated selector rules are not preserved; consolidation always replaces repeated selector rules with one combined rule after conflicts and duplicates have been processed.</p>
     </div>
     <div class="modal-foot"><button class="btn primary" id="preserveCssHelpOk" type="button">OK</button></div>
   </div>
@@ -2003,8 +2003,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v402";
-const APP_VERSION = "1.2.402";
+const BUILD = "v404";
+const APP_VERSION = "1.2.404";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 
@@ -2064,6 +2064,7 @@ const State = {
   gridAutoFitPresetChosen:false,   // true after user explicitly chooses an Auto Fit target preset/custom size
   gridDynamicNoticeSuppress:false, // user preference: do not show dynamic sizing notice on load
   skipDeviceChecksOnSave:false, // user preference: skip selected-device validation during hub save
+  initialLoadCleanToken:0,       // increments per loaded layout so delayed load-time layout normalization can keep the loaded layout clean
   dynamicGridTargetVisible:true, // show simulated target viewport for dashboards using 0-sized dynamic cells
   overlaps:"none",               // 'none'|'allow'|'skip'|'push' — move conflict handling (spec --overlaps)
   pushForcedRestore:null,             // remembers push when temporarily forced back to warn because the source is not push-eligible
@@ -4975,6 +4976,7 @@ function finishAdopt(meta){
   render();
   updateGridControls();
   markLayoutClean();
+  scheduleInitialLoadCleanMark(meta);
   updateSaveHubState();
   if(gridCfgUsesAutoSize(State.cfg)){
     status(`Loaded ${State.tiles.length} tiles · ${State.cfg.cols}×${State.cfg.rows} dynamic ${gridDynamicAxesLabel(State.cfg)} grid. ${gridDynamicIndicatorText(State.cfg)}; change the target in Grid → Edit → Auto Fit.`);
@@ -5383,26 +5385,34 @@ function tileIdsInCommentText(text){
 function cleanupCssForTileIds(css, removedIds){
   const ids=new Set([...removedIds].map(Number));
   if(!ids.size) return css;
-  const nodes=parseCssNodes(css); const out=[];
-  for(const node of nodes){
-    if(node.kind==="stmt"){ out.push(node); continue; }
-    const pre=node.prelude.trim();
-    if(pre.startsWith("@")){
-      const innerNodes=parseCssNodes(node.body);
-      const innerClean=cleanupCssForTileIds(renderCssNodes(innerNodes), ids);
-      out.push(new CssBlock(node.prelude, innerClean.replace(/\s+$/,""))); continue;
+  function cleanRules(cssText){
+    const nodes=parseCssNodes(cssText||""); const out=[];
+    for(const node of nodes){
+      if(node.kind==="stmt"){ out.push(node); continue; }
+      const pre=node.prelude.trim();
+      if(pre.startsWith("@")){
+        const innerClean=cleanRules(node.body||"");
+        if(innerClean.trim()) out.push(new CssBlock(node.prelude, innerClean.replace(/\s+$/,"")));
+        continue;
+      }
+      const selectors=splitSelectorList(pre); const kept=[];
+      for(const sel of selectors){
+        const selIds=selectorTileIds(sel);
+        let hit=false; for(const x of selIds) if(ids.has(x)) hit=true;
+        if(selIds.size && hit) continue;
+        kept.push(sel);
+      }
+      if(!kept.length) continue;
+      out.push(new CssBlock(kept.join(", "), node.body));
     }
-    const selectors=splitSelectorList(pre); const kept=[];
-    for(const sel of selectors){
-      const selIds=selectorTileIds(sel);
-      let hit=false; for(const x of selIds) if(ids.has(x)) hit=true;
-      if(selIds.size && hit) continue;
-      kept.push(sel);
-    }
-    if(!kept.length) continue;
-    out.push(new CssBlock(kept.join(", "), node.body));
+    return renderCssNodes(out);
   }
-  return renderCssNodes(out);
+  let out=cleanRules(css||"");
+  // Orphan cleanup must remove tile-scoped comments as well as active rules.
+  // Section headers and commented-out rule blocks such as /* #tile-123 ... */
+  // otherwise survive after the orphaned #tile-123 rule itself has been scrubbed.
+  const cleaned=processStandaloneCommentsForRemovedTiles(out, ids, true);
+  return cleaned&&cleaned[0]!=null ? cleaned[0] : out;
 }
 
 // ---- standalone comment handling (mirror) ----
@@ -5989,12 +5999,20 @@ function orphanTileIdsInCss(css, existingIds){
 function orphanBreakdown(css, existingIds){
   const ex=new Set([...existingIds].map(Number));
   const ruleOrphans=new Set([...orphanTileIdsInCss(css,ex)]); // these are real selector refs (comments ignored)
-  // ids that appear ONLY in comments and have no tile:
+  // ids that appear ONLY in comments and have no tile.  Recurse through @media
+  // blocks so tile-scoped comments nested inside imported/responsive sections
+  // are detected and can be scrubbed by cleanup.
   const allComment=new Set();
-  for(const node of parseCssNodes(css)){
-    if(node.kind==="stmt" && node.text.replace(/^\s+/,"").startsWith("/*"))
-      for(const x of tileIdsInCommentText(node.text)) allComment.add(x);
+  function collect(cssText){
+    for(const node of parseCssNodes(cssText||"")){
+      if(node.kind==="stmt" && node.text.replace(/^\s+/,"").startsWith("/*")){
+        for(const x of tileIdsInCommentText(node.text)) allComment.add(x);
+      }else if(node.kind==="block" && (node.prelude||"").trim().startsWith("@")){
+        collect(node.body||"");
+      }
+    }
   }
+  collect(css||"");
   const selIds=selectorTileIdsInCss(css);
   const commentOnlyOrphans=new Set([...allComment].filter(i=>!ex.has(i)&&!selIds.has(i)));
   return { ruleOrphans, commentOnlyOrphans };
@@ -12475,6 +12493,22 @@ function markLayoutClean(){
   State.savedSnapshot=currentLayoutSnapshot();
   updateDirtyIndicator();
 }
+function scheduleInitialLoadCleanMark(meta){
+  // render() may immediately perform load-time normalization such as declared
+  // bounds auto-sizing. Those no-history adjustments are part of adopting the
+  // loaded dashboard, not a user edit, so the Modified indicator should remain
+  // off after load completes. Do not clear the indicator if the user has already
+  // made an edit or started a pending operation.
+  const token=(Number(State.initialLoadCleanToken)||0)+1;
+  State.initialLoadCleanToken=token;
+  setTimeout(()=>{
+    if(State.initialLoadCleanToken!==token) return;
+    if(!State.active || State.active!==meta) return;
+    if((State.history&&State.history.length)||(State.future&&State.future.length)) return;
+    if(State.pending||State.tileDrag||State.resizeDrag) return;
+    markLayoutClean();
+  },160);
+}
 function updateDirtyIndicator(){
   const dirty=hasUnsavedChanges();
   const crumb=document.getElementById("crumb");
@@ -14666,7 +14700,7 @@ function buildCustomCssCleanupDialogHtml(analysis){
     }
     if(analysis.commentOnlyOrphans.size){
       const ids=[...analysis.commentOnlyOrphans].sort((a,b)=>a-b).join(", ");
-      parts.push(`<div class="css-cleanup-choice-row"><input type="checkbox" class="css-comment-orphan-choice" checked aria-label="Show comment-only orphan references"><div class="css-cleanup-card css-orphan-row">Comment-only orphan references are shown for awareness and are not changed by cleanup:<span class="css-skip-ind">Skip</span><br><code>${htmlEscape(ids)}</code></div></div>`);
+      parts.push(`<div class="css-cleanup-choice-row"><input type="checkbox" class="css-comment-orphan-choice" checked aria-label="Remove orphaned tile-scoped comments"><div class="css-cleanup-card css-orphan-row">Remove orphaned tile-scoped comments for missing tile ids:<span class="css-skip-ind">Skip</span><br><code>${htmlEscape(ids)}</code></div></div>`);
     }
     parts.push(`<pre class="css-orphan-details hidden" id="cssCleanupOrphanRules">${htmlEscape(orphanDetail||"(no extractable orphan CSS)")}</pre>`);
     parts.push(`</div>`);
@@ -14919,8 +14953,10 @@ function cleanCustomCssProblemsWithChoices(css, analysis, choices){
   // 3. Clean or preserve orphans only if the orphan row/category was checked.
   if(choices.removeOrphans){
     current=analyzeCustomCssCleanup(out, existingIds, {includeConsolidation:true});
-    if(current.ruleOrphans.size){
-      const orphanIds=commentCleaned ? new Set([...current.ruleOrphans, ...current.commentOnlyOrphans]) : current.ruleOrphans;
+    const removeCommentOrphans=cssCleanupCheckedOrDefault(choices,"removeCommentOrphans",true);
+    const orphanIds=new Set([...current.ruleOrphans]);
+    if(removeCommentOrphans) for(const id of current.commentOnlyOrphans) orphanIds.add(id);
+    if(orphanIds.size){
       out=commentCleaned ? commentCssForTileIds(out, [...orphanIds]) : cleanupCssForTileIds(out, [...orphanIds]);
     }
   }
@@ -14953,7 +14989,7 @@ function cleanCustomCssProblems(css, existingIds){
   for(const g of analysis.conflictGroups){ const latest=cssProblemLatestItem(g); if(latest) conflicts.set(g.key, latest.normValue); }
   const duplicates=new Set(analysis.duplicateGroups.map(g=>g.key));
   const consolidations=new Set((analysis.consolidationGroups||[]).filter(g=>!g.blockedByConflicts).map(g=>g.key));
-  return cleanCustomCssProblemsWithChoices(css||"", analysis, {conflicts, duplicates, consolidations, removeOrphans:true, commentCleaned:false, conflictCleanupEnabled:true, duplicateCleanupEnabled:true, existingIds:existingIds||new Set()});
+  return cleanCustomCssProblemsWithChoices(css||"", analysis, {conflicts, duplicates, consolidations, removeOrphans:true, removeCommentOrphans:true, commentCleaned:false, conflictCleanupEnabled:true, duplicateCleanupEnabled:true, existingIds:existingIds||new Set()});
 }
 function showCustomCssCleanupDialog(text, analysis, done, options={}){
   const modal=document.getElementById("cssCleanupModal");
@@ -15017,7 +15053,9 @@ function showCustomCssCleanupDialog(text, analysis, done, options={}){
     const consolidations=new Set();
     body.querySelectorAll('.css-consolidate-choice:checked').forEach(el=>consolidations.add(el.getAttribute("data-consolidate-key")));
     const removeOrphans=!!(body.querySelector("#cssCleanupRemoveOrphans")&&body.querySelector("#cssCleanupRemoveOrphans").checked);
-    let cleanedText=cleanCustomCssProblemsWithChoices(text||"", analysis, {conflicts, duplicates, skippedDuplicates, consolidations, removeOrphans, commentCleaned, conflictCleanupEnabled, duplicateCleanupEnabled, existingIds:customCssExistingTileIds()});
+    const commentOrphanBox=body.querySelector(".css-comment-orphan-choice");
+    const removeCommentOrphans=commentOrphanBox ? !!commentOrphanBox.checked : true;
+    let cleanedText=cleanCustomCssProblemsWithChoices(text||"", analysis, {conflicts, duplicates, skippedDuplicates, consolidations, removeOrphans, removeCommentOrphans, commentCleaned, conflictCleanupEnabled, duplicateCleanupEnabled, existingIds:customCssExistingTileIds()});
     const externalDiscardKeys=[];
     body.querySelectorAll('input[type="radio"][data-external-conflict-key]:checked').forEach(el=>{
       if(el.value==="discard") externalDiscardKeys.push(el.getAttribute("data-external-conflict-key")||"");
