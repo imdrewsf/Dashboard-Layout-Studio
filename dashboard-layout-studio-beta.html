@@ -979,7 +979,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.409">1.2.409</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.410">1.2.410</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -2012,12 +2012,14 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v409";
-const APP_VERSION = "1.2.409";
+const BUILD = "v410";
+const APP_VERSION = "1.2.410";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
 const BETA_APP_FILENAME = "dashboard-layout-studio-beta.html";
+const STABLE_MANUAL_DOWNLOAD_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio.html";
+const BETA_MANUAL_DOWNLOAD_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio-beta.html";
 const UPDATE_RELEASE_MODE_STABLE = "stable";
 const UPDATE_RELEASE_MODE_BETA = "beta";
 let PendingUpdate = null;
@@ -15922,6 +15924,7 @@ function updateManifestEntry(data,channel){
     channel,
     version:String(raw.version||"").trim(),
     releaseUrl:String(raw.releaseUrl||"").trim(),
+    manualUrl:String(raw.manualUrl||"").trim(),
     sha256:String(raw.sha256||"").trim().toLowerCase(),
     size:Number(raw.size),
     filename
@@ -15929,6 +15932,24 @@ function updateManifestEntry(data,channel){
 }
 function installedAppFilename(){ return STABLE_APP_FILENAME; }
 function installedAppPath(){ return `/local/${encodeURIComponent(STABLE_APP_FILENAME)}`; }
+function manualUpdateDownloadUrl(candidate){
+  if(candidate&&candidate.manualUrl) return candidate.manualUrl;
+  return candidate&&candidate.channel===UPDATE_RELEASE_MODE_BETA
+    ? BETA_MANUAL_DOWNLOAD_URL
+    : STABLE_MANUAL_DOWNLOAD_URL;
+}
+function corsSafeUpdateUrl(candidate){
+  const original=String(candidate&&candidate.releaseUrl||"").trim();
+  if(!original) return "";
+  try{
+    const url=new URL(original,window.location.href);
+    const match=url.pathname.match(/^\/imdrewsf\/Dashboard-Layout-Studio\/releases\/latest\/download\/(dashboard-layout-studio(?:-beta)?\.html)$/i);
+    if(url.hostname.toLowerCase()==="github.com"&&match){
+      return `https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/${match[1]}?version=${encodeURIComponent(candidate.version||currentVersionLabel())}`;
+    }
+  }catch(_e){}
+  return original;
+}
 function updateCandidateToken(candidate){
   if(!candidate) return "";
   return `${candidate.channel}:${normalizedVersionLabel(candidate.version)}`;
@@ -15986,7 +16007,7 @@ function showUpdateDialog(candidate,isMock=false){
   if(el("updateIntro")) el("updateIntro").textContent=candidate.forceInstall
     ? "You chose Stable only. DLS can replace the current installed version with the current stable release using the permanent dashboard-layout-studio.html filename and bookmark."
     : `DLS can install the latest ${candidate.channel===UPDATE_RELEASE_MODE_BETA?"beta":"stable"} release directly into Hubitat File Manager using the permanent dashboard-layout-studio.html filename.`;
-  if(el("updateDownloadLink")) el("updateDownloadLink").href=candidate.releaseUrl||"#";
+  if(el("updateDownloadLink")) el("updateDownloadLink").href=manualUpdateDownloadUrl(candidate)||"#";
   if(el("updateSkipCheck")) el("updateSkipCheck").checked=false;
   const install=el("updateInstallBtn");
   if(install){
@@ -16001,10 +16022,62 @@ function showUpdateDialog(candidate,isMock=false){
   }
   el("updateModal")?.classList.remove("hidden");
 }
+function sha256HexFallback(buffer){
+  const input=new Uint8Array(buffer);
+  const bitLength=input.length*8;
+  const paddedLength=Math.ceil((input.length+9)/64)*64;
+  const bytes=new Uint8Array(paddedLength);
+  bytes.set(input);
+  bytes[input.length]=0x80;
+  const view=new DataView(bytes.buffer);
+  view.setUint32(paddedLength-8,Math.floor(bitLength/0x100000000),false);
+  view.setUint32(paddedLength-4,bitLength>>>0,false);
+  const h=new Uint32Array([
+    0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,
+    0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19
+  ]);
+  const k=new Uint32Array([
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+  ]);
+  const w=new Uint32Array(64);
+  const rotr=(x,n)=>(x>>>n)|(x<<(32-n));
+  for(let offset=0;offset<paddedLength;offset+=64){
+    for(let i=0;i<16;i++) w[i]=view.getUint32(offset+i*4,false);
+    for(let i=16;i<64;i++){
+      const s0=(rotr(w[i-15],7)^rotr(w[i-15],18)^(w[i-15]>>>3))>>>0;
+      const s1=(rotr(w[i-2],17)^rotr(w[i-2],19)^(w[i-2]>>>10))>>>0;
+      w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;
+    }
+    let a=h[0],b=h[1],c=h[2],d=h[3],e=h[4],f=h[5],g=h[6],hh=h[7];
+    for(let i=0;i<64;i++){
+      const s1=(rotr(e,6)^rotr(e,11)^rotr(e,25))>>>0;
+      const ch=((e&f)^((~e)&g))>>>0;
+      const t1=(hh+s1+ch+k[i]+w[i])>>>0;
+      const s0=(rotr(a,2)^rotr(a,13)^rotr(a,22))>>>0;
+      const maj=((a&b)^(a&c)^(b&c))>>>0;
+      const t2=(s0+maj)>>>0;
+      hh=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    h[0]=(h[0]+a)>>>0;h[1]=(h[1]+b)>>>0;h[2]=(h[2]+c)>>>0;h[3]=(h[3]+d)>>>0;
+    h[4]=(h[4]+e)>>>0;h[5]=(h[5]+f)>>>0;h[6]=(h[6]+g)>>>0;h[7]=(h[7]+hh)>>>0;
+  }
+  return Array.from(h,n=>n.toString(16).padStart(8,"0")).join("");
+}
 async function sha256Hex(buffer){
-  if(!window.crypto||!window.crypto.subtle) throw new Error("This browser does not provide SHA-256 verification.");
-  const digest=await window.crypto.subtle.digest("SHA-256",buffer);
-  return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
+  if(window.crypto&&window.crypto.subtle){
+    try{
+      const digest=await window.crypto.subtle.digest("SHA-256",buffer);
+      return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
+    }catch(_e){}
+  }
+  return sha256HexFallback(buffer);
 }
 function htmlVersionFromSource(source){
   const m=String(source||"").match(/const\s+APP_VERSION\s*=\s*["']([^"']+)["']/);
@@ -16014,7 +16087,10 @@ async function downloadAndValidateUpdate(candidate){
   if(!candidate.releaseUrl) throw new Error("The update manifest does not contain a release URL.");
   if(!Number.isFinite(candidate.size)||candidate.size<=0) throw new Error("The update manifest does not contain a valid file size.");
   if(!/^[a-f0-9]{64}$/i.test(candidate.sha256||"")) throw new Error("The update manifest does not contain a valid SHA-256 checksum.");
-  const res=await fetch(candidate.releaseUrl,{cache:"no-store",redirect:"follow"});
+  const downloadUrl=corsSafeUpdateUrl(candidate);
+  if(!downloadUrl) throw new Error("The update manifest does not contain a usable release URL.");
+  const separator=downloadUrl.includes("?")?"&":"?";
+  const res=await fetch(`${downloadUrl}${separator}dlsDownload=${encodeURIComponent(candidate.version)}-${Date.now()}`,{cache:"no-store",mode:"cors",redirect:"follow"});
   if(!res.ok) throw new Error(`The release download returned HTTP ${res.status}.`);
   const buffer=await res.arrayBuffer();
   if(buffer.byteLength!==candidate.size) throw new Error(`Downloaded size ${buffer.byteLength} did not match the expected ${candidate.size} bytes.`);
