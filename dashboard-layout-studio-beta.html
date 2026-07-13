@@ -131,7 +131,17 @@
   .jump-btn{display:none;align-items:center;justify-content:center;width:30px;height:28px;padding:0;border-radius:7px;border:1px solid rgba(103,232,249,.28);background:rgba(103,232,249,.08);color:var(--accent);cursor:pointer;transition:all .14s;white-space:nowrap;}
   .jump-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(103,232,249,.16);color:var(--text);}
   .jump-btn:disabled{opacity:.42;cursor:not-allowed;color:var(--faint);}
-  .jump-btn .jump-icon{width:15px;height:15px;stroke-width:2.2;}
+  .jump-btn .jump-icon{width:15px;height:15px;stroke-width:2.2;flex:none;}
+  /* Keep the clean launch shortcut identical to v1.2.418 and earlier. */
+  .jump-btn.dropdown{width:auto;min-width:112px;height:28px;padding:0 7px;gap:5px;font-family:var(--sans);font-size:.78rem;font-weight:500;}
+  .jump-btn .jump-label{display:inline-flex;align-items:center;color:var(--text);line-height:1;}
+  .jump-btn .jump-label.hidden{display:none;}
+  .jump-btn .jump-menu-chev{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:2px;
+    border-radius:5px;border:1px solid rgba(103,232,249,.38);background:rgba(103,232,249,.12);
+    color:var(--accent);font-size:.95rem;font-weight:800;line-height:1;box-shadow:inset 0 0 0 1px rgba(103,232,249,.08),0 0 8px rgba(103,232,249,.10);}
+  .jump-btn:hover:not(:disabled) .jump-menu-chev{background:rgba(103,232,249,.20);border-color:rgba(103,232,249,.58);color:#fff;}
+  .jump-btn .jump-menu-chev.hidden{display:none;}
+  #dashboardLaunchMenu{min-width:210px;}
   .topbar .spacer{flex:1;}
   .conn-dot{width:8px;height:8px;border-radius:50%;background:var(--faint);}
   .conn-dot.live{background:var(--ok);box-shadow:0 0 9px rgba(52,211,153,.7);}
@@ -537,6 +547,45 @@
   #infoModal.css-editing .info-css-head{flex:none;margin:0 0 7px;}
   #infoModal.css-editing .info-css-editor{flex:1;min-height:150px;max-height:none;resize:none;}
   #infoModal.css-editing .info-css-actions{margin:9px 0 12px;}
+
+  /* printable tile reports */
+  .reports-modal{width:min(900px,96vw);max-height:90vh;}
+  .reports-intro{margin:0 0 13px;color:var(--muted);font-size:.79rem;line-height:1.5;}
+  .reports-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;}
+  .reports-section{border:1px solid var(--border);border-radius:10px;background:rgba(0,0,0,.12);padding:12px;min-width:0;}
+  .reports-section.full{grid-column:1/-1;}
+  .reports-section h4{margin:0 0 9px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);}
+  .reports-field{margin:0 0 10px;}
+  .reports-field:last-child{margin-bottom:0;}
+  .reports-field>label,.reports-field>.reports-label{display:block;margin:0 0 5px;color:var(--muted);font-size:.7rem;font-weight:650;}
+  .reports-control{width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:7px;background:rgba(2,6,23,.72);color:var(--text);font-family:var(--sans);font-size:.76rem;}
+  .reports-control:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(103,232,249,.10);}
+  .reports-radio-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .reports-radio{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.025);color:var(--muted);font-size:.74rem;cursor:pointer;}
+  .reports-radio:has(input:checked){border-color:var(--accent);background:rgba(103,232,249,.10);color:var(--text);}
+  .reports-radio:has(input:disabled){opacity:.45;cursor:not-allowed;}
+  .reports-radio input{accent-color:var(--accent);}
+  .reports-option{display:flex;align-items:flex-start;gap:8px;padding:8px 9px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.025);color:var(--muted);font-size:.73rem;line-height:1.35;cursor:pointer;}
+  .reports-option:has(input:checked){border-color:rgba(103,232,249,.34);background:rgba(103,232,249,.075);color:var(--text);}
+  .reports-option input{accent-color:var(--accent);margin-top:2px;flex:none;}
+  .reports-option b{display:block;color:var(--text);font-size:.74rem;margin-bottom:2px;}
+  .reports-option small{display:block;color:var(--faint);font-size:.67rem;line-height:1.38;}
+  .reports-field.disabled .reports-option{opacity:.45;cursor:not-allowed;}
+  .reports-field.disabled .reports-option b,.reports-field.disabled .reports-option small{color:var(--faint);}
+  .reports-scope-hint,.reports-type-hint{margin:7px 0 0;color:var(--faint);font-size:.68rem;line-height:1.4;}
+  .reports-sort-grid{display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:7px;margin-bottom:7px;}
+  .reports-sort-grid:last-child{margin-bottom:0;}
+  .reports-columns-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;}
+  .reports-columns-head h4{margin:0;}
+  .reports-columns-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
+  .reports-columns-actions .btn{width:auto;padding:4px 8px;font-size:.68rem;}
+  .reports-columns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;}
+  .reports-column{display:flex;align-items:center;gap:7px;min-width:0;padding:7px 8px;border:1px solid rgba(148,163,184,.16);border-radius:7px;background:rgba(255,255,255,.025);color:var(--muted);font-size:.72rem;cursor:pointer;}
+  .reports-column:has(input:checked){border-color:rgba(103,232,249,.34);background:rgba(103,232,249,.075);color:var(--text);}
+  .reports-column input{accent-color:var(--accent);flex:none;}
+  .reports-column span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .reports-foot-note{margin-right:auto;align-self:center;color:var(--faint);font-size:.69rem;line-height:1.35;}
+  @media(max-width:760px){.reports-form{grid-template-columns:1fr}.reports-section.full{grid-column:auto}.reports-columns{grid-template-columns:repeat(2,minmax(0,1fr));}.reports-sort-grid{grid-template-columns:1fr 100px;}}
 
 
   /* empty state */
@@ -979,7 +1028,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.412">1.2.412</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.3.422">1.3.422</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -992,7 +1041,13 @@
         <path d="M10 14 21 3"></path>
         <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"></path>
       </svg>
+      <span class="jump-label hidden" id="dashboardLaunchLabel">Preview</span>
+      <span class="jump-menu-chev hidden" id="dashboardLaunchChev" aria-hidden="true">▾</span>
     </button>
+    <div class="holdmenu hidden" id="dashboardLaunchMenu">
+      <button class="hm-item" id="dashboardLaunchPreview">Open Preview</button>
+      <button class="hm-item" id="dashboardLaunchSaved">Open Saved Dashboard</button>
+    </div>
     <span class="orphan-ind" id="orphanInd" style="display:none" title="Review orphaned CSS">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
       <span class="oi-txt">CSS Status</span>
@@ -1064,7 +1119,13 @@
       <button class="tbar-arrow left" data-row="0" aria-label="Scroll left">‹</button>
       <div class="toolbar-row" id="toolbarRow1">
         <div class="tgroup">
-          <button class="tool" id="btnInfo" disabled title="Show info for selected tile (tile id, position, CSS)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Info</button>
+          <div class="holdwrap">
+            <button class="tool hb alt-menu" id="btnInfo" disabled title="Click: show information for the selected tile. Hold or Shift-click: information and report options."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Info<span class="hb-chev" aria-hidden="true">◢</span></button>
+            <div class="holdmenu hidden" id="infoHoldMenu">
+              <button class="hm-item" id="infoMenuTile">Tile Information</button>
+              <button class="hm-item" id="infoMenuReports">Reports…</button>
+            </div>
+          </div>
           <span class="toolbar-divider" aria-hidden="true"></span>
           <button class="tool" data-action="insert" disabled title="Insert lines before selection">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Insert
@@ -1336,7 +1397,7 @@
 <div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual layout editor for existing Hubitat Dashboard v1 layouts. It can rearrange, resize, duplicate, remove, and reassign existing tiles, and it can change supported presentation details through custom CSS. It does not replace the Hubitat dashboard and tile configuration interface.</p><div class="help-callout"><b>Use the Hubitat interface for source creation:</b> Create dashboards, create original tiles, choose templates, and configure template-specific properties in the native Hubitat dashboard editor. Reload the dashboard in Dashboard Layout Studio afterward to continue arranging it.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>It cannot add a completely new original tile from Hubitat's template list. Additional tiles can be created only by copying or duplicating an existing tile and then changing its supported assignment or layout settings.</li><li>It cannot change an existing tile from one Hubitat template to another.</li></ul><h5>Template-property limits</h5><ul><li>The graphical editor does not change template-specific properties such as custom icons, background images, background settings, or other properties that are not exposed through the layout operations or achievable with CSS.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
-<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, Rendered View can use either the temporary preview dashboard or the original dashboard workflow.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
+<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><p><b>Dashboard launch shortcut:</b> For a clean hub-loaded layout, the shortcut beside the dashboard name opens the saved dashboard immediately. When unsaved changes exist, it becomes a down-arrow menu with choices to open a temporary preview of the unsaved working layout or open the dashboard currently saved on the hub. The shortcut is disabled for offline layouts.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
 <div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
 <div class="k">Hub Connection Settings (Gear Icon)</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
 <div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
@@ -1373,7 +1434,8 @@
 <section class="help-pane" id="helpToolbar">
 <div class="help-pages"><article class="help-page active" data-help-title="Selection and tile actions"><div class="help-page-kicker">Toolbar Buttons</div><h4>Selection and tile actions</h4><h5>How the toolbar is organized</h5><p>The first toolbar group in the top row contains actions that operate on the current selection: tiles, rows, columns, or selected areas.</p><p>The next top-row group contains whole-layout actions such as Trim and Spacing.</p><div class="help-callout">Select first, then act. Selection actions use the current tile, row, column, or rectangular selection; whole-layout actions operate across the dashboard layout.</div><h5>Selection and structural actions</h5><div class="help-grid">
 <div class="k">Select</div><div class="v">Selects all tiles in the layout. This is the toolbar equivalent of Ctrl/Cmd+A.</div>
-<div class="k">Info</div><div class="v">Shows tile id, position, size, device id from the layout JSON, hub device name when available, template details, and tile-scoped custom CSS for the selected tile. The scoped CSS section can be edited directly; every saved selector must remain scoped to the current tile.</div>
+<div class="k">Info</div><div class="v">Click to show tile id, position, size, device id from the layout JSON, hub device name when available, template details, and tile-scoped custom CSS for the selected tile. Hold or Shift-click for the Info menu, which also opens Reports. When no tile is selected, Tile Information remains visible in the menu but is disabled. The scoped CSS section can be edited directly; every saved selector must remain scoped to the current tile.</div>
+<div class="k">Reports</div><div class="v">Opens from the Info hold menu. Creates printer-friendly Plain, Relationship Tree, Overlap Groups, Nested Groups, or Conflict Groups reports for either the selected tiles or the whole layout. Reports open in a separate window, support configurable sorting, selectable columns, common paper sizes, and portrait, landscape, or automatic orientation. Grouped reports can optionally include a proportional thumbnail showing each group’s actual tile footprints and overlaps. Reports are paginated into true paper-sized sheets with a header, footer, and page number on every page. Column headings repeat on every table page. Graphical relationship groups remain together when they fit; oversized groups continue across pages with repeated group headings, fixed readable typography, and connected hierarchy cards rather than page-wide text scaling.</div>
 <div class="k">Insert</div><div class="v">For row/column selections, inserts rows or columns before the selected line range and shifts affected tiles. With incl partial, tiles that start before the inserted line but cross into the selected range move with the selected tiles.</div>
 <div class="k">Delete</div><div class="v">Deletes selected rows/columns and shifts later tiles to close the gap. For tile selections, use Clear to remove without shifting.</div>
 <div class="k">Clear</div><div class="v">Removes selected tiles or tiles in the selected area without shifting other tiles.</div>
@@ -1390,7 +1452,7 @@
 <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
 </div><h5>History, views, JSON, and Save</h5><div class="help-grid">
 <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. Undo All follows undo history and remains disabled when there is no undo checkpoint. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Shift-click Undo All reloads the current dashboard from the hub when the layout originated from the hub and Undo All is enabled; otherwise it performs the normal Undo All action.</div>
-<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. Before a refresh, DLS authorizes the devices used by the current working layout, saves that layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
+<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. When a dashboard is first loaded from the hub, DLS captures rendered tiles directly from that loaded dashboard and does not update the temporary dashboard. For later manual refreshes, DLS authorizes the devices used by the current working layout, saves that layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
 <div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
 <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
 </div></article></div>
@@ -1655,6 +1717,105 @@
     </div>
     <div class="modal-body"><div id="infoBody"></div></div>
     <div class="modal-foot"><button class="btn" id="infoClose">Close</button></div>
+  </div>
+</div>
+
+<div class="modal-back hidden" id="reportsModal">
+  <div class="modal reports-modal">
+    <div class="modal-head"><h3>Tile Reports</h3></div>
+    <div class="modal-body">
+      <p class="reports-intro">Create a printer-friendly tile list or graphical relationship report. Reports open in a separate browser window, are paginated to the selected paper size with repeating headers and footers, and use a consistent readable text size on every page.</p>
+      <div class="reports-form">
+        <section class="reports-section">
+          <h4>Report</h4>
+          <div class="reports-field">
+            <label for="reportTitle">Report title</label>
+            <input class="reports-control" id="reportTitle" type="text" maxlength="160" value="Tile Report">
+          </div>
+          <div class="reports-field">
+            <label for="reportType">Report type</label>
+            <select class="reports-control" id="reportType">
+              <option value="plain">Plain tile list</option>
+              <option value="tree">Relationship tree</option>
+              <option value="overlap">Overlap groups</option>
+              <option value="nested">Nested groups</option>
+              <option value="conflicts">Conflict groups</option>
+            </select>
+            <p class="reports-type-hint" id="reportTypeHint"></p>
+          </div>
+          <div class="reports-field">
+            <span class="reports-label">Scope</span>
+            <div class="reports-radio-row">
+              <label class="reports-radio"><input type="radio" name="reportScope" value="all" checked>Whole layout</label>
+              <label class="reports-radio"><input type="radio" name="reportScope" id="reportScopeSelected" value="selected">Selected tiles</label>
+            </div>
+            <p class="reports-scope-hint" id="reportScopeHint"></p>
+          </div>
+          <div class="reports-field">
+            <label for="reportPageSize">Page size</label>
+            <select class="reports-control" id="reportPageSize">
+              <option value="letter" selected>Letter (8.5 × 11 in)</option>
+              <option value="legal">Legal (8.5 × 14 in)</option>
+              <option value="tabloid">Tabloid / Ledger (11 × 17 in)</option>
+              <option value="executive">Executive (7.25 × 10.5 in)</option>
+              <option value="statement">Statement / Half Letter (5.5 × 8.5 in)</option>
+              <option value="a3">A3 (297 × 420 mm)</option>
+              <option value="a4">A4 (210 × 297 mm)</option>
+              <option value="a5">A5 (148 × 210 mm)</option>
+              <option value="b5">B5 (176 × 250 mm)</option>
+            </select>
+          </div>
+          <div class="reports-field">
+            <label for="reportOrientation">Print orientation</label>
+            <select class="reports-control" id="reportOrientation">
+              <option value="auto">Automatic</option>
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
+          </div>
+          <div class="reports-field" id="reportThumbnailField">
+            <span class="reports-label">Group graphics</span>
+            <label class="reports-option">
+              <input type="checkbox" id="reportGroupThumbnail" checked>
+              <span><b>Include group thumbnails</b><small>Always includes a numbered Simple View footprint. When captured Rendered View tiles are available, a rendered thumbnail is shown beside it.</small></span>
+            </label>
+          </div>
+        </section>
+
+        <section class="reports-section">
+          <h4>Sort order</h4>
+          <div class="reports-sort-grid"><select class="reports-control report-sort-key" id="reportSort1"></select><select class="reports-control" id="reportDir1"><option value="asc">Ascending</option><option value="desc">Descending</option></select></div>
+          <div class="reports-sort-grid"><select class="reports-control report-sort-key" id="reportSort2"></select><select class="reports-control" id="reportDir2"><option value="asc">Ascending</option><option value="desc">Descending</option></select></div>
+          <div class="reports-sort-grid"><select class="reports-control report-sort-key" id="reportSort3"></select><select class="reports-control" id="reportDir3"><option value="asc">Ascending</option><option value="desc">Descending</option></select></div>
+          <p class="reports-scope-hint">Sorting controls table rows, group order, roots, and child tiles. Tile ID is used as a final tie-breaker.</p>
+        </section>
+
+        <section class="reports-section full">
+          <div class="reports-columns-head">
+            <h4>Fields to include</h4>
+            <div class="reports-columns-actions">
+              <button class="btn ghost" id="reportColumnsCli" type="button">CLI defaults</button>
+              <button class="btn ghost" id="reportColumnsAll" type="button">Select all</button>
+              <button class="btn ghost" id="reportColumnsClear" type="button">Clear</button>
+            </div>
+          </div>
+          <div class="reports-columns" id="reportColumns">
+            <label class="reports-column"><input type="checkbox" data-report-column="tile_id" checked><span>Tile ID</span></label>
+            <label class="reports-column"><input type="checkbox" data-report-column="label" checked><span>Label</span></label>
+            <label class="reports-column"><input type="checkbox" data-report-column="row" checked><span>Row</span></label>
+            <label class="reports-column"><input type="checkbox" data-report-column="col" checked><span>Column</span></label>
+            <label class="reports-column"><input type="checkbox" data-report-column="height" checked><span>Height</span></label>
+            <label class="reports-column"><input type="checkbox" data-report-column="width" checked><span>Width</span></label>
+            <label class="reports-column"><input type="checkbox" data-report-column="placement" checked><span>Placement</span></label>
+            <label class="reports-column"><input type="checkbox" data-report-column="device" checked><span>Device ID</span></label>
+            <label class="reports-column"><input type="checkbox" data-report-column="device_name" checked><span>Device name</span></label>
+            <label class="reports-column"><input type="checkbox" data-report-column="template" checked><span>Template</span></label>
+            <label class="reports-column"><input type="checkbox" data-report-column="css_rules" checked><span>CSS rules</span></label>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="modal-foot"><span class="reports-foot-note">Effective CSS counts include customCSS and loaded @import stylesheets.</span><button class="btn ghost" id="reportsCancel">Cancel</button><button class="btn primary" id="reportsGenerate">Open Report</button></div>
   </div>
 </div>
 
@@ -2012,8 +2173,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v412";
-const APP_VERSION = "1.2.412";
+const BUILD = "v422";
+const APP_VERSION = "1.3.422";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -2936,12 +3097,12 @@ async function captureRenderedSnapshotsForLoadOperation(op){
   if(!renderedViewEnabled()){ hubOperationSkip(op,"render","Rendered View is not enabled."); setTileDisplayMode("simple",{redraw:false,warn:false}); return 0; }
   const a=renderedSnapshotAvailability();
   if(!a.ok){ hubOperationSkip(op,"render",a.reason||"Rendered View unavailable."); setTileDisplayMode("simple",{redraw:false,warn:false}); updateTileDisplayIndicator(); return 0; }
-  hubOperationStep(op,"render","active",`Refreshing Rendered View with ${renderedViewEngineLabel()}…`);
+  hubOperationStep(op,"render","active",`Rendering directly from the loaded dashboard with ${renderedViewEngineLabel()}…`);
   State.tileViewMode="snapshot";
   updateTileDisplayIndicator();
   await wait(350);
   checkHubOperationAbort(op);
-  const count=await captureHubTileSnapshots({silent:true,timeoutMs:30000,retryCount:1});
+  const count=await captureHubTileSnapshots({silent:true,timeoutMs:30000,retryCount:1,forcePrimaryDashboard:true,dashboardUrl:State.lastDashUrl});
   const summary=State.tileSnapshotLastSummary||"";
   hubOperationStep(op,"render","done",count?(summary||`${count} tile${count===1?"":"s"} captured.`):"Rendered View unavailable or no captures were produced.");
   return count;
@@ -7945,6 +8106,728 @@ function showTileInfo(tileId){
   restoreModalPosition("infoModal"); document.getElementById("infoModal").classList.remove("hidden");
 }
 
+/* ---------- Tile reports ---------- */
+const DLS_REPORT_COLUMNS=[
+  {key:"tile_id",label:"Tile ID",short:"ID",numeric:true,cli:true},
+  {key:"label",label:"Label",short:"Label",numeric:false,cli:false},
+  {key:"row",label:"Row",short:"Row",numeric:true,cli:true},
+  {key:"col",label:"Column",short:"Col",numeric:true,cli:true},
+  {key:"height",label:"Height",short:"Height",numeric:true,cli:true},
+  {key:"width",label:"Width",short:"Width",numeric:true,cli:true},
+  {key:"placement",label:"Placement",short:"Placement",numeric:false,cli:true},
+  {key:"device",label:"Device ID",short:"Device",numeric:false,cli:true},
+  {key:"device_name",label:"Device name",short:"Device name",numeric:false,cli:false},
+  {key:"template",label:"Template",short:"Template",numeric:false,cli:true},
+  {key:"css_rules",label:"CSS rules",short:"CSS",numeric:true,cli:true},
+];
+const DLS_REPORT_TYPE_HINTS={
+  plain:"Columnar tile list equivalent to DTU --list-tiles:plain. Best printed in landscape when many fields are selected.",
+  tree:"All independent tiles plus graphical overlap and nesting groups, equivalent to DTU --list-tiles:tree.",
+  overlap:"Only groups whose tile footprints overlap or contain one another, equivalent to DTU --list-tiles:overlap.",
+  nested:"Only overlap groups containing at least one parent/child containment relationship, equivalent to DTU --list-tiles:nested.",
+  conflicts:"Only partial-overlap or identical-footprint conflict groups; pure containment is excluded, equivalent to DTU --list-tiles:conflicts.",
+};
+const DLS_REPORT_PAGE_SIZES={
+  letter:{label:"Letter",width:"8.5in",height:"11in"},
+  legal:{label:"Legal",width:"8.5in",height:"14in"},
+  tabloid:{label:"Tabloid / Ledger",width:"11in",height:"17in"},
+  executive:{label:"Executive",width:"7.25in",height:"10.5in"},
+  statement:{label:"Statement / Half Letter",width:"5.5in",height:"8.5in"},
+  a3:{label:"A3",width:"297mm",height:"420mm"},
+  a4:{label:"A4",width:"210mm",height:"297mm"},
+  a5:{label:"A5",width:"148mm",height:"210mm"},
+  b5:{label:"B5",width:"176mm",height:"250mm"},
+};
+function dlsReportPageSpec(pageSize,orientation){
+  const base=DLS_REPORT_PAGE_SIZES[pageSize]||DLS_REPORT_PAGE_SIZES.letter;
+  const landscape=orientation==="landscape";
+  return {label:base.label,width:landscape?base.height:base.width,height:landscape?base.width:base.height,orientation:landscape?"landscape":"portrait"};
+}
+function dlsReportLayoutName(){
+  return String((State.active&&(State.active.label||State.active.name))||(State.cfg&&(State.cfg.name||State.cfg.title))||"Dashboard Layout");
+}
+function dlsReportRect(t){
+  const row=Number(t.row)||0,col=Number(t.col)||0,height=Math.max(1,Number(t.rowSpan)||1),width=Math.max(1,Number(t.colSpan)||1);
+  return {row,col,height,width,r2:row+height-1,c2:col+width-1};
+}
+function dlsReportRectSame(a,b){ return a.row===b.row&&a.col===b.col&&a.r2===b.r2&&a.c2===b.c2; }
+function dlsReportRectContains(a,b){ return a.row<=b.row&&a.r2>=b.r2&&a.col<=b.col&&a.c2>=b.c2; }
+function dlsReportRectsOverlap(a,b){ return a.col<=b.c2&&a.c2>=b.col&&a.row<=b.r2&&a.r2>=b.row; }
+function dlsReportPairRelation(a,b){
+  if(!dlsReportRectsOverlap(a.rect,b.rect)) return null;
+  if(dlsReportRectSame(a.rect,b.rect)) return "same";
+  if(dlsReportRectContains(a.rect,b.rect)) return "contains";
+  if(dlsReportRectContains(b.rect,a.rect)) return "inside";
+  return "overlaps";
+}
+function dlsReportCssRuleCounts(css){
+  const counts=new Map();
+  function scan(cssText){
+    for(const node of parseCssNodes(cssText||"")){
+      if(node.kind!=="block") continue;
+      const pre=String(node.prelude||"").trim();
+      if(!pre) continue;
+      if(pre.startsWith("@")){ scan(node.body||""); continue; }
+      const ids=new Set();
+      for(const sel of splitSelectorList(pre)) for(const id of selectorTileIds(sel)) ids.add(Number(id));
+      for(const id of ids) counts.set(id,(counts.get(id)||0)+1);
+    }
+  }
+  scan(css||"");
+  return counts;
+}
+function dlsReportPlacementMap(records){
+  const state=new Map(records.map(r=>[r.tile_id,{parent:false,child:false,partial:false}]));
+  for(let i=0;i<records.length;i++) for(let j=i+1;j<records.length;j++){
+    const a=records[i],b=records[j],rel=dlsReportPairRelation(a,b);
+    if(rel==="contains"){ state.get(a.tile_id).child=true; state.get(b.tile_id).parent=true; }
+    else if(rel==="inside"){ state.get(a.tile_id).parent=true; state.get(b.tile_id).child=true; }
+    else if(rel==="overlaps"||rel==="same"){ state.get(a.tile_id).partial=true; state.get(b.tile_id).partial=true; }
+  }
+  const out=new Map();
+  for(const [id,s] of state) out.set(id,s.parent?"nested":s.child?"container":s.partial?"overlapping":"independent");
+  return out;
+}
+function dlsReportRecords(tiles){
+  const cssCounts=dlsReportCssRuleCounts(currentCssForCascade());
+  const records=(tiles||[]).map(t=>{
+    const raw=t&&t._raw?t._raw:t||{};
+    const rect=dlsReportRect(t||raw);
+    const id=Number(t&&t.id!=null?t.id:raw.id);
+    const deviceRaw=raw.device!=null?raw.device:(t&&t.device!=null?t.device:"");
+    const device=String(deviceRaw==null?"":deviceRaw).trim();
+    const normalized=normalizeDeviceId(deviceRaw);
+    return {
+      tile:t,rect,tile_id:id,
+      label:String(tileGridLabelValue(t)||""),
+      row:rect.row,col:rect.col,height:rect.height,width:rect.width,
+      placement:"independent",
+      device,
+      device_name:normalized==null?"":String(mapDeviceNameForId(State.deviceNames,normalized)||mapDeviceNameForId(State.devicePickedNames,normalized)||""),
+      template:String(raw.template!=null?raw.template:(t&&t.template!=null?t.template:"")),
+      css_rules:Number(cssCounts.get(id)||0),
+    };
+  });
+  const placement=dlsReportPlacementMap(records);
+  for(const r of records) r.placement=placement.get(r.tile_id)||"independent";
+  return records;
+}
+function dlsReportSortValue(record,key){
+  const def=DLS_REPORT_COLUMNS.find(c=>c.key===key);
+  const val=record&&record[key]!=null?record[key]:"";
+  if(def&&def.numeric) return Number(val)||0;
+  if(key==="device"&&/^\d+$/.test(String(val).trim())) return Number(val);
+  return String(val).trim().toLocaleLowerCase();
+}
+function dlsReportCompare(a,b,specs){
+  for(const spec of specs||[]){
+    if(!spec||!spec.key) continue;
+    const av=dlsReportSortValue(a,spec.key),bv=dlsReportSortValue(b,spec.key);
+    let cmp=0;
+    if(typeof av==="number"&&typeof bv==="number") cmp=av-bv;
+    else cmp=String(av).localeCompare(String(bv),undefined,{numeric:true,sensitivity:"base"});
+    if(cmp) return spec.dir==="desc"?-cmp:cmp;
+  }
+  return Number(a.tile_id)-Number(b.tile_id);
+}
+function dlsReportSorted(records,specs){ return [...records].sort((a,b)=>dlsReportCompare(a,b,specs)); }
+function dlsReportComponents(records,conflictsOnly=false){
+  const adj=records.map(()=>new Set());
+  for(let i=0;i<records.length;i++) for(let j=i+1;j<records.length;j++){
+    const rel=dlsReportPairRelation(records[i],records[j]);
+    if(!rel) continue;
+    if(conflictsOnly&&(rel==="contains"||rel==="inside")) continue;
+    adj[i].add(j); adj[j].add(i);
+  }
+  const seen=new Set(),out=[];
+  for(let i=0;i<records.length;i++){
+    if(seen.has(i)||!adj[i].size) continue;
+    const stack=[i],comp=[]; seen.add(i);
+    while(stack.length){
+      const cur=stack.pop(); comp.push(records[cur]);
+      for(const nb of adj[cur]) if(!seen.has(nb)){seen.add(nb);stack.push(nb);}
+    }
+    out.push(comp);
+  }
+  return out;
+}
+function dlsReportComponentHasNesting(comp){
+  for(let i=0;i<comp.length;i++) for(let j=i+1;j<comp.length;j++){
+    const rel=dlsReportPairRelation(comp[i],comp[j]);
+    if(rel==="contains"||rel==="inside") return true;
+  }
+  return false;
+}
+function dlsReportHierarchy(comp,specs,includeRefs=true){
+  const parent=new Map(),children=new Map(comp.map(r=>[r.tile_id,[]])),refs=new Map(comp.map(r=>[r.tile_id,[]]));
+  const byId=new Map(comp.map(r=>[r.tile_id,r]));
+  const area=r=>r.rect.width*r.rect.height;
+  const ordered=[...comp].sort((a,b)=>area(a)-area(b)||dlsReportCompare(a,b,specs));
+  for(const r of ordered){
+    const candidates=comp.filter(p=>p.tile_id!==r.tile_id&&dlsReportRectContains(p.rect,r.rect)&&!dlsReportRectSame(p.rect,r.rect));
+    if(candidates.length){
+      candidates.sort((a,b)=>area(a)-area(b)||dlsReportCompare(a,b,specs));
+      const p=candidates[0]; parent.set(r.tile_id,p.tile_id); children.get(p.tile_id).push(r);
+    }
+  }
+  if(includeRefs){
+    for(let i=0;i<comp.length;i++) for(let j=i+1;j<comp.length;j++){
+      const a=comp[i],b=comp[j];
+      if(parent.get(a.tile_id)===b.tile_id||parent.get(b.tile_id)===a.tile_id) continue;
+      const rel=dlsReportPairRelation(a,b);
+      if(rel==="overlaps"||rel==="same"){
+        refs.get(a.tile_id).push({id:b.tile_id,rel});
+        refs.get(b.tile_id).push({id:a.tile_id,rel});
+      }
+    }
+  }
+  for(const list of children.values()) list.sort((a,b)=>dlsReportCompare(a,b,specs));
+  for(const list of refs.values()) list.sort((a,b)=>a.id-b.id);
+  const roots=dlsReportSorted(comp.filter(r=>!parent.has(r.tile_id)),specs);
+  return {parent,children,refs,roots,byId};
+}
+function dlsReportColumnValue(record,key){
+  const v=record[key];
+  if(v==null||v==="") return "—";
+  return String(v);
+}
+function dlsReportPlacementLabel(v){ return ({independent:"Independent",nested:"Nested",container:"Container",overlapping:"Overlapping"})[v]||String(v||""); }
+function dlsReportSelectedColumns(){ return [...document.querySelectorAll('#reportColumns input[data-report-column]:checked')].map(x=>x.dataset.reportColumn); }
+function dlsReportSortSpecs(){
+  const out=[];
+  for(let i=1;i<=3;i++){
+    const key=document.getElementById(`reportSort${i}`)?.value||"";
+    const dir=document.getElementById(`reportDir${i}`)?.value||"asc";
+    if(key&&!out.some(x=>x.key===key)) out.push({key,dir});
+  }
+  if(!out.some(x=>x.key==="tile_id")) out.push({key:"tile_id",dir:"asc"});
+  return out;
+}
+function dlsReportPopulateSortControls(){
+  const opts=['<option value="">No additional sort</option>',...DLS_REPORT_COLUMNS.map(c=>`<option value="${c.key}">${esc(c.label)}</option>`)].join("");
+  for(let i=1;i<=3;i++){ const el=document.getElementById(`reportSort${i}`); if(el&&!el.options.length) el.innerHTML=opts; }
+  const s1=document.getElementById("reportSort1"),s2=document.getElementById("reportSort2"),s3=document.getElementById("reportSort3");
+  if(s1&&!s1.value) s1.value="tile_id";
+  if(s2&&!s2.value) s2.value="";
+  if(s3&&!s3.value) s3.value="";
+}
+function dlsReportUpdateTypeHint(){
+  const type=document.getElementById("reportType")?.value||"plain";
+  const hint=document.getElementById("reportTypeHint"); if(hint) hint.textContent=DLS_REPORT_TYPE_HINTS[type]||"";
+  const field=document.getElementById("reportThumbnailField");
+  const checkbox=document.getElementById("reportGroupThumbnail");
+  const enabled=type!=="plain";
+  if(field){ field.classList.toggle("disabled",!enabled); field.setAttribute("aria-disabled",enabled?"false":"true"); }
+  if(checkbox) checkbox.disabled=!enabled;
+}
+function dlsReportSetColumns(mode){
+  const checks=[...document.querySelectorAll('#reportColumns input[data-report-column]')];
+  for(const x of checks){
+    const def=DLS_REPORT_COLUMNS.find(c=>c.key===x.dataset.reportColumn);
+    x.checked=mode==="all"?true:mode==="clear"?false:!!(def&&def.cli);
+  }
+}
+function openReportsModal(){
+  if(!State.tiles.length){ toast("Load a dashboard layout before creating reports.","err"); return; }
+  dlsReportPopulateSortControls(); dlsReportUpdateTypeHint();
+  const selected=currentSelectionTileIds();
+  const sel=document.getElementById("reportScopeSelected");
+  if(sel) sel.disabled=!selected.length;
+  if(!selected.length){ const all=document.querySelector('input[name="reportScope"][value="all"]'); if(all) all.checked=true; }
+  const hint=document.getElementById("reportScopeHint");
+  if(hint) hint.textContent=`${State.tiles.length} tile${State.tiles.length===1?"":"s"} in the layout; ${selected.length} currently selected.`;
+  const title=document.getElementById("reportTitle");
+  if(title) title.value=`${dlsReportLayoutName()} — Tile Report`;
+  resetModalPosition("reportsModal"); document.getElementById("reportsModal")?.classList.remove("hidden");
+}
+function closeReportsModal(){ document.getElementById("reportsModal")?.classList.add("hidden"); }
+function dlsReportNodeTitle(record,columns){
+  const parts=[];
+  if(columns.includes("tile_id")) parts.push(`Tile #${record.tile_id}`);
+  if(columns.includes("label")&&record.label) parts.push(record.label);
+  return parts.length?parts.join(" — "):"Tile";
+}
+function dlsReportNodeHtml(record,hierarchy,columns,depth=0){
+  const children=hierarchy.children.get(record.tile_id)||[];
+  const refs=hierarchy.refs.get(record.tile_id)||[];
+  const detailCols=columns.filter(k=>!['tile_id','label','placement'].includes(k));
+  const details=detailCols.map(key=>{
+    const def=DLS_REPORT_COLUMNS.find(c=>c.key===key); if(!def) return "";
+    return `<div class="node-field"><span>${esc(def.short)}</span><b>${esc(dlsReportColumnValue(record,key))}</b></div>`;
+  }).join("");
+  const placement=columns.includes("placement")?`<span class="placement-badge ${esc(record.placement)}">${esc(dlsReportPlacementLabel(record.placement))}</span>`:"";
+  const refsHtml=refs.length?`<div class="node-refs"><b>Related conflicts:</b> ${refs.map(x=>`Tile #${x.id} <em>${x.rel==="same"?"same footprint":"overlaps"}</em>`).join(" · ")}</div>`:"";
+  const childHtml=children.length?`<div class="tree-children">${children.map(ch=>`<div class="tree-child">${dlsReportNodeHtml(ch,hierarchy,columns,depth+1)}</div>`).join("")}</div>`:"";
+  return `<div class="tree-branch" data-depth="${depth}"><article class="tile-node placement-${esc(record.placement)}" data-depth="${depth}"><div class="node-head"><h3>${esc(dlsReportNodeTitle(record,columns))}</h3>${placement}</div>${details?`<div class="node-fields">${details}</div>`:""}${refsHtml}</article>${childHtml}</div>`;
+}
+function dlsReportIndependentGrid(records,columns){
+  if(!records.length) return '<div class="empty-report">No independent tiles are present in this report scope.</div>';
+  return `<div class="independent-grid">${records.map(r=>{
+    const fake={children:new Map([[r.tile_id,[]]]),refs:new Map([[r.tile_id,[]]])};
+    return dlsReportNodeHtml(r,fake,columns);
+  }).join("")}</div>`;
+}
+function dlsReportThumbnailColor(placement){
+  return ({independent:"#64748b",container:"#059669",nested:"#7c3aed",overlapping:"#d97706"})[placement]||"#64748b";
+}
+function dlsReportGroupBounds(comp){
+  const minRow=Math.min(...comp.map(r=>r.rect.row)),minCol=Math.min(...comp.map(r=>r.rect.col));
+  const maxRow=Math.max(...comp.map(r=>r.rect.r2)),maxCol=Math.max(...comp.map(r=>r.rect.c2));
+  const rows=Math.max(1,maxRow-minRow+1),cols=Math.max(1,maxCol-minCol+1);
+  const cfg=currentGridCfg();
+  const colSize=Math.max(1,Number(gridEffectiveColSize(cfg))||1);
+  const rowSize=Math.max(1,Number(gridEffectiveRowSize(cfg))||1);
+  const gap=Math.max(0,Number(cfg&&cfg.gridGap)||0);
+  const colPitch=colSize+gap,rowPitch=rowSize+gap;
+  const pixelWidth=Math.max(1,cols*colSize+Math.max(0,cols-1)*gap);
+  const pixelHeight=Math.max(1,rows*rowSize+Math.max(0,rows-1)*gap);
+  return {minRow,minCol,maxRow,maxCol,rows,cols,colSize,rowSize,gap,colPitch,rowPitch,pixelWidth,pixelHeight,bounds:`Rows ${minRow}–${maxRow} · Columns ${minCol}–${maxCol} · ${cols} × ${rows} cells`};
+}
+function dlsReportThumbTileStyle(record,bounds){
+  const left=((record.rect.col-bounds.minCol)*bounds.colPitch/bounds.pixelWidth)*100;
+  const top=((record.rect.row-bounds.minRow)*bounds.rowPitch/bounds.pixelHeight)*100;
+  const tileWidth=Math.max(1,record.rect.width*bounds.colSize+Math.max(0,record.rect.width-1)*bounds.gap);
+  const tileHeight=Math.max(1,record.rect.height*bounds.rowSize+Math.max(0,record.rect.height-1)*bounds.gap);
+  const width=(tileWidth/bounds.pixelWidth)*100;
+  const height=(tileHeight/bounds.pixelHeight)*100;
+  return `left:${left.toFixed(5)}%;top:${top.toFixed(5)}%;width:${width.toFixed(5)}%;height:${height.toFixed(5)}%;`;
+}
+function dlsReportSnapshotForTileId(id){
+  const snap=State.tileSnapshots&&State.tileSnapshots[String(id)];
+  if(!snap) return null;
+  const captured=sanitizeSnapshotInnerHtml(snap.html||"");
+  if(!snap.imageDataUrl&&!captured) return null;
+  return {snap,captured};
+}
+function dlsReportSimpleGroupThumbnailHtml(comp,index,bounds){
+  const ordered=[...comp].sort((a,b)=>(b.rect.width*b.rect.height)-(a.rect.width*a.rect.height)||Number(a.tile_id)-Number(b.tile_id));
+  const tiles=ordered.map(r=>{
+    const tip=`Tile #${r.tile_id} · row ${r.rect.row}, col ${r.rect.col} · ${r.rect.width}×${r.rect.height}`;
+    return `<div class="simple-thumb-tile placement-${esc(r.placement)}" style="${dlsReportThumbTileStyle(r,bounds)}" title="${esc(tip)}"><span class="simple-thumb-id">#${esc(String(r.tile_id))}</span></div>`;
+  }).join("");
+  const gridX=(bounds.colPitch/bounds.pixelWidth*100).toFixed(6),gridY=(bounds.rowPitch/bounds.pixelHeight*100).toFixed(6);
+  return `<figure class="group-thumbnail simple-group-thumbnail"><div class="group-thumbnail-head"><b>Simple View</b><span>${esc(bounds.bounds)}</span></div><div class="group-thumbnail-stage" data-thumb-width="${bounds.pixelWidth}" data-thumb-height="${bounds.pixelHeight}" role="img" aria-label="Simple View ${esc(bounds.bounds)}"><div class="group-thumbnail-canvas simple-thumb-grid" style="--thumb-grid-x:${gridX}%;--thumb-grid-y:${gridY}%">${tiles}</div></div><figcaption>Tile footprints use the dashboard’s actual column, row, and gap proportions. Every tile shows only its tile number at one uniform font size.</figcaption></figure>`;
+}
+function dlsReportRenderedGroupThumbnailHtml(comp,index,bounds){
+  let available=0;
+  const ordered=[...comp].sort((a,b)=>(b.rect.width*b.rect.height)-(a.rect.width*a.rect.height)||Number(a.tile_id)-Number(b.tile_id));
+  const tiles=ordered.map(r=>{
+    const found=dlsReportSnapshotForTileId(r.tile_id);
+    const tip=`Tile #${r.tile_id}${r.label?` — ${r.label}`:""}`;
+    if(!found){
+      return `<div class="rendered-thumb-tile rendered-thumb-unavailable" style="${dlsReportThumbTileStyle(r,bounds)}" title="${esc(tip)} — rendered snapshot unavailable"><span class="rendered-thumb-missing">#${esc(String(r.tile_id))}</span></div>`;
+    }
+    available++;
+    const {snap,captured}=found;
+    const content=snap.imageDataUrl
+      ? `<img class="rendered-thumb-image" src="${esc(snap.imageDataUrl)}" alt="">`
+      : `<div class="rendered-thumb-source" data-source-width="${Math.max(1,Number(snap.width)||1)}" data-source-height="${Math.max(1,Number(snap.height)||1)}" style="width:${Math.max(1,Number(snap.width)||1)}px;height:${Math.max(1,Number(snap.height)||1)}px">${captured}</div>`;
+    return `<div class="rendered-thumb-tile" style="${dlsReportThumbTileStyle(r,bounds)}" title="${esc(tip)}">${content}</div>`;
+  }).join("");
+  if(!available) return "";
+  const missing=comp.length-available;
+  const stale=State.tileSnapshotsStaleReason?` Captures may be stale: ${State.tileSnapshotsStaleReason}.`:"";
+  const availability=missing?`${available} of ${comp.length} rendered tile captures are available; unavailable tiles are numbered placeholders.`:`All ${comp.length} rendered tile captures are available.`;
+  return `<figure class="group-thumbnail rendered-group-thumbnail"><div class="group-thumbnail-head"><b>Rendered View</b><span>${esc(bounds.bounds)}</span></div><div class="group-thumbnail-stage rendered-thumb-stage" data-thumb-width="${bounds.pixelWidth}" data-thumb-height="${bounds.pixelHeight}" role="img" aria-label="Rendered View ${esc(bounds.bounds)}"><div class="group-thumbnail-canvas">${tiles}</div></div><figcaption>${esc(availability+stale)}</figcaption></figure>`;
+}
+function dlsReportGroupThumbnailHtml(comp,index){
+  if(!comp||!comp.length) return "";
+  const bounds=dlsReportGroupBounds(comp);
+  const rendered=dlsReportRenderedGroupThumbnailHtml(comp,index,bounds);
+  const simple=dlsReportSimpleGroupThumbnailHtml(comp,index,bounds);
+  return `<div class="group-thumbnails ${rendered?"has-rendered":"simple-only"}">${rendered}${simple}</div>`;
+}
+function dlsReportGroupHtml(comp,index,specs,columns,opts={}){
+  const hierarchy=dlsReportHierarchy(comp,specs,opts.includeRefs!==false);
+  const title=opts.title||`Group ${index+1}`;
+  const network=opts.network===true;
+  const thumbnail=opts.includeThumbnail?dlsReportGroupThumbnailHtml(comp,index):"";
+  const body=network
+    ? `<div class="network-grid">${hierarchy.roots.map(r=>dlsReportNodeHtml(r,hierarchy,columns)).join("")}</div>`
+    : `<div class="tree-roots">${hierarchy.roots.map(r=>dlsReportNodeHtml(r,hierarchy,columns)).join("")}</div>`;
+  return `<section class="relationship-group"><div class="group-title"><h2>${esc(title)}</h2><span>${comp.length} tile${comp.length===1?"":"s"}</span></div>${thumbnail}${body}</section>`;
+}
+function dlsReportPlainHtml(records,columns,specs){
+  const sorted=dlsReportSorted(records,specs);
+  const headers=columns.map(k=>DLS_REPORT_COLUMNS.find(c=>c.key===k)).filter(Boolean);
+  return `<div class="table-wrap"><table><thead><tr>${headers.map(c=>`<th class="${c.numeric?"num":""}">${esc(c.label)}</th>`).join("")}</tr></thead><tbody>${sorted.map(r=>`<tr>${headers.map(c=>{
+    const value=c.key==="placement"?dlsReportPlacementLabel(r[c.key]):dlsReportColumnValue(r,c.key);
+    return `<td class="${c.numeric?"num":""}${c.key==="placement"?` placement-cell ${esc(r.placement)}`:""}">${esc(value)}</td>`;
+  }).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+function dlsReportBodyHtml(type,records,columns,specs,includeThumbnails=false){
+  const sorted=dlsReportSorted(records,specs);
+  const allComps=dlsReportComponents(sorted,false).sort((a,b)=>dlsReportCompare(dlsReportSorted(a,specs)[0],dlsReportSorted(b,specs)[0],specs));
+  const nestedComps=allComps.filter(dlsReportComponentHasNesting);
+  const conflictComps=dlsReportComponents(sorted,true).sort((a,b)=>dlsReportCompare(dlsReportSorted(a,specs)[0],dlsReportSorted(b,specs)[0],specs));
+  if(type==="plain") return dlsReportPlainHtml(sorted,columns,specs);
+  if(type==="tree"){
+    const involved=new Set(allComps.flatMap(c=>c.map(r=>r.tile_id)));
+    const independent=sorted.filter(r=>!involved.has(r.tile_id));
+    let html=`<section class="report-section"><div class="section-title"><h2>Independent tiles</h2><span>${independent.length}</span></div>${dlsReportIndependentGrid(independent,columns)}</section>`;
+    if(allComps.length) html+=`<section class="report-section"><div class="section-title"><h2>Relationship groups</h2><span>${allComps.length}</span></div>${allComps.map((c,i)=>dlsReportGroupHtml(c,i,specs,columns,{includeRefs:true,includeThumbnail:includeThumbnails})).join("")}</section>`;
+    return html;
+  }
+  const comps=type==="overlap"?allComps:type==="nested"?nestedComps:conflictComps;
+  if(!comps.length) return `<div class="empty-report">No ${esc(type==="nested"?"nested":type==="conflicts"?"conflict":"overlap")} groups were found in this report scope.</div>`;
+  return comps.map((c,i)=>dlsReportGroupHtml(c,i,specs,columns,{includeRefs:type!=="nested",network:type==="conflicts",includeThumbnail:includeThumbnails})).join("");
+}
+function dlsReportSummaryHtml(records){
+  const counts={independent:0,nested:0,container:0,overlapping:0};
+  for(const r of records) counts[r.placement]=(counts[r.placement]||0)+1;
+  const all=dlsReportComponents(records,false),conf=dlsReportComponents(records,true);
+  const css=records.reduce((n,r)=>n+Number(r.css_rules||0),0);
+  const cards=[
+    [records.length,"Tiles"],[counts.independent,"Independent"],[counts.container,"Containers"],[counts.nested,"Nested"],[counts.overlapping,"Overlapping"],[all.length,"Overlap groups"],[conf.length,"Conflict groups"],[css,"CSS rules"]
+  ];
+  return `<div class="summary-grid">${cards.map(([v,l])=>`<div class="summary-card"><b>${v}</b><span>${esc(l)}</span></div>`).join("")}</div>`;
+}
+function dlsReportWindowHtml(opts){
+  const {title,type,scopeLabel,records,columns,specs,orientation,pageSize,includeThumbnails=false}=opts;
+  const resolvedOrientation=orientation==="auto"?(type==="plain"?"landscape":"portrait"):orientation;
+  const paper=dlsReportPageSpec(pageSize,resolvedOrientation);
+  const typeLabel=({plain:"Plain tile list",tree:"Relationship tree",overlap:"Overlap groups",nested:"Nested groups",conflicts:"Conflict groups"})[type]||type;
+  const body=dlsReportBodyHtml(type,records,columns,specs,includeThumbnails);
+  const generated=new Date().toLocaleString();
+  const printDescriptor=`${paper.label} · ${paper.orientation}`;
+  const layoutName=dlsReportLayoutName();
+  const summary=dlsReportSummaryHtml(records);
+  const jsLiteral=value=>JSON.stringify(String(value==null?"":value)).replace(/</g,"\\u003c").replace(/\u2028/g,"\\u2028").replace(/\u2029/g,"\\u2029");
+  const titleJs=jsLiteral(title),contextJs=jsLiteral(`${layoutName} · ${typeLabel}`),footerJs=jsLiteral(`Dashboard Layout Studio ${APP_VERSION} · ${printDescriptor}`),generatedJs=jsLiteral(`Generated ${generated}`),typeJs=jsLiteral(type);
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><style>
+@page{size:${paper.width} ${paper.height};margin:0}
+*{box-sizing:border-box}
+:root{--page-width:${paper.width};--page-height:${paper.height};--page-pad-x:.44in;--page-pad-top:.28in;--page-pad-bottom:.25in;--page-head-h:.42in;--page-foot-h:.34in}
+html{background:#d8dee8}
+body{margin:0;background:#d8dee8;color:#172033;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:9pt;line-height:1.35;orphans:3;widows:3}
+.report-actions{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:10px 28px;background:rgba(238,242,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid #cbd5e1;box-shadow:0 3px 12px rgba(15,23,42,.10)}
+.report-actions .paper-note{margin-right:auto;color:#475569;font-size:8pt;font-weight:700}
+.report-actions button{border:1px solid #94a3b8;border-radius:7px;background:white;color:#172033;padding:7px 13px;font-weight:700;cursor:pointer}
+.report-actions button.primary{background:#0f766e;border-color:#0f766e;color:white}
+.report-actions .print-note{color:#64748b;font-size:7.5pt;margin-left:4px}
+.sheets{padding:24px 0 44px}
+.sheet{width:var(--page-width);height:var(--page-height);margin:0 auto 24px;padding:var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom);display:grid;grid-template-rows:var(--page-head-h) minmax(0,1fr) var(--page-foot-h);background:#eef2f7;box-shadow:0 14px 38px rgba(15,23,42,.22);overflow:hidden;break-after:page;page-break-after:always}
+.sheet:last-child{break-after:auto;page-break-after:auto}
+.page-running-header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;border-bottom:1px solid #94a3b8;color:#334155;font-size:8pt;font-weight:750;white-space:nowrap;min-width:0}
+.page-running-header .page-title{overflow:hidden;text-overflow:ellipsis}
+.page-running-header .page-context{max-width:48%;overflow:hidden;text-overflow:ellipsis;text-align:right;color:#64748b;font-weight:600}
+.sheet-body{min-height:0;overflow:hidden;padding:.12in 0 .10in}
+.page-running-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:16px;border-top:1px solid #cbd5e1;color:#64748b;font-size:7pt;white-space:nowrap;min-width:0}
+.page-running-footer .footer-left{overflow:hidden;text-overflow:ellipsis}
+.page-running-footer .footer-right{text-align:right}
+.report-header{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;padding:20px 22px;border-radius:14px;background:linear-gradient(135deg,#10243d,#173d55 58%,#0f766e);color:white;box-shadow:0 10px 26px rgba(15,23,42,.16);break-inside:avoid-page;page-break-inside:avoid}
+.report-header h1{margin:0 0 7px;font-size:18pt;line-height:1.15}
+.report-header p{margin:0;color:#d8f3f1;font-size:9pt}
+.report-meta{text-align:right;font-size:8pt;color:#dbeafe}
+.report-meta b{display:block;color:white;font-size:9.5pt;margin-bottom:3px}
+.summary-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;margin:12px 0 14px;break-inside:avoid-page;page-break-inside:avoid}
+.summary-card{border:1px solid #cbd5e1;border-radius:9px;background:white;padding:8px 9px;box-shadow:0 2px 8px rgba(15,23,42,.05);break-inside:avoid-page;page-break-inside:avoid}
+.summary-card b{display:block;font-size:11pt;color:#0f766e}
+.summary-card span{font-size:6.5pt;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+.table-wrap{overflow:visible;border:1px solid #cbd5e1;border-radius:10px;background:white;box-shadow:0 4px 14px rgba(15,23,42,.06)}
+table{border-collapse:collapse;width:100%;font-size:8pt;table-layout:auto}
+thead{display:table-header-group}
+tfoot{display:table-footer-group}
+th{background:#173d55;color:white;text-align:left;padding:7px 8px;border-right:1px solid rgba(255,255,255,.15);white-space:nowrap}
+td{padding:6px 8px;border-bottom:1px solid #e2e8f0;vertical-align:top;overflow-wrap:anywhere}
+tbody tr:nth-child(even){background:#f8fafc}
+tr{break-inside:avoid-page;page-break-inside:avoid}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+.placement-cell{font-weight:750}.placement-cell.nested{color:#6d28d9}.placement-cell.container{color:#047857}.placement-cell.overlapping{color:#b45309}
+.report-section{margin:0 0 18px}
+.section-title,.group-title{display:flex;align-items:center;gap:10px;margin:0 0 9px;break-after:avoid-page;page-break-after:avoid}
+.section-title h2,.group-title h2{margin:0;font-size:10.5pt;color:#173d55}
+.section-title span,.group-title span{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:22px;padding:0 7px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:7pt;font-weight:800}
+.relationship-group{break-inside:avoid-page;page-break-inside:avoid;margin:0;padding:12px;border:1px solid #cbd5e1;border-radius:12px;background:rgba(255,255,255,.80)}
+.group-thumbnails{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 11px;break-inside:avoid-page;page-break-inside:avoid}
+.group-thumbnails.simple-only{grid-template-columns:minmax(0,1fr)}
+.group-thumbnail{margin:0;padding:8px 9px 7px;border:1px solid #d5dde8;border-radius:9px;background:#f8fafc;min-width:0;break-inside:avoid-page;page-break-inside:avoid}
+.group-thumbnail-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 5px;color:#64748b;font-size:6.5pt}
+.group-thumbnail-head b{color:#173d55;font-size:7.5pt;text-transform:uppercase;letter-spacing:.045em}
+.group-thumbnail-head span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.group-thumbnail-stage{position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:1.35in;border:1px solid #dbe3ed;border-radius:7px;background:white;overflow:hidden;isolation:isolate}
+.group-thumbnail-canvas{position:relative;display:block;flex:none;overflow:hidden;isolation:isolate;background:white}
+.simple-thumb-grid{background-color:#fff;background-image:linear-gradient(to right,#e2e8f0 1px,transparent 1px),linear-gradient(to bottom,#e2e8f0 1px,transparent 1px);background-size:var(--thumb-grid-x) var(--thumb-grid-y)}
+.simple-thumb-tile,.rendered-thumb-tile{position:absolute;box-sizing:border-box;overflow:hidden}
+.simple-thumb-tile{display:flex;align-items:center;justify-content:center;border:1px solid #475569;background:#e2e8f0;color:#0f172a}
+.simple-thumb-tile.placement-independent{border-color:#475569;background:#e2e8f0}.simple-thumb-tile.placement-container{border-color:#047857;background:#d1fae5}.simple-thumb-tile.placement-nested{border-color:#6d28d9;background:#ede9fe}.simple-thumb-tile.placement-overlapping{border-color:#b45309;background:#fef3c7}
+.simple-thumb-id{display:block;max-width:100%;overflow:hidden;text-overflow:clip;white-space:nowrap;font-family:Arial,Helvetica,sans-serif;font-size:6.5pt!important;line-height:1;font-weight:800;color:#0f172a;text-align:center}
+.rendered-thumb-stage{background:#e2e8f0}
+.rendered-thumb-tile{border:1px solid rgba(15,23,42,.36);background:#cbd5e1}
+.rendered-thumb-image{display:block;width:100%;height:100%;object-fit:contain;object-position:center;background:transparent}
+.rendered-thumb-source{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;overflow:hidden}
+.rendered-thumb-source *{pointer-events:none!important}
+.rendered-thumb-unavailable{display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(135deg,#f1f5f9,#f1f5f9 5px,#e2e8f0 5px,#e2e8f0 10px);border-style:dashed}
+.rendered-thumb-missing{font-family:Arial,Helvetica,sans-serif;font-size:6.5pt;line-height:1;font-weight:800;color:#64748b}
+.group-thumbnail figcaption{margin-top:5px;color:#64748b;font-size:6.25pt;line-height:1.3}
+.tree-roots{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;align-items:start}
+.tree-branch,.tree-child{min-width:0;break-inside:avoid-page;page-break-inside:avoid}
+.tree-children{margin:9px 0 0 16px;padding-left:20px;border-left:2px solid #94a3b8}
+.tree-child{position:relative;margin:9px 0}.tree-child:before{content:"";position:absolute;left:-20px;top:20px;width:18px;border-top:2px solid #94a3b8}
+.network-grid,.independent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:9px}
+.tile-node{break-inside:avoid-page;page-break-inside:avoid;border:1px solid #cbd5e1;border-left:6px solid #64748b;border-radius:9px;background:white;padding:9px 10px;box-shadow:0 3px 10px rgba(15,23,42,.05)}
+.tile-node.placement-container{border-left-color:#059669}.tile-node.placement-nested{border-left-color:#7c3aed}.tile-node.placement-overlapping{border-left-color:#d97706}
+.node-head{display:flex;align-items:flex-start;justify-content:space-between;gap:9px}.node-head h3{margin:0;min-width:0;font-size:8.5pt;color:#172033;overflow-wrap:anywhere}
+.placement-badge{flex:none;border-radius:999px;padding:2px 7px;font-size:6.5pt;font-weight:800;text-transform:uppercase;letter-spacing:.03em;background:#e2e8f0;color:#475569}
+.placement-badge.container{background:#d1fae5;color:#047857}.placement-badge.nested{background:#ede9fe;color:#6d28d9}.placement-badge.overlapping{background:#fef3c7;color:#b45309}
+.node-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:4px;margin-top:7px}.node-field{min-width:0;border-radius:6px;background:#f8fafc;padding:4px 5px}.node-field span{display:block;color:#64748b;font-size:6.25pt;text-transform:uppercase;letter-spacing:.04em}.node-field b{display:block;min-width:0;margin-top:1px;color:#172033;font-size:7.5pt;overflow-wrap:anywhere}
+.node-refs{margin-top:7px;border-top:1px dashed #cbd5e1;padding-top:5px;color:#92400e;font-size:7pt}.node-refs em{font-style:normal;color:#b45309}
+.empty-report{border:1px dashed #94a3b8;border-radius:11px;background:white;padding:26px;text-align:center;color:#64748b;break-inside:avoid-page;page-break-inside:avoid}
+.legend{display:flex;gap:11px;flex-wrap:wrap;margin:0;color:#475569;font-size:7pt;break-inside:avoid-page;page-break-inside:avoid}.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:10px;height:10px;border-radius:2px;background:#64748b}.legend i.container{background:#059669}.legend i.nested{background:#7c3aed}.legend i.overlapping{background:#d97706}
+.page-section-heading{margin:0 0 9px}
+.page-unit{margin:0 0 12px;break-inside:avoid-page;page-break-inside:avoid}.report-note{margin:10px 0 0;padding-top:8px;border-top:1px solid #cbd5e1;color:#64748b;font-size:7pt;break-inside:avoid-page;page-break-inside:avoid}
+.page-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:9px;margin:0 0 12px}
+.split-group{break-inside:auto;page-break-inside:auto}.split-tree-list{display:flex;flex-direction:column;gap:8px}.split-tree-row{position:relative;min-width:0}.split-tree-row.has-parent:before{content:"";position:absolute;left:-10px;top:-8px;width:8px;height:25px;border-left:2px solid #94a3b8;border-bottom:2px solid #94a3b8;border-bottom-left-radius:5px}.split-tree-row .tile-node{width:100%}.continued-label,.node-continuation{display:inline-block;margin-left:7px;color:#64748b;font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.oversize-unit{overflow:visible}
+.report-source-host{position:absolute;left:-250vw;top:0;width:calc(var(--page-width) - (2 * var(--page-pad-x)));visibility:hidden;pointer-events:none}
+.report-source-host .sheet-body{height:calc(var(--page-height) - var(--page-pad-top) - var(--page-pad-bottom) - var(--page-head-h) - var(--page-foot-h));overflow:hidden}
+.pagination-error{width:min(700px,90vw);margin:40px auto;padding:20px;border:1px solid #ef4444;border-radius:10px;background:white;color:#991b1b}
+@media(max-width:900px){.summary-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.report-header{grid-template-columns:1fr}.report-meta{text-align:left}}
+@media print{
+  html,body{background:white}
+  .report-actions,.report-source-host{display:none!important}
+  .sheets{padding:0}
+  .sheet{margin:0;box-shadow:none;break-after:page!important;page-break-after:always!important}
+  .sheet:last-child{break-after:auto!important;page-break-after:auto!important}
+  .report-header,.summary-card,.relationship-group,.tile-node,.table-wrap{box-shadow:none}
+  th,.placement-badge,.tile-node,.report-header,.group-thumbnail,.simple-thumb-tile,.rendered-thumb-tile{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style></head><body>
+<div class="report-actions"><span class="paper-note">${esc(printDescriptor)}</span><span class="print-note">For PDF, choose “Save as PDF” in the print dialog and disable the browser’s own headers and footers.</span><button onclick="window.close()">Close</button><button class="primary" onclick="window.print()">Print / Save PDF</button></div>
+<div id="sheets" class="sheets" aria-live="polite"></div>
+<div id="reportSourceHost" class="report-source-host" aria-hidden="true"><div class="sheet-body"><div id="introSource"><header class="report-header"><div><h1>${esc(title)}</h1><p>${esc(typeLabel)} · ${esc(scopeLabel)}</p></div><div class="report-meta"><b>${esc(layoutName)}</b>Generated ${esc(generated)}<br>Paper: ${esc(printDescriptor)}</div></header>${summary}<div class="legend"><span><i></i>Independent</span><span><i class="container"></i>Container</span><span><i class="nested"></i>Nested</span><span><i class="overlapping"></i>Overlapping / conflict</span></div></div><div id="reportSource">${body}<div class="report-note">Effective CSS rule counts include editable customCSS and loaded external @import stylesheets.</div></div></div></div>
+<script>(function(){
+'use strict';
+var sheets=document.getElementById('sheets');
+var titleText=${titleJs};
+var contextText=${contextJs};
+var footerText=${footerJs};
+var generatedText=${generatedJs};
+var reportType=${typeJs};
+function makeSheet(){
+  var sheet=document.createElement('section');
+  sheet.className='sheet';
+  sheet.innerHTML='<header class="page-running-header"><span class="page-title"></span><span class="page-context"></span></header><div class="sheet-body"></div><footer class="page-running-footer"><span class="footer-left"></span><span class="footer-right"></span></footer>';
+  sheet.querySelector('.page-title').textContent=titleText;
+  sheet.querySelector('.page-context').textContent=contextText;
+  sheet.querySelector('.footer-left').textContent=footerText;
+  sheets.appendChild(sheet);
+  return sheet;
+}
+function bodyOf(sheet){return sheet.querySelector('.sheet-body');}
+function fits(body){return body.scrollHeight<=body.clientHeight+1;}
+function pageHasContent(body){return body.children.length>0;}
+function clone(el){return el.cloneNode(true);}
+function fitThumbCanvases(root){
+  if(!root)return;
+  Array.prototype.forEach.call(root.querySelectorAll('.group-thumbnail-stage'),function(stage){
+    var canvas=stage.querySelector(':scope > .group-thumbnail-canvas');if(!canvas)return;
+    var naturalW=Math.max(1,Number(stage.getAttribute('data-thumb-width'))||1);
+    var naturalH=Math.max(1,Number(stage.getAttribute('data-thumb-height'))||1);
+    var availableW=Math.max(1,stage.clientWidth-2),availableH=Math.max(1,stage.clientHeight-2);
+    var scale=Math.min(availableW/naturalW,availableH/naturalH);
+    canvas.style.width=Math.max(1,naturalW*scale)+'px';
+    canvas.style.height=Math.max(1,naturalH*scale)+'px';
+  });
+}
+function fitRenderedThumbSources(root){
+  if(!root)return;
+  Array.prototype.forEach.call(root.querySelectorAll('.rendered-thumb-source'),function(src){
+    var tile=src.parentElement;
+    var sw=Math.max(1,Number(src.getAttribute('data-source-width'))||src.offsetWidth||1);
+    var sh=Math.max(1,Number(src.getAttribute('data-source-height'))||src.offsetHeight||1);
+    var tw=Math.max(1,tile.clientWidth||1),th=Math.max(1,tile.clientHeight||1);
+    var scale=Math.min(tw/sw,th/sh);
+    var left=(tw-sw*scale)/2,top=(th-sh*scale)/2;
+    src.style.left=left+'px';src.style.top=top+'px';src.style.transform='scale('+scale+')';
+  });
+}
+function addAtomic(el,state){
+  var unit=clone(el);unit.classList.add('page-unit');state.body.appendChild(unit);
+  if(fits(state.body))return true;
+  state.body.removeChild(unit);
+  if(pageHasContent(state.body)){state.sheet=makeSheet();state.body=bodyOf(state.sheet);}
+  state.body.appendChild(unit);
+  if(!fits(state.body))unit.classList.add('oversize-unit');
+  return fits(state.body);
+}
+function addHeading(el,state){
+  var h=clone(el);h.classList.add('page-section-heading','page-unit');state.body.appendChild(h);
+  if(!fits(state.body)){state.body.removeChild(h);state.sheet=makeSheet();state.body=bodyOf(state.sheet);state.body.appendChild(h);}
+}
+function addGridItems(items,className,state){
+  var grid=null;
+  function newGrid(){grid=document.createElement('div');grid.className=(className||'page-grid')+' page-unit';state.body.appendChild(grid);}
+  newGrid();
+  Array.prototype.forEach.call(items,function(item){
+    var node=clone(item);grid.appendChild(node);
+    if(fits(state.body))return;
+    grid.removeChild(node);
+    if(!grid.children.length)state.body.removeChild(grid);
+    state.sheet=makeSheet();state.body=bodyOf(state.sheet);newGrid();grid.appendChild(node);
+    if(!fits(state.body))node.classList.add('oversize-unit');
+  });
+  if(grid&&!grid.children.length&&grid.parentNode)grid.parentNode.removeChild(grid);
+}
+function paginatePlain(state){
+  var sourceTable=document.querySelector('#reportSource table');
+  if(!sourceTable)return;
+  var thead=sourceTable.querySelector('thead');
+  var rows=sourceTable.querySelectorAll('tbody tr');
+  var currentTable=null,currentBody=null,wrap=null,rowCount=0;
+  function beginTable(){
+    wrap=document.createElement('div');wrap.className='table-wrap page-unit';
+    currentTable=document.createElement('table');
+    if(thead)currentTable.appendChild(clone(thead));
+    currentBody=document.createElement('tbody');currentTable.appendChild(currentBody);wrap.appendChild(currentTable);state.body.appendChild(wrap);rowCount=0;
+  }
+  beginTable();
+  Array.prototype.forEach.call(rows,function(row){
+    var copy=clone(row);currentBody.appendChild(copy);rowCount++;
+    if(fits(state.body))return;
+    currentBody.removeChild(copy);rowCount--;
+    if(rowCount===0){
+      if(state.body.children.length>1){
+        state.body.removeChild(wrap);state.sheet=makeSheet();state.body=bodyOf(state.sheet);beginTable();currentBody.appendChild(copy);rowCount=1;
+      }else{currentBody.appendChild(copy);copy.classList.add('oversize-unit');}
+      return;
+    }
+    state.sheet=makeSheet();state.body=bodyOf(state.sheet);beginTable();currentBody.appendChild(copy);rowCount=1;
+  });
+}
+function groupFragment(group,state,continued){
+  var section=document.createElement('section');section.className='relationship-group split-group page-unit';
+  var sourceTitle=group.querySelector(':scope > .group-title');
+  if(sourceTitle){
+    var title=clone(sourceTitle);
+    if(continued){var h=title.querySelector('h2');if(h){var mark=document.createElement('small');mark.className='continued-label';mark.textContent='continued';h.appendChild(mark);}}
+    section.appendChild(title);
+  }
+  if(!continued){var sourceThumb=group.querySelector(':scope > .group-thumbnails');if(sourceThumb)section.appendChild(clone(sourceThumb));}
+  var list=document.createElement('div');list.className='split-tree-list';section.appendChild(list);state.body.appendChild(section);
+  return {section:section,list:list,continued:continued};
+}
+function nextGroupPage(group,state){
+  state.sheet=makeSheet();state.body=bodyOf(state.sheet);return groupFragment(group,state,true);
+}
+function splitRowForNode(node){
+  var depth=Math.max(0,Number(node.getAttribute('data-depth')||0));
+  var row=document.createElement('div');row.className='split-tree-row';
+  row.style.marginLeft=(Math.min(depth,8)*16)+'px';
+  if(depth>0)row.classList.add('has-parent');
+  var card=clone(node);card.removeAttribute('data-depth');row.appendChild(card);return row;
+}
+function nodePiece(node,continued){
+  var depth=Math.max(0,Number(node.getAttribute('data-depth')||0));
+  var row=document.createElement('div');row.className='split-tree-row';row.style.marginLeft=(Math.min(depth,8)*16)+'px';if(depth>0)row.classList.add('has-parent');
+  var card=clone(node);card.removeAttribute('data-depth');
+  var oldFields=card.querySelector(':scope > .node-fields');if(oldFields)oldFields.remove();
+  var oldRefs=card.querySelector(':scope > .node-refs');if(oldRefs)oldRefs.remove();
+  if(continued){var h=card.querySelector('.node-head h3');if(h){var mark=document.createElement('small');mark.className='node-continuation';mark.textContent='continued';h.appendChild(mark);}}
+  var fields=document.createElement('div');fields.className='node-fields';card.appendChild(fields);row.appendChild(card);
+  return {row:row,card:card,fields:fields};
+}
+function splitOversizeNode(node,group,state,ctx){
+  var fieldItems=node.querySelectorAll(':scope > .node-fields > .node-field');
+  var refs=node.querySelector(':scope > .node-refs');
+  var piece=nodePiece(node,false);ctx.list.appendChild(piece.row);
+  if(!fits(state.body)){ctx.list.removeChild(piece.row);ctx=nextGroupPage(group,state);piece=nodePiece(node,false);ctx.list.appendChild(piece.row);}
+  Array.prototype.forEach.call(fieldItems,function(field){
+    var copy=clone(field);piece.fields.appendChild(copy);
+    if(fits(state.body))return;
+    piece.fields.removeChild(copy);ctx=nextGroupPage(group,state);piece=nodePiece(node,true);ctx.list.appendChild(piece.row);piece.fields.appendChild(copy);
+    if(!fits(state.body))piece.row.classList.add('oversize-unit');
+  });
+  if(refs){
+    var refsCopy=clone(refs);piece.card.appendChild(refsCopy);
+    if(!fits(state.body)){
+      piece.card.removeChild(refsCopy);ctx=nextGroupPage(group,state);piece=nodePiece(node,true);ctx.list.appendChild(piece.row);piece.card.appendChild(refsCopy);
+      if(!fits(state.body))piece.row.classList.add('oversize-unit');
+    }
+  }
+  return ctx;
+}
+function splitGraphGroup(group,state){
+  if(pageHasContent(state.body)){state.sheet=makeSheet();state.body=bodyOf(state.sheet);}
+  var ctx=groupFragment(group,state,false);
+  var nodes=group.querySelectorAll('.tile-node');
+  Array.prototype.forEach.call(nodes,function(node){
+    var row=splitRowForNode(node);ctx.list.appendChild(row);
+    if(fits(state.body))return;
+    ctx.list.removeChild(row);
+    if(ctx.list.children.length)ctx=nextGroupPage(group,state);
+    ctx.list.appendChild(row);
+    if(fits(state.body))return;
+    ctx.list.removeChild(row);ctx=splitOversizeNode(node,group,state,ctx);
+  });
+}
+function addGraphGroup(group,state){
+  var whole=clone(group);whole.classList.add('page-unit');state.body.appendChild(whole);
+  if(fits(state.body))return;
+  state.body.removeChild(whole);
+  if(pageHasContent(state.body)){state.sheet=makeSheet();state.body=bodyOf(state.sheet);}
+  whole=clone(group);whole.classList.add('page-unit');state.body.appendChild(whole);
+  if(fits(state.body))return;
+  state.body.removeChild(whole);splitGraphGroup(group,state);
+}
+function paginateGraph(state){
+  var source=document.getElementById('reportSource');
+  Array.prototype.forEach.call(source.children,function(child){
+    if(child.classList.contains('report-section')){
+      var heading=child.querySelector(':scope > .section-title');if(heading)addHeading(heading,state);
+      var independent=child.querySelector(':scope > .independent-grid');
+      if(independent){addGridItems(independent.children,'independent-grid',state);return;}
+      var groups=child.querySelectorAll(':scope > .relationship-group');
+      if(groups.length){Array.prototype.forEach.call(groups,function(g){addGraphGroup(g,state);});return;}
+      Array.prototype.forEach.call(child.children,function(el){if(!el.classList.contains('section-title'))addAtomic(el,state);});
+      return;
+    }
+    if(child.classList.contains('relationship-group'))addGraphGroup(child,state);else addAtomic(child,state);
+  });
+}
+function finalize(){
+  fitThumbCanvases(sheets);fitRenderedThumbSources(sheets);
+  var pages=sheets.querySelectorAll('.sheet');var total=pages.length;
+  Array.prototype.forEach.call(pages,function(page,index){page.querySelector('.footer-right').textContent=generatedText+' · Page '+(index+1)+' of '+total;});
+  document.getElementById('reportSourceHost').style.display='none';
+}
+try{
+  fitThumbCanvases(document.getElementById('reportSourceHost'));
+  fitRenderedThumbSources(document.getElementById('reportSourceHost'));
+  var state={sheet:makeSheet()};state.body=bodyOf(state.sheet);
+  var intro=document.getElementById('introSource');
+  Array.prototype.forEach.call(intro.children,function(el){addAtomic(el,state);});
+  if(reportType==='plain'){paginatePlain(state);var finalNote=document.querySelector('#reportSource > .report-note');if(finalNote)addAtomic(finalNote,state);}else paginateGraph(state);
+  finalize();
+}catch(err){
+  sheets.innerHTML='<div class="pagination-error"><b>Report pagination failed.</b><br>'+String(err&&err.message?err.message:err)+'</div>';
+}
+})();<\/script>
+</body></html>`;
+}
+
+function generateTileReport(){
+  const type=document.getElementById("reportType")?.value||"plain";
+  const scope=document.querySelector('input[name="reportScope"]:checked')?.value||"all";
+  const selectedIds=new Set(currentSelectionTileIds().map(Number));
+  const source=scope==="selected"?State.tiles.filter(t=>selectedIds.has(Number(t.id))):State.tiles.slice();
+  if(!source.length){ toast(scope==="selected"?"The current selection contains no tiles.":"The layout contains no tiles.","err"); return; }
+  const columns=dlsReportSelectedColumns();
+  if(!columns.length){ toast("Select at least one report field.","err"); return; }
+  const title=String(document.getElementById("reportTitle")?.value||"").trim()||`${dlsReportLayoutName()} — Tile Report`;
+  const orientation=document.getElementById("reportOrientation")?.value||"auto";
+  const pageSize=document.getElementById("reportPageSize")?.value||"letter";
+  const includeThumbnails=type!=="plain"&&!!document.getElementById("reportGroupThumbnail")?.checked;
+  const specs=dlsReportSortSpecs();
+  const records=dlsReportRecords(source);
+  const reportWin=window.open("","_blank");
+  if(!reportWin){ toast("The report window was blocked. Allow pop-ups for this DLS page and try again.","err"); return; }
+  const html=dlsReportWindowHtml({title,type,scopeLabel:scope==="selected"?`Selected tiles (${records.length})`:`Whole layout (${records.length} tiles)`,records,columns,specs,orientation,pageSize,includeThumbnails});
+  reportWin.document.open(); reportWin.document.write(html); reportWin.document.close();
+  try{ reportWin.opener=null; reportWin.focus(); }catch(_){ }
+  closeReportsModal();
+  status(`Opened ${records.length}-tile ${type} report in a new window.`);
+}
+
 function onGridClick(e){
   if(State.pending&&State.pending.action==="moveTiles"){ completeMoveTiles(snapCellToDashboardStep(cellFromEvent(e))); return; }
   if(State.pending&&State.pending.action==="copyTiles"){ completeCopyTiles(snapCellToDashboardStep(cellFromEvent(e))); return; }
@@ -8641,9 +9524,15 @@ function updateActionButtons(){
     }
   }
 
+  const selectedTileCount=currentSelectionTileIds().length;
   const bInfo=document.getElementById("btnInfo");
-  if(bInfo) bInfo.disabled=currentSelectionTileIds().length===0||!!State.pending;
-  const bSize=document.getElementById("btnSetTileSize"); if(bSize) bSize.disabled=currentSelectionTileIds().length===0||!!State.pending;
+  if(bInfo) bInfo.disabled=!State.tiles.length||!!State.pending;
+  const infoTileItem=document.getElementById("infoMenuTile");
+  if(infoTileItem){
+    infoTileItem.disabled=selectedTileCount===0||!!State.pending;
+    infoTileItem.title=selectedTileCount===0?"Select a tile to view Tile Information.":"Show information for the selected tile.";
+  }
+  const bSize=document.getElementById("btnSetTileSize"); if(bSize) bSize.disabled=selectedTileCount===0||!!State.pending;
   document.querySelector('.tool[data-action="cut"]').disabled=!anySel||State.pending;
   document.querySelector('.tool[data-action="copybuf"]').disabled=!anySel||State.pending;
   const isPastePending=State.pending&&State.pending.action==="pasteBuf";
@@ -13221,19 +14110,142 @@ function snapshotDashboardUrl(overrideUrl=null){
 function updateDashboardJumpState(){
   const b=document.getElementById("btnOpenDashboard");
   if(!b) return;
+  const menu=document.getElementById("dashboardLaunchMenu");
+  const chev=document.getElementById("dashboardLaunchChev");
+  const label=document.getElementById("dashboardLaunchLabel");
+  const previewItem=document.getElementById("dashboardLaunchPreview");
+  const savedItem=document.getElementById("dashboardLaunchSaved");
   const url=currentDashboardUrl();
-  const dirty=hasUnsavedChanges();
+  const online=State.conn.mode==="live"&&!!State.active&&!!url;
+  const offline=State.conn.mode==="offline"&&!!State.active;
+  const dirty=online&&hasUnsavedChanges();
   b.style.display=State.active?"inline-flex":"none";
-  b.disabled=!url;
-  b.title=url ? (dirty?"Open the current dashboard. Warning: unsaved DLS changes will not appear there until saved to the hub.":"Open the current dashboard in a new window.") : "Open in new window is available only for hub-loaded dashboards.";
+  b.disabled=!online;
+  b.classList.toggle("dropdown",dirty);
+  b.setAttribute("aria-haspopup",dirty?"menu":"false");
+  b.setAttribute("aria-expanded",dirty&&menu&&!menu.classList.contains("hidden")?"true":"false");
+  if(label) label.classList.toggle("hidden",!dirty);
+  if(chev) chev.classList.toggle("hidden",!dirty);
+  if(!dirty&&menu) menu.classList.add("hidden");
+  if(previewItem){
+    const previewReady=dirty&&temporaryDashboardPreviewUsable()&&!hubOperationActive();
+    previewItem.disabled=!previewReady;
+    previewItem.title=previewReady
+      ? "Save the current unsaved working layout to the temporary preview dashboard and open it."
+      : (dirty?"Preview requires the temporary preview dashboard to be enabled, ready, and hosted on the hub.":"");
+  }
+  if(savedItem) savedItem.disabled=!dirty||!url;
+  if(offline){
+    b.title="Dashboard launch is unavailable for offline layouts.";
+    b.setAttribute("aria-label",b.title);
+  }else if(!State.active){
+    b.title="Load a hub dashboard before opening it.";
+    b.setAttribute("aria-label",b.title);
+  }else if(!online){
+    b.title="Open in new window is available only for a hub-loaded dashboard with an active connection.";
+    b.setAttribute("aria-label",b.title);
+  }else if(dirty){
+    b.title="Choose whether to open a preview of the unsaved layout or the dashboard currently saved on the hub.";
+    b.setAttribute("aria-label","Preview options for unsaved dashboard changes");
+  }else{
+    b.title="Open the current dashboard in a new window.";
+    b.setAttribute("aria-label",b.title);
+  }
 }
 function openDashboardWindow(url){
   const w=window.open(url,"_blank","noopener");
   if(!w) toast("The browser blocked the dashboard window.","err");
 }
-function openCurrentDashboard(){
+function openSavedDashboardFromLaunchMenu(){
   const url=currentDashboardUrl();
   if(!url){ toast("Open in new window is available only for hub-loaded dashboards.","err"); return; }
+  openDashboardWindow(url);
+  status("Opened the dashboard currently saved on the hub. Unsaved DLS changes remain local.");
+}
+function previewLaunchUrl(raw){
+  try{
+    const u=new URL(raw,window.location.href);
+    u.searchParams.set("dlsPreview",String(Date.now()));
+    return u.toString();
+  }catch(_e){
+    return String(raw||"")+(String(raw||"").includes("?")?"&":"?")+"dlsPreview="+Date.now();
+  }
+}
+function writePreviewLaunchPage(win,title,message,error=false){
+  if(!win||win.closed) return;
+  try{
+    const fg=error?"#fecaca":"#eef2fa";
+    const accent=error?"#ef4444":"#67e8f9";
+    win.document.open();
+    win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title><style>html,body{height:100%;margin:0}body{display:grid;place-items:center;background:#0d1526;color:${fg};font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}.card{max-width:560px;margin:24px;padding:28px;border:1px solid rgba(148,163,184,.3);border-radius:14px;background:#162034;box-shadow:0 20px 50px rgba(0,0,0,.45)}h1{margin:0 0 10px;font-size:1.2rem;color:${accent}}p{margin:0;color:#bcc8e0;white-space:pre-wrap}</style></head><body><div class="card"><h1>${esc(title)}</h1><p>${esc(message)}</p></div></body></html>`);
+    win.document.close();
+  }catch(_e){}
+}
+async function openCurrentDashboardPreview(){
+  if(!(State.conn.mode==="live"&&State.active&&hasUnsavedChanges())){
+    openCurrentDashboard();
+    return;
+  }
+  if(!temporaryDashboardPreviewUsable()){
+    toast("Preview requires the temporary preview dashboard to be enabled and ready while DLS is hosted on the hub.","err");
+    updateDashboardJumpState();
+    return;
+  }
+  if(hubOperationActive()){
+    toast("Another hub operation is already in progress.","err");
+    updateDashboardJumpState();
+    return;
+  }
+  const previewWindow=window.open("about:blank","_blank");
+  if(!previewWindow){ toast("The browser blocked the preview window.","err"); return; }
+  try{ previewWindow.opener=null; }catch(_e){}
+  writePreviewLaunchPage(previewWindow,"Preparing Dashboard Preview","DLS is updating the temporary preview dashboard with the current unsaved layout.");
+  try{
+    const context=await runHubOperation(
+      "Open dashboard preview",
+      [
+        {id:"devices",label:"Authorize preview devices"},
+        {id:"save",label:"Save working layout to preview"},
+        {id:"open",label:"Open preview dashboard"}
+      ],
+      async op=>{
+        const payload=serializeLayout();
+        hubOperationStep(op,"devices","active","Matching the preview dashboard device list to the working layout…");
+        const deviceCount=await synchronizeTemporaryDashboardDevices(payload);
+        checkHubOperationAbort(op);
+        hubOperationStep(op,"devices","done",`${deviceCount} device${deviceCount===1?"":"s"} authorized.`);
+        hubOperationStep(op,"save","active","Saving the current unsaved working layout…");
+        const result=await postTemporaryPreviewLayout(payload);
+        checkHubOperationAbort(op);
+        hubOperationStep(op,"save","done","Working layout saved only to the temporary preview dashboard.");
+        hubOperationStep(op,"open","active","Opening the temporary preview dashboard…");
+        const url=previewLaunchUrl(result.dashUrl||dashboardPageUrlForMeta(temporaryDashboardState().meta));
+        if(!url) throw new Error("the temporary preview dashboard URL is unavailable");
+        writePreviewLaunchPage(previewWindow,"Opening Dashboard Preview","The preview is ready and is opening now.");
+        previewWindow.location.replace(url);
+        hubOperationStep(op,"open","done","Preview opened in a new window.");
+        return result;
+      },
+      {doneMessage:"Dashboard preview opened."}
+    );
+    if(!context&&previewWindow&&!previewWindow.closed) previewWindow.close();
+    else status("Opened a preview of the current unsaved layout. The saved dashboard was not changed.");
+  }catch(e){
+    const msg=e&&e.message?e.message:String(e||"unknown preview error");
+    writePreviewLaunchPage(previewWindow,"Dashboard Preview Failed",msg,true);
+    toast(`Could not open dashboard preview: ${msg}`,"err");
+    status("Dashboard preview could not be opened.");
+  }finally{
+    updateDashboardJumpState();
+  }
+}
+function openCurrentDashboard(){
+  const url=currentDashboardUrl();
+  if(!url){
+    const msg=State.conn.mode==="offline"?"Dashboard launch is unavailable for offline layouts.":"Open in new window is available only for hub-loaded dashboards.";
+    toast(msg,"err");
+    return;
+  }
   if(hasUnsavedChanges()){
     showConfirm(
       "Open dashboard with unsaved changes?",
@@ -16579,12 +17591,19 @@ Install the current stable release now, or keep the current installed version un
   dz.addEventListener("dragleave",()=>{ dz.style.background=""; dz.style.borderColor=""; dz.style.color=""; });
   dz.addEventListener("drop",e=>{ e.preventDefault(); dz.style.background=""; dz.style.borderColor=""; dz.style.color=""; const f=e.dataTransfer.files[0]; if(f) loadFromFile(f); });
 
-  // Info button
-  document.getElementById("btnInfo").addEventListener("click",()=>{
+  function openSelectedTileInfo(){
     const ids=currentSelectionTileIds();
-    if(!ids||!ids.length){ toast("Select a tile first.","err"); return; }
+    if(!ids||!ids.length){ toast("Select a tile first, or hold Info and choose Reports.","err"); return; }
     showTileInfo(ids[0]);
-  });
+  }
+  document.getElementById("reportsCancel")?.addEventListener("click",closeReportsModal);
+  document.getElementById("reportsGenerate")?.addEventListener("click",generateTileReport);
+  document.getElementById("reportsModal")?.addEventListener("click",e=>{ if(e.target.id==="reportsModal") closeReportsModal(); });
+  document.getElementById("reportType")?.addEventListener("change",dlsReportUpdateTypeHint);
+  document.getElementById("reportColumnsCli")?.addEventListener("click",()=>dlsReportSetColumns("cli"));
+  document.getElementById("reportColumnsAll")?.addEventListener("click",()=>dlsReportSetColumns("all"));
+  document.getElementById("reportColumnsClear")?.addEventListener("click",()=>dlsReportSetColumns("clear"));
+
   document.getElementById("hubOfflineClose").addEventListener("click",()=>document.getElementById("hubOfflineModal").classList.add("hidden"));
   document.getElementById("hubConnectErrorClose").addEventListener("click",()=>document.getElementById("hubConnectErrorModal").classList.add("hidden"));
   document.getElementById("hubConnectErrorMore").addEventListener("click",()=>{
@@ -16609,7 +17628,29 @@ Install the current stable release now, or keep the current installed version un
     document.getElementById("shell").classList.toggle("collapsed");
     updateSideToggleIcon();
   });
-  document.getElementById("btnOpenDashboard").addEventListener("click",openCurrentDashboard);
+  document.getElementById("btnOpenDashboard").addEventListener("click",e=>{
+    const btn=e.currentTarget;
+    if(btn.disabled) return;
+    if(State.conn.mode==="live"&&hasUnsavedChanges()){
+      const menu=document.getElementById("dashboardLaunchMenu");
+      if(!menu) return;
+      if(menu.classList.contains("hidden")) showHoldMenu(btn,menu,"left");
+      else menu.classList.add("hidden");
+      btn.setAttribute("aria-expanded",menu.classList.contains("hidden")?"false":"true");
+      return;
+    }
+    openCurrentDashboard();
+  });
+  document.getElementById("dashboardLaunchPreview")?.addEventListener("click",()=>{
+    document.getElementById("dashboardLaunchMenu")?.classList.add("hidden");
+    document.getElementById("btnOpenDashboard")?.setAttribute("aria-expanded","false");
+    openCurrentDashboardPreview();
+  });
+  document.getElementById("dashboardLaunchSaved")?.addEventListener("click",()=>{
+    document.getElementById("dashboardLaunchMenu")?.classList.add("hidden");
+    document.getElementById("btnOpenDashboard")?.setAttribute("aria-expanded","false");
+    openSavedDashboardFromLaunchMenu();
+  });
   updateSideToggleIcon();
   updateDashboardJumpState();
   document.querySelectorAll(".slabel.collapsible").forEach(h=>h.addEventListener("click",()=>h.closest(".sect").classList.toggle("collapsed")));
@@ -16685,6 +17726,10 @@ Install the current stable release now, or keep the current installed version un
     });
     btn.addEventListener("mouseleave",()=>clearTimeout(timer));
   }
+  wireHoldButton("btnInfo","infoHoldMenu",openSelectedTileInfo);
+  document.getElementById("infoMenuTile")?.addEventListener("click",()=>{ document.getElementById("infoHoldMenu")?.classList.add("hidden"); openSelectedTileInfo(); });
+  document.getElementById("infoMenuReports")?.addEventListener("click",()=>{ document.getElementById("infoHoldMenu")?.classList.add("hidden"); openReportsModal(); });
+
   wireHoldButton("btnPasteBuf","pasteHoldMenu",()=>{
     if(State.pending&&State.pending.action==="pasteBuf"){ cancelPending(); return; }
     beginPaste(State.overlaps==="push");
@@ -16917,6 +17962,7 @@ Install the current stable release now, or keep the current installed version un
       orphanModal:"orphanCancel",
       pinModal:"pinCancel",
       infoModal:"infoClose",
+      reportsModal:"reportsCancel",
       devicePickedModal:"devicePickedClose",
       cssReviewModal:"cssReviewCancel",
       pasteModal:"pasteCancel",
