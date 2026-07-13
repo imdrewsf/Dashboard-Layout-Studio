@@ -979,7 +979,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.404">1.2.404</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.411">1.2.411</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1230,6 +1230,11 @@
         </select></label>
       <p class="hint" style="margin:8px 0 0">Rendered View start mode controls what DLS tries first for hub-loaded layouts: Style Copy clones the rendered dashboard tile HTML with computed styles, Image Snapshot renders each tile as an image-style snapshot and keeps a styled fallback for icon-font tiles, Compatibility Mode uses the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. Auto-connect runs Discover automatically when the page loads. Grid gaps are shown by default so DLS matches dashboard spacing; use Don't show grid gap for a tighter editing view. Auto-size dashboard bounds keeps declared rows/columns fit to the used layout plus optional padding. Skip device checks on save bypasses the save-time selected-device validation step for faster saves when you intentionally manage dashboard devices yourself.</p>
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+        <label class="pp-row"><span>Automatic Updates</span>
+          <select id="prefUpdateReleaseMode" title="Choose whether automatic updates use stable releases only or include beta releases">
+            <option value="stable" selected>Stable Only</option>
+            <option value="beta">Include Beta</option>
+          </select></label>
         <button class="btn ghost" id="prefCheckUpdate" style="width:100%">Check for updates</button>
       </div>
     </div>
@@ -1965,27 +1970,30 @@
 </div>
 
 <div class="modal-back hidden" id="updateModal">
-  <div class="modal" style="width:480px">
-    <div class="modal-head"><h3>Update Available</h3></div>
+  <div class="modal" style="width:520px">
+    <div class="modal-head"><h3 id="updateModalTitle">Update Available</h3></div>
     <div class="modal-body" style="display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;align-items:center;gap:12px">
-        <span style="font-size:2rem">🎉</span>
+        <span style="font-size:2rem">↻</span>
         <div>
           <div style="font-size:.95rem;font-weight:600;color:var(--text)" id="updateVersionLine">A new version is available</div>
           <div style="font-size:.82rem;color:var(--muted);margin-top:2px" id="updateCurrentLine">You are running <span id="updateCurrentBuild"></span></div>
         </div>
       </div>
-      <p class="hint" style="margin:0">To update Dashboard Layout Studio:</p>
+      <p class="hint" id="updateIntro" style="margin:0">DLS can install this update directly into Hubitat File Manager.</p>
       <ol style="margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px;font-size:.82rem;color:var(--muted);line-height:1.5">
-        <li id="updateStep1" class="update-step step-active">Click <b>Download latest version</b> below to download the new file.</li>
-        <li id="updateStep2" class="update-step">On your Hubitat hub, go to <b style="color:var(--text)">Settings → File Manager</b>.</li>
-        <li id="updateStep3" class="update-step">Select the downloaded file and click <b style="color:var(--text)">Upload</b> — it will overwrite the existing file.</li>
-        <li id="updateStep4" class="update-step">Reload this page.</li>
+        <li id="updateStep1" class="update-step step-active">Download the release asset.</li>
+        <li id="updateStep2" class="update-step">Validate its version, size, and SHA-256 checksum.</li>
+        <li id="updateStep3" class="update-step">Upload it to Hubitat File Manager, overwriting dashboard-layout-studio.html.</li>
+        <li id="updateStep4" class="update-step">Verify the installed copy and reload it.</li>
       </ol>
-      <div style="margin-top:4px">
-        <a id="updateDownloadLink" href="#" target="_blank" class="btn primary" style="display:inline-block;text-decoration:none">Download latest version</a>
+      <p id="updateProgressMsg" class="hint" style="margin:0;min-height:1.2em"></p>
+      <p id="updateError" style="display:none;margin:0;padding:8px 10px;border:1px solid rgba(239,68,68,.42);border-radius:8px;background:rgba(239,68,68,.09);color:#fecaca;font-size:.74rem;line-height:1.45"></p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:2px">
+        <button id="updateInstallBtn" type="button" class="btn primary" style="width:auto">Install update</button>
+        <a id="updateDownloadLink" href="#" target="_blank" class="btn ghost" style="width:auto;text-decoration:none">Download manually</a>
       </div>
-      <label class="chk" style="margin-top:4px">
+      <label class="chk" style="margin-top:2px">
         <input type="checkbox" id="updateSkipCheck" /> Don't remind me again for this version
       </label>
     </div>
@@ -2003,10 +2011,17 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v404";
-const APP_VERSION = "1.2.404";
+const BUILD = "v411";
+const APP_VERSION = "1.2.411";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
+const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
+const BETA_APP_FILENAME = "dashboard-layout-studio-beta.html";
+const STABLE_MANUAL_DOWNLOAD_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio.html";
+const BETA_MANUAL_DOWNLOAD_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio-beta.html";
+const UPDATE_RELEASE_MODE_STABLE = "stable";
+const UPDATE_RELEASE_MODE_BETA = "beta";
+let PendingUpdate = null;
 
 const State = {
   conn:{ip:"",appId:"",token:"",mode:"disconnected"},
@@ -2041,6 +2056,7 @@ const State = {
   renderedViewPreference:false,  // saved preference: offer Rendered View when hosted by the hub
   renderedViewEngine:"style-copy", // style-copy|image-snapshot|compatibility|simple; first Rendered View engine to try
   renderedViewCompatibility:"auto", // legacy compatibility preference; normalized into renderedViewEngine when restored
+  updateReleaseMode:UPDATE_RELEASE_MODE_STABLE, // stable follows stable only; beta selects the newest stable or beta release
   tiles:[],                      // working layout; array order = tiebreak within same z
   selKind:null,                  // 'col'|'row' — set automatically by what you click; drives col/row ops
   selMode:"default",             // 'default'|'include_partial'|'exclude_partial'|'only_partial' (per spec)
@@ -15184,6 +15200,7 @@ function saveConn(){
       renderedViewEnabled:!!State.renderedViewPreference,
       renderedViewEngine:normalizeRenderedViewEngine(State.renderedViewEngine),
       renderedViewCompatibility:normalizeRenderedViewCompatibility(State.renderedViewCompatibility),
+      updateReleaseMode:normalizeUpdateReleaseMode(State.updateReleaseMode),
       gridPreviewMode:normalizeGridPreviewMode(State.gridPreviewMode),
       hideGridGap:!!State.hideGridGap,
       autoResizeDashboardGrid:!!State.autoResizeDashboardGrid,
@@ -15223,6 +15240,7 @@ function restoreConn(){
     }
     State.renderedViewEngine=normalizeRenderedViewEngine(c.renderedViewEngine || (normalizeRenderedViewCompatibility(c.renderedViewCompatibility)==="always"?"compatibility":"style-copy"));
     State.renderedViewCompatibility=normalizeRenderedViewCompatibility(c.renderedViewCompatibility);
+    State.updateReleaseMode=normalizeUpdateReleaseMode(c.updateReleaseMode);
     if(c.gridPreviewMode!=null) State.gridPreviewMode=normalizeGridPreviewMode(c.gridPreviewMode);
     State.hideGridGap=!!c.hideGridGap;
     State.autoResizeDashboardGrid=(c.autoResizeDashboardGrid==null)?true:!!c.autoResizeDashboardGrid;
@@ -15247,6 +15265,8 @@ function restoreConn(){
     try{ updateAutoResizeDashboardPreferenceControls(); }catch(_e){}
     const skipDeviceChecks=document.getElementById("prefSkipDeviceChecksOnSave");
     if(skipDeviceChecks) skipDeviceChecks.checked=!!State.skipDeviceChecksOnSave;
+    const updateModePref=document.getElementById("prefUpdateReleaseMode");
+    if(updateModePref) updateModePref.value=normalizeUpdateReleaseMode(State.updateReleaseMode);
     const rveMode=document.getElementById("prefRenderedViewEngine");
     if(rveMode) rveMode.value=State.renderedViewEngine;
     const rvc=document.getElementById("prefRenderedViewCompatibility");
@@ -15372,7 +15392,7 @@ async function maybeAutofillDashboardConnectionFromHubData(opts={}){
   }
 }
 
-/* ---------- version check ---------- */
+/* ---------- version check and self-update ---------- */
 function versionBuildNumber(v){
   const s=String(v||"").trim();
   const nums=s.match(/\d+/g)||[];
@@ -15380,7 +15400,7 @@ function versionBuildNumber(v){
 }
 function versionParts(v){
   const nums=String(v||"").trim().match(/\d+/g)||[];
-  return nums.length>=3 ? nums.slice(0,3).map(n=>String(Number(n))) : null;
+  return nums.length>=3 ? nums.slice(0,3).map(n=>Number(n)) : null;
 }
 function normalizedVersionLabel(v){
   const parts=versionParts(v);
@@ -15388,115 +15408,335 @@ function normalizedVersionLabel(v){
   const b=versionBuildNumber(v);
   return b ? b : String(v||"").trim();
 }
-function sameDashboardLayoutStudioVersion(a,b){
-  const ap=versionParts(a);
-  const bp=versionParts(b);
-  if(ap && bp) return ap.join(".")===bp.join(".");
-  if(ap || bp){
-    const semverParts=ap||bp;
-    const buildOnly=ap?versionBuildNumber(b):versionBuildNumber(a);
-    return !!buildOnly && buildOnly===semverParts[2];
+function compareDashboardLayoutStudioVersions(a,b){
+  const ap=versionParts(a), bp=versionParts(b);
+  if(ap&&bp){
+    for(let i=0;i<3;i++) if(ap[i]!==bp[i]) return ap[i]>bp[i]?1:-1;
+    return 0;
   }
-  const an=normalizedVersionLabel(a);
-  const bn=normalizedVersionLabel(b);
-  return !!an && !!bn && an===bn;
+  const an=Number(versionBuildNumber(a)||0), bn=Number(versionBuildNumber(b)||0);
+  if(an===bn) return 0;
+  return an>bn?1:-1;
 }
-function currentVersionLabel(){
-  return APP_VERSION || BUILD;
+function sameDashboardLayoutStudioVersion(a,b){ return compareDashboardLayoutStudioVersions(a,b)===0; }
+function currentVersionLabel(){ return APP_VERSION || BUILD; }
+function normalizeUpdateReleaseMode(value){
+  return String(value||"").toLowerCase()===UPDATE_RELEASE_MODE_BETA
+    ? UPDATE_RELEASE_MODE_BETA
+    : UPDATE_RELEASE_MODE_STABLE;
 }
-function showUpdateDialog(latest, releaseUrl, isMock){
-  const el = id => document.getElementById(id);
-  if(el("updateCurrentBuild")) el("updateCurrentBuild").textContent = currentVersionLabel();
-  if(el("updateVersionLine")) el("updateVersionLine").textContent = isMock
-    ? `${latest} is available  (test mode)`
-    : `Version ${latest} is available`;
-  if(el("updateDownloadLink")) el("updateDownloadLink").href = releaseUrl || "#";
-  if(el("updateSkipCheck")) el("updateSkipCheck").checked = false;
-  // reset step states to initial: step 1 active, rest neutral
+function currentUpdateReleaseMode(){ return normalizeUpdateReleaseMode(State.updateReleaseMode); }
+function updateManifestEntry(data,channel){
+  const raw=(data&&data[channel]) || (channel===UPDATE_RELEASE_MODE_STABLE?data:null);
+  if(!raw||!String(raw.version||"").trim()) return null;
+  const filename=channel===UPDATE_RELEASE_MODE_BETA?BETA_APP_FILENAME:STABLE_APP_FILENAME;
+  return {
+    channel,
+    version:String(raw.version||"").trim(),
+    releaseUrl:String(raw.releaseUrl||"").trim(),
+    manualUrl:String(raw.manualUrl||"").trim(),
+    sha256:String(raw.sha256||"").trim().toLowerCase(),
+    size:Number(raw.size),
+    filename
+  };
+}
+function installedAppFilename(){ return STABLE_APP_FILENAME; }
+function installedAppPath(){ return `/local/${encodeURIComponent(STABLE_APP_FILENAME)}`; }
+function manualUpdateDownloadUrl(candidate){
+  if(candidate&&candidate.manualUrl) return candidate.manualUrl;
+  return candidate&&candidate.channel===UPDATE_RELEASE_MODE_BETA
+    ? BETA_MANUAL_DOWNLOAD_URL
+    : STABLE_MANUAL_DOWNLOAD_URL;
+}
+function corsSafeUpdateUrl(candidate){
+  const original=String(candidate&&candidate.releaseUrl||"").trim();
+  if(!original) return "";
+  try{
+    const url=new URL(original,window.location.href);
+    const match=url.pathname.match(/^\/imdrewsf\/Dashboard-Layout-Studio\/releases\/latest\/download\/(dashboard-layout-studio(?:-beta)?\.html)$/i);
+    if(url.hostname.toLowerCase()==="github.com"&&match){
+      return `https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/${match[1]}?version=${encodeURIComponent(candidate.version||currentVersionLabel())}`;
+    }
+  }catch(_e){}
+  return original;
+}
+function updateCandidateToken(candidate){
+  if(!candidate) return "";
+  return `${candidate.channel}:${normalizedVersionLabel(candidate.version)}`;
+}
+function chooseUpdateCandidate(data){
+  const mode=currentUpdateReleaseMode();
+  const stable=updateManifestEntry(data,UPDATE_RELEASE_MODE_STABLE);
+  let selected=stable;
+  if(mode===UPDATE_RELEASE_MODE_BETA){
+    const beta=updateManifestEntry(data,UPDATE_RELEASE_MODE_BETA);
+    if(!selected) selected=beta;
+    else if(beta && compareDashboardLayoutStudioVersions(beta.version,selected.version)>0) selected=beta;
+    // When stable and beta have the same version, prefer the stable asset.
+  }
+  if(!selected) return null;
+  return compareDashboardLayoutStudioVersions(selected.version,currentVersionLabel())>0
+    ? {...selected,kind:`${selected.channel}-update`,forceInstall:false}
+    : null;
+}
+async function fetchUpdateManifest(){
+  const res=await fetch(VERSION_CHECK_URL,{cache:"no-store"});
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+function resetUpdateProgress(){
   ["updateStep1","updateStep2","updateStep3","updateStep4"].forEach((id,i)=>{
-    const s=el(id); if(!s) return;
-    s.classList.toggle("step-active", i===0);
+    const s=document.getElementById(id); if(!s) return;
+    s.classList.toggle("step-active",i===0);
     s.classList.remove("step-done");
   });
-  if(el("updateDownloadLink")) el("updateDownloadLink").textContent = "Download latest version";
-  const modal = el("updateModal");
-  if(modal) modal.classList.remove("hidden");
+  const msg=document.getElementById("updateProgressMsg"); if(msg) msg.textContent="";
+  const err=document.getElementById("updateError"); if(err){ err.style.display="none"; err.textContent=""; }
 }
-
+function setUpdateProgress(step,message){
+  ["updateStep1","updateStep2","updateStep3","updateStep4"].forEach((id,i)=>{
+    const s=document.getElementById(id); if(!s) return;
+    s.classList.toggle("step-active",i===step);
+    s.classList.toggle("step-done",i<step);
+  });
+  const msg=document.getElementById("updateProgressMsg"); if(msg) msg.textContent=message||"";
+}
+function showUpdateError(message){
+  const err=document.getElementById("updateError");
+  if(err){ err.textContent=String(message||"Update failed."); err.style.display="block"; }
+}
+function showUpdateDialog(candidate,isMock=false){
+  PendingUpdate={...candidate,isMock:!!isMock};
+  const el=id=>document.getElementById(id);
+  if(el("updateCurrentBuild")) el("updateCurrentBuild").textContent=currentVersionLabel();
+  if(el("updateModalTitle")) el("updateModalTitle").textContent=candidate.forceInstall?"Install Stable Release":"Update Available";
+  if(el("updateVersionLine")){
+    if(isMock) el("updateVersionLine").textContent=`${candidate.version} is available (test mode)`;
+    else el("updateVersionLine").textContent=`${candidate.channel===UPDATE_RELEASE_MODE_BETA?"Beta":"Stable"} version ${candidate.version} is available`;
+  }
+  if(el("updateIntro")) el("updateIntro").textContent=candidate.forceInstall
+    ? "You chose Stable only. DLS can replace the current installed version with the current stable release using the permanent dashboard-layout-studio.html filename and bookmark."
+    : `DLS can install the latest ${candidate.channel===UPDATE_RELEASE_MODE_BETA?"beta":"stable"} release directly into Hubitat File Manager using the permanent dashboard-layout-studio.html filename.`;
+  if(el("updateDownloadLink")) el("updateDownloadLink").href=manualUpdateDownloadUrl(candidate)||"#";
+  if(el("updateSkipCheck")) el("updateSkipCheck").checked=false;
+  const install=el("updateInstallBtn");
+  if(install){
+    install.textContent=candidate.forceInstall?"Install stable version":"Install update";
+    install.disabled=isMock||!pageLooksHubHosted();
+    install.title=isMock?"Automatic installation is disabled in test mode":(!pageLooksHubHosted()?"Automatic installation requires DLS to be opened from the hub's /local/ File Manager path":"");
+  }
+  if(el("updateClose")) el("updateClose").disabled=false;
+  resetUpdateProgress();
+  if(!pageLooksHubHosted()&&!isMock){
+    const msg=el("updateProgressMsg"); if(msg) msg.textContent=`Automatic installation is available only when DLS is opened from the hub. Download the ${candidate.channel===UPDATE_RELEASE_MODE_BETA?"beta":"stable"} asset manually and upload it as dashboard-layout-studio.html.`;
+  }
+  el("updateModal")?.classList.remove("hidden");
+}
+function sha256HexFallback(buffer){
+  const input=new Uint8Array(buffer);
+  const bitLength=input.length*8;
+  const paddedLength=Math.ceil((input.length+9)/64)*64;
+  const bytes=new Uint8Array(paddedLength);
+  bytes.set(input);
+  bytes[input.length]=0x80;
+  const view=new DataView(bytes.buffer);
+  view.setUint32(paddedLength-8,Math.floor(bitLength/0x100000000),false);
+  view.setUint32(paddedLength-4,bitLength>>>0,false);
+  const h=new Uint32Array([
+    0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,
+    0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19
+  ]);
+  const k=new Uint32Array([
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+  ]);
+  const w=new Uint32Array(64);
+  const rotr=(x,n)=>(x>>>n)|(x<<(32-n));
+  for(let offset=0;offset<paddedLength;offset+=64){
+    for(let i=0;i<16;i++) w[i]=view.getUint32(offset+i*4,false);
+    for(let i=16;i<64;i++){
+      const s0=(rotr(w[i-15],7)^rotr(w[i-15],18)^(w[i-15]>>>3))>>>0;
+      const s1=(rotr(w[i-2],17)^rotr(w[i-2],19)^(w[i-2]>>>10))>>>0;
+      w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;
+    }
+    let a=h[0],b=h[1],c=h[2],d=h[3],e=h[4],f=h[5],g=h[6],hh=h[7];
+    for(let i=0;i<64;i++){
+      const s1=(rotr(e,6)^rotr(e,11)^rotr(e,25))>>>0;
+      const ch=((e&f)^((~e)&g))>>>0;
+      const t1=(hh+s1+ch+k[i]+w[i])>>>0;
+      const s0=(rotr(a,2)^rotr(a,13)^rotr(a,22))>>>0;
+      const maj=((a&b)^(a&c)^(b&c))>>>0;
+      const t2=(s0+maj)>>>0;
+      hh=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    h[0]=(h[0]+a)>>>0;h[1]=(h[1]+b)>>>0;h[2]=(h[2]+c)>>>0;h[3]=(h[3]+d)>>>0;
+    h[4]=(h[4]+e)>>>0;h[5]=(h[5]+f)>>>0;h[6]=(h[6]+g)>>>0;h[7]=(h[7]+hh)>>>0;
+  }
+  return Array.from(h,n=>n.toString(16).padStart(8,"0")).join("");
+}
+async function sha256Hex(buffer){
+  if(window.crypto&&window.crypto.subtle){
+    try{
+      const digest=await window.crypto.subtle.digest("SHA-256",buffer);
+      return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
+    }catch(_e){}
+  }
+  return sha256HexFallback(buffer);
+}
+function htmlVersionFromSource(source){
+  const m=String(source||"").match(/const\s+APP_VERSION\s*=\s*["']([^"']+)["']/);
+  return m?m[1].trim():"";
+}
+async function downloadAndValidateUpdate(candidate){
+  if(!candidate.releaseUrl) throw new Error("The update manifest does not contain a release URL.");
+  if(!Number.isFinite(candidate.size)||candidate.size<=0) throw new Error("The update manifest does not contain a valid file size.");
+  if(!/^[a-f0-9]{64}$/i.test(candidate.sha256||"")) throw new Error("The update manifest does not contain a valid SHA-256 checksum.");
+  const downloadUrl=corsSafeUpdateUrl(candidate);
+  if(!downloadUrl) throw new Error("The update manifest does not contain a usable release URL.");
+  const separator=downloadUrl.includes("?")?"&":"?";
+  const res=await fetch(`${downloadUrl}${separator}dlsDownload=${encodeURIComponent(candidate.version)}-${Date.now()}`,{cache:"no-store",mode:"cors",redirect:"follow"});
+  if(!res.ok) throw new Error(`The release download returned HTTP ${res.status}.`);
+  const buffer=await res.arrayBuffer();
+  if(buffer.byteLength!==candidate.size) throw new Error(`Downloaded size ${buffer.byteLength} did not match the expected ${candidate.size} bytes.`);
+  const hash=await sha256Hex(buffer);
+  if(hash!==candidate.sha256) throw new Error("The downloaded file failed SHA-256 verification.");
+  const source=new TextDecoder("utf-8").decode(buffer);
+  if(!/Dashboard Layout Studio/i.test(source)||!/<html[\s>]/i.test(source)) throw new Error("The downloaded asset is not a Dashboard Layout Studio HTML file.");
+  const embedded=htmlVersionFromSource(source);
+  if(!embedded||!sameDashboardLayoutStudioVersion(embedded,candidate.version)) throw new Error(`The downloaded file reports version ${embedded||"unknown"}, not ${candidate.version}.`);
+  return {buffer,source,hash};
+}
+async function uploadUpdateToHub(candidate,buffer){
+  const form=new FormData();
+  form.append("uploadFile",new File([buffer],installedAppFilename(),{type:"text/html;charset=utf-8"}));
+  const res=await fetch("/hub/fileManager/upload",{method:"POST",body:form,credentials:"same-origin",cache:"no-store"});
+  const contentType=res.headers.get("content-type")||"";
+  const body=await res.text();
+  if(!res.ok) throw new Error(`Hubitat File Manager returned HTTP ${res.status}.`);
+  let data=null;
+  try{ data=JSON.parse(body); }catch(_e){}
+  if(!data||data.success!==true){
+    if(/<html|login/i.test(body)||!contentType.toLowerCase().includes("json")) throw new Error("Hubitat returned an administrative or login page instead of an upload confirmation.");
+    throw new Error((data&&data.status)||"Hubitat did not confirm the File Manager upload.");
+  }
+  return data;
+}
+async function verifyInstalledUpdate(candidate){
+  const url=`${installedAppPath()}?dlsUpdate=${Date.now()}`;
+  const res=await fetch(url,{credentials:"same-origin",cache:"no-store"});
+  if(!res.ok) throw new Error(`The installed file could not be read back (HTTP ${res.status}).`);
+  const buffer=await res.arrayBuffer();
+  if(buffer.byteLength!==candidate.size) throw new Error("The installed file size did not match the verified release asset.");
+  const hash=await sha256Hex(buffer);
+  if(hash!==candidate.sha256) throw new Error("The installed file checksum did not match the verified release asset.");
+  const source=new TextDecoder("utf-8").decode(buffer);
+  const embedded=htmlVersionFromSource(source);
+  if(!embedded||!sameDashboardLayoutStudioVersion(embedded,candidate.version)) throw new Error("The installed file did not report the expected version.");
+  return url;
+}
+async function performSelfUpdate(){
+  const candidate=PendingUpdate;
+  if(!candidate||candidate.isMock) return;
+  const install=document.getElementById("updateInstallBtn");
+  const close=document.getElementById("updateClose");
+  const manual=document.getElementById("updateDownloadLink");
+  try{
+    if(install){ install.disabled=true; install.textContent="Installing…"; install.classList.add("busy"); }
+    if(close) close.disabled=true;
+    if(manual) manual.style.pointerEvents="none";
+    setUpdateProgress(0,"Downloading the release asset…");
+    const validated=await downloadAndValidateUpdate(candidate);
+    setUpdateProgress(1,"Version, size, and SHA-256 checksum verified.");
+    setUpdateProgress(2,`Uploading as ${installedAppFilename()} to Hubitat File Manager…`);
+    await uploadUpdateToHub(candidate,validated.buffer);
+    setUpdateProgress(3,"Upload confirmed. Verifying the installed file…");
+    await verifyInstalledUpdate(candidate);
+    const next=`${installedAppPath()}?updated=${Date.now()}`;
+    setUpdateProgress(4,"Update verified. Reloading Dashboard Layout Studio…");
+    try{ localStorage.removeItem(VERSION_SKIP_KEY); }catch(_e){}
+    setTimeout(()=>window.location.replace(next),350);
+  }catch(e){
+    showUpdateError(`${e.message||e} The current running page has not been reloaded. You can retry or use Download manually.`);
+    setUpdateProgress(0,"Automatic installation did not complete.");
+    if(install){ install.disabled=false; install.textContent=candidate.forceInstall?"Retry stable installation":"Retry installation"; install.classList.remove("busy"); }
+    if(close) close.disabled=false;
+    if(manual) manual.style.pointerEvents="";
+    toast(`Update failed: ${e.message||e}`,"err");
+  }
+}
+function requestSelfUpdate(){
+  if(!PendingUpdate||PendingUpdate.isMock||!pageLooksHubHosted()) return;
+  const run=()=>performSelfUpdate();
+  if(hasUnsavedChanges()){
+    showConfirm(
+      "Install Dashboard Layout Studio update?",
+      `The current layout contains unsaved changes. Installing the update will reload DLS, and those changes will be lost unless you save or download them first.\n\nContinue with the update?`,
+      run,
+      ()=>status("Update cancelled — unsaved layout changes were kept."),
+      {okText:"Install and reload",cancelText:"Cancel",defaultButton:"cancel",dangerOk:true}
+    );
+    return;
+  }
+  run();
+}
 async function checkForUpdate(force=false){
   if(!VERSION_CHECK_URL) return;
-  const el = id => document.getElementById(id);
-  const btnCheck = el("prefCheckUpdate");
+  const btnCheck=document.getElementById("prefCheckUpdate");
   if(btnCheck){ btnCheck.textContent="Checking…"; btnCheck.disabled=true; }
   try{
-    const res = await fetch(VERSION_CHECK_URL, {cache:"no-store"});
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const latest = (data.version||"").trim();
-    if(!latest){
-      if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }
-      return;
-    }
-    if(sameDashboardLayoutStudioVersion(latest, currentVersionLabel()) || sameDashboardLayoutStudioVersion(latest, BUILD)){
+    const data=await fetchUpdateManifest();
+    const candidate=chooseUpdateCandidate(data);
+    if(!candidate){
       if(btnCheck){ btnCheck.textContent="Up to date ✓"; btnCheck.disabled=false; setTimeout(()=>{ if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }},2500); }
       return;
     }
+    const token=updateCandidateToken(candidate);
     if(!force){
-      let skipped="";
-      try{ skipped=localStorage.getItem(VERSION_SKIP_KEY)||""; }catch(_){}
-      if(skipped===latest || sameDashboardLayoutStudioVersion(skipped, latest)){
+      let skipped=""; try{ skipped=localStorage.getItem(VERSION_SKIP_KEY)||""; }catch(_e){}
+      if(skipped===token || skipped===candidate.version || sameDashboardLayoutStudioVersion(skipped,candidate.version)){
         if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }
         return;
       }
     }
     if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }
-    showUpdateDialog(latest, data.releaseUrl, false);
+    showUpdateDialog(candidate,false);
   }catch(e){
     if(btnCheck){ btnCheck.textContent="Check failed"; btnCheck.disabled=false; setTimeout(()=>{ if(btnCheck){ btnCheck.textContent="Check for updates"; btnCheck.disabled=false; }},2500); }
+    if(force) toast(`Update check failed: ${e.message||e}`,"err");
   }
 }
-
 function wireUpdateModal(){
-  const modal = document.getElementById("updateModal");
+  const modal=document.getElementById("updateModal");
   if(!modal) return;
-  document.getElementById("updateClose")?.addEventListener("click", ()=>{
-    if(document.getElementById("updateSkipCheck")?.checked){
-      const latest = (document.getElementById("updateVersionLine")?.textContent||"")
-        .replace("Version ","").replace(" is available","").replace("(test mode)","").trim();
-      try{ if(latest) localStorage.setItem(VERSION_SKIP_KEY, latest); }catch(_){}
+  document.getElementById("updateClose")?.addEventListener("click",()=>{
+    if(document.getElementById("updateSkipCheck")?.checked&&PendingUpdate){
+      try{ localStorage.setItem(VERSION_SKIP_KEY,updateCandidateToken(PendingUpdate)); }catch(_e){}
     }
     modal.classList.add("hidden");
   });
-  modal.addEventListener("click", e=>{ if(e.target===modal) modal.classList.add("hidden"); });
-
-  // On download: fade step 1, highlight steps 2-4, relabel button
-  document.getElementById("updateDownloadLink")?.addEventListener("click", ()=>{
-    const el = id => document.getElementById(id);
-    el("updateStep1")?.classList.replace("step-active","step-done");
-    ["updateStep2","updateStep3","updateStep4"].forEach(id=>{
-      const s=el(id); if(!s) return;
-      s.classList.add("step-active");
-      s.classList.remove("step-done");
-    });
-    const btn = el("updateDownloadLink");
-    if(btn) btn.textContent = "Download again";
+  modal.addEventListener("click",e=>{ if(e.target===modal&&!document.getElementById("updateClose")?.disabled) modal.classList.add("hidden"); });
+  document.getElementById("updateInstallBtn")?.addEventListener("click",requestSelfUpdate);
+  document.getElementById("updateDownloadLink")?.addEventListener("click",()=>{
+    const msg=document.getElementById("updateProgressMsg"); if(msg) msg.textContent=`Manual download started. Upload the downloaded file through Hubitat File Manager as ${installedAppFilename()}, then open /local/${installedAppFilename()}.`;
   });
-
-  // Hidden trigger: 5 rapid clicks on the version number shows test dialog
-  const brandVer = document.getElementById("brandVersion");
+  const brandVer=document.getElementById("brandVersion");
   if(brandVer){
-    let clickCount=0, clickTimer=null;
+    let clickCount=0,clickTimer=null;
     brandVer.style.cursor="default";
-    brandVer.addEventListener("click", ()=>{
-      clickCount++;
-      clearTimeout(clickTimer);
+    brandVer.addEventListener("click",()=>{
+      clickCount++; clearTimeout(clickTimer);
       if(clickCount>=5){
         clickCount=0;
-        const nextMinor = currentVersionLabel().replace(/\d+$/, n => String(+n+1));
-        showUpdateDialog(nextMinor, "#", true);
-      } else {
-        clickTimer=setTimeout(()=>{ clickCount=0; }, 1500);
-      }
+        const next=currentVersionLabel().replace(/\d+$/,n=>String(+n+1));
+        const mode=currentUpdateReleaseMode();
+        showUpdateDialog({channel:mode,version:next,releaseUrl:"#",sha256:"",size:0,filename:mode===UPDATE_RELEASE_MODE_BETA?BETA_APP_FILENAME:STABLE_APP_FILENAME,forceInstall:false,kind:"test"},true);
+      }else clickTimer=setTimeout(()=>{ clickCount=0; },1500);
     });
   }
 }
@@ -15504,6 +15744,8 @@ function wireUpdateModal(){
 async function wire(){
   const savedConn=restoreConn();
   updateUndoControls();
+  const updateModePref=document.getElementById("prefUpdateReleaseMode");
+  if(updateModePref) updateModePref.value=normalizeUpdateReleaseMode(State.updateReleaseMode);
   updateTileDisplayIndicator();
   applyTileOpacity(+document.getElementById("prefTileOpacity").value);
   // Note: updatePushModeButtons(false) is called after PUSH_BTNS is defined, further below
@@ -15646,6 +15888,61 @@ async function wire(){
       if(State.renderedViewEngine!=="simple" && renderedSnapshotAvailability().ok) setTileDisplayMode("snapshot",{redraw:true,warn:true,silent:false});
       else { State.tileViewMode="simple"; updateTileDisplayIndicator(); }
     }
+  });
+  document.getElementById("prefUpdateReleaseMode")?.addEventListener("change",async e=>{
+    const select=e.target;
+    const previous=currentUpdateReleaseMode();
+    const requested=normalizeUpdateReleaseMode(select.value);
+    if(requested===previous){ select.value=previous; return; }
+    if(previous===UPDATE_RELEASE_MODE_BETA && requested===UPDATE_RELEASE_MODE_STABLE){
+      select.disabled=true;
+      try{
+        const manifest=await fetchUpdateManifest();
+        const stable=updateManifestEntry(manifest,UPDATE_RELEASE_MODE_STABLE);
+        if(!stable) throw new Error("The update manifest does not contain a stable release.");
+        const cmp=compareDashboardLayoutStudioVersions(stable.version,currentVersionLabel());
+        const relation=cmp<0
+          ? `The current stable release (${stable.version}) is older than the installed version (${currentVersionLabel()}).`
+          : cmp===0
+            ? `The current stable release has the same version number (${stable.version}) as the installed version.`
+            : `Stable version ${stable.version} is newer than the installed version ${currentVersionLabel()}.`;
+        showConfirm(
+          "Switch to stable-only updates?",
+          `${relation}
+
+Install the current stable release now, or keep the current installed version until a newer stable release is published?`,
+          ()=>{
+            State.updateReleaseMode=UPDATE_RELEASE_MODE_STABLE;
+            select.value=UPDATE_RELEASE_MODE_STABLE;
+            saveConn();
+            const candidate={...stable,kind:"stable-preference-switch",forceInstall:true};
+            PendingUpdate=candidate;
+            status(`Stable-only updates selected. Preparing stable ${stable.version}…`,true);
+            if(pageLooksHubHosted()) requestSelfUpdate(); else showUpdateDialog(candidate,false);
+          },
+          ()=>{
+            State.updateReleaseMode=UPDATE_RELEASE_MODE_STABLE;
+            select.value=UPDATE_RELEASE_MODE_STABLE;
+            saveConn();
+            status("Stable-only updates selected. The current version will remain installed until a newer stable release is available.");
+          },
+          {okText:"Install stable now",cancelText:"Keep current version",defaultButton:"cancel"}
+        );
+      }catch(err){
+        select.value=previous;
+        State.updateReleaseMode=previous;
+        toast(`Could not check the stable release: ${err.message||err}`,"err");
+      }finally{
+        select.disabled=false;
+      }
+      return;
+    }
+    State.updateReleaseMode=requested;
+    select.value=requested;
+    saveConn();
+    try{ localStorage.removeItem(VERSION_SKIP_KEY); }catch(_e){}
+    status("Automatic updates will include beta releases and use the newest available version.");
+    checkForUpdate(true);
   });
   document.getElementById("prefRenderedViewEngine")?.addEventListener("change",e=>{
     State.renderedViewEngine=normalizeRenderedViewEngine(e.target.value);
