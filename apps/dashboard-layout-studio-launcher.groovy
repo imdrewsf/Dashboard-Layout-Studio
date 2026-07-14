@@ -5,14 +5,14 @@
  * Hubitat File Manager and provides a launch link. DLS manages its own
  * updates after the initial installation.
  *
- * Version: 1.0.2
- * Build: 003
+ * Version: 1.0.3
+ * Build: 004
  */
 
 import groovy.transform.Field
 
-@Field static final String APP_VERSION = "1.0.2"
-@Field static final String APP_BUILD = "003"
+@Field static final String APP_VERSION = "1.0.3"
+@Field static final String APP_BUILD = "004"
 @Field static final String DLS_FILE_NAME = "dashboard-layout-studio.html"
 @Field static final String DLS_LOCAL_PATH = "/local/dashboard-layout-studio.html"
 @Field static final String DLS_DOWNLOAD_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio.html"
@@ -286,9 +286,11 @@ private String responseBodyAsText(Object data) {
         return null
     }
 
-    // textParser:true requests a plain-text response from Hubitat. Avoid
-    // java.io.Reader references because Hubitat's app sandbox rejects them.
-    return data.toString()
+    // With textParser:true Hubitat supplies a reader-like response object.
+    // The Groovy text property consumes that response and returns its content.
+    // Calling toString() only returns an object description such as
+    // java.io.StringReader@1a2b3c, not the downloaded file.
+    return data.text as String
 }
 
 

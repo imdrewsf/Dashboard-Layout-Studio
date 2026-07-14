@@ -2,10 +2,10 @@
   "packageName": "Dashboard Layout Studio",
   "minimumHEVersion": "2.3.9",
   "author": "Andrew Peck",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "dateReleased": "2026-07-14",
   "documentationLink": "https://github.com/imdrewsf/Dashboard-Layout-Studio",
-  "releaseNotes": "Adds required non-empty iconUrl, iconX2Url, and iconX3Url definition values using repository-hosted DLS icon assets.",
+  "releaseNotes": "Fixes initial DLS installation by reading the Hubitat HTTP response body from response.data.text instead of converting the Reader object with toString().",
   "apps": [
     {
       "id": "b716e857-dc24-427d-aba7-1cc429b33f26",
