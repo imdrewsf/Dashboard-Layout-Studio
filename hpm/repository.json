@@ -1,0 +1,16 @@
+{
+  "author": "Andrew Peck",
+  "gitHubUrl": "https://github.com/imdrewsf",
+  "packages": [
+    {
+      "name": "Dashboard Layout Studio",
+      "category": "Utility",
+      "location": "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/hpm/packageManifest.json",
+      "description": "Visual editor for Hubitat Dashboard v1 layouts. The HPM-installed launcher performs the initial DLS installation, opens DLS, and can remove the installed HTML file.",
+      "tags": [
+        "Dashboards",
+        "Tools & Utilities"
+      ]
+    }
+  ]
+}
