@@ -975,11 +975,103 @@
   @media(max-width:760px){.grid-stats-compare,.grid-recommend-axes{grid-template-columns:1fr}.grid-tabbar{flex-wrap:wrap}.grid-tab-actions{justify-content:stretch}.grid-tab-actions .btn{width:100%}}
   @media(max-width:760px){.grid-dialog-grid,.grid-dialog-two{grid-template-columns:1fr}.grid-dialog-grid{gap:7px}}
 
+
+
+  /* ============================================================
+     VIEWPORT-SAFE DIALOG AND PANEL SCROLLING
+     Keep every dialog, editor, menu, and floating panel usable on
+     short or low-resolution screens without clipping controls.
+     ============================================================ */
+  .modal-back{
+    box-sizing:border-box;
+    padding:12px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    overscroll-behavior:contain;
+  }
+  .modal{
+    min-height:0;
+    max-height:calc(100dvh - 24px);
+  }
+  .modal-head,.modal-foot{flex:0 0 auto;}
+  .modal-body{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:auto;
+    overscroll-behavior:contain;
+    scrollbar-gutter:stable;
+  }
+
+  /* The docked Tile Information/CSS editor must remain inside the viewport. */
+  #infoModal{
+    box-sizing:border-box;
+    padding:64px 18px 12px 12px;
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
+  #infoModal .modal{max-height:calc(100dvh - 76px);}
+  #infoModal.css-editing .modal{
+    height:auto;
+    max-height:calc(100dvh - 76px);
+  }
+  #infoModal.css-editing .modal-body{
+    display:block;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding:12px 18px 0;
+  }
+  #infoModal.css-editing #infoBody{
+    display:block;
+    min-height:0;
+    width:100%;
+  }
+  #infoModal.css-editing .info-css-instructions{
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  #infoModal.css-editing .info-css-editor{
+    display:block;
+    width:100%;
+    height:clamp(220px,45dvh,520px);
+    min-height:180px;
+    max-height:none;
+    resize:vertical;
+  }
+  #infoModal.css-editing .info-css-actions{margin:9px 0 12px;}
+
+  /* Floating controls should scroll instead of extending below the screen. */
+  .prefs-panel{
+    max-height:calc(100dvh - 68px);
+    overflow-y:auto;
+    overflow-x:hidden;
+    overscroll-behavior:contain;
+    scrollbar-gutter:stable;
+  }
+  .holdmenu,.ctxmenu{
+    max-height:calc(100dvh - 16px);
+    overflow-y:auto;
+    overflow-x:hidden;
+    overscroll-behavior:contain;
+  }
+  .trace{max-height:min(240px,calc(100dvh - 28px));}
+  .trace-body{min-height:0;overflow-y:auto;}
+
+  @media(max-height:700px){
+    .modal-back{align-items:flex-start;padding:8px;}
+    .modal{max-height:calc(100dvh - 16px);}
+    #infoModal{padding:54px 8px 8px;}
+    #infoModal .modal,#infoModal.css-editing .modal{max-height:calc(100dvh - 62px);}
+    #infoModal.css-editing .info-css-editor{height:clamp(180px,38dvh,360px);min-height:150px;}
+    .help-modal,.grid-settings-modal{height:auto;max-height:calc(100dvh - 16px);}
+  }
+
 </style>
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.411">1.2.411</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.425">1.2.425</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1428,7 +1520,7 @@
 <div class="help-pages"><article class="help-page active" data-help-title="JSON editor and applying changes"><div class="help-page-kicker">JSON &amp; CSS</div><h4>JSON editor and applying changes</h4><h5>JSON editor and field views</h5><div class="help-grid">
 <div class="k">JSON editor</div><div class="v">Allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
 <div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
-<div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid location and size, any tile-scoped CSS content that may supply an alternate title, and its assigned device. Location and size are shown as row/column followed by size in parentheses. The first device choice is Unassigned for blank device IDs. Online layouts use the same selected-device choices as Tile Information; device dropdowns are sorted by device name with the device number shown in parentheses. Offline layouts allow numeric or blank device IDs. In online mode, tiles with a nonblank, nonzero device ID that has no matching hub device are treated as unknown-device tiles and highlighted in red, except Mode and Text Tile templates because those device fields are not validated as regular hub-device assignments. Tile-device rows for valid hub devices that are not selected for the dashboard are highlighted in yellow and remain unselected until you explicitly add them in Dashboard Devices. A Preferences option can skip this save-time device validation while leaving the editor review tools available. Show Invalid and Unassign Invalid are online-only tools. Unassign Invalid clears every non-exempt tile device assignment whose device ID does not exist on the hub after confirmation.</div>
+<div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid location and size, any tile-scoped CSS content that may supply an alternate title, and its assigned device. Location and size are shown as row/column followed by size in parentheses. The first device choice is Unassigned for blank device IDs. Online layouts use the same selected-device choices as Tile Information; device dropdowns are sorted by device name with the device number shown in parentheses. Offline layouts allow numeric or blank device IDs. In online mode, tiles with a nonblank, nonzero device ID that has no matching hub device are treated as unknown-device tiles and highlighted in red, except system, native-variable, navigation, and static templates such as HSM, Mode, Text Tile, Dashboard, Link, Image, HTML, Frame, Blank, Clock, and Date because those device fields are not regular hub-device assignments. Tile-device rows for valid hub devices that are not selected for the dashboard are highlighted in yellow and remain unselected until you explicitly add them in Dashboard Devices. A Preferences option can skip this save-time device validation while leaving the editor review tools available. Show Invalid and Unassign Invalid are online-only tools. Unassign Invalid clears every non-exempt tile device assignment whose device ID does not exist on the hub after confirmation.</div>
 <div class="k">Dashboard Devices</div><div class="v">Online only. Manages the devices selected for the Hubitat dashboard, locks devices used by current tiles, and can assign all devices, remove unused devices, reload the selection, or update it on the hub. Devices with assigned tiles that are not currently selected are marked yellow and remain unchecked until explicitly selected. Devices that are selected and assigned to tiles are shown in a slightly faded blue locked state.</div>
 </div><h5>Applying editor changes</h5><p><b>Apply changes</b> validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced.</p><div class="help-card-grid">
 <div class="help-card"><b>Custom field-only edits</b><p>If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed.</p></div>
@@ -1449,7 +1541,7 @@
 <li>When any selector consolidation is applied, all preserved duplicate comments are removed because every duplicate is already represented by a surviving active declaration. This includes comments inside selectors that were already in a single rule and comments preserved by an earlier cleanup run.</li>
 </ul><h5>CSS status and tile scope</h5><div class="help-grid">
 <div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block, and orphaned tile-scoped comments are removed or preserved with the related orphan cleanup. CSS cleanup checks use the merged effective stylesheet, including imported @import rules plus editable customCSS, for conflicts, duplicates, and selector consolidation. Imported conflicts, duplicates, and consolidation candidates are separated from editable customCSS items because imported rules are read-only. Consolidated selector originals are not preserved. Consolidation is blocked whenever related conflicts are found, and those rows show Conflicts Found until the conflicts are resolved.</div>
-<div class="k">Device status indicator</div><div class="v">Appears next to CSS Status in online mode when tile device assignments need review. Red indicates one or more non-exempt tile device IDs do not exist on the hub; clicking it opens the JSON Editor to Tile Devices. Yellow indicates valid hub devices are assigned to non-exempt tiles but are not selected for the dashboard; clicking it opens the JSON Editor to Dashboard Devices. Mode and Text Tile templates are excluded from these validity checks.</div>
+<div class="k">Device status indicator</div><div class="v">Appears next to CSS Status in online mode when tile device assignments need review. Red indicates one or more non-exempt tile device IDs do not exist on the hub; clicking it opens the JSON Editor to Tile Devices. Yellow indicates valid hub devices are assigned to non-exempt tiles but are not selected for the dashboard; clicking it opens the JSON Editor to Dashboard Devices. HSM, Mode, native Variable, Text Tile, Dashboard, Link, Image, HTML, Frame, Blank, Clock, Date, and similar non-device templates are excluded from these validity checks.</div>
 <div class="k">Tile-scoped CSS</div><div class="v">Rules such as <code>#tile-40</code>, <code>#tile_40</code>, or <code>.tile-40</code> are treated as tile-scoped CSS for copy/cleanup operations. If customCSS contains <code>@import</code> stylesheets, DLS loads imported tile-scoped rules as read-only external CSS. Imported rules are displayed in the customCSS editor and Tile Info, included in merged CSS conflict, duplicate, and consolidation checks with editable customCSS, and copied into editable customCSS when matching tiles are duplicated. External conflicts are shown separately with options to discard the editable customCSS declaration or accept the conflict. The External CSS Rules indicator appears when imported tile-scoped rules are active.</div>
 </div></article></div>
 <div class="help-page-nav"></div>
@@ -2011,8 +2103,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v411";
-const APP_VERSION = "1.2.411";
+const BUILD = "v425";
+const APP_VERSION = "1.2.425";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -5016,13 +5108,35 @@ function fam(tpl){
   return "other";
 }
 function tileLabel(t){ return t.label || t.template || `#${t.id}`; }
-function tileDeviceValidationExempt(rawOrTile){
+function tileDeviceValidationTemplate(rawOrTile){
   const raw=rawOrTile && rawOrTile._raw ? rawOrTile._raw : rawOrTile;
-  if(!raw) return false;
-  const values=[raw.template, raw.type, raw.tileType, raw.name, raw.label]
-    .map(v=>String(v==null?"":v).trim().toLowerCase())
-    .filter(Boolean);
-  return values.some(v=>/mode/.test(v) || /text\s*tile/.test(v) || /texttile/.test(v) || v==="text" || v==="text tile");
+  if(!raw) return "";
+  // Validate by the tile template only. Labels and names are user-editable and
+  // must not cause a real device tile to be treated as exempt.
+  const value=raw.template!=null ? raw.template : (raw.tileType!=null ? raw.tileType : raw.type);
+  return String(value==null?"":value).trim().toLowerCase().replace(/[\s_]+/g,"-");
+}
+function tileDeviceValidationExempt(rawOrTile){
+  const template=tileDeviceValidationTemplate(rawOrTile);
+  if(!template) return false;
+  const compact=template.replace(/[^a-z0-9]/g,"");
+
+  // Hub/location system tiles. Their numeric device field is not a normal
+  // Hubitat device-list assignment and may contain an internal or stale value.
+  if(["mode","hsm","hsmstatus","hubitatsafetymonitor"].includes(compact)) return true;
+
+  // Static, navigation, and presentation tiles.
+  if([
+    "text","texttile","dashboard","dashboardlink","link","links","url","urllink",
+    "image","imagetile","html","htmltile","frame","iframe","blank",
+    "clock","clocktile","date","datetile","time","timetile"
+  ].includes(compact)) return true;
+
+  // Native Hub Variable tiles are authorized separately from devices. A
+  // Variable Connector is a real virtual device and must continue to validate.
+  if(compact.startsWith("variable") && !compact.includes("connector")) return true;
+
+  return false;
 }
 function normalizeDeviceId(v){
   if(v==null) return null;
