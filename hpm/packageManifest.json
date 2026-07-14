@@ -1,0 +1,19 @@
+{
+  "packageName": "Dashboard Layout Studio",
+  "minimumHEVersion": "2.3.9",
+  "author": "Andrew Peck",
+  "version": "1.0.2",
+  "dateReleased": "2026-07-14",
+  "documentationLink": "https://github.com/imdrewsf/Dashboard-Layout-Studio",
+  "releaseNotes": "Adds required non-empty iconUrl, iconX2Url, and iconX3Url definition values using repository-hosted DLS icon assets.",
+  "apps": [
+    {
+      "id": "b716e857-dc24-427d-aba7-1cc429b33f26",
+      "name": "Dashboard Layout Studio",
+      "namespace": "imdrewsf",
+      "location": "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/apps/dashboard-layout-studio-launcher.groovy",
+      "required": true,
+      "oauth": false
+    }
+  ]
+}
