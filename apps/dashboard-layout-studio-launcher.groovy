@@ -5,14 +5,14 @@
  * Hubitat File Manager and provides a launch link. DLS manages its own
  * updates after the initial installation.
  *
- * Version: 1.0.5
- * Build: 006
+ * Version: 1.0.7
+ * Build: 008
  */
 
 import groovy.transform.Field
 
-@Field static final String APP_VERSION = "1.0.5"
-@Field static final String APP_BUILD = "006"
+@Field static final String APP_VERSION = "1.0.7"
+@Field static final String APP_BUILD = "008"
 @Field static final String DLS_FILE_NAME = "dashboard-layout-studio.html"
 @Field static final String DLS_LOCAL_PATH = "/local/dashboard-layout-studio.html"
 @Field static final String DLS_DOWNLOAD_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/dashboard-layout-studio.html"
@@ -74,6 +74,7 @@ def mainPage() {
         if ((fileStatus.available as Boolean) && !installed) {
             section("Install") {
                 paragraph "The launcher will download the latest stable DLS release from GitHub and save it in Hubitat File Manager as <code>${DLS_FILE_NAME}</code>."
+                paragraph installationProgressPanel()
                 input(
                     name: "installDlsButton",
                     type: "button",
@@ -317,7 +318,7 @@ private String responseBodyAsText(Object data) {
 
     String fallback = data.toString()
     if (fallback ==~ /(?s).*@[0-9a-fA-F]+$/) {
-        throw new RuntimeException("Hubitat returned an unreadable response object (${data.getClass().getName()}).")
+        throw new RuntimeException("Hubitat returned an unreadable response body.")
     }
     return fallback
 }
@@ -387,7 +388,143 @@ private String launcherStyles() {
                 font-size:13px !important;
                 line-height:1.15 !important;
             }
+
+            .dls-install-progress {
+                display:none;
+                margin:12px 0 14px;
+                padding:13px 14px;
+                border-left:5px solid #1976d2;
+                border-radius:4px;
+                background:#e3f2fd;
+                color:#0d2740;
+                box-shadow:0 1px 3px rgba(0,0,0,.12);
+            }
+            .dls-install-progress.dls-visible { display:block; }
+            .dls-install-progress-head {
+                display:flex;
+                align-items:center;
+                gap:10px;
+                font-weight:700;
+                color:#0d47a1;
+            }
+            .dls-install-spinner {
+                width:18px;
+                height:18px;
+                flex:0 0 18px;
+                border:3px solid rgba(25,118,210,.25);
+                border-top-color:#1976d2;
+                border-radius:50%;
+                animation:dlsInstallSpin .75s linear infinite;
+            }
+            .dls-install-progress-text {
+                margin-top:7px;
+                font-size:13px;
+                line-height:1.45;
+            }
+            .dls-install-progress-track {
+                position:relative;
+                height:7px;
+                margin-top:10px;
+                overflow:hidden;
+                border-radius:999px;
+                background:rgba(25,118,210,.17);
+            }
+            .dls-install-progress-track::after {
+                content:"";
+                position:absolute;
+                top:0;
+                bottom:0;
+                width:38%;
+                border-radius:999px;
+                background:#1976d2;
+                animation:dlsInstallSweep 1.25s ease-in-out infinite;
+            }
+            .dls-install-elapsed {
+                margin-top:7px;
+                color:#34536f;
+                font-size:12px;
+            }
+            .dls-installing,
+            .dls-installing * {
+                cursor:progress !important;
+            }
+            @keyframes dlsInstallSpin { to { transform:rotate(360deg); } }
+            @keyframes dlsInstallSweep {
+                0% { left:-42%; }
+                100% { left:104%; }
+            }
         </style>
+        <script>
+            (function(){
+                "use strict";
+                var active = false;
+                var startedAt = 0;
+                var timer = null;
+
+                function findInstallControl(node) {
+                    var current = node;
+                    while (current && current !== document) {
+                        if (current.getAttribute) {
+                            var name = current.getAttribute("name") || "";
+                            var id = current.getAttribute("id") || "";
+                            if (name.indexOf("installDlsButton") >= 0 || id.indexOf("installDlsButton") >= 0) {
+                                return current;
+                            }
+                        }
+                        current = current.parentNode;
+                    }
+                    return null;
+                }
+
+                function updateElapsed() {
+                    var elapsed = document.getElementById("dls-install-elapsed");
+                    if (!elapsed || !startedAt) return;
+                    var seconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
+                    elapsed.textContent = "Installation in progress — " + seconds + " second" + (seconds === 1 ? "" : "s") + " elapsed.";
+                }
+
+                function showInstallProgress() {
+                    if (active) return;
+                    active = true;
+                    startedAt = Date.now();
+                    var panel = document.getElementById("dls-install-progress");
+                    if (panel) panel.classList.add("dls-visible");
+                    document.body.classList.add("dls-installing");
+                    updateElapsed();
+                    timer = window.setInterval(updateElapsed, 1000);
+
+                    window.setTimeout(function(){
+                        var controls = document.querySelectorAll('[name*="installDlsButton"], [id*="installDlsButton"]');
+                        for (var i = 0; i < controls.length; i++) {
+                            controls[i].setAttribute("aria-busy", "true");
+                            controls[i].style.opacity = "0.78";
+                            controls[i].style.pointerEvents = "none";
+                        }
+                    }, 0);
+                }
+
+                document.addEventListener("click", function(event){
+                    if (findInstallControl(event.target)) showInstallProgress();
+                }, true);
+            })();
+        </script>
+    """
+}
+
+
+private String installationProgressPanel() {
+    return """
+        <div id="dls-install-progress" class="dls-install-progress" role="status" aria-live="polite">
+            <div class="dls-install-progress-head">
+                <span class="dls-install-spinner" aria-hidden="true"></span>
+                <span>Installing Dashboard Layout Studio</span>
+            </div>
+            <div class="dls-install-progress-text">
+                Downloading, validating, saving, and verifying the latest stable release. Keep this page open until installation completes.
+            </div>
+            <div class="dls-install-progress-track" aria-hidden="true"></div>
+            <div id="dls-install-elapsed" class="dls-install-elapsed">Installation in progress.</div>
+        </div>
     """
 }
 

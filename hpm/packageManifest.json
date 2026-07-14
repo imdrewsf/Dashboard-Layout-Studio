@@ -2,10 +2,10 @@
   "packageName": "Dashboard Layout Studio",
   "minimumHEVersion": "2.3.9",
   "author": "Andrew Peck",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "dateReleased": "2026-07-14",
   "documentationLink": "https://github.com/imdrewsf/Dashboard-Layout-Studio",
-  "releaseNotes": "Uses the raw GitHub stable HTML file to prevent release-redirect validation failures, improves response-body handling, forces white text on every launcher control and state, and slightly reduces the Launch and Remove button sizes.",
+  "releaseNotes": "Adds immediate on-page installation feedback with a spinner, indeterminate progress bar, elapsed time, and busy button state while the DLS file downloads, validates, saves, and verifies.",
   "apps": [
     {
       "id": "b716e857-dc24-427d-aba7-1cc429b33f26",
