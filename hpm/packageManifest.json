@@ -2,10 +2,10 @@
   "packageName": "Dashboard Layout Studio",
   "minimumHEVersion": "2.3.9",
   "author": "Andrew Peck",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "dateReleased": "2026-07-14",
   "documentationLink": "https://github.com/imdrewsf/Dashboard-Layout-Studio",
-  "releaseNotes": "Fixes initial DLS installation by reading the Hubitat HTTP response body from response.data.text instead of converting the Reader object with toString().",
+  "releaseNotes": "Improves launcher usability by forcing readable white text on the Launch, Install, Remove, and Confirm Removal controls and reducing the size of the blue Launch button.",
   "apps": [
     {
       "id": "b716e857-dc24-427d-aba7-1cc429b33f26",

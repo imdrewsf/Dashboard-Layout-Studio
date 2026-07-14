@@ -5,14 +5,14 @@
  * Hubitat File Manager and provides a launch link. DLS manages its own
  * updates after the initial installation.
  *
- * Version: 1.0.3
- * Build: 004
+ * Version: 1.0.4
+ * Build: 005
  */
 
 import groovy.transform.Field
 
-@Field static final String APP_VERSION = "1.0.3"
-@Field static final String APP_BUILD = "004"
+@Field static final String APP_VERSION = "1.0.4"
+@Field static final String APP_BUILD = "005"
 @Field static final String DLS_FILE_NAME = "dashboard-layout-studio.html"
 @Field static final String DLS_LOCAL_PATH = "/local/dashboard-layout-studio.html"
 @Field static final String DLS_DOWNLOAD_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio.html"
@@ -49,6 +49,7 @@ def mainPage() {
         uninstall: true
     ) {
         section {
+            paragraph launcherStyles()
             paragraph statusCard(installed, fileStatus.available as Boolean)
         }
 
@@ -76,7 +77,7 @@ def mainPage() {
                 input(
                     name: "installDlsButton",
                     type: "button",
-                    title: "Install Dashboard Layout Studio",
+                    title: '<span style="color:#ffffff !important; font-weight:600;">Install Dashboard Layout Studio</span>',
                     backgroundColor: "#1976d2"
                 )
             }
@@ -88,7 +89,7 @@ def mainPage() {
             section("Removal") {
                 href(
                     name: "removeDlsLink",
-                    title: "Remove Dashboard Layout Studio",
+                    title: removeLinkTitle(),
                     description: "Delete ${DLS_FILE_NAME} from Hubitat File Manager.",
                     page: "removeDlsPage"
                 )
@@ -113,6 +114,10 @@ def removeDlsPage() {
         install: false,
         uninstall: false
     ) {
+        section {
+            paragraph launcherStyles()
+        }
+
         if (!(fileStatus.available as Boolean)) {
             section {
                 paragraph messageCard(
@@ -129,7 +134,7 @@ def removeDlsPage() {
                 input(
                     name: "confirmRemoveDlsButton",
                     type: "button",
-                    title: "Confirm Removal",
+                    title: '<span style="color:#ffffff !important; font-weight:600;">Confirm Removal</span>',
                     backgroundColor: "#b71c1c"
                 )
             }
@@ -322,18 +327,58 @@ private void clearMessage() {
 }
 
 
+private String launcherStyles() {
+    return """
+        <style>
+            a.dls-launch-button,
+            a.dls-launch-button:link,
+            a.dls-launch-button:visited,
+            a.dls-launch-button:hover,
+            a.dls-launch-button:active {
+                color:#ffffff !important;
+            }
+
+            button[name*="installDlsButton"],
+            input[name*="installDlsButton"],
+            button[id*="installDlsButton"],
+            input[id*="installDlsButton"],
+            button[name*="confirmRemoveDlsButton"],
+            input[name*="confirmRemoveDlsButton"],
+            button[id*="confirmRemoveDlsButton"],
+            input[id*="confirmRemoveDlsButton"] {
+                color:#ffffff !important;
+                -webkit-text-fill-color:#ffffff !important;
+            }
+        </style>
+    """
+}
+
+
 private String launchButton() {
     return """
-        <div style="text-align:center; padding:18px 0 12px 0;">
-            <a href="${DLS_LOCAL_PATH}"
+        <div style="text-align:center; padding:10px 0 8px 0;">
+            <a class="dls-launch-button"
+               href="${DLS_LOCAL_PATH}"
                target="_blank"
                rel="noopener"
-               style="display:inline-block; padding:13px 24px; background:#1976d2; color:#ffffff;
-                      text-decoration:none; border-radius:5px; font-weight:600; font-size:16px;
+               style="display:inline-block; padding:9px 18px; background:#1976d2; color:#ffffff !important;
+                      -webkit-text-fill-color:#ffffff !important; text-decoration:none; border-radius:5px;
+                      font-weight:600; font-size:14px; line-height:1.2;
                       box-shadow:0 2px 4px rgba(0,0,0,.25);">
                 Launch Dashboard Layout Studio
             </a>
         </div>
+    """
+}
+
+
+private String removeLinkTitle() {
+    return """
+        <span style="display:inline-block; padding:8px 14px; background:#b71c1c;
+                     color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;
+                     border-radius:5px; font-weight:600; font-size:14px; line-height:1.2;">
+            Remove Dashboard Layout Studio
+        </span>
     """
 }
 
