@@ -5,7 +5,7 @@
   "version": "1.0.4",
   "dateReleased": "2026-07-14",
   "documentationLink": "https://github.com/imdrewsf/Dashboard-Layout-Studio",
-  "releaseNotes": "Uses an asynchronous GitHub download so the Install button responds immediately, adds an auto-refreshing four-step busy/progress display, and adds timeout recovery and detailed logging.",
+  "releaseNotes": "Improves launcher usability by forcing readable white text on the Launch, Install, Remove, and Confirm Removal controls and reducing the size of the blue Launch button.",
   "apps": [
     {
       "id": "b716e857-dc24-427d-aba7-1cc429b33f26",
