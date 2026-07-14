@@ -2,10 +2,10 @@
   "packageName": "Dashboard Layout Studio",
   "minimumHEVersion": "2.3.9",
   "author": "Andrew Peck",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "dateReleased": "2026-07-14",
   "documentationLink": "https://github.com/imdrewsf/Dashboard-Layout-Studio",
-  "releaseNotes": "Improves launcher usability by forcing readable white text on the Launch, Install, Remove, and Confirm Removal controls and reducing the size of the blue Launch button.",
+  "releaseNotes": "Uses the raw GitHub stable HTML file to prevent release-redirect validation failures, improves response-body handling, forces white text on every launcher control and state, and slightly reduces the Launch and Remove button sizes.",
   "apps": [
     {
       "id": "b716e857-dc24-427d-aba7-1cc429b33f26",

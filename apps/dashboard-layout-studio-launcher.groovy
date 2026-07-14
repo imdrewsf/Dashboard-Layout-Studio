@@ -5,17 +5,17 @@
  * Hubitat File Manager and provides a launch link. DLS manages its own
  * updates after the initial installation.
  *
- * Version: 1.0.4
- * Build: 005
+ * Version: 1.0.5
+ * Build: 006
  */
 
 import groovy.transform.Field
 
-@Field static final String APP_VERSION = "1.0.4"
-@Field static final String APP_BUILD = "005"
+@Field static final String APP_VERSION = "1.0.5"
+@Field static final String APP_BUILD = "006"
 @Field static final String DLS_FILE_NAME = "dashboard-layout-studio.html"
 @Field static final String DLS_LOCAL_PATH = "/local/dashboard-layout-studio.html"
-@Field static final String DLS_DOWNLOAD_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio.html"
+@Field static final String DLS_DOWNLOAD_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/dashboard-layout-studio.html"
 
 
 definition(
@@ -213,16 +213,19 @@ private void installDls() {
                 "Accept": "*/*",
                 "User-Agent": "Hubitat-DLS-Launcher/${APP_VERSION}"
             ],
+            contentType: "text/plain",
             textParser: true,
             followRedirects: true,
             timeout: 90
         ]
 
         httpGet(request) { response ->
-            if (response?.status != 200) {
-                throw new RuntimeException("GitHub returned HTTP ${response?.status ?: 'unknown'}.")
+            Integer status = response?.status as Integer
+            if (status != 200) {
+                throw new RuntimeException("GitHub returned HTTP ${status ?: 'unknown'}.")
             }
             html = responseBodyAsText(response?.data)
+            log.info "DLS download completed with HTTP status ${status}; received ${html?.length() ?: 0} characters."
         }
 
         validateDownloadedHtml(html)
@@ -291,11 +294,32 @@ private String responseBodyAsText(Object data) {
         return null
     }
 
-    // With textParser:true Hubitat supplies a reader-like response object.
-    // The Groovy text property consumes that response and returns its content.
-    // Calling toString() only returns an object description such as
-    // java.io.StringReader@1a2b3c, not the downloaded file.
-    return data.text as String
+    // Hubitat may expose a text response as a String, Reader-like object, or
+    // stream-like object depending on platform/parser behavior. Avoid explicit
+    // Reader class references because Hubitat's sandbox rejects them.
+    try {
+        String textValue = data.text as String
+        if (textValue != null) {
+            return textValue
+        }
+    } catch (Exception ignored) {
+        // Try the Groovy getText extension next.
+    }
+
+    try {
+        String textValue = data.getText("UTF-8") as String
+        if (textValue != null) {
+            return textValue
+        }
+    } catch (Exception ignored) {
+        // Fall back to toString only for objects that already represent text.
+    }
+
+    String fallback = data.toString()
+    if (fallback ==~ /(?s).*@[0-9a-fA-F]+$/) {
+        throw new RuntimeException("Hubitat returned an unreadable response object (${data.getClass().getName()}).")
+    }
+    return fallback
 }
 
 
@@ -330,24 +354,38 @@ private void clearMessage() {
 private String launcherStyles() {
     return """
         <style>
+            /* Hubitat themes apply their own foreground colors to generated
+               button and href children. Target every generated wrapper/state. */
             a.dls-launch-button,
             a.dls-launch-button:link,
             a.dls-launch-button:visited,
             a.dls-launch-button:hover,
-            a.dls-launch-button:active {
-                color:#ffffff !important;
-            }
-
-            button[name*="installDlsButton"],
-            input[name*="installDlsButton"],
-            button[id*="installDlsButton"],
-            input[id*="installDlsButton"],
-            button[name*="confirmRemoveDlsButton"],
-            input[name*="confirmRemoveDlsButton"],
-            button[id*="confirmRemoveDlsButton"],
-            input[id*="confirmRemoveDlsButton"] {
+            a.dls-launch-button:active,
+            a.dls-launch-button *,
+            .dls-remove-button,
+            .dls-remove-button *,
+            [name*="installDlsButton"],
+            [name*="installDlsButton"] *,
+            [id*="installDlsButton"],
+            [id*="installDlsButton"] *,
+            [name*="confirmRemoveDlsButton"],
+            [name*="confirmRemoveDlsButton"] *,
+            [id*="confirmRemoveDlsButton"],
+            [id*="confirmRemoveDlsButton"] *,
+            [name*="removeDlsLink"],
+            [name*="removeDlsLink"] *,
+            [id*="removeDlsLink"],
+            [id*="removeDlsLink"] *,
+            [href*="removeDlsPage"],
+            [href*="removeDlsPage"] * {
                 color:#ffffff !important;
                 -webkit-text-fill-color:#ffffff !important;
+                text-shadow:none !important;
+            }
+
+            a.dls-launch-button {
+                font-size:13px !important;
+                line-height:1.15 !important;
             }
         </style>
     """
@@ -361,9 +399,9 @@ private String launchButton() {
                href="${DLS_LOCAL_PATH}"
                target="_blank"
                rel="noopener"
-               style="display:inline-block; padding:9px 18px; background:#1976d2; color:#ffffff !important;
+               style="display:inline-block; padding:7px 13px; background:#1976d2; color:#ffffff !important;
                       -webkit-text-fill-color:#ffffff !important; text-decoration:none; border-radius:5px;
-                      font-weight:600; font-size:14px; line-height:1.2;
+                      font-weight:600; font-size:13px; line-height:1.15;
                       box-shadow:0 2px 4px rgba(0,0,0,.25);">
                 Launch Dashboard Layout Studio
             </a>
@@ -374,9 +412,9 @@ private String launchButton() {
 
 private String removeLinkTitle() {
     return """
-        <span style="display:inline-block; padding:8px 14px; background:#b71c1c;
+        <span class="dls-remove-button" style="display:inline-block; padding:7px 12px; background:#b71c1c;
                      color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;
-                     border-radius:5px; font-weight:600; font-size:14px; line-height:1.2;">
+                     border-radius:5px; font-weight:600; font-size:13px; line-height:1.15;">
             Remove Dashboard Layout Studio
         </span>
     """
