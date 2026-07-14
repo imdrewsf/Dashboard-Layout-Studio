@@ -5,14 +5,14 @@
  * Hubitat File Manager and provides a launch link. DLS manages its own
  * updates after the initial installation.
  *
- * Version: 1.0.7
- * Build: 008
+ * Version: 1.0.8
+ * Build: 009
  */
 
 import groovy.transform.Field
 
-@Field static final String APP_VERSION = "1.0.7"
-@Field static final String APP_BUILD = "008"
+@Field static final String APP_VERSION = "1.0.8"
+@Field static final String APP_BUILD = "009"
 @Field static final String DLS_FILE_NAME = "dashboard-layout-studio.html"
 @Field static final String DLS_LOCAL_PATH = "/local/dashboard-layout-studio.html"
 @Field static final String DLS_DOWNLOAD_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/dashboard-layout-studio.html"
@@ -51,19 +51,15 @@ def mainPage() {
         section {
             paragraph launcherStyles()
             paragraph statusCard(installed, fileStatus.available as Boolean)
-        }
 
-        if (!(fileStatus.available as Boolean)) {
-            section {
+            if (!(fileStatus.available as Boolean)) {
                 paragraph messageCard(
                     "Hubitat File Manager could not be read. Installation and removal controls are disabled until File Manager is available.",
                     "error"
                 )
             }
-        }
 
-        if (state.lastMessage) {
-            section {
+            if (state.lastMessage) {
                 paragraph messageCard(
                     state.lastMessage as String,
                     (state.lastMessageType ?: "info") as String
@@ -73,7 +69,7 @@ def mainPage() {
 
         if ((fileStatus.available as Boolean) && !installed) {
             section("Install") {
-                paragraph "The launcher will download the latest stable DLS release from GitHub and save it in Hubitat File Manager as <code>${DLS_FILE_NAME}</code>."
+                paragraph copyCard("The launcher will download the latest stable DLS release from GitHub and save it in Hubitat File Manager as <code>${DLS_FILE_NAME}</code>.")
                 paragraph installationProgressPanel()
                 input(
                     name: "installDlsButton",
@@ -81,24 +77,22 @@ def mainPage() {
                     title: '<span style="color:#ffffff !important; font-weight:600;">Install Dashboard Layout Studio</span>',
                     backgroundColor: "#1976d2"
                 )
+                paragraph copyCard("Launcher version ${APP_VERSION} (build ${APP_BUILD}). DLS performs its own update checks after it has been installed.")
             }
         } else if ((fileStatus.available as Boolean) && installed) {
-            section("Launch") {
+            section("Actions") {
                 paragraph launchButton()
-            }
-
-            section("Removal") {
                 href(
                     name: "removeDlsLink",
                     title: removeLinkTitle(),
-                    description: "Delete ${DLS_FILE_NAME} from Hubitat File Manager.",
                     page: "removeDlsPage"
                 )
+                paragraph copyCard("Launcher version ${APP_VERSION} (build ${APP_BUILD}). DLS performs its own update checks after it has been installed.")
             }
-        }
-
-        section("Launcher information") {
-            paragraph "Launcher version ${APP_VERSION} (build ${APP_BUILD}). DLS performs its own update checks after it has been installed."
+        } else {
+            section("Launcher information") {
+                paragraph copyCard("Launcher version ${APP_VERSION} (build ${APP_BUILD}). DLS performs its own update checks after it has been installed.")
+            }
         }
     }
 }
@@ -117,32 +111,27 @@ def removeDlsPage() {
     ) {
         section {
             paragraph launcherStyles()
-        }
 
-        if (!(fileStatus.available as Boolean)) {
-            section {
+            if (!(fileStatus.available as Boolean)) {
                 paragraph messageCard(
                     "Hubitat File Manager could not be read. No file was removed.",
                     "error"
                 )
-            }
-        } else if (installed) {
-            section {
+            } else if (installed) {
                 paragraph warningCard(
                     "This deletes <code>${DLS_FILE_NAME}</code> from Hubitat File Manager. " +
                     "The launcher app will remain installed and will return to its Install state."
                 )
+                paragraph removalProgressPanel()
                 input(
                     name: "confirmRemoveDlsButton",
                     type: "button",
                     title: '<span style="color:#ffffff !important; font-weight:600;">Confirm Removal</span>',
                     backgroundColor: "#b71c1c"
                 )
-            }
-        } else {
-            section {
+            } else {
                 paragraph messageCard("Dashboard Layout Studio has been removed.", "success")
-                paragraph "Select <strong>Next</strong> to return to the launcher."
+                paragraph copyCard("Select <strong>Next</strong> to return to the launcher.")
             }
         }
     }
@@ -355,8 +344,67 @@ private void clearMessage() {
 private String launcherStyles() {
     return """
         <style>
-            /* Hubitat themes apply their own foreground colors to generated
-               button and href children. Target every generated wrapper/state. */
+            /* Keep the launcher compact and readable regardless of the active
+               Hubitat theme. All custom copy is placed on a light surface with
+               an explicit dark foreground. */
+            .dls-copy,
+            .dls-copy *,
+            .dls-status-card,
+            .dls-status-card *,
+            .dls-message-card,
+            .dls-message-card *,
+            .dls-warning-card,
+            .dls-warning-card *,
+            .dls-progress,
+            .dls-progress * {
+                -webkit-text-fill-color:currentColor !important;
+                text-shadow:none !important;
+            }
+
+            .mdl-card {
+                min-height:0 !important;
+                margin-bottom:8px !important;
+            }
+            .mdl-card__title {
+                min-height:0 !important;
+                padding-top:8px !important;
+                padding-bottom:4px !important;
+            }
+            .mdl-card__supporting-text {
+                padding-top:7px !important;
+                padding-bottom:7px !important;
+            }
+            .mdl-card__supporting-text > p {
+                margin-top:3px !important;
+                margin-bottom:3px !important;
+            }
+
+            .dls-copy {
+                margin:0 !important;
+                padding:8px 10px;
+                border:1px solid #d7dde5;
+                border-radius:5px;
+                background:#f8fafc;
+                color:#1f2937 !important;
+                font-size:13px;
+                line-height:1.38;
+            }
+
+            /* Hubitat adds generous paragraph and section spacing. Tighten only
+               the generated areas used by this launcher. */
+            .mdl-card__supporting-text p:has(.dls-copy),
+            .mdl-card__supporting-text p:has(.dls-status-card),
+            .mdl-card__supporting-text p:has(.dls-message-card),
+            .mdl-card__supporting-text p:has(.dls-warning-card),
+            .mdl-card__supporting-text p:has(.dls-progress),
+            .mdl-card__supporting-text p:has(.dls-launch-wrap) {
+                margin-top:0 !important;
+                margin-bottom:0 !important;
+            }
+            .dls-launch-wrap { margin:0 !important; padding:2px 0 !important; }
+
+            /* Hubitat themes apply foreground colors to generated controls and
+               nested spans. Force a readable button label everywhere. */
             a.dls-launch-button,
             a.dls-launch-button:link,
             a.dls-launch-button:visited,
@@ -385,51 +433,81 @@ private String launcherStyles() {
             }
 
             a.dls-launch-button {
+                display:inline-flex !important;
+                align-items:center !important;
+                justify-content:center !important;
+                box-sizing:border-box !important;
+                min-height:34px !important;
+                padding:0 14px !important;
                 font-size:13px !important;
-                line-height:1.15 !important;
+                line-height:1 !important;
+                text-align:center !important;
+                vertical-align:middle !important;
             }
 
-            .dls-install-progress {
+            .dls-remove-button {
+                display:inline-flex !important;
+                align-items:center !important;
+                justify-content:center !important;
+                box-sizing:border-box !important;
+                min-height:34px !important;
+                padding:0 12px !important;
+                line-height:1 !important;
+                text-align:center !important;
+            }
+
+            .dls-progress {
                 display:none;
-                margin:12px 0 14px;
-                padding:13px 14px;
-                border-left:5px solid #1976d2;
+                margin:5px 0 6px !important;
+                padding:9px 10px;
+                border-left:4px solid #1976d2;
                 border-radius:4px;
                 background:#e3f2fd;
-                color:#0d2740;
-                box-shadow:0 1px 3px rgba(0,0,0,.12);
+                color:#17324d !important;
+                box-shadow:0 1px 2px rgba(0,0,0,.10);
             }
-            .dls-install-progress.dls-visible { display:block; }
-            .dls-install-progress-head {
+            .dls-progress.dls-remove-progress {
+                border-left-color:#b71c1c;
+                background:#ffebee;
+                color:#4a1717 !important;
+            }
+            .dls-progress.dls-visible { display:block; }
+            .dls-progress-head {
                 display:flex;
                 align-items:center;
-                gap:10px;
+                gap:8px;
                 font-weight:700;
-                color:#0d47a1;
+                color:#0d47a1 !important;
             }
-            .dls-install-spinner {
-                width:18px;
-                height:18px;
-                flex:0 0 18px;
-                border:3px solid rgba(25,118,210,.25);
+            .dls-remove-progress .dls-progress-head { color:#8e1111 !important; }
+            .dls-progress-spinner {
+                width:16px;
+                height:16px;
+                flex:0 0 16px;
+                border:3px solid rgba(25,118,210,.24);
                 border-top-color:#1976d2;
                 border-radius:50%;
-                animation:dlsInstallSpin .75s linear infinite;
+                animation:dlsActionSpin .75s linear infinite;
             }
-            .dls-install-progress-text {
-                margin-top:7px;
-                font-size:13px;
-                line-height:1.45;
+            .dls-remove-progress .dls-progress-spinner {
+                border-color:rgba(183,28,28,.22);
+                border-top-color:#b71c1c;
             }
-            .dls-install-progress-track {
+            .dls-progress-text {
+                margin-top:5px;
+                font-size:12.5px;
+                line-height:1.35;
+            }
+            .dls-progress-track {
                 position:relative;
-                height:7px;
-                margin-top:10px;
+                height:6px;
+                margin-top:7px;
                 overflow:hidden;
                 border-radius:999px;
                 background:rgba(25,118,210,.17);
             }
-            .dls-install-progress-track::after {
+            .dls-remove-progress .dls-progress-track { background:rgba(183,28,28,.14); }
+            .dls-progress-track::after {
                 content:"";
                 position:absolute;
                 top:0;
@@ -437,19 +515,21 @@ private String launcherStyles() {
                 width:38%;
                 border-radius:999px;
                 background:#1976d2;
-                animation:dlsInstallSweep 1.25s ease-in-out infinite;
+                animation:dlsActionSweep 1.25s ease-in-out infinite;
             }
-            .dls-install-elapsed {
-                margin-top:7px;
-                color:#34536f;
-                font-size:12px;
+            .dls-remove-progress .dls-progress-track::after { background:#b71c1c; }
+            .dls-progress-elapsed {
+                margin-top:5px;
+                color:#34536f !important;
+                font-size:11.5px;
             }
-            .dls-installing,
-            .dls-installing * {
-                cursor:progress !important;
-            }
-            @keyframes dlsInstallSpin { to { transform:rotate(360deg); } }
-            @keyframes dlsInstallSweep {
+            .dls-remove-progress .dls-progress-elapsed { color:#6f3333 !important; }
+            .dls-action-running,
+            .dls-action-running * { cursor:progress !important; }
+            .dls-busy-control { opacity:.78 !important; }
+
+            @keyframes dlsActionSpin { to { transform:rotate(360deg); } }
+            @keyframes dlsActionSweep {
                 0% { left:-42%; }
                 100% { left:104%; }
             }
@@ -457,55 +537,62 @@ private String launcherStyles() {
         <script>
             (function(){
                 "use strict";
-                var active = false;
+                var activeAction = "";
                 var startedAt = 0;
                 var timer = null;
 
-                function findInstallControl(node) {
+                function actionForControl(node) {
                     var current = node;
                     while (current && current !== document) {
                         if (current.getAttribute) {
                             var name = current.getAttribute("name") || "";
                             var id = current.getAttribute("id") || "";
-                            if (name.indexOf("installDlsButton") >= 0 || id.indexOf("installDlsButton") >= 0) {
-                                return current;
-                            }
+                            var key = name + " " + id;
+                            if (key.indexOf("installDlsButton") >= 0) return "install";
+                            if (key.indexOf("confirmRemoveDlsButton") >= 0) return "remove";
                         }
                         current = current.parentNode;
                     }
-                    return null;
+                    return "";
                 }
 
                 function updateElapsed() {
-                    var elapsed = document.getElementById("dls-install-elapsed");
-                    if (!elapsed || !startedAt) return;
+                    if (!activeAction || !startedAt) return;
+                    var elapsed = document.getElementById("dls-" + activeAction + "-elapsed");
+                    if (!elapsed) return;
                     var seconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
-                    elapsed.textContent = "Installation in progress — " + seconds + " second" + (seconds === 1 ? "" : "s") + " elapsed.";
+                    var verb = activeAction === "remove" ? "Removal" : "Installation";
+                    elapsed.textContent = verb + " in progress — " + seconds + " second" + (seconds === 1 ? "" : "s") + " elapsed.";
                 }
 
-                function showInstallProgress() {
-                    if (active) return;
-                    active = true;
+                function markControlBusy(action) {
+                    var token = action === "remove" ? "confirmRemoveDlsButton" : "installDlsButton";
+                    var controls = document.querySelectorAll('[name*="' + token + '"], [id*="' + token + '"]');
+                    for (var i = 0; i < controls.length; i++) {
+                        controls[i].setAttribute("aria-busy", "true");
+                        controls[i].classList.add("dls-busy-control");
+                    }
+                }
+
+                function showProgress(action) {
+                    if (!action || activeAction) return;
+                    activeAction = action;
                     startedAt = Date.now();
-                    var panel = document.getElementById("dls-install-progress");
+                    var panel = document.getElementById("dls-" + action + "-progress");
                     if (panel) panel.classList.add("dls-visible");
-                    document.body.classList.add("dls-installing");
+                    document.body.classList.add("dls-action-running");
+                    markControlBusy(action);
                     updateElapsed();
                     timer = window.setInterval(updateElapsed, 1000);
-
-                    window.setTimeout(function(){
-                        var controls = document.querySelectorAll('[name*="installDlsButton"], [id*="installDlsButton"]');
-                        for (var i = 0; i < controls.length; i++) {
-                            controls[i].setAttribute("aria-busy", "true");
-                            controls[i].style.opacity = "0.78";
-                            controls[i].style.pointerEvents = "none";
-                        }
-                    }, 0);
                 }
 
+                /* Use the normal bubbling phase. Hubitat's own button handler
+                   runs first at the control, so visual feedback cannot consume
+                   or cancel the first click. Do not disable pointer events. */
                 document.addEventListener("click", function(event){
-                    if (findInstallControl(event.target)) showInstallProgress();
-                }, true);
+                    var action = actionForControl(event.target);
+                    if (action) showProgress(action);
+                }, false);
             })();
         </script>
     """
@@ -514,16 +601,33 @@ private String launcherStyles() {
 
 private String installationProgressPanel() {
     return """
-        <div id="dls-install-progress" class="dls-install-progress" role="status" aria-live="polite">
-            <div class="dls-install-progress-head">
-                <span class="dls-install-spinner" aria-hidden="true"></span>
+        <div id="dls-install-progress" class="dls-progress dls-install-progress" role="status" aria-live="polite">
+            <div class="dls-progress-head">
+                <span class="dls-progress-spinner" aria-hidden="true"></span>
                 <span>Installing Dashboard Layout Studio</span>
             </div>
-            <div class="dls-install-progress-text">
-                Downloading, validating, saving, and verifying the latest stable release. Keep this page open until installation completes.
+            <div class="dls-progress-text">
+                Downloading, validating, saving, and verifying the stable release. Keep this page open until installation completes.
             </div>
-            <div class="dls-install-progress-track" aria-hidden="true"></div>
-            <div id="dls-install-elapsed" class="dls-install-elapsed">Installation in progress.</div>
+            <div class="dls-progress-track" aria-hidden="true"></div>
+            <div id="dls-install-elapsed" class="dls-progress-elapsed">Installation in progress.</div>
+        </div>
+    """
+}
+
+
+private String removalProgressPanel() {
+    return """
+        <div id="dls-remove-progress" class="dls-progress dls-remove-progress" role="status" aria-live="polite">
+            <div class="dls-progress-head">
+                <span class="dls-progress-spinner" aria-hidden="true"></span>
+                <span>Removing Dashboard Layout Studio</span>
+            </div>
+            <div class="dls-progress-text">
+                Deleting the DLS HTML file and verifying that it was removed from Hubitat File Manager.
+            </div>
+            <div class="dls-progress-track" aria-hidden="true"></div>
+            <div id="dls-remove-elapsed" class="dls-progress-elapsed">Removal in progress.</div>
         </div>
     """
 }
@@ -531,15 +635,14 @@ private String installationProgressPanel() {
 
 private String launchButton() {
     return """
-        <div style="text-align:center; padding:10px 0 8px 0;">
+        <div class="dls-launch-wrap" style="text-align:center;">
             <a class="dls-launch-button"
                href="${DLS_LOCAL_PATH}"
                target="_blank"
                rel="noopener"
-               style="display:inline-block; padding:7px 13px; background:#1976d2; color:#ffffff !important;
+               style="background:#1976d2; color:#ffffff !important;
                       -webkit-text-fill-color:#ffffff !important; text-decoration:none; border-radius:5px;
-                      font-weight:600; font-size:13px; line-height:1.15;
-                      box-shadow:0 2px 4px rgba(0,0,0,.25);">
+                      font-weight:600; box-shadow:0 2px 4px rgba(0,0,0,.22);">
                 Launch Dashboard Layout Studio
             </a>
         </div>
@@ -549,9 +652,9 @@ private String launchButton() {
 
 private String removeLinkTitle() {
     return """
-        <span class="dls-remove-button" style="display:inline-block; padding:7px 12px; background:#b71c1c;
+        <span class="dls-remove-button" style="background:#b71c1c;
                      color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;
-                     border-radius:5px; font-weight:600; font-size:13px; line-height:1.15;">
+                     border-radius:5px; font-weight:600; font-size:13px;">
             Remove Dashboard Layout Studio
         </span>
     """
@@ -568,9 +671,9 @@ private String statusCard(Boolean installed, Boolean available) {
             : "${DLS_FILE_NAME} is not present in Hubitat File Manager.")
 
     return """
-        <div style="border-left:5px solid ${color}; background:#f5f5f5; padding:14px 16px; border-radius:4px;">
-            <div style="font-size:18px; font-weight:600; color:${color};">${status}</div>
-            <div style="margin-top:4px;">${detail}</div>
+        <div class="dls-status-card" style="border-left:4px solid ${color}; background:#f5f5f5; color:#263238 !important; padding:9px 11px; border-radius:4px;">
+            <div style="font-size:17px; font-weight:600; color:${color} !important;">${status}</div>
+            <div style="margin-top:2px; color:#263238 !important; font-size:13px; line-height:1.35;">${detail}</div>
         </div>
     """
 }
@@ -578,8 +681,8 @@ private String statusCard(Boolean installed, Boolean available) {
 
 private String warningCard(String message) {
     return """
-        <div style="border-left:5px solid #b71c1c; background:#ffebee; padding:14px 16px; border-radius:4px;">
-            <strong>Confirm removal</strong><br>${message}
+        <div class="dls-warning-card" style="border-left:4px solid #b71c1c; background:#ffebee; color:#3e2723 !important; padding:9px 11px; border-radius:4px; line-height:1.38;">
+            <strong style="color:#7f1d1d !important;">Confirm removal</strong><br>${message}
         </div>
     """
 }
@@ -587,17 +690,22 @@ private String warningCard(String message) {
 
 private String messageCard(String message, String type) {
     Map<String, Map<String, String>> styles = [
-        success: [border: "#1b5e20", background: "#e8f5e9"],
-        error:   [border: "#b71c1c", background: "#ffebee"],
-        info:    [border: "#1565c0", background: "#e3f2fd"]
+        success: [border: "#1b5e20", background: "#e8f5e9", text: "#173b1a"],
+        error:   [border: "#b71c1c", background: "#ffebee", text: "#4a1717"],
+        info:    [border: "#1565c0", background: "#e3f2fd", text: "#17324d"]
     ]
 
     Map<String, String> style = styles[type] ?: styles.info
     return """
-        <div style="border-left:5px solid ${style.border}; background:${style.background}; padding:12px 14px; border-radius:4px;">
+        <div class="dls-message-card" style="border-left:4px solid ${style.border}; background:${style.background}; color:${style.text} !important; padding:9px 11px; border-radius:4px; line-height:1.38;">
             ${escapeHtml(message)}
         </div>
     """
+}
+
+
+private String copyCard(String html) {
+    return "<div class=\"dls-copy\">${html ?: ''}</div>"
 }
 
 
