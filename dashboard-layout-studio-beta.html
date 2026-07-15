@@ -1120,7 +1120,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.3.426">1.3.426</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.3.430">1.3.430</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1544,7 +1544,7 @@
 <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
 </div><h5>History, views, JSON, and Save</h5><div class="help-grid">
 <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. Undo All follows undo history and remains disabled when there is no undo checkpoint. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Shift-click Undo All reloads the current dashboard from the hub when the layout originated from the hub and Undo All is enabled; otherwise it performs the normal Undo All action.</div>
-<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. When a dashboard is first loaded from the hub, DLS captures rendered tiles directly from that loaded dashboard and does not update the temporary dashboard. For later manual refreshes, DLS authorizes the devices used by the current working layout, saves that layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
+<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. When a dashboard is first loaded from the hub, DLS captures rendered tiles directly from that loaded dashboard and does not update the temporary dashboard. For later manual refreshes, DLS authorizes the devices used by the current working layout, prepares preview-only File Manager copies of matching dashboard JSON and Simple CSS Editor CSS files when present, saves the adjusted layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. Simple CSS preview imports are redirected to DLS_Temporary_Dashboard.css. When DLS finds a matching dashboard CSS import and JSON settings file, it creates temporary copies. If it also finds an attribute tile whose templateExtra is iFrameLauncher or a tile whose device maps to Simple CSS Editor, the preview warning identifies Simple CSS Editor specifically; otherwise it reports probable external-editor files. The warning is shown only when the Preview launch option is used. It appears in the rendered preview window with an OK button and a Don't warn me again checkbox. Changes made through a preview editor tile remain in the temporary JSON/CSS copies and are not saved back to the current dashboard's actual files when the preview window is closed. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
 <div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
 <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
 </div></article></div>
@@ -1700,7 +1700,7 @@
 <div class="modal-back hidden" id="confirmModal">
   <div class="modal" style="width:480px">
     <div class="modal-head"><h3 id="confirmTitle">Confirm</h3></div>
-    <div class="modal-body"><p id="confirmMsg" style="margin:0;line-height:1.6;white-space:pre-wrap"></p></div>
+    <div class="modal-body"><p id="confirmMsg" style="margin:0;line-height:1.6;white-space:pre-wrap"></p><label class="chk" id="confirmOptionWrap" style="display:none;margin-top:12px"><input type="checkbox" id="confirmOptionCheck"><span id="confirmOptionText"></span></label></div>
     <div class="modal-foot" style="justify-content:flex-end">
       <button class="btn ghost" id="confirmCancel">Cancel</button>
       <button class="btn primary" id="confirmOk">OK</button>
@@ -2265,8 +2265,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v426";
-const APP_VERSION = "1.3.426";
+const BUILD = "v430";
+const APP_VERSION = "1.3.430";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -2277,6 +2277,9 @@ const UPDATE_RELEASE_MODE_STABLE = "stable";
 const UPDATE_RELEASE_MODE_BETA = "beta";
 let PendingUpdate = null;
 const TEMP_DASHBOARD_NAME = "DLS Temporary Dashboard";
+const TEMP_SIMPLE_CSS_JSON_FILENAME = "DLS_Temporary_Dashboard.json";
+const TEMP_SIMPLE_CSS_CSS_FILENAME = "DLS_Temporary_Dashboard.css";
+const TEMP_SIMPLE_CSS_WARNING_SUPPRESS_KEY = "dls.suppressTemporarySimpleCssPreviewWarning";
 
 const State = {
   conn:{ip:"",appId:"",token:"",mode:"disconnected"},
@@ -3596,14 +3599,229 @@ async function postTemporaryPreviewLayout(payload){
   td.status="ready";td.ready=true;td.error="";
   return context;
 }
+function temporaryPreviewDashboardFileStem(payload){
+  return String((State.active&&(State.active.label||State.active.name))||(payload&&payload.name)||"").trim();
+}
+function temporaryPreviewFileStemKey(value){
+  return String(value||"").replace(/\.[^.]+$/,"" ).toLowerCase().replace(/[^a-z0-9]+/g,"");
+}
+function temporaryPreviewSourceFileCandidates(stem,extension){
+  const raw=String(stem||"").trim();
+  const variants=[
+    raw,
+    raw.replace(/\s+/g,"_"),
+    raw.replace(/[^A-Za-z0-9._-]+/g,"_").replace(/^_+|_+$/g,"")
+  ].filter(Boolean);
+  return [...new Set(variants)].map(v=>`${v}.${extension}`);
+}
+function temporaryPreviewLocalImportInfo(importUrl,dashboardStem){
+  try{
+    const u=new URL(String(importUrl||""),window.location.href);
+    const hubOrigin=new URL(Hub.base(),window.location.href).origin;
+    if(u.origin!==window.location.origin && u.origin!==hubOrigin) return null;
+    if(!/^\/local\//i.test(u.pathname)) return null;
+    const fileName=decodeURIComponent(u.pathname.split("/").pop()||"");
+    if(!/\.css$/i.test(fileName)) return null;
+    if(temporaryPreviewFileStemKey(fileName)!==temporaryPreviewFileStemKey(dashboardStem)) return null;
+    return {url:u.href,fileName};
+  }catch(_e){ return null; }
+}
+async function readTemporaryPreviewSourceFile(fileName,kind){
+  const url=`/local/${encodeURIComponent(fileName)}?dlsPreviewFile=${Date.now()}`;
+  const res=await temporaryDashboardFetch(url,{headers:{"Accept":"*/*"}});
+  if(res.status===404) return null;
+  const contentType=String(res.headers.get("content-type")||"").toLowerCase();
+  const buffer=await res.arrayBuffer();
+  if(!res.ok) throw new Error(`${fileName} could not be read from File Manager (HTTP ${res.status})`);
+  if(!buffer.byteLength) throw new Error(`${fileName} is empty`);
+  const text=new TextDecoder("utf-8").decode(buffer);
+  if(contentType.includes("text/html") || /^\s*<!doctype html|^\s*<html/i.test(text)){
+    throw new Error(`${fileName} returned an administrative HTML page instead of a File Manager file`);
+  }
+  if(kind==="json"){
+    try{ JSON.parse(text); }
+    catch(_e){ throw new Error(`${fileName} is not valid JSON`); }
+  }
+  return {fileName,buffer,contentType:contentType|| (kind==="json"?"application/json":"text/css")};
+}
+async function findTemporaryPreviewSourceFile(candidates,kind){
+  for(const fileName of (candidates||[])){
+    const found=await readTemporaryPreviewSourceFile(fileName,kind);
+    if(found) return found;
+  }
+  return null;
+}
+async function uploadTemporaryPreviewFile(source,targetName){
+  const form=new FormData();
+  form.append("uploadFile",new File([source.buffer],targetName,{type:source.contentType||"application/octet-stream"}));
+  const res=await temporaryDashboardFetch("/hub/fileManager/upload",{method:"POST",body:form});
+  const contentType=String(res.headers.get("content-type")||"").toLowerCase();
+  const body=await res.text();
+  if(!res.ok) throw new Error(`Hubitat File Manager returned HTTP ${res.status} while creating ${targetName}`);
+  let data=null;
+  try{ data=JSON.parse(body); }catch(_e){}
+  if(!data||data.success!==true){
+    if(contentType.includes("text/html")||/<html|login/i.test(body)) throw new Error(`Hubitat returned an administrative or login page while creating ${targetName}`);
+    throw new Error((data&&data.status)||`Hubitat did not confirm creation of ${targetName}`);
+  }
+  return true;
+}
+function rewriteSimpleCssImportForTemporaryPreview(css,dashboardStem,tempUrl){
+  let changed=false;
+  const rewritten=String(css||"").replace(/@import\s+(?:url\(\s*)?(?:"([^"]+)"|'([^']+)'|([^;)\s]+))\s*\)?([^;]*);/gi,(full,dq,sq,bare)=>{
+    const raw=(dq||sq||bare||"").trim();
+    if(!temporaryPreviewLocalImportInfo(raw,dashboardStem)) return full;
+    changed=true;
+    return full.replace(raw,tempUrl);
+  });
+  return {css:rewritten,changed};
+}
+function temporaryPreviewSimpleCssWarningsSuppressed(){
+  try{ return localStorage.getItem(TEMP_SIMPLE_CSS_WARNING_SUPPRESS_KEY)==="1"; }
+  catch(_e){ return false; }
+}
+function suppressTemporaryPreviewSimpleCssWarnings(){
+  try{ localStorage.setItem(TEMP_SIMPLE_CSS_WARNING_SUPPRESS_KEY,"1"); }
+  catch(_e){}
+}
+function temporaryPreviewTileMapsToSimpleCssEditor(tile){
+  if(!tile||typeof tile!=="object") return false;
+  const template=String(tile.template||"").trim().toLowerCase();
+  const extra=String(tile.templateExtra||"").trim().toLowerCase();
+  if(template==="attribute" && extra==="iframelauncher") return true;
+  const id=canonicalDeviceId(tile.device);
+  if(!id) return false;
+  const mapped=mapDeviceNameForId(State.deviceNames,id)||mapDeviceNameForId(State.devicePickedNames,id)||"";
+  return String(mapped).trim().toLowerCase()==="simple css editor";
+}
+function temporaryPreviewHasSimpleCssEditorTile(payload){
+  return Array.isArray(payload&&payload.tiles) && payload.tiles.some(temporaryPreviewTileMapsToSimpleCssEditor);
+}
+function temporarySimpleCssPreviewWarningContent(info){
+  if(!info || !info.externalEditorFilesDetected || temporaryPreviewSimpleCssWarningsSuppressed()) return null;
+  const confirmed=!!info.simpleCssDetected;
+  return {
+    confirmed,
+    title:confirmed?"Simple CSS Editor Detected":"External Dashboard Files Detected",
+    message:confirmed
+      ? `DLS created temporary copies of this dashboard's Simple CSS styles and settings for the preview. If you launch Simple CSS Editor from the temporary preview, any changes are saved only to ${TEMP_SIMPLE_CSS_JSON_FILENAME} and ${TEMP_SIMPLE_CSS_CSS_FILENAME}. They are not saved back to ${info.dashboardName}'s actual files when the preview window is closed.`
+      : `DLS found a dashboard stylesheet and matching settings file that were probably created by an external editor such as Simple CSS Editor. Temporary copies were created for this preview. Any changes made to those copies apply only to the preview and are not saved back to ${info.dashboardName}'s actual files when the preview window is closed.`
+  };
+}
+function showTemporarySimpleCssWarningInPreviewWindow(previewWindow,info){
+  const warning=temporarySimpleCssPreviewWarningContent(info);
+  if(!warning || !previewWindow || previewWindow.closed) return;
+  let attempts=0;
+  const maxAttempts=80;
+  const tryInject=()=>{
+    if(!previewWindow || previewWindow.closed) return;
+    attempts++;
+    try{
+      const doc=previewWindow.document;
+      if(!doc || !doc.body || previewWindow.location.href==="about:blank" || doc.readyState==="loading"){
+        if(attempts<maxAttempts) setTimeout(tryInject,250);
+        return;
+      }
+      const renderedContent=doc.querySelector(".tile,[id^='tile-'],.dashboard");
+      if(!renderedContent && attempts<12){
+        setTimeout(tryInject,250);
+        return;
+      }
+      if(doc.getElementById("dlsTemporarySimpleCssWarning")) return;
+      const overlay=doc.createElement("div");
+      overlay.id="dlsTemporarySimpleCssWarning";
+      overlay.setAttribute("role","dialog");
+      overlay.setAttribute("aria-modal","true");
+      overlay.setAttribute("aria-labelledby","dlsTemporarySimpleCssWarningTitle");
+      overlay.style.cssText="position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(2,6,23,.72);backdrop-filter:blur(3px);font-family:system-ui,-apple-system,Segoe UI,sans-serif;";
+      const card=doc.createElement("div");
+      card.style.cssText="width:min(620px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;border:1px solid rgba(103,232,249,.45);border-radius:14px;background:#162034;color:#eef2fa;box-shadow:0 24px 70px rgba(0,0,0,.65);padding:22px;";
+      const title=doc.createElement("h2");
+      title.id="dlsTemporarySimpleCssWarningTitle";
+      title.textContent=warning.title;
+      title.style.cssText="margin:0 0 10px;color:#67e8f9;font-size:1.15rem;line-height:1.25;";
+      const body=doc.createElement("p");
+      body.textContent=warning.message;
+      body.style.cssText="margin:0 0 16px;color:#d8e2f3;font-size:.95rem;line-height:1.55;";
+      const controls=doc.createElement("div");
+      controls.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;";
+      const label=doc.createElement("label");
+      label.style.cssText="display:inline-flex;align-items:center;gap:8px;color:#eef2fa;font-size:.9rem;cursor:pointer;";
+      const checkbox=doc.createElement("input");
+      checkbox.type="checkbox";
+      checkbox.style.cssText="width:16px;height:16px;accent-color:#67e8f9;";
+      label.append(checkbox,doc.createTextNode("Don't warn me again"));
+      const ok=doc.createElement("button");
+      ok.type="button";
+      ok.textContent="OK";
+      ok.style.cssText="min-width:96px;padding:8px 18px;border:0;border-radius:8px;background:#67e8f9;color:#06222b;font-weight:750;font-size:.92rem;cursor:pointer;";
+      ok.addEventListener("click",()=>{
+        if(checkbox.checked) suppressTemporaryPreviewSimpleCssWarnings();
+        overlay.remove();
+      });
+      controls.append(label,ok);
+      card.append(title,body,controls);
+      overlay.append(card);
+      doc.body.append(overlay);
+      setTimeout(()=>{ try{ ok.focus(); }catch(_e){} },0);
+      status(warning.confirmed
+        ? "Simple CSS Editor preview warning displayed in the preview window."
+        : "External dashboard files warning displayed in the preview window.",true);
+    }catch(_e){
+      if(attempts<maxAttempts) setTimeout(tryInject,250);
+    }
+  };
+  setTimeout(tryInject,700);
+}
+async function prepareTemporaryPreviewFileCopies(payload){
+  const dashboardName=temporaryPreviewDashboardFileStem(payload);
+  const info={dashboardName,jsonCopied:false,cssCopied:false,jsonSource:"",cssSource:"",cssImportFound:false,simpleCssTileDetected:false,externalEditorFilesDetected:false,simpleCssDetected:false};
+  if(!dashboardName) return {payload,info};
+  setSnapshotRefreshStatus("Checking preview support files…",true);
+  status("Checking File Manager for dashboard preview support files…",true);
+
+  info.simpleCssTileDetected=temporaryPreviewHasSimpleCssEditorTile(payload);
+
+  const jsonSource=await findTemporaryPreviewSourceFile(temporaryPreviewSourceFileCandidates(dashboardName,"json"),"json");
+  if(jsonSource){
+    await uploadTemporaryPreviewFile(jsonSource,TEMP_SIMPLE_CSS_JSON_FILENAME);
+    info.jsonCopied=true;
+    info.jsonSource=jsonSource.fileName;
+  }
+
+  const matchingImports=[];
+  for(const imp of extractCssImports(payload&&payload.customCSS||"")){
+    const match=temporaryPreviewLocalImportInfo(imp.url,dashboardName);
+    if(match && !matchingImports.some(x=>x.fileName.toLowerCase()===match.fileName.toLowerCase())) matchingImports.push(match);
+  }
+  info.cssImportFound=matchingImports.length>0;
+  if(matchingImports.length){
+    const cssSource=await findTemporaryPreviewSourceFile(matchingImports.map(x=>x.fileName),"css");
+    if(cssSource){
+      await uploadTemporaryPreviewFile(cssSource,TEMP_SIMPLE_CSS_CSS_FILENAME);
+      const tempCssUrl=new URL(`/local/${TEMP_SIMPLE_CSS_CSS_FILENAME}?dlsPreview=${Date.now()}`,window.location.origin).href;
+      const rewrite=rewriteSimpleCssImportForTemporaryPreview(payload.customCSS||"",dashboardName,tempCssUrl);
+      if(rewrite.changed){
+        payload.customCSS=rewrite.css;
+        info.cssCopied=true;
+        info.cssSource=cssSource.fileName;
+      }
+    }
+  }
+  info.externalEditorFilesDetected=!!(info.cssImportFound&&info.jsonCopied&&info.cssCopied);
+  info.simpleCssDetected=!!(info.externalEditorFilesDetected&&info.simpleCssTileDetected);
+  return {payload,info};
+}
 async function prepareTemporaryDashboardPreview(){
   if(!temporaryDashboardPreviewUsable()) throw new Error("temporary preview dashboard is unavailable");
-  const payload=serializeLayout();
+  let payload=serializeLayout();
   setSnapshotRefreshStatus("Preparing temporary preview…",true);
   status("Preparing temporary dashboard preview…",true);
+  const files=await prepareTemporaryPreviewFileCopies(payload);
+  payload=files.payload;
   await synchronizeTemporaryDashboardDevices(payload);
   const context=await postTemporaryPreviewLayout(payload);
-  return {payload,context};
+  return {payload,context,fileCopies:files.info};
 }
 function askConfirmAsync(title,message,opts={}){
   return new Promise(resolve=>showConfirm(title,message,()=>resolve(true),()=>resolve(false),opts));
@@ -11837,19 +12055,24 @@ function showConfirm(title, msg, onOk, onCancel, opts={}){
   resetModalPosition("confirmModal");
   modal.classList.remove("hidden");
   const ok=document.getElementById("confirmOk"), cancel=document.getElementById("confirmCancel");
+  const optionWrap=document.getElementById("confirmOptionWrap"), optionCheck=document.getElementById("confirmOptionCheck"), optionText=document.getElementById("confirmOptionText");
   const okText=opts.okText||"OK", cancelText=opts.cancelText||"Cancel";
   const oldOkText=ok.textContent, oldCancelText=cancel.textContent;
   const oldOkClass=ok.className, oldCancelClass=cancel.className;
-  const oldCancelDisplay=cancel.style.display;
+  const oldCancelDisplay=cancel.style.display, oldOptionDisplay=optionWrap.style.display;
   ok.textContent=okText; cancel.textContent=cancelText;
   cancel.style.display=opts.hideCancel?"none":oldCancelDisplay;
+  optionCheck.checked=!!opts.checkboxChecked;
+  optionText.textContent=opts.checkboxText||"";
+  optionWrap.style.display=opts.checkboxText?"inline-flex":"none";
   if(opts.defaultButton==="cancel"){
     ok.className="btn ghost"+(opts.dangerOk?" danger":"");
     cancel.className="btn primary";
   }
   let cleaned=false;
-  const runOk=()=>{ cleanup(); if(onOk) onOk(); };
-  const runCancel=()=>{ cleanup(); if(onCancel) onCancel(); };
+  const result=()=>({checked:!!optionCheck.checked});
+  const runOk=()=>{ const value=result(); cleanup(); if(onOk) onOk(value); };
+  const runCancel=()=>{ const value=result(); cleanup(); if(onCancel) onCancel(value); };
   const onKeyDown=e=>{
     if(opts.defaultButton==="cancel" && (e.key===" " || e.key==="Spacebar" || e.code==="Space")){
       e.preventDefault();
@@ -11865,6 +12088,8 @@ function showConfirm(title, msg, onOk, onCancel, opts={}){
     ok.textContent=oldOkText; cancel.textContent=oldCancelText;
     ok.className=oldOkClass; cancel.className=oldCancelClass;
     cancel.style.display=oldCancelDisplay;
+    optionWrap.style.display=oldOptionDisplay;
+    optionCheck.checked=false; optionText.textContent="";
   };
   ok.onclick=runOk;
   cancel.onclick=runCancel;
@@ -14318,12 +14543,21 @@ async function openCurrentDashboardPreview(){
     const context=await runHubOperation(
       "Open dashboard preview",
       [
+        {id:"files",label:"Prepare preview support files"},
         {id:"devices",label:"Authorize preview devices"},
         {id:"save",label:"Save working layout to preview"},
         {id:"open",label:"Open preview dashboard"}
       ],
       async op=>{
-        const payload=serializeLayout();
+        let payload=serializeLayout();
+        hubOperationStep(op,"files","active","Checking File Manager for dashboard JSON and Simple CSS Editor files…");
+        const preparedFiles=await prepareTemporaryPreviewFileCopies(payload);
+        payload=preparedFiles.payload;
+        checkHubOperationAbort(op);
+        const copied=[];
+        if(preparedFiles.info.jsonCopied) copied.push(TEMP_SIMPLE_CSS_JSON_FILENAME);
+        if(preparedFiles.info.cssCopied) copied.push(TEMP_SIMPLE_CSS_CSS_FILENAME);
+        hubOperationStep(op,"files",copied.length?"done":"skipped",copied.length?`Created ${copied.join(" and ")} for preview only.`:"No matching preview support files were found.");
         hubOperationStep(op,"devices","active","Matching the preview dashboard device list to the working layout…");
         const deviceCount=await synchronizeTemporaryDashboardDevices(payload);
         checkHubOperationAbort(op);
@@ -14337,6 +14571,7 @@ async function openCurrentDashboardPreview(){
         if(!url) throw new Error("the temporary preview dashboard URL is unavailable");
         writePreviewLaunchPage(previewWindow,"Opening Dashboard Preview","The preview is ready and is opening now.");
         previewWindow.location.replace(url);
+        showTemporarySimpleCssWarningInPreviewWindow(previewWindow,preparedFiles.info);
         hubOperationStep(op,"open","done","Preview opened in a new window.");
         return result;
       },
