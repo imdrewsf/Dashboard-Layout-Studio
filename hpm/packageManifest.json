@@ -2,10 +2,10 @@
   "packageName": "Dashboard Layout Studio",
   "minimumHEVersion": "2.3.9",
   "author": "Andrew Peck",
-  "version": "1.0.8",
+  "version": "1.0.12",
   "dateReleased": "2026-07-14",
   "documentationLink": "https://github.com/imdrewsf/Dashboard-Layout-Studio",
-  "releaseNotes": "Fixes the first-click installation race, centers the Launch button label, adds removal progress feedback, tightens page spacing, and enforces readable text colors across Hubitat themes.",
+  "releaseNotes": "Compacts all launcher sections by consolidating status and message cards, reducing Hubitat card margins and padding, and folding version information into the status panel. The Remove action is now the actual page link styled as a button, eliminating the nested button inside a larger clickable area.",
   "apps": [
     {
       "id": "b716e857-dc24-427d-aba7-1cc429b33f26",

@@ -5,17 +5,18 @@
  * Hubitat File Manager and provides a launch link. DLS manages its own
  * updates after the initial installation.
  *
- * Version: 1.0.8
- * Build: 009
+ * Version: 1.0.12
+ * Build: 013
  */
 
 import groovy.transform.Field
 
-@Field static final String APP_VERSION = "1.0.8"
-@Field static final String APP_BUILD = "009"
+@Field static final String APP_VERSION = "1.0.12"
+@Field static final String APP_BUILD = "013"
 @Field static final String DLS_FILE_NAME = "dashboard-layout-studio.html"
 @Field static final String DLS_LOCAL_PATH = "/local/dashboard-layout-studio.html"
 @Field static final String DLS_DOWNLOAD_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/dashboard-layout-studio.html"
+@Field static final Long OPERATION_TIMEOUT_MS = 180000L
 
 
 definition(
@@ -39,59 +40,73 @@ preferences {
 
 
 def mainPage() {
+    recoverStaleOperation()
+
     Map fileStatus = getDlsFileStatus()
     Boolean installed = fileStatus.exists as Boolean
+    Boolean installing = isOperationActive("install")
+    Boolean removing = isOperationActive("remove")
+    Integer refreshSeconds = (installing || removing) ? 1 : 0
 
     dynamicPage(
         name: "mainPage",
         title: "Dashboard Layout Studio",
         install: true,
-        uninstall: true
+        uninstall: true,
+        refreshInterval: refreshSeconds
     ) {
         section {
-            paragraph launcherStyles()
-            paragraph statusCard(installed, fileStatus.available as Boolean)
+            String overview = launcherStyles() + statusCard(installed, fileStatus.available as Boolean)
 
             if (!(fileStatus.available as Boolean)) {
-                paragraph messageCard(
+                overview += messageCard(
                     "Hubitat File Manager could not be read. Installation and removal controls are disabled until File Manager is available.",
                     "error"
                 )
             }
 
             if (state.lastMessage) {
-                paragraph messageCard(
+                overview += messageCard(
                     state.lastMessage as String,
                     (state.lastMessageType ?: "info") as String
                 )
             }
+
+            paragraph overview
         }
 
         if ((fileStatus.available as Boolean) && !installed) {
             section("Install") {
-                paragraph copyCard("The launcher will download the latest stable DLS release from GitHub and save it in Hubitat File Manager as <code>${DLS_FILE_NAME}</code>.")
-                paragraph installationProgressPanel()
-                input(
-                    name: "installDlsButton",
-                    type: "button",
-                    title: '<span style="color:#ffffff !important; font-weight:600;">Install Dashboard Layout Studio</span>',
-                    backgroundColor: "#1976d2"
+                paragraph copyCard(
+                    "Downloads the latest stable DLS release and saves it in Hubitat File Manager as " +
+                    "<code>${DLS_FILE_NAME}</code>."
                 )
-                paragraph copyCard("Launcher version ${APP_VERSION} (build ${APP_BUILD}). DLS performs its own update checks after it has been installed.")
+
+                if (installing) {
+                    paragraph operationProgressPanel("install")
+                } else if (removing) {
+                    paragraph operationProgressPanel("remove")
+                } else {
+                    input(
+                        name: "installDlsButton",
+                        type: "button",
+                        title: "Install Dashboard Layout Studio",
+                        backgroundColor: "#1976d2"
+                    )
+                }
             }
         } else if ((fileStatus.available as Boolean) && installed) {
             section("Actions") {
-                paragraph launchButton()
-                href(
-                    name: "removeDlsLink",
-                    title: removeLinkTitle(),
-                    page: "removeDlsPage"
-                )
-                paragraph copyCard("Launcher version ${APP_VERSION} (build ${APP_BUILD}). DLS performs its own update checks after it has been installed.")
-            }
-        } else {
-            section("Launcher information") {
-                paragraph copyCard("Launcher version ${APP_VERSION} (build ${APP_BUILD}). DLS performs its own update checks after it has been installed.")
+                if (installing || removing) {
+                    paragraph operationProgressPanel(installing ? "install" : "remove")
+                } else {
+                    paragraph launchButton()
+                    href(
+                        name: "removeDlsLink",
+                        title: "Remove Dashboard Layout Studio",
+                        page: "removeDlsPage"
+                    )
+                }
             }
         }
     }
@@ -99,39 +114,62 @@ def mainPage() {
 
 
 def removeDlsPage() {
+    recoverStaleOperation()
+
     Map fileStatus = getDlsFileStatus()
     Boolean installed = fileStatus.exists as Boolean
+    Boolean removing = isOperationActive("remove")
 
     dynamicPage(
         name: "removeDlsPage",
         title: "Remove Dashboard Layout Studio",
         nextPage: "mainPage",
         install: false,
-        uninstall: false
+        uninstall: false,
+        refreshInterval: removing ? 1 : 0
     ) {
         section {
-            paragraph launcherStyles()
+            String content = launcherStyles()
+
+            if (state.lastMessage) {
+                content += messageCard(
+                    state.lastMessage as String,
+                    (state.lastMessageType ?: "info") as String
+                )
+            }
 
             if (!(fileStatus.available as Boolean)) {
-                paragraph messageCard(
+                content += messageCard(
                     "Hubitat File Manager could not be read. No file was removed.",
                     "error"
                 )
-            } else if (installed) {
-                paragraph warningCard(
+            } else if (removing) {
+                content += warningCard(
                     "This deletes <code>${DLS_FILE_NAME}</code> from Hubitat File Manager. " +
-                    "The launcher app will remain installed and will return to its Install state."
+                    "The launcher app remains installed."
                 )
-                paragraph removalProgressPanel()
+                content += operationProgressPanel("remove")
+            } else if (installed) {
+                content += warningCard(
+                    "This deletes <code>${DLS_FILE_NAME}</code> from Hubitat File Manager. " +
+                    "The launcher app remains installed."
+                )
+            } else {
+                if (!state.lastMessage) {
+                    content += messageCard("Dashboard Layout Studio has been removed.", "success")
+                }
+                content += copyCard("Select <strong>Next</strong> to return to the launcher.")
+            }
+
+            paragraph content
+
+            if ((fileStatus.available as Boolean) && installed && !removing) {
                 input(
                     name: "confirmRemoveDlsButton",
                     type: "button",
-                    title: '<span style="color:#ffffff !important; font-weight:600;">Confirm Removal</span>',
+                    title: "Confirm Removal",
                     backgroundColor: "#b71c1c"
                 )
-            } else {
-                paragraph messageCard("Dashboard Layout Studio has been removed.", "success")
-                paragraph copyCard("Select <strong>Next</strong> to return to the launcher.")
             }
         }
     }
@@ -149,6 +187,9 @@ def updated() {
 
 
 def uninstalled() {
+    unschedule()
+    clearOperation()
+
     try {
         if (getDlsFileStatus().exists as Boolean) {
             deleteHubFile(DLS_FILE_NAME)
@@ -162,17 +203,18 @@ def uninstalled() {
 
 void initialize() {
     app.updateLabel("Dashboard Layout Studio")
+    recoverStaleOperation()
 }
 
 
 void appButtonHandler(String buttonName) {
     switch (buttonName) {
         case "installDlsButton":
-            installDls()
+            beginInstallDls()
             break
 
         case "confirmRemoveDlsButton":
-            removeDls()
+            beginRemoveDls()
             break
 
         default:
@@ -183,8 +225,14 @@ void appButtonHandler(String buttonName) {
 }
 
 
-private void installDls() {
+private void beginInstallDls() {
+    recoverStaleOperation()
     clearMessage()
+
+    if (isOperationActive()) {
+        setMessage("Another launcher operation is already in progress.", "info")
+        return
+    }
 
     try {
         Map initialStatus = getDlsFileStatus()
@@ -195,50 +243,106 @@ private void installDls() {
             setMessage("Dashboard Layout Studio is already installed.", "info")
             return
         }
-        String html = null
 
+        String operationToken = startOperation("install", "Starting the download from GitHub…")
         Map request = [
             uri: DLS_DOWNLOAD_URL,
             headers: [
-                "Accept": "*/*",
+                "Accept": "text/html,text/plain,*/*",
                 "User-Agent": "Hubitat-DLS-Launcher/${APP_VERSION}"
             ],
             contentType: "text/plain",
-            textParser: true,
             followRedirects: true,
             timeout: 90
         ]
 
-        httpGet(request) { response ->
-            Integer status = response?.status as Integer
-            if (status != 200) {
-                throw new RuntimeException("GitHub returned HTTP ${status ?: 'unknown'}.")
-            }
-            html = responseBodyAsText(response?.data)
-            log.info "DLS download completed with HTTP status ${status}; received ${html?.length() ?: 0} characters."
+        asynchttpGet("installDownloadCallback", request, [token: operationToken])
+        log.info "Started asynchronous DLS download from ${DLS_DOWNLOAD_URL}."
+    } catch (Exception exception) {
+        log.error "Unable to start Dashboard Layout Studio installation: ${exception}"
+        clearOperation()
+        setMessage("Installation failed to start: ${exception.message ?: 'Unknown error'}", "error")
+    }
+}
+
+
+def installDownloadCallback(response, data = null) {
+    String operationToken = (data?.token ?: "") as String
+    if (!operationMatches("install", operationToken)) {
+        log.warn "Ignoring a stale Dashboard Layout Studio download callback."
+        return
+    }
+
+    try {
+        Integer status = readAsyncStatus(response)
+        if (status != 200) {
+            String detail = readAsyncError(response)
+            throw new RuntimeException("GitHub returned HTTP ${status ?: 'unknown'}${detail ? ': ' + detail : ''}.")
         }
 
+        updateOperation("install", operationToken, "Download complete. Validating the Dashboard Layout Studio HTML…")
+        String html = responseBodyAsText(response?.data)
+        log.info "DLS download completed with HTTP status ${status}; received ${html?.length() ?: 0} characters."
+
         validateDownloadedHtml(html)
+
+        updateOperation("install", operationToken, "Validation passed. Saving the file to Hubitat File Manager…")
         uploadHubFile(DLS_FILE_NAME, html.getBytes("UTF-8"))
 
+        updateOperation("install", operationToken, "The file was saved. Verifying the File Manager entry…")
         Map finalStatus = getDlsFileStatus()
         if (!(finalStatus.available as Boolean) || !(finalStatus.exists as Boolean)) {
             throw new RuntimeException("Hubitat did not report the uploaded file in File Manager.")
         }
 
-        setMessage("Dashboard Layout Studio was installed successfully.", "success")
+        finishOperation(operationToken, "Dashboard Layout Studio was installed successfully.", "success")
         log.info "Installed ${DLS_FILE_NAME} from ${DLS_DOWNLOAD_URL}."
     } catch (Exception exception) {
         log.error "Dashboard Layout Studio installation failed: ${exception}"
-        setMessage("Installation failed: ${exception.message ?: exception.class.simpleName}", "error")
+        finishOperation(operationToken, "Installation failed: ${exception.message ?: 'Unknown error'}", "error")
     }
 }
 
 
-private void removeDls() {
+private void beginRemoveDls() {
+    recoverStaleOperation()
     clearMessage()
 
+    if (isOperationActive()) {
+        setMessage("Another launcher operation is already in progress.", "info")
+        return
+    }
+
     try {
+        Map initialStatus = getDlsFileStatus()
+        if (!(initialStatus.available as Boolean)) {
+            throw new RuntimeException("Hubitat File Manager could not be read.")
+        }
+        if (!(initialStatus.exists as Boolean)) {
+            setMessage("Dashboard Layout Studio has already been removed.", "info")
+            return
+        }
+
+        startOperation("remove", "Preparing to remove the DLS HTML file…")
+        runIn(1, "performRemoveDls", [overwrite: true])
+        log.info "Scheduled Dashboard Layout Studio removal."
+    } catch (Exception exception) {
+        log.error "Unable to start Dashboard Layout Studio removal: ${exception}"
+        clearOperation()
+        setMessage("Removal failed to start: ${exception.message ?: 'Unknown error'}", "error")
+    }
+}
+
+
+def performRemoveDls() {
+    String operationToken = (state.operationToken ?: "") as String
+    if (!operationMatches("remove", operationToken)) {
+        return
+    }
+
+    try {
+        updateOperation("remove", operationToken, "Deleting the DLS HTML file from Hubitat File Manager…")
+
         Map initialStatus = getDlsFileStatus()
         if (!(initialStatus.available as Boolean)) {
             throw new RuntimeException("Hubitat File Manager could not be read.")
@@ -247,6 +351,7 @@ private void removeDls() {
             deleteHubFile(DLS_FILE_NAME)
         }
 
+        updateOperation("remove", operationToken, "The delete request completed. Verifying removal…")
         Map finalStatus = getDlsFileStatus()
         if (!(finalStatus.available as Boolean)) {
             throw new RuntimeException("Hubitat File Manager could not be read after removal.")
@@ -255,12 +360,45 @@ private void removeDls() {
             throw new RuntimeException("The file is still present in Hubitat File Manager.")
         }
 
-        setMessage("Dashboard Layout Studio was removed.", "success")
+        finishOperation(operationToken, "Dashboard Layout Studio was removed.", "success")
         log.info "Removed ${DLS_FILE_NAME} from Hubitat File Manager."
     } catch (Exception exception) {
         log.error "Dashboard Layout Studio removal failed: ${exception}"
-        setMessage("Removal failed: ${exception.message ?: exception.class.simpleName}", "error")
+        finishOperation(operationToken, "Removal failed: ${exception.message ?: 'Unknown error'}", "error")
     }
+}
+
+
+private Integer readAsyncStatus(response) {
+    Integer status = null
+
+    try {
+        status = response?.status as Integer
+    } catch (Exception ignored) {
+        // Try the documented accessor below.
+    }
+
+    if (status == null) {
+        try {
+            status = response?.getStatus() as Integer
+        } catch (Exception ignored) {
+            // Leave the status unknown.
+        }
+    }
+
+    return status
+}
+
+
+private String readAsyncError(response) {
+    try {
+        if (response?.hasError()) {
+            return (response?.getErrorMessage() ?: "Request failed") as String
+        }
+    } catch (Exception ignored) {
+        // No additional error detail is available.
+    }
+    return ""
 }
 
 
@@ -284,9 +422,6 @@ private String responseBodyAsText(Object data) {
         return null
     }
 
-    // Hubitat may expose a text response as a String, Reader-like object, or
-    // stream-like object depending on platform/parser behavior. Avoid explicit
-    // Reader class references because Hubitat's sandbox rejects them.
     try {
         String textValue = data.text as String
         if (textValue != null) {
@@ -302,7 +437,7 @@ private String responseBodyAsText(Object data) {
             return textValue
         }
     } catch (Exception ignored) {
-        // Fall back to toString only for objects that already represent text.
+        // Fall back to a normal string representation.
     }
 
     String fallback = data.toString()
@@ -329,6 +464,71 @@ private void validateDownloadedHtml(String html) {
 }
 
 
+private String startOperation(String operation, String message) {
+    String operationToken = now().toString()
+    state.operation = operation
+    state.operationToken = operationToken
+    state.operationStartedAt = now()
+    state.operationMessage = message
+    return operationToken
+}
+
+
+private void updateOperation(String operation, String operationToken, String message) {
+    if (operationMatches(operation, operationToken)) {
+        state.operationMessage = message
+    }
+}
+
+
+private void finishOperation(String operationToken, String message, String type) {
+    if (operationToken && operationToken != (state.operationToken ?: "") as String) {
+        return
+    }
+    clearOperation()
+    setMessage(message, type)
+}
+
+
+private Boolean operationMatches(String operation, String operationToken) {
+    return operationToken &&
+        operation == (state.operation ?: "") as String &&
+        operationToken == (state.operationToken ?: "") as String
+}
+
+
+private Boolean isOperationActive(String requestedOperation = null) {
+    String currentOperation = (state.operation ?: "") as String
+    if (!currentOperation) {
+        return false
+    }
+    return requestedOperation == null || currentOperation == requestedOperation
+}
+
+
+private void recoverStaleOperation() {
+    String currentOperation = (state.operation ?: "") as String
+    if (!currentOperation) {
+        return
+    }
+
+    Long startedAt = state.operationStartedAt ? (state.operationStartedAt as Long) : 0L
+    if (startedAt > 0L && (now() - startedAt) > OPERATION_TIMEOUT_MS) {
+        String label = currentOperation == "remove" ? "Removal" : "Installation"
+        clearOperation()
+        setMessage("${label} timed out before completion. Check the Hubitat log for details and try again.", "error")
+    }
+}
+
+
+private void clearOperation() {
+    state.remove("operation")
+    state.remove("operationToken")
+    state.remove("operationStartedAt")
+    state.remove("operationMessage")
+}
+
+
 private void setMessage(String message, String type) {
     state.lastMessage = message
     state.lastMessageType = type
@@ -344,9 +544,6 @@ private void clearMessage() {
 private String launcherStyles() {
     return """
         <style>
-            /* Keep the launcher compact and readable regardless of the active
-               Hubitat theme. All custom copy is placed on a light surface with
-               an explicit dark foreground. */
             .dls-copy,
             .dls-copy *,
             .dls-status-card,
@@ -361,105 +558,153 @@ private String launcherStyles() {
                 text-shadow:none !important;
             }
 
+            .mdl-grid {
+                padding-top:2px !important;
+                padding-bottom:2px !important;
+            }
+            .mdl-cell {
+                margin-top:2px !important;
+                margin-bottom:2px !important;
+            }
             .mdl-card {
                 min-height:0 !important;
-                margin-bottom:8px !important;
+                margin-bottom:2px !important;
             }
             .mdl-card__title {
                 min-height:0 !important;
-                padding-top:8px !important;
-                padding-bottom:4px !important;
+                padding-top:5px !important;
+                padding-bottom:3px !important;
             }
             .mdl-card__supporting-text {
-                padding-top:7px !important;
-                padding-bottom:7px !important;
+                padding-top:4px !important;
+                padding-bottom:4px !important;
             }
             .mdl-card__supporting-text > p {
-                margin-top:3px !important;
-                margin-bottom:3px !important;
+                margin:0 !important;
+            }
+
+            .dls-copy,
+            .dls-status-card,
+            .dls-message-card,
+            .dls-warning-card,
+            .dls-progress {
+                box-sizing:border-box;
+                margin:0 0 4px !important;
+            }
+            .dls-copy:last-child,
+            .dls-status-card:last-child,
+            .dls-message-card:last-child,
+            .dls-warning-card:last-child,
+            .dls-progress:last-child {
+                margin-bottom:0 !important;
             }
 
             .dls-copy {
-                margin:0 !important;
-                padding:8px 10px;
+                padding:6px 8px;
                 border:1px solid #d7dde5;
                 border-radius:5px;
                 background:#f8fafc;
                 color:#1f2937 !important;
-                font-size:13px;
-                line-height:1.38;
+                font-size:12.5px;
+                line-height:1.32;
             }
 
-            /* Hubitat adds generous paragraph and section spacing. Tighten only
-               the generated areas used by this launcher. */
-            .mdl-card__supporting-text p:has(.dls-copy),
-            .mdl-card__supporting-text p:has(.dls-status-card),
-            .mdl-card__supporting-text p:has(.dls-message-card),
-            .mdl-card__supporting-text p:has(.dls-warning-card),
-            .mdl-card__supporting-text p:has(.dls-progress),
-            .mdl-card__supporting-text p:has(.dls-launch-wrap) {
-                margin-top:0 !important;
-                margin-bottom:0 !important;
+            .mdl-card:has(.dls-launch-wrap),
+            .mdl-card:has(a[href*="removeDlsPage"]),
+            .mdl-cell:has(.dls-launch-wrap),
+            .mdl-cell:has(a[href*="removeDlsPage"]) {
+                width:auto !important;
+                min-height:0 !important;
+                margin:2px 4px 2px 0 !important;
+                padding:0 !important;
+                display:inline-block !important;
+                vertical-align:top !important;
+                background:transparent !important;
+                box-shadow:none !important;
             }
-            .dls-launch-wrap { margin:0 !important; padding:2px 0 !important; }
+            .mdl-card__supporting-text:has(.dls-launch-wrap),
+            .mdl-card__supporting-text:has(a[href*="removeDlsPage"]) {
+                width:auto !important;
+                margin:0 !important;
+                padding:0 !important;
+            }
+            .dls-launch-wrap {
+                margin:0 !important;
+                padding:0 !important;
+            }
 
-            /* Hubitat themes apply foreground colors to generated controls and
-               nested spans. Force a readable button label everywhere. */
             a.dls-launch-button,
             a.dls-launch-button:link,
             a.dls-launch-button:visited,
             a.dls-launch-button:hover,
             a.dls-launch-button:active,
             a.dls-launch-button *,
-            .dls-remove-button,
-            .dls-remove-button *,
+            a[href*="removeDlsPage"],
+            a[href*="removeDlsPage"] *,
             [name*="installDlsButton"],
-            [name*="installDlsButton"] *,
             [id*="installDlsButton"],
-            [id*="installDlsButton"] *,
             [name*="confirmRemoveDlsButton"],
-            [name*="confirmRemoveDlsButton"] *,
-            [id*="confirmRemoveDlsButton"],
-            [id*="confirmRemoveDlsButton"] *,
-            [name*="removeDlsLink"],
-            [name*="removeDlsLink"] *,
-            [id*="removeDlsLink"],
-            [id*="removeDlsLink"] *,
-            [href*="removeDlsPage"],
-            [href*="removeDlsPage"] * {
+            [id*="confirmRemoveDlsButton"] {
                 color:#ffffff !important;
                 -webkit-text-fill-color:#ffffff !important;
                 text-shadow:none !important;
             }
 
-            a.dls-launch-button {
-                display:inline-flex !important;
-                align-items:center !important;
-                justify-content:center !important;
+            input[name*="installDlsButton"],
+            input[id*="installDlsButton"],
+            input[name*="confirmRemoveDlsButton"],
+            input[id*="confirmRemoveDlsButton"],
+            button[name*="installDlsButton"],
+            button[id*="installDlsButton"],
+            button[name*="confirmRemoveDlsButton"],
+            button[id*="confirmRemoveDlsButton"] {
                 box-sizing:border-box !important;
-                min-height:34px !important;
-                padding:0 14px !important;
-                font-size:13px !important;
-                line-height:1 !important;
+                min-height:32px !important;
+                padding:0 12px !important;
+                border-radius:5px !important;
+                font-size:12.5px !important;
+                font-weight:600 !important;
+                line-height:32px !important;
                 text-align:center !important;
                 vertical-align:middle !important;
+                cursor:pointer !important;
+                box-shadow:0 1px 3px rgba(0,0,0,.22);
             }
 
-            .dls-remove-button {
+            a.dls-launch-button,
+            a[href*="removeDlsPage"] {
                 display:inline-flex !important;
                 align-items:center !important;
                 justify-content:center !important;
                 box-sizing:border-box !important;
-                min-height:34px !important;
+                width:auto !important;
+                min-height:32px !important;
+                margin:0 !important;
                 padding:0 12px !important;
+                border-radius:5px !important;
+                font-size:12.5px !important;
+                font-weight:600 !important;
                 line-height:1 !important;
                 text-align:center !important;
+                text-decoration:none !important;
+                vertical-align:middle !important;
+                box-shadow:0 1px 3px rgba(0,0,0,.22);
+            }
+            a.dls-launch-button {
+                background:#1976d2 !important;
+            }
+            a[href*="removeDlsPage"] {
+                background:#b71c1c !important;
+            }
+            a[href*="removeDlsPage"] .preference-description,
+            a[href*="removeDlsPage"] .description,
+            a[href*="removeDlsPage"] small {
+                display:none !important;
             }
 
             .dls-progress {
-                display:none;
-                margin:5px 0 6px !important;
-                padding:9px 10px;
+                display:block;
+                padding:7px 8px;
                 border-left:4px solid #1976d2;
                 border-radius:4px;
                 background:#e3f2fd;
@@ -471,20 +716,21 @@ private String launcherStyles() {
                 background:#ffebee;
                 color:#4a1717 !important;
             }
-            .dls-progress.dls-visible { display:block; }
             .dls-progress-head {
                 display:flex;
                 align-items:center;
-                gap:8px;
+                gap:7px;
                 font-weight:700;
                 color:#0d47a1 !important;
             }
-            .dls-remove-progress .dls-progress-head { color:#8e1111 !important; }
+            .dls-remove-progress .dls-progress-head {
+                color:#8e1111 !important;
+            }
             .dls-progress-spinner {
-                width:16px;
-                height:16px;
-                flex:0 0 16px;
-                border:3px solid rgba(25,118,210,.24);
+                width:14px;
+                height:14px;
+                flex:0 0 14px;
+                border:2px solid rgba(25,118,210,.24);
                 border-top-color:#1976d2;
                 border-radius:50%;
                 animation:dlsActionSpin .75s linear infinite;
@@ -494,19 +740,21 @@ private String launcherStyles() {
                 border-top-color:#b71c1c;
             }
             .dls-progress-text {
-                margin-top:5px;
-                font-size:12.5px;
-                line-height:1.35;
+                margin-top:3px;
+                font-size:12px;
+                line-height:1.28;
             }
             .dls-progress-track {
                 position:relative;
-                height:6px;
-                margin-top:7px;
+                height:5px;
+                margin-top:5px;
                 overflow:hidden;
                 border-radius:999px;
                 background:rgba(25,118,210,.17);
             }
-            .dls-remove-progress .dls-progress-track { background:rgba(183,28,28,.14); }
+            .dls-remove-progress .dls-progress-track {
+                background:rgba(183,28,28,.14);
+            }
             .dls-progress-track::after {
                 content:"";
                 position:absolute;
@@ -517,117 +765,47 @@ private String launcherStyles() {
                 background:#1976d2;
                 animation:dlsActionSweep 1.25s ease-in-out infinite;
             }
-            .dls-remove-progress .dls-progress-track::after { background:#b71c1c; }
-            .dls-progress-elapsed {
-                margin-top:5px;
-                color:#34536f !important;
-                font-size:11.5px;
+            .dls-remove-progress .dls-progress-track::after {
+                background:#b71c1c;
             }
-            .dls-remove-progress .dls-progress-elapsed { color:#6f3333 !important; }
-            .dls-action-running,
-            .dls-action-running * { cursor:progress !important; }
-            .dls-busy-control { opacity:.78 !important; }
+            .dls-progress-elapsed {
+                margin-top:3px;
+                color:#34536f !important;
+                font-size:11px;
+            }
+            .dls-remove-progress .dls-progress-elapsed {
+                color:#6f3333 !important;
+            }
 
-            @keyframes dlsActionSpin { to { transform:rotate(360deg); } }
+            @keyframes dlsActionSpin {
+                to { transform:rotate(360deg); }
+            }
             @keyframes dlsActionSweep {
                 0% { left:-42%; }
                 100% { left:104%; }
             }
         </style>
-        <script>
-            (function(){
-                "use strict";
-                var activeAction = "";
-                var startedAt = 0;
-                var timer = null;
-
-                function actionForControl(node) {
-                    var current = node;
-                    while (current && current !== document) {
-                        if (current.getAttribute) {
-                            var name = current.getAttribute("name") || "";
-                            var id = current.getAttribute("id") || "";
-                            var key = name + " " + id;
-                            if (key.indexOf("installDlsButton") >= 0) return "install";
-                            if (key.indexOf("confirmRemoveDlsButton") >= 0) return "remove";
-                        }
-                        current = current.parentNode;
-                    }
-                    return "";
-                }
-
-                function updateElapsed() {
-                    if (!activeAction || !startedAt) return;
-                    var elapsed = document.getElementById("dls-" + activeAction + "-elapsed");
-                    if (!elapsed) return;
-                    var seconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
-                    var verb = activeAction === "remove" ? "Removal" : "Installation";
-                    elapsed.textContent = verb + " in progress — " + seconds + " second" + (seconds === 1 ? "" : "s") + " elapsed.";
-                }
-
-                function markControlBusy(action) {
-                    var token = action === "remove" ? "confirmRemoveDlsButton" : "installDlsButton";
-                    var controls = document.querySelectorAll('[name*="' + token + '"], [id*="' + token + '"]');
-                    for (var i = 0; i < controls.length; i++) {
-                        controls[i].setAttribute("aria-busy", "true");
-                        controls[i].classList.add("dls-busy-control");
-                    }
-                }
-
-                function showProgress(action) {
-                    if (!action || activeAction) return;
-                    activeAction = action;
-                    startedAt = Date.now();
-                    var panel = document.getElementById("dls-" + action + "-progress");
-                    if (panel) panel.classList.add("dls-visible");
-                    document.body.classList.add("dls-action-running");
-                    markControlBusy(action);
-                    updateElapsed();
-                    timer = window.setInterval(updateElapsed, 1000);
-                }
-
-                /* Use the normal bubbling phase. Hubitat's own button handler
-                   runs first at the control, so visual feedback cannot consume
-                   or cancel the first click. Do not disable pointer events. */
-                document.addEventListener("click", function(event){
-                    var action = actionForControl(event.target);
-                    if (action) showProgress(action);
-                }, false);
-            })();
-        </script>
     """
 }
 
 
-private String installationProgressPanel() {
+private String operationProgressPanel(String operation) {
+    Boolean removing = operation == "remove"
+    String title = removing ? "Removing Dashboard Layout Studio" : "Installing Dashboard Layout Studio"
+    String message = (state.operationMessage ?: (removing ? "Removal is in progress…" : "Installation is in progress…")) as String
+    Long startedAt = state.operationStartedAt ? (state.operationStartedAt as Long) : now()
+    Long elapsedSeconds = Math.max(0L, (now() - startedAt).intdiv(1000L))
+    String elapsedLabel = "${removing ? 'Removal' : 'Installation'} in progress — ${elapsedSeconds} second${elapsedSeconds == 1L ? '' : 's'} elapsed."
+
     return """
-        <div id="dls-install-progress" class="dls-progress dls-install-progress" role="status" aria-live="polite">
+        <div class="dls-progress ${removing ? 'dls-remove-progress' : 'dls-install-progress'}" role="status" aria-live="polite">
             <div class="dls-progress-head">
                 <span class="dls-progress-spinner" aria-hidden="true"></span>
-                <span>Installing Dashboard Layout Studio</span>
+                <span>${title}</span>
             </div>
-            <div class="dls-progress-text">
-                Downloading, validating, saving, and verifying the stable release. Keep this page open until installation completes.
-            </div>
+            <div class="dls-progress-text">${escapeHtml(message)}</div>
             <div class="dls-progress-track" aria-hidden="true"></div>
-            <div id="dls-install-elapsed" class="dls-progress-elapsed">Installation in progress.</div>
-        </div>
-    """
-}
-
-
-private String removalProgressPanel() {
-    return """
-        <div id="dls-remove-progress" class="dls-progress dls-remove-progress" role="status" aria-live="polite">
-            <div class="dls-progress-head">
-                <span class="dls-progress-spinner" aria-hidden="true"></span>
-                <span>Removing Dashboard Layout Studio</span>
-            </div>
-            <div class="dls-progress-text">
-                Deleting the DLS HTML file and verifying that it was removed from Hubitat File Manager.
-            </div>
-            <div class="dls-progress-track" aria-hidden="true"></div>
-            <div id="dls-remove-elapsed" class="dls-progress-elapsed">Removal in progress.</div>
+            <div class="dls-progress-elapsed">${elapsedLabel}</div>
         </div>
     """
 }
@@ -635,28 +813,14 @@ private String removalProgressPanel() {
 
 private String launchButton() {
     return """
-        <div class="dls-launch-wrap" style="text-align:center;">
+        <div class="dls-launch-wrap">
             <a class="dls-launch-button"
                href="${DLS_LOCAL_PATH}"
                target="_blank"
-               rel="noopener"
-               style="background:#1976d2; color:#ffffff !important;
-                      -webkit-text-fill-color:#ffffff !important; text-decoration:none; border-radius:5px;
-                      font-weight:600; box-shadow:0 2px 4px rgba(0,0,0,.22);">
+               rel="noopener">
                 Launch Dashboard Layout Studio
             </a>
         </div>
-    """
-}
-
-
-private String removeLinkTitle() {
-    return """
-        <span class="dls-remove-button" style="background:#b71c1c;
-                     color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;
-                     border-radius:5px; font-weight:600; font-size:13px;">
-            Remove Dashboard Layout Studio
-        </span>
     """
 }
 
@@ -671,9 +835,10 @@ private String statusCard(Boolean installed, Boolean available) {
             : "${DLS_FILE_NAME} is not present in Hubitat File Manager.")
 
     return """
-        <div class="dls-status-card" style="border-left:4px solid ${color}; background:#f5f5f5; color:#263238 !important; padding:9px 11px; border-radius:4px;">
-            <div style="font-size:17px; font-weight:600; color:${color} !important;">${status}</div>
-            <div style="margin-top:2px; color:#263238 !important; font-size:13px; line-height:1.35;">${detail}</div>
+        <div class="dls-status-card" style="border-left:4px solid ${color}; background:#f5f5f5; color:#263238 !important; padding:7px 9px; border-radius:4px;">
+            <div style="font-size:16px; font-weight:600; color:${color} !important;">${status}</div>
+            <div style="margin-top:1px; color:#263238 !important; font-size:12.5px; line-height:1.3;">${detail}</div>
+            <div style="margin-top:2px; color:#546e7a !important; font-size:11px; line-height:1.2;">Launcher ${APP_VERSION} · build ${APP_BUILD}</div>
         </div>
     """
 }
@@ -681,7 +846,7 @@ private String statusCard(Boolean installed, Boolean available) {
 
 private String warningCard(String message) {
     return """
-        <div class="dls-warning-card" style="border-left:4px solid #b71c1c; background:#ffebee; color:#3e2723 !important; padding:9px 11px; border-radius:4px; line-height:1.38;">
+        <div class="dls-warning-card" style="border-left:4px solid #b71c1c; background:#ffebee; color:#3e2723 !important; padding:7px 9px; border-radius:4px; line-height:1.32;">
             <strong style="color:#7f1d1d !important;">Confirm removal</strong><br>${message}
         </div>
     """
@@ -697,7 +862,7 @@ private String messageCard(String message, String type) {
 
     Map<String, String> style = styles[type] ?: styles.info
     return """
-        <div class="dls-message-card" style="border-left:4px solid ${style.border}; background:${style.background}; color:${style.text} !important; padding:9px 11px; border-radius:4px; line-height:1.38;">
+        <div class="dls-message-card" style="border-left:4px solid ${style.border}; background:${style.background}; color:${style.text} !important; padding:7px 9px; border-radius:4px; line-height:1.32;">
             ${escapeHtml(message)}
         </div>
     """
