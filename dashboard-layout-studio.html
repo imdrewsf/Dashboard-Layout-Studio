@@ -1071,7 +1071,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.425">1.2.425</span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.2.441">1.2.441</span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1122,8 +1122,8 @@
         </div>
         <input type="file" id="fileInput" accept=".json,application/json" style="display:none" />
         <div class="btn-row connect-row">
-          <button class="btn primary" id="btnDiscover">Connect To Hub</button>
-          <button class="btn gear" id="btnHubSettings" title="Hub connection settings" aria-label="Hub connection settings" aria-expanded="false">
+          <button class="btn primary busy" id="btnDiscover" disabled title="Dashboard Layout Studio is starting up.">Starting up…</button>
+          <button class="btn gear" id="btnHubSettings" disabled title="Dashboard Layout Studio is starting up." aria-label="Hub connection settings" aria-expanded="false">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
           </button>
         </div>
@@ -1145,7 +1145,7 @@
     <div class="sect" id="selSection" style="display:none">
       <div class="slabel collapsible" data-target="bodySel">Selection<span class="chev">▾</span></div>
       <div class="sect-body" id="bodySel">
-        <div class="sel-card" id="selCard"><p class="hint">Selected tiles appear here, grouped by cluster. Ctrl-click tiles on the map to build a multi-tile selection.</p></div>
+        <div class="sel-card" id="selCard"><p class="hint">Selected tiles appear here, grouped by cluster. Ctrl-click adds tiles; Ctrl+Alt-click adds whole clusters.</p></div>
       </div>
     </div>
   </aside>
@@ -1445,6 +1445,7 @@
 <div class="k">Click a tile</div><div class="v">Selects the tile at that cell. Repeated clicks on the same overlapped cell cycle through the stack.</div>
 <div class="k">Ctrl/Cmd-click tile</div><div class="v">Adds or removes a tile from the current tile selection. On overlapped stacks, repeated Ctrl/Cmd-clicks cycle through layers.</div>
 <div class="k">Alt-click tile</div><div class="v">Selects the connected tile cluster at that cell.</div>
+<div class="k">Ctrl/Cmd+Alt-click tile</div><div class="v">Adds the connected tile cluster at that cell to the current tile selection.</div>
 <div class="k">Double-click tile/grid cell</div><div class="v">Selects the connected tile cluster at that cell.</div>
 </div><h5>Selecting areas, rows, and columns</h5><div class="help-grid">
 <div class="k">Drag on grid</div><div class="v">Creates a rectangular selection. The Selection mode option determines which crossing tiles are included.</div>
@@ -2103,8 +2104,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v425";
-const APP_VERSION = "1.2.425";
+const BUILD = "v441";
+const APP_VERSION = "1.2.441";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -2114,6 +2115,7 @@ const BETA_MANUAL_DOWNLOAD_URL = "https://github.com/imdrewsf/Dashboard-Layout-S
 const UPDATE_RELEASE_MODE_STABLE = "stable";
 const UPDATE_RELEASE_MODE_BETA = "beta";
 let PendingUpdate = null;
+let DLSStartupPending = true;
 
 const State = {
   conn:{ip:"",appId:"",token:"",mode:"disconnected"},
@@ -7594,8 +7596,9 @@ function onGridClick(e){
   State.stackInfo=cell;
   if(!stack.length){ if(!(e.ctrlKey||e.metaKey)) { clearTileSel(); State.stackCycle={key:null,idx:0}; } render(); return; }
   const topDown=stackOrder(stack).reverse();
-  // Alt-click: select the whole cluster at this point
-  if(e.altKey){ selectGroupAt(cell.row,cell.col); return; }
+  // Alt-click selects the whole cluster. Ctrl/Cmd+Alt-click adds that
+  // cluster to the existing tile selection instead of replacing it.
+  if(e.altKey){ selectGroupAt(cell.row,cell.col,!!(e.ctrlKey||e.metaKey)); return; }
   // Ctrl/Cmd-click: add/remove a tile from a multi-tile selection. On overlapping
   // stacks, repeated ctrl-clicks on the same cell walk DOWN the layers (top→bottom)
   // so you can reach and toggle buried tiles, mirroring plain-click cycling.
@@ -7626,9 +7629,15 @@ function selectAllTiles(){
     status(`Selected all ${State.tiles.length} tiles.`);
   }
 }
-function selectGroupAt(row,col){
+function selectGroupAt(row,col,additive=false){
   clearConflictHighlight();
   const ids=clusterIdsAt(row,col); if(!ids.length) return;
+  if(additive){
+    const existing=(State.sel.type==="tile"||State.sel.type==="rect")?[...State.sel.ids]:[];
+    selectTileIds([...new Set([...existing,...ids])]);
+    render();
+    return;
+  }
   State.sel={type:"tile",ids,lines:[],rect:null};
   updateActionButtons(); render();
 }
@@ -7832,7 +7841,7 @@ function renderSelCard(){
   const isTileSel=(State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.length;
   if(!isTileSel&&!effectiveIds){
     if(sec) sec.style.display = State.active ? "block" : "none";
-    card.innerHTML=`<p class="hint">Selected tiles appear here, grouped by cluster. Ctrl-click tiles on the map to build a multi-tile selection.</p>`;
+    card.innerHTML=`<p class="hint">Selected tiles appear here, grouped by cluster. Ctrl-click adds tiles; Ctrl+Alt-click adds whole clusters.</p>`;
     return;
   }
   if(sec) sec.style.display="block";
@@ -12924,6 +12933,21 @@ function hubParamFieldsMatchConnection(){
 function resetConnectButton(){
   const connect=document.getElementById("btnDiscover");
   const gear=document.getElementById("btnHubSettings");
+  if(DLSStartupPending){
+    if(connect){
+      connect.classList.remove("hub-connected","hover-reconnect");
+      connect.classList.add("busy");
+      connect.disabled=true;
+      connect.textContent="Starting up…";
+      connect.title="Dashboard Layout Studio is restoring settings and preparing the hub connection.";
+    }
+    if(gear){
+      gear.disabled=true;
+      gear.title="Hub connection settings will be available after startup completes.";
+    }
+    setHubParamFieldsDisabled(true);
+    return;
+  }
   if(connect){
     connect.classList.remove("busy","hub-connected","hover-reconnect");
     connect.disabled=!State.hubAvailable;
@@ -12941,7 +12965,7 @@ function setConnectProgress(label){
   const gear=document.getElementById("btnHubSettings");
   if(label) status(`Hub connection: ${label}`, true);
   if(connect){
-    connect.textContent="Connect To Hub";
+    connect.textContent=label||"Connecting…";
     connect.disabled=true;
     connect.classList.remove("hub-connected","hover-reconnect");
     connect.classList.add("busy");
@@ -16674,16 +16698,24 @@ Install the current stable release now, or keep the current installed version un
     return "";
   });
 
-  // auto-connect on load if the saved preference is set and we have connection details.
-  // Progress is shown on the Connect To Hub button rather than in the status bar.
+  // Finish startup only after settings, hub-host detection, and optional app/token
+  // discovery have completed. This prevents an early click from racing initialization.
+  let autoConnectStarted=false;
   if(State.hubAvailable && savedConn && savedConn.autoConnect){
     const ip=document.getElementById("hubIp").value.trim();
     const appId=document.getElementById("appId").value.trim();
     const token=document.getElementById("token").value.trim();
     if(ip && appId && token){
       State.conn.ip=ip; State.conn.appId=appId; State.conn.token=token;
+      DLSStartupPending=false;
+      setConnectProgress("Connecting…");
+      autoConnectStarted=true;
       setTimeout(()=>Hub.discover(), 300);
     }
+  }
+  if(!autoConnectStarted){
+    DLSStartupPending=false;
+    resetConnectButton();
   }
 }
 // ── Toolbar row width balancing ─────────────────────────────────────────────────────────────────────────
