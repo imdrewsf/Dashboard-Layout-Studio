@@ -142,6 +142,12 @@
   .jump-btn:hover:not(:disabled) .jump-menu-chev{background:rgba(103,232,249,.20);border-color:rgba(103,232,249,.58);color:#fff;}
   .jump-btn .jump-menu-chev.hidden{display:none;}
   #dashboardLaunchMenu{min-width:210px;}
+  #cssPasteMenu{min-width:190px;}
+  .launch-toolbar-btn{border-color:rgba(103,232,249,.28);background:rgba(103,232,249,.06);min-width:92px;}
+  .launch-toolbar-btn:hover:not(:disabled){border-color:rgba(103,232,249,.48);background:rgba(103,232,249,.13);}
+  #dashboardLaunchLabel{display:inline-block;min-width:42px;text-align:left;}
+  #dashboardLaunchLabel:empty::before{content:"Launch";}
+  #btnCssClipboard.css-paste-mode{border-color:rgba(103,232,249,.48);background:rgba(103,232,249,.11);}
   .topbar .spacer{flex:1;}
   .conn-dot{width:8px;height:8px;border-radius:50%;background:var(--faint);}
   .conn-dot.live{background:var(--ok);box-shadow:0 0 9px rgba(52,211,153,.7);}
@@ -1126,26 +1132,13 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.3.432">1.3.432</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.442">1.4.442</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
       <span class="side-toggle-arrow" id="sideToggleArrow" aria-hidden="true">‹</span>
     </button>
     <span class="crumb" id="crumb">No dashboard loaded</span>
-    <button class="jump-btn" id="btnOpenDashboard" disabled title="Load a hub dashboard before opening it" aria-label="Open dashboard in new window">
-      <svg class="jump-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 3h7v7"></path>
-        <path d="M10 14 21 3"></path>
-        <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"></path>
-      </svg>
-      <span class="jump-label hidden" id="dashboardLaunchLabel">Preview</span>
-      <span class="jump-menu-chev hidden" id="dashboardLaunchChev" aria-hidden="true">▾</span>
-    </button>
-    <div class="holdmenu hidden" id="dashboardLaunchMenu">
-      <button class="hm-item" id="dashboardLaunchPreview">Open Preview</button>
-      <button class="hm-item" id="dashboardLaunchSaved">Open Saved Dashboard</button>
-    </div>
     <span class="orphan-ind" id="orphanInd" style="display:none" title="Review orphaned CSS">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
       <span class="oi-txt">CSS Status</span>
@@ -1183,8 +1176,8 @@
         </div>
         <input type="file" id="fileInput" accept=".json,application/json" style="display:none" />
         <div class="btn-row connect-row">
-          <button class="btn primary" id="btnDiscover">Connect To Hub</button>
-          <button class="btn gear" id="btnHubSettings" title="Hub connection settings" aria-label="Hub connection settings" aria-expanded="false">
+          <button class="btn primary busy" id="btnDiscover" disabled title="Dashboard Layout Studio is starting up.">Starting up…</button>
+          <button class="btn gear" id="btnHubSettings" disabled title="Dashboard Layout Studio is starting up." aria-label="Hub connection settings" aria-expanded="false">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
           </button>
         </div>
@@ -1206,7 +1199,7 @@
     <div class="sect" id="selSection" style="display:none">
       <div class="slabel collapsible" data-target="bodySel">Selection<span class="chev">▾</span></div>
       <div class="sect-body" id="bodySel">
-        <div class="sel-card" id="selCard"><p class="hint">Selected tiles appear here, grouped by cluster. Ctrl-click tiles on the map to build a multi-tile selection.</p></div>
+        <div class="sel-card" id="selCard"><p class="hint">Selected tiles appear here, grouped by cluster. Ctrl-click adds tiles; Ctrl+Alt-click adds whole clusters.</p></div>
       </div>
     </div>
   </aside>
@@ -1255,8 +1248,20 @@
             </div>
           </div>
           <span class="toolbar-divider" aria-hidden="true"></span>
+          <div class="holdwrap">
+            <button class="tool hb" id="btnCssClipboard" disabled title="Copy tile-scoped CSS from the single selected tile">
+              <svg id="cssClipboardIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 012-2h10"/><path d="M12 12h4M14 10v4"/></svg><span id="cssClipboardLabel">Copy CSS</span><span class="hb-chev hidden" id="cssClipboardChev" aria-hidden="true">▾</span>
+            </button>
+            <div class="holdmenu hidden" id="cssPasteMenu">
+              <button class="hm-item" id="cssPastePreserve">Paste - Preserve</button>
+              <button class="hm-item" id="cssPasteOverwrite">Paste - Overwrite</button>
+              <button class="hm-item" id="cssPasteReplace">Paste - Replace All</button>
+              <button class="hm-item" id="cssPasteAdd">Paste - Add All</button>
+            </div>
+          </div>
+          <span class="toolbar-divider" aria-hidden="true"></span>
           <button class="tool" id="btnSetTileSize" disabled title="Resize selected tiles to an exact height and width">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 4v16M16 4v16M4 8h16M4 16h16"/></svg>Resize
+            <svg id="tileSizeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 4v16M16 4v16M4 8h16M4 16h16"/></svg><span id="tileSizeBtnLabel">Resize</span>
           </button>
         </div>
         <div class="tgroup">
@@ -1349,6 +1354,16 @@
         </div>
         <div class="tgroup save-actions">
           <button class="tool" id="btnJson" disabled title="View layout JSON"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H6a2 2 0 00-2 2v4a2 2 0 01-2 2 2 2 0 012 2v4a2 2 0 002 2h2M16 3h2a2 2 0 012 2v4a2 2 0 002 2 2 2 0 00-2 2v4a2 2 0 01-2 2h-2"/></svg>JSON</button>
+          <span class="toolbar-divider" aria-hidden="true"></span>
+          <div class="holdwrap">
+            <button class="tool hb launch-toolbar-btn" id="btnOpenDashboard" disabled title="Load a hub dashboard before opening it" aria-label="Open dashboard in new window">
+              <svg class="jump-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg><span id="dashboardLaunchLabel">Launch</span><span class="hb-chev hidden" id="dashboardLaunchChev" aria-hidden="true">▾</span>
+            </button>
+            <div class="holdmenu hidden" id="dashboardLaunchMenu">
+              <button class="hm-item" id="dashboardLaunchPreview">Preview Changes</button>
+              <button class="hm-item" id="dashboardLaunchSaved">Launch Saved</button>
+            </div>
+          </div>
           <span class="toolbar-divider" aria-hidden="true"></span>
           <div class="holdwrap">
             <button class="tool hb menu-only active" id="btnSave" disabled title="Save options: save to hub, download as file, or copy to clipboard" style="border-color:var(--border)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Save<span class="hb-chev" id="saveChev" aria-hidden="true">▾</span></button>
@@ -1495,7 +1510,7 @@
 <div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual layout editor for existing Hubitat Dashboard v1 layouts. It can rearrange, resize, duplicate, remove, and reassign existing tiles, and it can change supported presentation details through custom CSS. It does not replace the Hubitat dashboard and tile configuration interface.</p><div class="help-callout"><b>Use the Hubitat interface for source creation:</b> Create dashboards, create original tiles, choose templates, and configure template-specific properties in the native Hubitat dashboard editor. Reload the dashboard in Dashboard Layout Studio afterward to continue arranging it.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>It cannot add a completely new original tile from Hubitat's template list. Additional tiles can be created only by copying or duplicating an existing tile and then changing its supported assignment or layout settings.</li><li>It cannot change an existing tile from one Hubitat template to another.</li></ul><h5>Template-property limits</h5><ul><li>The graphical editor does not change template-specific properties such as custom icons, background images, background settings, or other properties that are not exposed through the layout operations or achievable with CSS.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
-<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><p><b>Dashboard launch shortcut:</b> For a clean hub-loaded layout, the shortcut beside the dashboard name opens the saved dashboard immediately. When unsaved changes exist, it becomes a down-arrow menu with choices to open a temporary preview of the unsaved working layout or open the dashboard currently saved on the hub. The shortcut is disabled for offline layouts.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
+<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><p><b>Dashboard launch shortcut:</b> Before a dashboard is loaded, the disabled button reads Launch. For an unchanged hub-loaded dashboard, Launch opens the saved dashboard immediately without a menu arrow. When unsaved changes exist, it changes to Preview with a down-arrow menu offering Preview Changes or Launch Saved. The button remains disabled for offline layouts.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
 <div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
 <div class="k">Hub Connection Settings (Gear Icon)</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
 <div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
@@ -1513,6 +1528,7 @@
 <div class="k">Click a tile</div><div class="v">Selects the tile at that cell. Repeated clicks on the same overlapped cell cycle through the stack.</div>
 <div class="k">Ctrl/Cmd-click tile</div><div class="v">Adds or removes a tile from the current tile selection. On overlapped stacks, repeated Ctrl/Cmd-clicks cycle through layers.</div>
 <div class="k">Alt-click tile</div><div class="v">Selects the connected tile cluster at that cell.</div>
+<div class="k">Ctrl/Cmd+Alt-click tile</div><div class="v">Adds the connected tile cluster at that cell to the current tile selection.</div>
 <div class="k">Double-click tile/grid cell</div><div class="v">Selects the connected tile cluster at that cell.</div>
 </div><h5>Selecting areas, rows, and columns</h5><div class="help-grid">
 <div class="k">Drag on grid</div><div class="v">Creates a rectangular selection. The Selection mode option determines which crossing tiles are included.</div>
@@ -1543,6 +1559,7 @@
 <div class="k">Cut / Copy / Paste</div><div class="v">Uses an internal tile buffer. Cut keeps tiles visible until the first paste, which behaves as a move; later pastes create copies.</div>
 </div></article><article class="help-page" data-help-title="Layout and editor controls"><div class="help-page-kicker">Toolbar Buttons</div><h4>Layout and editor controls</h4><h5>Layout sizing and spacing actions</h5><div class="help-grid">
 <div class="k">Trim</div><div class="v">Whole-layout action that removes blank space above and/or left of the current layout. Hold the button for top-only or left-only choices.</div>
+<div class="k">Copy CSS / Paste CSS</div><div class="v">Select exactly one tile and click Copy CSS to capture its tile-scoped editable and imported CSS. The button changes to Paste CSS and Resize changes to Cancel. While CSS paste mode is active, all other controls are disabled, but tiles can still be selected. Select one or more other destination tiles; pasted selectors are retargeted separately to every destination. Paste - Preserve keeps existing conflicting declarations, Paste - Overwrite lets pasted declarations replace local conflicts, Paste - Replace All removes all editable CSS scoped to each destination before pasting, and Paste - Add All appends every pasted rule even when conflicts or duplicates result. Choose a paste mode to complete the operation, or click Cancel to return to Copy CSS. Imported destination rules remain read-only.</div>
 <div class="k">Resize</div><div class="v">Selection-action button that sets selected tiles to an exact height and width. Options can preserve spacing between resized tiles and/or push the surrounding layout out of the way. When Overlaps is set to push, or Shift is held, the Resize button glows and the dialog opens with Preserve spacing between resized tiles and Push layout to make room enabled.</div>
 <div class="k">Spacing</div><div class="v">Opens a dialog with all spacing actions: Set all, Set rows only, Set columns only, Unstack and Set All, Inc/Dec all, Inc/Dec rows only, and Inc/Dec columns only.</div>
 <div class="k">Enl/Rdc</div><div class="v">Opens the Enlarge / Reduce dialog for enlarging or reducing the entire layout by row and column amounts. Positive rows/columns enlarge tiles; negative rows/columns reduce them. This is equivalent to selecting all tiles and dragging the lower-right resize handle.</div>
@@ -2271,8 +2288,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v432";
-const APP_VERSION = "1.3.432";
+const BUILD = "v442";
+const APP_VERSION = "1.4.442";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -2282,6 +2299,7 @@ const BETA_MANUAL_DOWNLOAD_URL = "https://github.com/imdrewsf/Dashboard-Layout-S
 const UPDATE_RELEASE_MODE_STABLE = "stable";
 const UPDATE_RELEASE_MODE_BETA = "beta";
 let PendingUpdate = null;
+let DLSStartupPending = true;
 const TEMP_DASHBOARD_NAME = "DLS Temporary Dashboard";
 const TEMP_SIMPLE_CSS_JSON_FILENAME = "DLS_Temporary_Dashboard.json";
 const TEMP_SIMPLE_CSS_CSS_FILENAME = "DLS_Temporary_Dashboard.css";
@@ -2369,6 +2387,7 @@ const State = {
   pendingRemoval:null,           // {removedIds, commitFn, preview} during CSS-review
   buffer:null,                   // {tiles:[full snapshots], css, sourceId, mode:'cut'|'copy', cutIds:Set}
   bufferUsed:false,              // whether the current (cut) buffer has been pasted once
+  cssClipboard:null,             // {sourceId,css,hasExternal}: tile-scoped CSS awaiting paste to other selected tiles
 };
 
 function clearConflictHighlight(redraw=false){
@@ -5924,6 +5943,7 @@ function finishAdopt(meta){
     State.buffer=null; State.bufferUsed=false;
   }
   State.active=meta;
+  State.cssClipboard=null;
   State.tileSnapshotBlockedUntilReload=false;
   State.tileSnapshotsStaleReason="";
   clearSelection(); State.pending=null; State.stackInfo=null;
@@ -6879,6 +6899,123 @@ function retargetTileCssReferences(css,tileId){
     return out;
   }
   return {css:rec(String(css||"")),changed};
+}
+
+function cssClipboardDestinationIds(){
+  if(!State.cssClipboard) return [];
+  const sourceId=Number(State.cssClipboard.sourceId);
+  return currentSelectionTileIds().map(Number).filter(id=>id!==sourceId);
+}
+function joinCssSections(){
+  return [...arguments].map(x=>String(x||"").trim()).filter(Boolean).join("\n\n");
+}
+function cssDeclarationKeys(css){
+  const data=collectCssDeclarationProblemData(String(css||""));
+  const keys=new Set();
+  for(const d of data.decls||[]) for(const key of d.keys||[]) keys.add(key);
+  return keys;
+}
+function filterCssDeclarationsByKeys(css,keys,removeMatching=true){
+  keys=keys instanceof Set?keys:new Set(keys||[]);
+  function rec(text,atPath=[]){
+    const out=[];
+    for(const node of parseCssNodes(String(text||""))){
+      if(node.kind==="stmt"){
+        if(node.text.trim()) out.push(node);
+        continue;
+      }
+      const pre=String(node.prelude||"").trim();
+      if(!pre) continue;
+      if(pre.startsWith("@")){
+        const inner=rec(node.body||"",[...atPath,pre]).replace(/\s+$/g,"");
+        if(inner) out.push(new CssBlock(pre,inner));
+        continue;
+      }
+      const selectors=splitSelectorList(pre).map(x=>x.trim()).filter(Boolean);
+      for(const selector of selectors){
+        const kept=[];
+        for(const part of splitCssDeclarationsForProblems(node.body||"")){
+          const d=parseCssDeclarationForProblems(part);
+          if(!d){ kept.push(cssBodyPartOutputText(part)); continue; }
+          const hit=keys.has(cssProblemContextKey(atPath,selector,d.prop));
+          if(removeMatching?!hit:hit) kept.push(cssBodyPartOutputText(part));
+        }
+        const body=kept.map(x=>String(x||"").trim()).filter(Boolean).join("\n");
+        if(body) out.push(new CssBlock(selector,body));
+      }
+    }
+    return out.length?renderCssNodes(out):"";
+  }
+  return normalizeTileInfoCssText(rec(String(css||"")));
+}
+function cancelCssPasteMode(message=""){
+  if(!State.cssClipboard) return;
+  State.cssClipboard=null;
+  document.getElementById("cssPasteMenu")?.classList.add("hidden");
+  updateActionButtons();
+  if(message) status(message);
+}
+function beginCopyTileCss(){
+  const ids=currentSelectionTileIds().map(Number);
+  if(ids.length!==1){ toast("Select exactly one tile to copy CSS from.","err"); return; }
+  const sourceId=ids[0];
+  const external=extractTileScopedCssForEditor(externalCssRulesText(),sourceId);
+  const local=extractTileScopedCssForEditor(State.customCSS||"",sourceId);
+  const css=joinCssSections(external,local);
+  if(!css){ toast(`Tile #${sourceId} has no tile-scoped CSS to copy.`,"err"); return; }
+  State.cssClipboard={sourceId,css,hasExternal:!!external};
+  updateActionButtons();
+  status(`Copied CSS from Tile #${sourceId}. Select one or more destination tiles, choose a Paste CSS mode, or click Cancel.`);
+}
+function applyCssClipboardPaste(mode){
+  if(!State.cssClipboard){ toast("Copy CSS from one tile first.","err"); return; }
+  const sourceId=Number(State.cssClipboard.sourceId);
+  const destinations=cssClipboardDestinationIds();
+  if(!destinations.length){ toast("Select one or more destination tiles other than the copied tile.","err"); return; }
+  const modeLabels={preserve:"Paste - Preserve",overwrite:"Paste - Overwrite",replace:"Paste - Replace All",add:"Paste - Add All"};
+  const historySnapshot=snapshot();
+  let css=String(State.customCSS||"");
+  let importedRemain=0;
+  for(const destId of destinations){
+    const pasted=normalizeTileInfoCssText(retargetTileCssReferences(State.cssClipboard.css,destId).css);
+    const existingLocal=extractTileScopedCssForEditor(css,destId);
+    const existingExternal=extractTileScopedCssForEditor(externalCssRulesText(),destId);
+    let replacement="";
+    if(mode==="preserve"){
+      const effectiveKeys=cssDeclarationKeys(joinCssSections(existingExternal,existingLocal));
+      const filtered=filterCssDeclarationsByKeys(pasted,effectiveKeys,true);
+      replacement=joinCssSections(existingLocal,filtered);
+      css=replaceTileScopedCssPreserveSource(css,destId,replacement);
+    }else if(mode==="overwrite"){
+      const pastedKeys=cssDeclarationKeys(pasted);
+      const filteredExisting=filterCssDeclarationsByKeys(existingLocal,pastedKeys,true);
+      replacement=joinCssSections(filteredExisting,pasted);
+      css=replaceTileScopedCssPreserveSource(css,destId,replacement);
+    }else if(mode==="replace"){
+      css=replaceTileScopedCssPreserveSource(css,destId,pasted);
+    }else if(mode==="add"){
+      const add=pasted.trim();
+      if(add) css=css.replace(/\s+$/g,"")+(css.trim()?"\n\n":"")+add+"\n";
+    }else{
+      toast("Unknown CSS paste mode.","err"); return;
+    }
+    if(existingExternal) importedRemain++;
+  }
+  State.customCSS=css;
+  pushHistorySnapshot(historySnapshot);
+  if(State.baseDoc) State.baseDoc.customCSS=State.customCSS;
+  if(State.active&&State.active._layout) State.active._layout.customCSS=State.customCSS;
+  State.zMap=parseCssZ(currentCssForCascade());
+  State.tileSnapshotBlockedUntilReload=false;
+  markRenderedSnapshotsStale(`CSS pasted from Tile #${sourceId}`,{message:false});
+  refreshExternalCssImports({force:true});
+  State.cssClipboard=null;
+  document.getElementById("cssPasteMenu")?.classList.add("hidden");
+  updateActionButtons();
+  render();
+  const externalNote=importedRemain?` ${importedRemain} destination tile${importedRemain===1?" has":"s have"} read-only imported CSS that remains active.`:"";
+  status(`${modeLabels[mode]} applied CSS from Tile #${sourceId} to ${destinations.length} tile${destinations.length===1?"":"s"}. An Undo checkpoint was created.${externalNote}`);
+  toast(`CSS pasted to ${destinations.length} tile${destinations.length===1?"":"s"}.`,"ok");
 }
 
 function extractTileScopedCssForEditor(css,tileId){
@@ -9275,8 +9412,9 @@ function onGridClick(e){
   State.stackInfo=cell;
   if(!stack.length){ if(!(e.ctrlKey||e.metaKey)) { clearTileSel(); State.stackCycle={key:null,idx:0}; } render(); return; }
   const topDown=stackOrder(stack).reverse();
-  // Alt-click: select the whole cluster at this point
-  if(e.altKey){ selectGroupAt(cell.row,cell.col); return; }
+  // Alt-click selects the whole cluster. Ctrl/Cmd+Alt-click adds that
+  // cluster to the existing tile selection instead of replacing it.
+  if(e.altKey){ selectGroupAt(cell.row,cell.col,!!(e.ctrlKey||e.metaKey)); return; }
   // Ctrl/Cmd-click: add/remove a tile from a multi-tile selection. On overlapping
   // stacks, repeated ctrl-clicks on the same cell walk DOWN the layers (top→bottom)
   // so you can reach and toggle buried tiles, mirroring plain-click cycling.
@@ -9307,9 +9445,15 @@ function selectAllTiles(){
     status(`Selected all ${State.tiles.length} tiles.`);
   }
 }
-function selectGroupAt(row,col){
+function selectGroupAt(row,col,additive=false){
   clearConflictHighlight();
   const ids=clusterIdsAt(row,col); if(!ids.length) return;
+  if(additive){
+    const existing=(State.sel.type==="tile"||State.sel.type==="rect")?[...State.sel.ids]:[];
+    selectTileIds([...new Set([...existing,...ids])]);
+    render();
+    return;
+  }
   State.sel={type:"tile",ids,lines:[],rect:null};
   updateActionButtons(); render();
 }
@@ -9513,7 +9657,7 @@ function renderSelCard(){
   const isTileSel=(State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.length;
   if(!isTileSel&&!effectiveIds){
     if(sec) sec.style.display = State.active ? "block" : "none";
-    card.innerHTML=`<p class="hint">Selected tiles appear here, grouped by cluster. Ctrl-click tiles on the map to build a multi-tile selection.</p>`;
+    card.innerHTML=`<p class="hint">Selected tiles appear here, grouped by cluster. Ctrl-click adds tiles; Ctrl+Alt-click adds whole clusters.</p>`;
     return;
   }
   if(sec) sec.style.display="block";
@@ -9878,7 +10022,7 @@ function syncPushAvailability(){
   const btnMove=document.getElementById("btnMoveTo"); if(btnMove) btnMove.classList.toggle("push-mode",pushActive&&movePushOk&&!btnMove.disabled);
   const btnCopy=document.getElementById("btnCopyTo"); if(btnCopy) btnCopy.classList.toggle("push-mode",pushActive&&copyPushOk&&!btnCopy.disabled);
   const btnPaste=document.getElementById("btnPasteBuf"); if(btnPaste) btnPaste.classList.toggle("push-mode",pushActive&&pastePushOk&&!btnPaste.disabled);
-  const btnResize=document.getElementById("btnSetTileSize"); if(btnResize) btnResize.classList.toggle("push-mode",pushActive&&currentSelectionTileIds().length>0&&!btnResize.disabled);
+  const btnResize=document.getElementById("btnSetTileSize"); if(btnResize) btnResize.classList.toggle("push-mode",!State.cssClipboard&&pushActive&&currentSelectionTileIds().length>0&&!btnResize.disabled);
   if(pushActive && !document.getElementById("sizeModal")?.classList.contains("hidden")){
     const keepBox=document.getElementById("tileSizeKeepSpacing"), pushBox=document.getElementById("tileSizePushLayout");
     if(pushBox) pushBox.checked=true;
@@ -9904,8 +10048,35 @@ function releasePendingUiLockIfNeeded(){
   const dz=document.getElementById("dropZone");
   if(dz){ dz.classList.remove("disabled"); dz.setAttribute("aria-disabled","false"); }
 }
+function releaseCssPasteUiLockIfNeeded(){
+  if(State.cssClipboard) return;
+  const controls=document.querySelectorAll("#toolbar button,#toolbar select,#toolbar input,#topbar button,.topbar button,.side button");
+  controls.forEach(el=>{
+    if(el.dataset.cssPasteLocked==="1"){
+      if(el.dataset.cssPasteWasDisabled==="1") el.disabled=true;
+      else if(el.dataset.cssPasteWasDisabled==="0") el.disabled=false;
+    }
+    delete el.dataset.cssPasteLocked;
+    delete el.dataset.cssPasteWasDisabled;
+  });
+}
+function applyCssPasteUiLock(){
+  if(!State.cssClipboard){ releaseCssPasteUiLockIfNeeded(); return; }
+  const allowed=new Set([
+    "btnCssClipboard","btnSetTileSize",
+    "cssPastePreserve","cssPasteOverwrite","cssPasteReplace","cssPasteAdd"
+  ]);
+  const controls=document.querySelectorAll("#toolbar button,#toolbar select,#toolbar input,#topbar button,.topbar button,.side button");
+  controls.forEach(el=>{
+    if(allowed.has(el.id)) return;
+    if(el.dataset.cssPasteLocked!=="1") el.dataset.cssPasteWasDisabled=el.disabled?"1":"0";
+    el.dataset.cssPasteLocked="1";
+    el.disabled=true;
+  });
+}
 function updateActionButtons(){
   releasePendingUiLockIfNeeded();
+  releaseCssPasteUiLockIfNeeded();
   const s=State.sel;
   const lineSel=s.type==="line"&&s.lines.length>0&&!State.pending;
   const anySel=lineSel||(s.type==="rect"&&s.ids.length>0)||(s.type==="tile"&&s.ids.length>0);
@@ -9965,7 +10136,44 @@ function updateActionButtons(){
     infoTileItem.disabled=selectedTileCount===0||!!State.pending;
     infoTileItem.title=selectedTileCount===0?"Select a tile to view Tile Information.":"Show information for the selected tile.";
   }
-  const bSize=document.getElementById("btnSetTileSize"); if(bSize) bSize.disabled=selectedTileCount===0||!!State.pending;
+  const cssBtn=document.getElementById("btnCssClipboard");
+  if(State.cssClipboard&&!State.tiles.some(t=>Number(t.id)===Number(State.cssClipboard.sourceId))) State.cssClipboard=null;
+  if(cssBtn){
+    const pasteMode=!!State.cssClipboard;
+    const destCount=pasteMode?cssClipboardDestinationIds().length:0;
+    cssBtn.disabled=!!State.pending || (!pasteMode && selectedTileCount!==1);
+    cssBtn.classList.toggle("css-paste-mode",pasteMode);
+    cssBtn.classList.toggle("menu-only",pasteMode);
+    const cssLabel=document.getElementById("cssClipboardLabel");
+    const cssChev=document.getElementById("cssClipboardChev");
+    if(cssLabel) cssLabel.textContent=pasteMode?"Paste CSS":"Copy CSS";
+    if(cssChev) cssChev.classList.toggle("hidden",!pasteMode);
+    cssBtn.title=pasteMode
+      ? (destCount?`Paste CSS copied from Tile #${State.cssClipboard.sourceId} to ${destCount} selected destination tile${destCount===1?"":"s"}.`:`Select one or more destination tiles other than Tile #${State.cssClipboard.sourceId}.`)
+      : (selectedTileCount===1?"Copy tile-scoped CSS from the selected tile":"Select exactly one tile to copy CSS from");
+    ["cssPastePreserve","cssPasteOverwrite","cssPasteReplace","cssPasteAdd"].forEach(id=>{
+      const item=document.getElementById(id); if(item) item.disabled=!pasteMode||destCount===0||!!State.pending;
+    });
+  }
+  const bSize=document.getElementById("btnSetTileSize");
+  if(bSize){
+    const cssPasteMode=!!State.cssClipboard;
+    const sizeLabel=document.getElementById("tileSizeBtnLabel");
+    const sizeIcon=document.getElementById("tileSizeIcon");
+    if(cssPasteMode){
+      bSize.disabled=false;
+      bSize.classList.add("danger");
+      bSize.title="Cancel CSS paste mode";
+      if(sizeLabel) sizeLabel.textContent="Cancel";
+      if(sizeIcon) sizeIcon.innerHTML='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+    }else{
+      bSize.disabled=selectedTileCount===0||!!State.pending;
+      bSize.classList.remove("danger");
+      bSize.title="Resize selected tiles to an exact height and width";
+      if(sizeLabel) sizeLabel.textContent="Resize";
+      if(sizeIcon) sizeIcon.innerHTML='<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 4v16M16 4v16M4 8h16M4 16h16"/>';
+    }
+  }
   document.querySelector('.tool[data-action="cut"]').disabled=!anySel||State.pending;
   document.querySelector('.tool[data-action="copybuf"]').disabled=!anySel||State.pending;
   const isPastePending=State.pending&&State.pending.action==="pasteBuf";
@@ -10000,6 +10208,7 @@ function updateActionButtons(){
   updateGridControls();
   updateSaveHubState();
   applyPendingUiLock();
+  applyCssPasteUiLock();
 }
 function applyPendingUiLock(){
   const pending=!!State.pending;
@@ -14449,6 +14658,7 @@ function resetOfflineWorkspaceForHubConnect(){
   State.pendingRemoval=null;
   State.buffer=null;
   State.bufferUsed=false;
+  State.cssClipboard=null;
   resetDeviceNames();
   const empty=document.getElementById("emptyStage");
   const frame=document.getElementById("mapFrame");
@@ -14606,12 +14816,13 @@ function updateDashboardJumpState(){
   const online=State.conn.mode==="live"&&!!State.active&&!!url;
   const offline=State.conn.mode==="offline"&&!!State.active;
   const dirty=online&&hasUnsavedChanges();
-  b.style.display=State.active?"inline-flex":"none";
+  b.style.display="inline-flex";
   b.disabled=!online;
-  b.classList.toggle("dropdown",dirty);
+  b.classList.toggle("menu-only",dirty);
+  b.classList.toggle("active",dirty);
   b.setAttribute("aria-haspopup",dirty?"menu":"false");
   b.setAttribute("aria-expanded",dirty&&menu&&!menu.classList.contains("hidden")?"true":"false");
-  if(label) label.classList.toggle("hidden",!dirty);
+  if(label) label.textContent=dirty?"Preview":"Launch";
   if(chev) chev.classList.toggle("hidden",!dirty);
   if(!dirty&&menu) menu.classList.add("hidden");
   if(previewItem){
@@ -14629,13 +14840,13 @@ function updateDashboardJumpState(){
     b.title="Load a hub dashboard before opening it.";
     b.setAttribute("aria-label",b.title);
   }else if(!online){
-    b.title="Open in new window is available only for a hub-loaded dashboard with an active connection.";
+    b.title="Launch is available only for a hub-loaded dashboard with an active connection.";
     b.setAttribute("aria-label",b.title);
   }else if(dirty){
     b.title="Choose whether to open a preview of the unsaved layout or the dashboard currently saved on the hub.";
     b.setAttribute("aria-label","Preview options for unsaved dashboard changes");
   }else{
-    b.title="Open the current dashboard in a new window.";
+    b.title="Launch the current dashboard in a new window.";
     b.setAttribute("aria-label",b.title);
   }
 }
@@ -14804,6 +15015,21 @@ function hubParamFieldsMatchConnection(){
 function resetConnectButton(){
   const connect=document.getElementById("btnDiscover");
   const gear=document.getElementById("btnHubSettings");
+  if(DLSStartupPending){
+    if(connect){
+      connect.classList.remove("hub-connected","hover-reconnect");
+      connect.classList.add("busy");
+      connect.disabled=true;
+      connect.textContent="Starting up…";
+      connect.title="Dashboard Layout Studio is restoring settings and preparing the hub connection.";
+    }
+    if(gear){
+      gear.disabled=true;
+      gear.title="Hub connection settings will be available after startup completes.";
+    }
+    setHubParamFieldsDisabled(true);
+    return;
+  }
   if(connect){
     connect.classList.remove("busy","hub-connected","hover-reconnect");
     connect.disabled=!State.hubAvailable;
@@ -14821,7 +15047,7 @@ function setConnectProgress(label){
   const gear=document.getElementById("btnHubSettings");
   if(label) status(`Hub connection: ${label}`, true);
   if(connect){
-    connect.textContent="Connect To Hub";
+    connect.textContent=label||"Connecting…";
     connect.disabled=true;
     connect.classList.remove("hub-connected","hover-reconnect");
     connect.classList.add("busy");
@@ -17742,6 +17968,7 @@ function wireUpdateModal(){
 
 async function wire(){
   const savedConn=restoreConn();
+  updateDashboardJumpState();
   updateUndoControls();
   const tempPreviewPref=document.getElementById("prefUseTemporaryDashboard");
   if(tempPreviewPref) tempPreviewPref.checked=!!State.useTemporaryDashboard;
@@ -18296,7 +18523,28 @@ Install the current stable release now, or keep the current installed version un
   document.getElementById("layoutScaleCols")?.addEventListener("keydown",e=>{ if(e.key==="Enter") applyLayoutScale(); });
   updateSpacingControls();
 
-  document.getElementById("btnSetTileSize").addEventListener("click",openTileSizeModal);
+  document.getElementById("btnCssClipboard")?.addEventListener("click",e=>{
+    const btn=e.currentTarget;
+    if(btn.disabled) return;
+    e.preventDefault(); e.stopPropagation();
+    if(!State.cssClipboard){ beginCopyTileCss(); return; }
+    const menu=document.getElementById("cssPasteMenu");
+    if(!menu) return;
+    if(menu.classList.contains("hidden")) showHoldMenu(btn,menu,"left");
+    else menu.classList.add("hidden");
+  });
+  document.getElementById("cssPastePreserve")?.addEventListener("click",()=>applyCssClipboardPaste("preserve"));
+  document.getElementById("cssPasteOverwrite")?.addEventListener("click",()=>applyCssClipboardPaste("overwrite"));
+  document.getElementById("cssPasteReplace")?.addEventListener("click",()=>applyCssClipboardPaste("replace"));
+  document.getElementById("cssPasteAdd")?.addEventListener("click",()=>applyCssClipboardPaste("add"));
+
+  document.getElementById("btnSetTileSize").addEventListener("click",()=>{
+    if(State.cssClipboard){
+      cancelCssPasteMode("CSS paste cancelled. Copy CSS is ready for a new source tile.");
+      return;
+    }
+    openTileSizeModal();
+  });
   document.getElementById("tileSizeCancel").addEventListener("click",closeTileSizeModal);
   document.getElementById("tileSizeApply").addEventListener("click",()=>applySelectedTileSize());
   document.getElementById("tileSizePushLayout")?.addEventListener("change",updateTileSizeOptionState);
@@ -18501,6 +18749,7 @@ Install the current stable release now, or keep the current installed version un
       syncPushAvailability(); render(); return;
     }
     if(e.key==="Escape"&&State.pending){ e.preventDefault(); cancelPending(); return; }
+    if(e.key==="Escape"&&State.cssClipboard){ e.preventDefault(); cancelCssPasteMode("CSS paste cancelled. Copy CSS is ready for a new source tile."); return; }
     if(e.key==="Escape"&&modalOpen){ e.preventDefault(); cancelTopModalWithEscape(); return; }
     if((e.ctrlKey||e.metaKey)&&e.key==="z"){ if(!typing){ e.preventDefault(); undo(); } return; }
     if((e.ctrlKey||e.metaKey)&&(e.key==="y"||(e.shiftKey&&e.key==="z"))){ if(!typing){ e.preventDefault(); redo(); } return; }
@@ -18609,16 +18858,24 @@ Install the current stable release now, or keep the current installed version un
     return "";
   });
 
-  // auto-connect on load if the saved preference is set and we have connection details.
-  // Progress is shown on the Connect To Hub button rather than in the status bar.
+  // Finish startup only after settings, hub-host detection, and optional app/token
+  // discovery have completed. This prevents an early click from racing initialization.
+  let autoConnectStarted=false;
   if(State.hubAvailable && savedConn && savedConn.autoConnect){
     const ip=document.getElementById("hubIp").value.trim();
     const appId=document.getElementById("appId").value.trim();
     const token=document.getElementById("token").value.trim();
     if(ip && appId && token){
       State.conn.ip=ip; State.conn.appId=appId; State.conn.token=token;
+      DLSStartupPending=false;
+      setConnectProgress("Connecting…");
+      autoConnectStarted=true;
       setTimeout(()=>Hub.discover(), 300);
     }
+  }
+  if(!autoConnectStarted){
+    DLSStartupPending=false;
+    resetConnectButton();
   }
 }
 // ── Toolbar row width balancing ─────────────────────────────────────────────────────────────────────────
