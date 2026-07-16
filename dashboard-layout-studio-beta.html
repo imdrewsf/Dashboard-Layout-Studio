@@ -1132,7 +1132,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.442">1.4.442</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.444">1.4.444</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -2288,8 +2288,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v442";
-const APP_VERSION = "1.4.442";
+const BUILD = "v444";
+const APP_VERSION = "1.4.444";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -3225,7 +3225,7 @@ async function captureRenderedSnapshotsForLoadOperation(op){
   checkHubOperationAbort(op);
   const count=await captureHubTileSnapshots({silent:true,timeoutMs:30000,retryCount:1,forcePrimaryDashboard:true,dashboardUrl:State.lastDashUrl});
   const summary=State.tileSnapshotLastSummary||"";
-  hubOperationStep(op,"render","done",count?(summary||`${count} tile${count===1?"":"s"} captured.`):"Rendered View unavailable or no captures were produced.");
+  hubOperationStep(op,"render","done",summary||(count?`${count} tile${count===1?"":"s"} captured.`:"Rendered View unavailable or no captures were produced."));
   return count;
 }
 async function runHubOperation(title,steps,fn,opts={}){
@@ -4577,7 +4577,33 @@ function tileDisplayMode(){
   return State.tileViewMode || "simple";
 }
 function hasReusableTileSnapshots(){
-  return State.tileSnapshotStatus==="ready" && !!(State.tileSnapshots && Object.keys(State.tileSnapshots).length);
+  return State.tileSnapshotStatus==="ready" && (
+    !(State.tiles&&State.tiles.length) ||
+    !!(State.tileSnapshots && Object.keys(State.tileSnapshots).length)
+  );
+}
+function completeEmptyRenderedViewCapture(opts={}){
+  const summary="Dashboard contains no tiles; Rendered View is empty.";
+  if(State.tileSnapshotCancelToken) State.tileSnapshotCancelToken.cancelled=true;
+  State.tileSnapshots={};
+  State.tileSnapshotStatus="ready";
+  State.tileSnapshotLastError="";
+  State.tileSnapshotsStaleReason="";
+  State.tileSnapshotLastSummary=summary;
+  State.tileSnapshotIconFallbackCount=0;
+  State.tileSnapshotLastDurationMs=0;
+  State.tileSnapshotCapture=null;
+  State.tileSnapshotCancelToken=null;
+  removeSnapshotCaptureFrame();
+  setSnapshotRefreshStatus(summary,false);
+  updateTileDisplayIndicator();
+  if(State.active) render();
+  if(!opts.silent) status(`Rendered View refreshed. ${summary}`);
+  trace("rendered snapshot capture skipped: dashboard contains no tiles",null,"ok");
+  setTimeout(()=>{
+    if(State.tileSnapshotStatus==="ready" && !(State.tiles&&State.tiles.length)) setSnapshotRefreshStatus("",false);
+  },2600);
+  return 0;
 }
 function renderedUnavailableReason(){
   const a=renderedSnapshotAvailability();
@@ -5570,6 +5596,7 @@ async function waitForSnapshotFrameLoad(frame,timeoutMs=8000,token=null){
 async function captureHubTileSnapshots(opts={}){
   if(tileDisplayMode()!=="snapshot") return 0;
   if(!ensureSnapshotModeApplicable({warn:!opts.silent,redraw:true})) return 0;
+  if(!(State.tiles&&State.tiles.length)) return completeEmptyRenderedViewCapture(opts);
   if(!opts.temporaryPrepared && !opts.forcePrimaryDashboard && temporaryDashboardPreviewUsable()){
     const td=temporaryDashboardState();
     if(td.operation) return td.operation;
