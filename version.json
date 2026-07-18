@@ -10,9 +10,9 @@
                    "size":  1041975
                },
     "beta":  {
-                 "version":  "v1.4.444",
+                 "version":  "v1.4.445",
                  "releaseUrl":  "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio-beta.html",
-                 "sha256":  "cbba134876b07e2e872d08ba3e1a2acd77cc7e005fc0f36e22a104120ea03125",
-                 "size":  1179664
+                 "sha256":  "f0b0250b3d13b3a6d62fa0e3f3a5746311926ff55bb69431c57daf95f1710119",
+                 "size":  1196318
              }
 }

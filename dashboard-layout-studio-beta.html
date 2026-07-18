@@ -31,6 +31,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Dashboard Layout Studio</title>
+<script>
+(function(){
+  var theme="dark";
+  try{
+    var direct=localStorage.getItem("dls.theme");
+    if(direct==="light"||direct==="dark") theme=direct;
+    else{
+      var saved=JSON.parse(localStorage.getItem("dls.conn")||"null");
+      if(saved&&(saved.theme==="light"||saved.theme==="dark")) theme=saved.theme;
+    }
+  }catch(_e){}
+  document.documentElement.setAttribute("data-theme",theme);
+})();
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%0A%20%20%3Crect%20width='64'%20height='64'%20rx='12'%20fill='%230b1220'/%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id='g'%20x1='10'%20y1='54'%20x2='54'%20y2='10'%20gradientUnits='userSpaceOnUse'%3E%0A%20%20%20%20%20%20%3Cstop%20stop-color='%2367e8f9'/%3E%0A%20%20%20%20%20%20%3Cstop%20offset='1'%20stop-color='%233aa6c4'/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20x='8'%20y='8'%20width='48'%20height='48'%20rx='11'%20fill='url(%23g)'/%3E%0A%20%20%3Crect%20x='8'%20y='30'%20width='48'%20height='4'%20fill='%230b1220'%20opacity='.85'/%3E%0A%20%20%3Crect%20x='30'%20y='8'%20width='4'%20height='48'%20fill='%230b1220'%20opacity='.85'/%3E%0A%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/png;base64,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" sizes="180x180">
 <meta name="theme-color" content="#0b1220">
@@ -1128,11 +1142,223 @@
     .help-modal,.grid-settings-modal{height:auto;max-height:calc(100dvh - 16px);}
   }
 
+
+
+  /* ============================================================
+     LIGHT INTERFACE THEME
+     The dashboard preview itself is not recolored; these rules only
+     restyle Dashboard Layout Studio's application chrome.
+     ============================================================ */
+  html{color-scheme:dark;}
+  html[data-theme="light"]{
+    color-scheme:light;
+    --bg:#f4f7fb;
+    --panel:rgba(255,255,255,.985);
+    --panel-2:#e8eef6;
+    --border:rgba(15,23,42,.18);
+    --border-2:rgba(15,23,42,.34);
+    --text:#172033;
+    --muted:#475569;
+    --faint:#64748b;
+    --accent:#05758a;
+    --accent-2:#6d28d9;
+    --amber:#b45309;
+    --amber-2:#b45309;
+    --danger:#c62828;
+    --ok:#047857;
+    --violet:#6d28d9;
+    --shadow:0 18px 42px rgba(15,23,42,.18);
+  }
+  html[data-theme="light"] body{
+    background:
+      radial-gradient(1000px 560px at 6% -12%,rgba(8,145,178,.10),transparent 57%),
+      radial-gradient(850px 540px at 100% 110%,rgba(109,40,217,.07),transparent 56%),
+      linear-gradient(170deg,#f7f9fc,#edf2f8);
+  }
+  html[data-theme="light"] .brand,
+  html[data-theme="light"] .topbar,
+  html[data-theme="light"] .side,
+  html[data-theme="light"] .toolbar,
+  html[data-theme="light"] .statusbar,
+  html[data-theme="light"] .bottom-bar{background:rgba(255,255,255,.82);}
+  html[data-theme="light"] .brand .mark{box-shadow:0 2px 9px rgba(5,117,138,.28),inset 0 1px 0 rgba(255,255,255,.8);}
+  html[data-theme="light"] .slabel{background:#e5edf6;color:#334155;border-left-color:rgba(5,117,138,.62);}
+  html[data-theme="light"] .slabel.collapsible:hover{background:#dbe6f1;color:#0f172a;}
+  html[data-theme="light"] .sect-body{border-left-color:rgba(5,117,138,.22);}
+  html[data-theme="light"] .icon-btn,
+  html[data-theme="light"] .btn,
+  html[data-theme="light"] .modesel,
+  html[data-theme="light"] .info-nav,
+  html[data-theme="light"] .info-icon-btn,
+  html[data-theme="light"] .grid-view-btn{background:#f8fafc;color:#334155;border-color:var(--border);}
+  html[data-theme="light"] .icon-btn:hover,
+  html[data-theme="light"] .btn:hover:not(:disabled),
+  html[data-theme="light"] .info-nav:hover,
+  html[data-theme="light"] .info-icon-btn:hover,
+  html[data-theme="light"] .grid-view-btn:hover:not(:disabled){background:#e5edf6;color:#0f172a;border-color:var(--border-2);}
+  html[data-theme="light"] .btn.primary{background:linear-gradient(135deg,#67e8f9,#46b6cf);color:#06222b;border-color:transparent;}
+  html[data-theme="light"] .btn.primary:disabled{background:#e5eaf1;color:#64748b;border-color:#cbd5e1;}
+  html[data-theme="light"] .btn.primary.busy:disabled{background:linear-gradient(135deg,#67e8f9,#46b6cf,#67e8f9);color:#06222b;border-color:transparent;}
+  html[data-theme="light"] .btn.primary.hub-connected{background:linear-gradient(135deg,#34d399,#10b981);color:#042014;}
+  html[data-theme="light"] .tool{color:#263449;}
+  html[data-theme="light"] .tool:hover:not(:disabled){background:#e6edf5;color:#0f172a;border-color:#cbd5e1;}
+  html[data-theme="light"] .tool.active{background:#dde7f1;color:#0f172a;border-color:rgba(5,117,138,.48);box-shadow:inset 0 0 0 1px rgba(5,117,138,.14);}
+  html[data-theme="light"] .tgroup,
+  html[data-theme="light"] .status-actions{background:rgba(15,23,42,.035);border-color:rgba(15,23,42,.14);}
+  html[data-theme="light"] .toolbar-divider,
+  html[data-theme="light"] .grid-view-divider{background:rgba(15,23,42,.22);}
+  html[data-theme="light"] .tbar-wrap+.tbar-wrap{border-top-color:rgba(15,23,42,.10);}
+  html[data-theme="light"] .tbar-wrap:last-child .toolbar-row{background:rgba(15,23,42,.02);}
+  html[data-theme="light"] .tbar-arrow.left{background:linear-gradient(to right,rgba(244,247,251,.98) 58%,transparent);}
+  html[data-theme="light"] .tbar-arrow.right{background:linear-gradient(to left,rgba(244,247,251,.98) 58%,transparent);}
+  html[data-theme="light"] .input,
+  html[data-theme="light"] input[type="text"],
+  html[data-theme="light"] input[type="number"],
+  html[data-theme="light"] input[type="password"],
+  html[data-theme="light"] select,
+  html[data-theme="light"] textarea,
+  html[data-theme="light"] .info-device-select,
+  html[data-theme="light"] .info-device-input,
+  html[data-theme="light"] .info-template-extra-input,
+  html[data-theme="light"] .info-css-editor,
+  html[data-theme="light"] .device-picked-select,
+  html[data-theme="light"] .json-tile-device-control select,
+  html[data-theme="light"] .json-tile-device-control input{background:#fff;color:#172033;border-color:#c7d2df;}
+  html[data-theme="light"] .input[readonly]{background:#edf2f7;color:#64748b;}
+  html[data-theme="light"] input::placeholder,
+  html[data-theme="light"] textarea::placeholder{color:#7b8798;}
+  html[data-theme="light"] select option{background:#fff;color:#172033;}
+  html[data-theme="light"] select option:disabled{background:#edf2f7;color:#7b8798;}
+  html[data-theme="light"] .dash-item{background:#f8fafc;color:#172033;}
+  html[data-theme="light"] .dash-item:hover{background:#e8eef6;}
+  html[data-theme="light"] .dash-item.active{background:rgba(5,117,138,.10);}
+  html[data-theme="light"] .holdmenu,
+  html[data-theme="light"] .ctxmenu,
+  html[data-theme="light"] .prefs-panel,
+  html[data-theme="light"] .modal,
+  html[data-theme="light"] .trace{background:#fff;border-color:#cbd5e1;box-shadow:var(--shadow);}
+  html[data-theme="light"] .holdmenu .hm-item,
+  html[data-theme="light"] .ctxmenu .ci{color:#172033;}
+  html[data-theme="light"] .holdmenu .hm-item:hover:not(:disabled),
+  html[data-theme="light"] .ctxmenu .ci:hover{background:#e8eef6;}
+  html[data-theme="light"] .holdmenu .hm-sep,
+  html[data-theme="light"] .ctxmenu .sep{background:#d7e0ea;}
+  html[data-theme="light"] .modal-back{background:rgba(15,23,42,.30);}
+  html[data-theme="light"] .modal-head,
+  html[data-theme="light"] .modal-foot,
+  html[data-theme="light"] .trace-head{border-color:#d6dee8;}
+  html[data-theme="light"] .stack-card,
+  html[data-theme="light"] .sel-group,
+  html[data-theme="light"] .stack-row,
+  html[data-theme="light"] .css-cleanup-section,
+  html[data-theme="light"] .css-cleanup-card,
+  html[data-theme="light"] .css-cleanup-count{background:#f8fafc;border-color:#d1dbe6;}
+  html[data-theme="light"] .sel-group .sg-head{background:#e8eef6;}
+  html[data-theme="light"] .sel-row:hover,
+  html[data-theme="light"] .stack-row:hover{background:#e8eef6;}
+  html[data-theme="light"] .stack-row.active{background:linear-gradient(135deg,rgba(5,117,138,.10),rgba(109,40,217,.08));border-color:#334155;}
+  html[data-theme="light"] .gridmap{
+    background-color:#fff;
+    background-image:
+      linear-gradient(rgba(51,65,85,.12) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(51,65,85,.12) 1px,transparent 1px);
+  }
+  html[data-theme="light"] .hcell:hover{color:#045d70;background:rgba(5,117,138,.12);}
+  html[data-theme="light"] .hcell.hcell-hover{background:rgba(15,23,42,.16);color:#0f172a;}
+  html[data-theme="light"] .hover-band{background:rgba(5,117,138,.07);border-color:rgba(5,117,138,.30);}
+  html[data-theme="light"] .band{background:rgba(5,117,138,.08);border-color:rgba(5,117,138,.55);}
+  html[data-theme="light"] .tile{color:#172033;border-color:rgba(15,23,42,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.58);}
+  html[data-theme="light"] .tile.c-switch{background:linear-gradient(145deg,rgba(8,145,178,.30),rgba(8,145,178,.13));}
+  html[data-theme="light"] .tile.c-dim{background:linear-gradient(145deg,rgba(217,119,6,.32),rgba(217,119,6,.13));}
+  html[data-theme="light"] .tile.c-mode{background:linear-gradient(145deg,rgba(109,40,217,.26),rgba(109,40,217,.11));}
+  html[data-theme="light"] .tile.c-sensor{background:linear-gradient(145deg,rgba(220,38,38,.25),rgba(220,38,38,.10));}
+  html[data-theme="light"] .tile.c-text{background:linear-gradient(145deg,rgba(100,116,139,.20),rgba(100,116,139,.07));}
+  html[data-theme="light"] .tile.c-button{background:linear-gradient(145deg,rgba(5,150,105,.26),rgba(5,150,105,.10));}
+  html[data-theme="light"] .tile.c-other{background:linear-gradient(145deg,rgba(71,85,105,.20),rgba(71,85,105,.08));}
+  html[data-theme="light"] .tile.sel{outline-color:#0f172a;box-shadow:0 0 0 3px rgba(15,23,42,.18),0 6px 16px rgba(15,23,42,.22);}
+  html[data-theme="light"] .tile.grouped{outline-color:#05758a;box-shadow:0 0 0 3px rgba(5,117,138,.18);}
+  html[data-theme="light"] .canvas-wrap::-webkit-scrollbar-thumb,
+  html[data-theme="light"] .side::-webkit-scrollbar-thumb{background:#b8c4d2;}
+  html[data-theme="light"] .empty-stage .ei{background:rgba(255,255,255,.55);}
+  html[data-theme="light"] .bottom-bar,
+  html[data-theme="light"] .statusbar{box-shadow:0 -1px 0 rgba(15,23,42,.04);}
+  html[data-theme="light"] .view-mode-btn{color:#356b78;}
+  html[data-theme="light"] .view-mode-btn:hover:not(:disabled){color:#034f60;text-shadow:none;}
+  html[data-theme="light"] .view-mode-btn.active{color:#0f172a;text-shadow:none;}
+  html[data-theme="light"] .view-mode-sep{color:#94a3b8;}
+  html[data-theme="light"] .grid-view-title,
+  html[data-theme="light"] .grid-zoom-readout,
+  html[data-theme="light"] .view-refresh-status{color:#526376;}
+  html[data-theme="light"] .json-manager-pane,
+  html[data-theme="light"] .json-manager-fixed-top,
+  html[data-theme="light"] .json-manager-fixed-bottom,
+  html[data-theme="light"] #jsonTileDevicesPane .json-manager-scroll,
+  html[data-theme="light"] .device-picked-list,
+  html[data-theme="light"] .device-picked-extracted{background:#f8fafc;border-color:#cbd5e1;}
+  html[data-theme="light"] .json-manager-fixed-top,
+  html[data-theme="light"] .json-manager-fixed-bottom{background:#f3f6fa;}
+  html[data-theme="light"] .json-tile-device-head,
+  html[data-theme="light"] .json-dashboard-device-head{background:#e8eef6;color:#526376;}
+  html[data-theme="light"] .json-dashboard-device-row,
+  html[data-theme="light"] .device-picked-item{background:rgba(15,23,42,.025);}
+  html[data-theme="light"] .json-dashboard-device-row.selected{background:rgba(5,117,138,.08);}
+  html[data-theme="light"] .json-modebar .btn.active{background:#fff;border-bottom-color:#fff;}
+  html[data-theme="light"] .help-tabs{background:#f3f6fa;}
+  html[data-theme="light"] .help-tab:hover{background:#e8eef6;}
+  html[data-theme="light"] .help-tab.active{background:rgba(5,117,138,.09);border-color:rgba(5,117,138,.32);}
+  html[data-theme="light"] .help-page-nav{background:linear-gradient(180deg,#f5f8fb,#e8eef6);box-shadow:0 -8px 22px rgba(15,23,42,.08);}
+  html[data-theme="light"] .help-page-nav .btn{background:rgba(5,117,138,.08);border-color:rgba(5,117,138,.35);}
+  html[data-theme="light"] .help-key{background:#eef2f7;border-color:#cbd5e1;color:#172033;}
+  html[data-theme="light"] .info-css-instructions{background:rgba(5,117,138,.055);border-color:rgba(5,117,138,.28);}
+  html[data-theme="light"] #infoBody pre,
+  html[data-theme="light"] .modal-body pre,
+  html[data-theme="light"] .external-css-pane pre{background:#f3f6fa;color:#334155;border-color:#cbd5e1;}
+  html[data-theme="light"] .external-css-pane,
+  html[data-theme="light"] .info-css-external{background:rgba(217,119,6,.06);}
+  html[data-theme="light"] .hub-op-step{background:#f8fafc;}
+  html[data-theme="light"] .hub-op-step.active{background:rgba(5,117,138,.08);}
+  html[data-theme="light"] .hub-activity-banner{background:#fff;color:#172033;border-color:rgba(5,117,138,.48);box-shadow:0 10px 28px rgba(15,23,42,.18);}
+  html[data-theme="light"] .json-manager-loading{background:rgba(5,117,138,.05);}
+  html[data-theme="light"] .toast{background:#fff;color:#172033;border-color:#cbd5e1;box-shadow:var(--shadow);}
+  html[data-theme="light"] .trace-body{color:#475569;}
+  html[data-theme="light"] .prefs-panel .pp-row select{background:#fff;color:#172033;}
+  html[data-theme="light"] .orphan-ind.cleanup{background:rgba(4,120,87,.09);}
+  html[data-theme="light"] .orphan-ind.warn{background:rgba(180,83,9,.09);}
+  html[data-theme="light"] .orphan-ind.danger{background:rgba(198,40,40,.09);color:#991b1b;}
+  html[data-theme="light"] .conn-dot{box-shadow:0 0 0 1px rgba(15,23,42,.08);}
+  html[data-theme="light"] .grid-dynamic-bound::after{background:#fff7d6;color:#7c4a03;border-color:rgba(180,83,9,.40);}
+  html[data-theme="light"] .coord-readout{background:rgba(255,255,255,.66);border-color:rgba(15,23,42,.14);}
+  html[data-theme="light"] .snap-title{background:rgba(15,23,42,.09);}
+  html[data-theme="light"] .info-icon-btn.ok,
+  html[data-theme="light"] .grid-css-change-list .new{color:#047857;border-color:rgba(4,120,87,.35);}
+  html[data-theme="light"] .info-icon-btn.cancel,
+  html[data-theme="light"] .info-css-error,
+  html[data-theme="light"] .import-device-row.unknown .name,
+  html[data-theme="light"] .import-device-row.unknown .state,
+  html[data-theme="light"] .import-device-status.err,
+  html[data-theme="light"] .json-manager-status.err,
+  html[data-theme="light"] .json-tile-device-row.bad-assignment .json-tile-id,
+  html[data-theme="light"] .json-tile-device-row.bad-assignment .device-note,
+  html[data-theme="light"] .grid-warning-list .danger,
+  html[data-theme="light"] .grid-css-change-list .old,
+  html[data-theme="light"] #updateError,
+  html[data-theme="light"] .external-css-pane span[style*="#fecaca"]{color:#991b1b!important;}
+  html[data-theme="light"] .json-tile-device-row.bad-assignment .json-tile-device-control select{background:#fff5f5;color:#991b1b;border-color:#dc2626;}
+  html[data-theme="light"] .json-css-alt.has-title,
+  html[data-theme="light"] .json-dashboard-device-row.used-unselected .device-id,
+  html[data-theme="light"] .json-dashboard-device-row.used-unselected .device-label,
+  html[data-theme="light"] .json-dashboard-device-row.used-unselected .device-use{color:#92400e;}
+  html[data-theme="light"] .view-refresh-btn{background:#ecfdf5;color:#047857;border-color:#10b981;text-shadow:none;box-shadow:0 0 0 1px rgba(4,120,87,.08);}
+  html[data-theme="light"] .view-refresh-btn:hover:not(:disabled){background:#d1fae5;color:#065f46;border-color:#059669;text-shadow:none;box-shadow:0 0 0 2px rgba(5,150,105,.12);}
+  html[data-theme="light"] .view-refresh-btn.ready{background:#ecfdf5;color:#047857;border-color:#10b981;}
+  html[data-theme="light"] .view-refresh-btn.unavailable{background:#fff1f2;color:#991b1b;border-color:#dc2626;text-shadow:none;box-shadow:0 0 0 1px rgba(220,38,38,.10);}
+  html[data-theme="light"] .view-refresh-btn.busy{background:#eff6ff;color:#075985;border-color:#0284c7;text-shadow:none;box-shadow:0 0 0 1px rgba(2,132,199,.12);}
+
 </style>
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.444">1.4.444</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.445">1.4.445</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1381,6 +1607,11 @@
     </div>
     <div class="prefs-panel hidden" id="prefsPanel">
       <div class="pp-head">Preferences</div>
+      <label class="pp-row"><span>Theme</span>
+        <select id="prefTheme" title="Choose the Dashboard Layout Studio interface theme">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+        </select></label>
       <label class="pp-row"><span>Auto-connect on load</span>
         <input type="checkbox" id="prefAutoConnect" /></label>
       <label class="pp-row"><span>Don't show grid gap</span>
@@ -1507,7 +1738,7 @@
 </div>
 <div class="help-content">
 <section class="help-pane active" id="helpOverview">
-<div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual layout editor for existing Hubitat Dashboard v1 layouts. It can rearrange, resize, duplicate, remove, and reassign existing tiles, and it can change supported presentation details through custom CSS. It does not replace the Hubitat dashboard and tile configuration interface.</p><div class="help-callout"><b>Use the Hubitat interface for source creation:</b> Create dashboards, create original tiles, choose templates, and configure template-specific properties in the native Hubitat dashboard editor. Reload the dashboard in Dashboard Layout Studio afterward to continue arranging it.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>It cannot add a completely new original tile from Hubitat's template list. Additional tiles can be created only by copying or duplicating an existing tile and then changing its supported assignment or layout settings.</li><li>It cannot change an existing tile from one Hubitat template to another.</li></ul><h5>Template-property limits</h5><ul><li>The graphical editor does not change template-specific properties such as custom icons, background images, background settings, or other properties that are not exposed through the layout operations or achievable with CSS.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
+<div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual layout editor for existing Hubitat Dashboard v1 layouts. It can rearrange, resize, duplicate, remove, and reassign existing tiles, and it can change supported presentation details through custom CSS. It does not replace the Hubitat dashboard and tile configuration interface.</p><p><b>Interface theme:</b> Preferences can switch Dashboard Layout Studio between Dark and Light themes. The choice is saved locally and restored before the interface is displayed.</p><div class="help-callout"><b>Use the Hubitat interface for source creation:</b> Create dashboards, create original tiles, choose templates, and configure template-specific properties in the native Hubitat dashboard editor. Reload the dashboard in Dashboard Layout Studio afterward to continue arranging it.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>It cannot add a completely new original tile from Hubitat's template list. Additional tiles can be created only by copying or duplicating an existing tile and then changing its supported assignment or layout settings.</li><li>It cannot change an existing tile from one Hubitat template to another.</li></ul><h5>Template-property limits</h5><ul><li>The graphical editor does not change template-specific properties such as custom icons, background images, background settings, or other properties that are not exposed through the layout operations or achievable with CSS.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
 <div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><p><b>Dashboard launch shortcut:</b> Before a dashboard is loaded, the disabled button reads Launch. For an unchanged hub-loaded dashboard, Launch opens the saved dashboard immediately without a menu arrow. When unsaved changes exist, it changes to Preview with a down-arrow menu offering Preview Changes or Launch Saved. The button remains disabled for offline layouts.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
@@ -2288,8 +2519,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v444";
-const APP_VERSION = "1.4.444";
+const BUILD = "v445";
+const APP_VERSION = "1.4.445";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -2305,8 +2536,24 @@ const TEMP_SIMPLE_CSS_JSON_FILENAME = "DLS_Temporary_Dashboard.json";
 const TEMP_SIMPLE_CSS_CSS_FILENAME = "DLS_Temporary_Dashboard.css";
 const TEMP_SIMPLE_CSS_WARNING_SUPPRESS_KEY = "dls.suppressTemporarySimpleCssPreviewWarning";
 const TILE_CSS_AUTO_RETARGET_KEY = "dls.autoRetargetTileCssPaste";
+const THEME_KEY = "dls.theme";
+function normalizeTheme(value){ return String(value||"").toLowerCase()==="light" ? "light" : "dark"; }
+function applyTheme(value,{persist=true,announce=false}={}){
+  const theme=normalizeTheme(value);
+  State.theme=theme;
+  document.documentElement.setAttribute("data-theme",theme);
+  const pref=document.getElementById("prefTheme");
+  if(pref&&pref.value!==theme) pref.value=theme;
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute("content",theme==="light"?"#f4f7fb":"#0b1220");
+  if(persist){ try{ localStorage.setItem(THEME_KEY,theme); }catch(_e){} }
+  requestAnimationFrame(()=>{ try{ window.balanceToolbarRows?.(); }catch(_e){} });
+  if(announce) status(`${theme==="light"?"Light":"Dark"} interface theme selected.`);
+  return theme;
+}
 
 const State = {
+  theme:normalizeTheme(document.documentElement.getAttribute("data-theme")),
   conn:{ip:"",appId:"",token:"",mode:"disconnected"},
   hubOperation:null,             // active hub load/save/update progress dialog and abort token
   hubAvailable:true,              // true only when live hub fetch/save features are available in this page context
@@ -17444,6 +17691,7 @@ function saveConn(){
       appId:document.getElementById("appId").value.trim(),
       token:document.getElementById("token").value.trim(),
       autoConnect:document.getElementById("prefAutoConnect").checked,
+      theme:normalizeTheme(State.theme),
       tileOpacity:+document.getElementById("prefTileOpacity").value,
       renderedViewEnabled:!!State.renderedViewPreference,
       renderedViewEngine:normalizeRenderedViewEngine(State.renderedViewEngine),
@@ -17471,12 +17719,15 @@ function saveConn(){
 function restoreConn(){
   try{
     const raw=localStorage.getItem(CONN_KEY);
-    if(!raw) return;
+    if(!raw){ applyTheme(State.theme,{persist:false}); return; }
     const c=JSON.parse(raw);
     if(c.ip)    document.getElementById("hubIp").value=c.ip;
     if(c.appId) document.getElementById("appId").value=c.appId;
     if(c.token) document.getElementById("token").value=c.token;
     document.getElementById("prefAutoConnect").checked=!!c.autoConnect;
+    let restoredTheme=c.theme;
+    if(!restoredTheme){ try{ restoredTheme=localStorage.getItem(THEME_KEY); }catch(_e){} }
+    applyTheme(restoredTheme||State.theme,{persist:false});
     if(c.tileOpacity!=null){
       document.getElementById("prefTileOpacity").value=c.tileOpacity;
       applyTileOpacity(c.tileOpacity);
@@ -18102,6 +18353,11 @@ async function wire(){
     e.stopPropagation();
     document.getElementById("prefsPanel").classList.toggle("hidden");
   });
+  document.getElementById("prefTheme")?.addEventListener("change",e=>{
+    applyTheme(e.target.value,{persist:true,announce:true});
+    saveConn();
+  });
+  applyTheme(State.theme,{persist:false});
   document.getElementById("prefAutoConnect").addEventListener("change",saveConn);
   document.getElementById("prefSkipDeviceChecksOnSave")?.addEventListener("change",e=>{
     State.skipDeviceChecksOnSave=!!e.target.checked;
