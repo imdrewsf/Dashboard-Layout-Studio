@@ -1354,11 +1354,333 @@
   html[data-theme="light"] .view-refresh-btn.unavailable{background:#fff1f2;color:#991b1b;border-color:#dc2626;text-shadow:none;box-shadow:0 0 0 1px rgba(220,38,38,.10);}
   html[data-theme="light"] .view-refresh-btn.busy{background:#eff6ff;color:#075985;border-color:#0284c7;text-shadow:none;box-shadow:0 0 0 1px rgba(2,132,199,.12);}
 
+
+  /* ============================================================
+     HIGH-CONTRAST LIGHT THEME REFINEMENTS
+     Stronger boundaries and control states based on the selection
+     pane visual language: dark section bars, crisp card outlines,
+     readable text, and clearly separated interactive controls.
+     ============================================================ */
+  html[data-theme="light"]{
+    --bg:#eef3f8;
+    --panel:#ffffff;
+    --panel-2:#dce6f1;
+    --border:rgba(15,23,42,.32);
+    --border-2:rgba(15,23,42,.56);
+    --text:#111827;
+    --muted:#334155;
+    --faint:#475569;
+    --accent:#036b7d;
+    --shadow:0 16px 38px rgba(15,23,42,.20);
+  }
+  html[data-theme="light"] body{
+    background:linear-gradient(170deg,#f8fafc,#e9eff6);
+  }
+  html[data-theme="light"] .brand,
+  html[data-theme="light"] .topbar,
+  html[data-theme="light"] .toolbar,
+  html[data-theme="light"] .statusbar,
+  html[data-theme="light"] .bottom-bar{
+    background:#ffffff;
+    border-color:#aeb9c7;
+  }
+  html[data-theme="light"] .side{
+    background:#f7f9fc;
+    border-right-color:#aeb9c7;
+  }
+  html[data-theme="light"] .slabel{
+    margin:0 0 6px;
+    padding:7px 10px;
+    border:1px solid #0d1a38;
+    border-left:1px solid #0d1a38;
+    border-radius:3px 3px 0 0;
+    background:#0d1a38;
+    color:#ffffff;
+    font-size:.69rem;
+    letter-spacing:.11em;
+    box-shadow:0 1px 2px rgba(15,23,42,.16);
+  }
+  html[data-theme="light"] .slabel .chev{color:#dbeafe;}
+  html[data-theme="light"] .slabel.collapsible:hover{
+    background:#18284d;
+    color:#ffffff;
+    border-color:#18284d;
+  }
+  html[data-theme="light"] .sect-body{
+    margin:-6px 0 2px;
+    padding:10px 9px 9px;
+    border:1px solid #c3ceda;
+    border-top:0;
+    border-radius:0 0 3px 3px;
+    background:#ffffff;
+  }
+  html[data-theme="light"] .field label,
+  html[data-theme="light"] .hint,
+  html[data-theme="light"] .sc-head,
+  html[data-theme="light"] .stack-card .sc-head,
+  html[data-theme="light"] .sel-card .sc-head,
+  html[data-theme="light"] .pp-row,
+  html[data-theme="light"] .conn-label,
+  html[data-theme="light"] .crumb,
+  html[data-theme="light"] .status-msg,
+  html[data-theme="light"] .glabel,
+  html[data-theme="light"] .msel>span{
+    color:#334155;
+  }
+  html[data-theme="light"] .icon-btn,
+  html[data-theme="light"] .btn,
+  html[data-theme="light"] .modesel,
+  html[data-theme="light"] .info-nav,
+  html[data-theme="light"] .info-icon-btn,
+  html[data-theme="light"] .grid-view-btn{
+    background:#ffffff;
+    color:#172033;
+    border-color:#8e9bad;
+    box-shadow:0 1px 2px rgba(15,23,42,.12);
+  }
+  html[data-theme="light"] .icon-btn:hover:not(:disabled),
+  html[data-theme="light"] .btn:hover:not(:disabled),
+  html[data-theme="light"] .modesel:hover:not(:disabled),
+  html[data-theme="light"] .info-nav:hover:not(:disabled),
+  html[data-theme="light"] .info-icon-btn:hover:not(:disabled),
+  html[data-theme="light"] .grid-view-btn:hover:not(:disabled){
+    background:#e3ebf4;
+    color:#0f172a;
+    border-color:#526174;
+    box-shadow:0 1px 3px rgba(15,23,42,.16);
+  }
+  html[data-theme="light"] .icon-btn:focus-visible,
+  html[data-theme="light"] .btn:focus-visible,
+  html[data-theme="light"] .tool:focus-visible,
+  html[data-theme="light"] .modesel:focus-visible,
+  html[data-theme="light"] input:focus-visible,
+  html[data-theme="light"] select:focus-visible,
+  html[data-theme="light"] textarea:focus-visible{
+    outline:2px solid #036b7d;
+    outline-offset:2px;
+  }
+  html[data-theme="light"] .btn:disabled,
+  html[data-theme="light"] .icon-btn:disabled,
+  html[data-theme="light"] .tool:disabled,
+  html[data-theme="light"] .modesel:disabled{
+    opacity:.72;
+    background:#e5eaf0;
+    color:#667085;
+    border-color:#b7c0cc;
+    box-shadow:none;
+  }
+  html[data-theme="light"] .tool{
+    background:#ffffff;
+    color:#172033;
+    border-color:#a2afbd;
+    box-shadow:0 1px 1px rgba(15,23,42,.08);
+  }
+  html[data-theme="light"] .tool:hover:not(:disabled){
+    background:#e3ebf4;
+    color:#0f172a;
+    border-color:#657488;
+  }
+  html[data-theme="light"] .tool.active{
+    background:#d2e8ed;
+    color:#073b47;
+    border-color:#036b7d;
+    box-shadow:inset 0 0 0 1px rgba(3,107,125,.24),0 1px 2px rgba(15,23,42,.10);
+  }
+  html[data-theme="light"] .tgroup,
+  html[data-theme="light"] .status-actions{
+    background:#dfe7f0;
+    border-color:#9eabb9;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.82);
+  }
+  html[data-theme="light"] .input,
+  html[data-theme="light"] input[type="text"],
+  html[data-theme="light"] input[type="number"],
+  html[data-theme="light"] input[type="password"],
+  html[data-theme="light"] select,
+  html[data-theme="light"] textarea,
+  html[data-theme="light"] .info-device-select,
+  html[data-theme="light"] .info-device-input,
+  html[data-theme="light"] .info-template-extra-input,
+  html[data-theme="light"] .info-css-editor,
+  html[data-theme="light"] .device-picked-select,
+  html[data-theme="light"] .json-tile-device-control select,
+  html[data-theme="light"] .json-tile-device-control input{
+    background:#ffffff;
+    color:#111827;
+    border-color:#7f8c9d;
+    box-shadow:inset 0 1px 2px rgba(15,23,42,.09);
+  }
+  html[data-theme="light"] .input:focus,
+  html[data-theme="light"] input[type="text"]:focus,
+  html[data-theme="light"] input[type="number"]:focus,
+  html[data-theme="light"] input[type="password"]:focus,
+  html[data-theme="light"] select:focus,
+  html[data-theme="light"] textarea:focus{
+    border-color:#036b7d;
+    box-shadow:0 0 0 3px rgba(3,107,125,.16);
+  }
+  html[data-theme="light"] .holdmenu,
+  html[data-theme="light"] .ctxmenu,
+  html[data-theme="light"] .prefs-panel,
+  html[data-theme="light"] .modal,
+  html[data-theme="light"] .trace{
+    background:#ffffff;
+    border-color:#8391a2;
+    box-shadow:0 18px 42px rgba(15,23,42,.24);
+  }
+  html[data-theme="light"] .holdmenu .hm-head,
+  html[data-theme="light"] .ctxmenu .hd,
+  html[data-theme="light"] .prefs-panel .pp-head{
+    color:#334155;
+  }
+  html[data-theme="light"] .dash-item{
+    background:#ffffff;
+    color:#111827;
+    border-color:#9aa7b6;
+    box-shadow:0 1px 1px rgba(15,23,42,.06);
+  }
+  html[data-theme="light"] .dash-item:hover{
+    background:#e3ebf4;
+    border-color:#64748b;
+  }
+  html[data-theme="light"] .dash-item.active{
+    background:#d7edf1;
+    border-color:#036b7d;
+    box-shadow:inset 3px 0 0 #036b7d;
+  }
+  html[data-theme="light"] .stack-card,
+  html[data-theme="light"] .sel-card,
+  html[data-theme="light"] .sel-group,
+  html[data-theme="light"] .stack-row,
+  html[data-theme="light"] .css-cleanup-section,
+  html[data-theme="light"] .css-cleanup-card,
+  html[data-theme="light"] .css-cleanup-count{
+    background:#ffffff;
+    border-color:#a4b0be;
+  }
+  html[data-theme="light"] .sel-list{gap:10px;}
+  html[data-theme="light"] .sel-group{
+    border:1px solid #718096;
+    border-radius:10px;
+    box-shadow:0 1px 3px rgba(15,23,42,.12);
+  }
+  html[data-theme="light"] .sel-group .sg-head{
+    padding:9px 10px;
+    background:#34446b;
+    color:#ffffff;
+  }
+  html[data-theme="light"] .sel-group .sg-chev,
+  html[data-theme="light"] .sel-group .sg-title{
+    color:#ffffff;
+  }
+  html[data-theme="light"] .sel-group .sg-title{font-weight:750;}
+  html[data-theme="light"] .sel-group .sg-badge{
+    color:#ffffff;
+    background:#2d6db5;
+    border:1px solid rgba(255,255,255,.18);
+  }
+  html[data-theme="light"] .sel-group .sg-body{
+    gap:8px;
+    padding:10px;
+    background:#ffffff;
+  }
+  html[data-theme="light"] .sel-row{
+    padding:9px 10px;
+    border:2px solid #7d8998;
+    border-radius:9px;
+    background:#f8fafc;
+    color:#111827;
+    box-shadow:0 1px 2px rgba(15,23,42,.08);
+  }
+  html[data-theme="light"] .sel-row:hover{
+    filter:brightness(.985);
+    box-shadow:0 2px 5px rgba(15,23,42,.15);
+  }
+  html[data-theme="light"] .sel-row .sr-t{
+    color:#111827;
+    font-weight:800;
+  }
+  html[data-theme="light"] .sel-row .sr-m,
+  html[data-theme="light"] .sel-row .sr-p{
+    color:#405065;
+  }
+  html[data-theme="light"] .sel-row .pl{
+    min-width:24px;
+    min-height:24px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid rgba(15,23,42,.10);
+    background:rgba(255,255,255,.58);
+    color:#526174;
+    font-weight:800;
+  }
+  html[data-theme="light"] .sel-row.sel-fam-switch{background:#d8f4e7;border-color:#10a968;}
+  html[data-theme="light"] .sel-row.sel-fam-switch .sr-t{color:#087a4c;}
+  html[data-theme="light"] .sel-row.sel-fam-sensor{background:#dcecfb;border-color:#2384e8;}
+  html[data-theme="light"] .sel-row.sel-fam-sensor .sr-t{color:#126ec7;}
+  html[data-theme="light"] .sel-row.sel-fam-button{background:#f8eadf;border-color:#e58a00;}
+  html[data-theme="light"] .sel-row.sel-fam-button .sr-t{color:#c66d00;}
+  html[data-theme="light"] .sel-row.sel-fam-dim{background:#fff0cf;border-color:#d88700;}
+  html[data-theme="light"] .sel-row.sel-fam-dim .sr-t{color:#a85f00;}
+  html[data-theme="light"] .sel-row.sel-fam-mode{background:#eee5fb;border-color:#7c3aed;}
+  html[data-theme="light"] .sel-row.sel-fam-mode .sr-t{color:#5b21b6;}
+  html[data-theme="light"] .sel-row.sel-fam-text{background:#edf1f5;border-color:#718096;}
+  html[data-theme="light"] .sel-row.sel-fam-text .sr-t{color:#334155;}
+  html[data-theme="light"] .sel-row.sel-fam-other{background:#dff3f1;border-color:#168d86;}
+  html[data-theme="light"] .sel-row.sel-fam-other .sr-t{color:#0f6f69;}
+  html[data-theme="light"] .stack-row{
+    background:#ffffff;
+    border-color:#8e9bad;
+    box-shadow:0 1px 2px rgba(15,23,42,.08);
+  }
+  html[data-theme="light"] .stack-row:hover{background:#e8eef6;border-color:#64748b;}
+  html[data-theme="light"] .stack-row.active{
+    background:#d8edf2;
+    border-color:#036b7d;
+    box-shadow:inset 3px 0 0 #036b7d,0 1px 3px rgba(15,23,42,.12);
+  }
+  html[data-theme="light"] .modal-head,
+  html[data-theme="light"] .modal-foot,
+  html[data-theme="light"] .trace-head{
+    background:#f3f6fa;
+    border-color:#aab6c4;
+  }
+  html[data-theme="light"] .statusbar,
+  html[data-theme="light"] .bottom-bar{
+    background:#f8fafc;
+    border-color:#aab6c4;
+  }
+  html[data-theme="light"] .coord-readout{
+    background:#ffffff;
+    border-color:#93a0af;
+    color:#334155;
+  }
+  html[data-theme="light"] .help-tabs,
+  html[data-theme="light"] .json-manager-fixed-top,
+  html[data-theme="light"] .json-manager-fixed-bottom{
+    background:#e7edf4;
+  }
+  html[data-theme="light"] .help-tab{
+    color:#334155;
+    border-color:transparent;
+  }
+  html[data-theme="light"] .help-tab:hover{
+    background:#d6e0ea;
+    border-color:#8795a6;
+  }
+  html[data-theme="light"] .help-tab.active{
+    background:#d3e9ed;
+    color:#064e5a;
+    border-color:#036b7d;
+    box-shadow:inset 3px 0 0 #036b7d;
+  }
+
 </style>
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.445">1.4.445</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.446">1.4.446</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -2519,8 +2841,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v445";
-const APP_VERSION = "1.4.445";
+const BUILD = "v446";
+const APP_VERSION = "1.4.446";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -6519,7 +6841,7 @@ function tileSelectionHtml(t, placement){
   const main=tileDisplayLabel(t);
   const meta=`Tile #${t.id} · Device ${tileDeviceIdForSelection(t)} · ${tileTemplateForSelection(t)}`;
   const pos=`r${t.row},c${t.col} · ${t.colSpan}×${t.rowSpan} · ${pl}`;
-  return `<button class="sel-row ${Number(t.id)===Number(State.focusTileId)?"info-focus":""}" data-tile="${esc(t.id)}">`+
+  return `<button class="sel-row sel-fam-${esc(fam(t.template))} ${Number(t.id)===Number(State.focusTileId)?"info-focus":""}" data-tile="${esc(t.id)}">`+
     `<span class="pl pl-${esc(pl)}">${esc(plText)}</span>`+
     `<span class="sr-lines"><span class="sr-t">${esc(main)}</span><span class="sr-m">${esc(meta)}</span><span class="sr-p">${esc(pos)}</span></span>`+
     `</button>`;
