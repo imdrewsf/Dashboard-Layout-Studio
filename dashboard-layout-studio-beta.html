@@ -338,6 +338,9 @@
     border-radius:9px;box-shadow:var(--shadow);padding:5px;min-width:170px;display:flex;flex-direction:column;gap:2px;}
   .holdmenu.hidden{display:none;}
   .holdmenu .hm-item{background:none;border:none;color:var(--text);text-align:left;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:.8rem;white-space:nowrap;}
+  #cssCopyMenuItems,#cssPasteMenuItems{display:flex;flex-direction:column;align-items:stretch;gap:2px;}
+  #cssCopyMenuItems.hidden,#cssPasteMenuItems.hidden{display:none;}
+  #cssCopyMenuItems .hm-item,#cssPasteMenuItems .hm-item{display:block;width:100%;} 
   .holdmenu .hm-item:hover:not(:disabled){background:var(--panel-2);}
   .holdmenu .hm-item:disabled{opacity:.35;cursor:not-allowed;color:var(--faint);}
   .holdmenu .hm-head{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:5px 10px 2px;pointer-events:none;}
@@ -353,6 +356,8 @@
   .hb.alt-menu .hb-chev{font-size:.62rem;}
   .tool:hover:not(:disabled).hb .hb-chev{background:rgba(103,232,249,.20);border-color:rgba(103,232,249,.58);color:#fff;}
   .tool.push-mode{border-color:var(--amber-2)!important;box-shadow:0 0 0 2px rgba(245,166,35,.4)!important;}
+  .tool.inter-window-default{border-color:#ef4444!important;background:rgba(239,68,68,.13)!important;color:#fecaca!important;box-shadow:0 0 0 2px rgba(239,68,68,.38),0 0 13px rgba(239,68,68,.24)!important;}
+  html[data-theme="light"] .tool.inter-window-default{color:#991b1b!important;background:#fee2e2!important;border-color:#dc2626!important;box-shadow:0 0 0 2px rgba(220,38,38,.25),0 0 10px rgba(220,38,38,.16)!important;}
   select.push-mode{border-color:var(--amber-2)!important;}
   .prefs-panel{position:fixed;right:14px;top:54px;z-index:300;width:280px;background:var(--panel);
     border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:14px;}
@@ -1680,7 +1685,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.446">1.4.446</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.448">1.4.448</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1787,24 +1792,32 @@
             </div>
           </div>
           <div class="holdwrap">
-            <button class="tool hb alt-menu" id="btnCopyTo" disabled title="Click: copy selection. Hold or Shift-click: more copy options.">
+            <button class="tool hb alt-menu" id="btnCopyTo" disabled title="Click: copy selection. Hold or Shift-click: more copy options. Ctrl+Alt-click copies to other windows.">
               <svg id="copyToIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg><span id="copyToBtnLabel">Copy to</span><span class="hb-chev" id="copyToChev" aria-hidden="true">◢</span>
             </button>
             <div class="holdmenu hidden" id="copyHoldMenu">
               <button class="hm-item" id="copyNormal">Copy to (no push)</button>
               <button class="hm-item" id="copyPush">Copy to with push…</button>
+              <div class="hm-sep"></div>
+              <button class="hm-item" id="copyOtherWindow">Copy to Other Window</button>
             </div>
           </div>
           <span class="toolbar-divider" aria-hidden="true"></span>
           <div class="holdwrap">
-            <button class="tool hb" id="btnCssClipboard" disabled title="Copy tile-scoped CSS from the single selected tile">
-              <svg id="cssClipboardIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 012-2h10"/><path d="M12 12h4M14 10v4"/></svg><span id="cssClipboardLabel">Copy CSS</span><span class="hb-chev hidden" id="cssClipboardChev" aria-hidden="true">▾</span>
+            <button class="tool hb alt-menu" id="btnCssClipboard" disabled title="Click: copy tile-scoped CSS. Hold or Shift-click: copy options.">
+              <svg id="cssClipboardIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 012-2h10"/><path d="M12 12h4M14 10v4"/></svg><span id="cssClipboardLabel">Copy CSS</span><span class="hb-chev" id="cssClipboardChev" aria-hidden="true">◢</span>
             </button>
             <div class="holdmenu hidden" id="cssPasteMenu">
-              <button class="hm-item" id="cssPastePreserve">Paste - Preserve</button>
-              <button class="hm-item" id="cssPasteOverwrite">Paste - Overwrite</button>
-              <button class="hm-item" id="cssPasteReplace">Paste - Replace All</button>
-              <button class="hm-item" id="cssPasteAdd">Paste - Add All</button>
+              <div id="cssCopyMenuItems">
+                <button class="hm-item" id="cssCopyLocal">Copy CSS</button>
+                <button class="hm-item" id="cssCopyOtherWindow">Copy CSS to Other Window</button>
+              </div>
+              <div id="cssPasteMenuItems" class="hidden">
+                <button class="hm-item" id="cssPastePreserve">Paste - Preserve</button>
+                <button class="hm-item" id="cssPasteOverwrite">Paste - Overwrite</button>
+                <button class="hm-item" id="cssPasteReplace">Paste - Replace All</button>
+                <button class="hm-item" id="cssPasteAdd">Paste - Add All</button>
+              </div>
             </div>
           </div>
           <span class="toolbar-divider" aria-hidden="true"></span>
@@ -2112,7 +2125,7 @@
 <div class="k">Cut / Copy / Paste</div><div class="v">Uses an internal tile buffer. Cut keeps tiles visible until the first paste, which behaves as a move; later pastes create copies.</div>
 </div></article><article class="help-page" data-help-title="Layout and editor controls"><div class="help-page-kicker">Toolbar Buttons</div><h4>Layout and editor controls</h4><h5>Layout sizing and spacing actions</h5><div class="help-grid">
 <div class="k">Trim</div><div class="v">Whole-layout action that removes blank space above and/or left of the current layout. Hold the button for top-only or left-only choices.</div>
-<div class="k">Copy CSS / Paste CSS</div><div class="v">Select exactly one tile and click Copy CSS to capture its tile-scoped editable and imported CSS. The button changes to Paste CSS and Resize changes to Cancel. While CSS paste mode is active, all other controls are disabled, but tiles can still be selected. Select one or more other destination tiles; pasted selectors are retargeted separately to every destination. Paste - Preserve keeps existing conflicting declarations, Paste - Overwrite lets pasted declarations replace local conflicts, Paste - Replace All removes all editable CSS scoped to each destination before pasting, and Paste - Add All appends every pasted rule even when conflicts or duplicates result. Choose a paste mode to complete the operation, or click Cancel to return to Copy CSS. Imported destination rules remain read-only.</div>
+<div class="k">Copy CSS / Paste CSS</div><div class="v">Select exactly one tile and click Copy CSS to capture its tile-scoped editable and imported CSS. Hold Copy CSS for local or other-window copy; Ctrl+Alt+Shift+C copies CSS to every open same-origin DLS window. The button changes to Paste CSS and Resize changes to Cancel. While CSS paste mode is active, all other controls are disabled, but tiles can still be selected. Select one or more other destination tiles; pasted selectors are retargeted separately to every destination. Paste - Preserve keeps existing conflicting declarations, Paste - Overwrite lets pasted declarations replace local conflicts, Paste - Replace All removes all editable CSS scoped to each destination before pasting, and Paste - Add All appends every pasted rule even when conflicts or duplicates result. Choose a paste mode to complete the operation, or click Cancel to return to Copy CSS. Imported destination rules remain read-only.</div>
 <div class="k">Resize</div><div class="v">Selection-action button that sets selected tiles to an exact height and width. Options can preserve spacing between resized tiles and/or push the surrounding layout out of the way. When Overlaps is set to push, or Shift is held, the Resize button glows and the dialog opens with Preserve spacing between resized tiles and Push layout to make room enabled.</div>
 <div class="k">Spacing</div><div class="v">Opens a dialog with all spacing actions: Set all, Set rows only, Set columns only, Unstack and Set All, Inc/Dec all, Inc/Dec rows only, and Inc/Dec columns only.</div>
 <div class="k">Enl/Rdc</div><div class="v">Opens the Enlarge / Reduce dialog for enlarging or reducing the entire layout by row and column amounts. Positive rows/columns enlarge tiles; negative rows/columns reduce them. This is equivalent to selecting all tiles and dragging the lower-right resize handle.</div>
@@ -2841,8 +2854,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v446";
-const APP_VERSION = "1.4.446";
+const BUILD = "v448";
+const APP_VERSION = "1.4.448";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -2858,6 +2871,12 @@ const TEMP_SIMPLE_CSS_JSON_FILENAME = "DLS_Temporary_Dashboard.json";
 const TEMP_SIMPLE_CSS_CSS_FILENAME = "DLS_Temporary_Dashboard.css";
 const TEMP_SIMPLE_CSS_WARNING_SUPPRESS_KEY = "dls.suppressTemporarySimpleCssPreviewWarning";
 const TILE_CSS_AUTO_RETARGET_KEY = "dls.autoRetargetTileCssPaste";
+const INTERWINDOW_TRANSFER_KEY = "dls.interWindowTransfer.v1";
+const INTERWINDOW_EVENT_KEY = "dls.interWindowTransferEvent.v1";
+const INTERWINDOW_PROTOCOL = "dls-interwindow-v1";
+const INTERWINDOW_MAX_AGE_MS = 30*60*1000;
+const DLS_WINDOW_ID = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;
+let InterWindowChannel=null;
 const THEME_KEY = "dls.theme";
 function normalizeTheme(value){ return String(value||"").toLowerCase()==="light" ? "light" : "dark"; }
 function applyTheme(value,{persist=true,announce=false}={}){
@@ -2956,8 +2975,127 @@ const State = {
   pendingRemoval:null,           // {removedIds, commitFn, preview} during CSS-review
   buffer:null,                   // {tiles:[full snapshots], css, sourceId, mode:'cut'|'copy', cutIds:Set}
   bufferUsed:false,              // whether the current (cut) buffer has been pasted once
-  cssClipboard:null,             // {sourceId,css,hasExternal}: tile-scoped CSS awaiting paste to other selected tiles
+  cssClipboard:null,             // {sourceId,css,hasExternal,external,operationId}: tile-scoped CSS awaiting paste
+  interWindowTransfer:null,         // synchronized same-origin tile/CSS copy operation
+  interWindowModifierHeld:false,    // Ctrl/Cmd+Alt changes Copy To / Copy CSS default to other-window copy
 };
+
+function interWindowDashboardLabel(){
+  return String(State.active&&State.active.label || State.original&&State.original.name || "another DLS window").trim() || "another DLS window";
+}
+function interWindowOperationExpired(op){
+  return !op || op.protocol!==INTERWINDOW_PROTOCOL || !op.operationId || !op.kind || !op.payload || Date.now()-Number(op.createdAt||0)>INTERWINDOW_MAX_AGE_MS;
+}
+function interWindowMessage(message){
+  const msg={protocol:INTERWINDOW_PROTOCOL,nonce:`${Date.now()}-${Math.random()}`,...message};
+  try{ InterWindowChannel?.postMessage(msg); }catch(_e){}
+  try{ localStorage.setItem(INTERWINDOW_EVENT_KEY,JSON.stringify(msg)); }catch(_e){}
+}
+function storeInterWindowOperation(op){
+  let stored=false;
+  try{ localStorage.setItem(INTERWINDOW_TRANSFER_KEY,JSON.stringify(op)); stored=true; }catch(_e){}
+  try{ InterWindowChannel?.postMessage({protocol:INTERWINDOW_PROTOCOL,action:"start",operation:op,nonce:`${Date.now()}-${Math.random()}`}); stored=true; }catch(_e){}
+  return stored;
+}
+function clearStoredInterWindowOperation(operationId){
+  try{
+    const current=JSON.parse(localStorage.getItem(INTERWINDOW_TRANSFER_KEY)||"null");
+    if(!operationId || current&&current.operationId===operationId) localStorage.removeItem(INTERWINDOW_TRANSFER_KEY);
+  }catch(_e){ try{ localStorage.removeItem(INTERWINDOW_TRANSFER_KEY); }catch(_ignore){} }
+}
+function clearInterWindowTransferLocal(reason="",operationId=null,{announce=true}={}){
+  const active=State.interWindowTransfer;
+  if(!active || operationId&&active.operationId!==operationId) return false;
+  const kind=active.kind;
+  if(kind==="tiles" && State.pending&&State.pending.action==="externalCopyTiles"&&State.pending.operationId===active.operationId) State.pending=null;
+  if(kind==="css" && State.cssClipboard&&State.cssClipboard.external&&State.cssClipboard.operationId===active.operationId) State.cssClipboard=null;
+  State.interWindowTransfer=null;
+  document.getElementById("copyHoldMenu")?.classList.add("hidden");
+  document.getElementById("cssPasteMenu")?.classList.add("hidden");
+  updateActionButtons();
+  if(State.active) render();
+  if(announce){
+    if(reason==="cancel") status("Inter-window copy cancelled in all DLS windows.");
+    else if(reason==="complete") status("Inter-window copy completed in another DLS window.");
+  }
+  return true;
+}
+function endInterWindowTransfer(reason="cancel",operationId=null,{announce=true}={}){
+  const id=operationId || State.interWindowTransfer&&State.interWindowTransfer.operationId;
+  if(!id) return;
+  clearInterWindowTransferLocal(reason,id,{announce});
+  clearStoredInterWindowOperation(id);
+  interWindowMessage({action:"end",operationId:id,reason});
+}
+function activateInterWindowTransfer(op,{announce=true}={}){
+  if(interWindowOperationExpired(op)){ if(op&&op.operationId) clearStoredInterWindowOperation(op.operationId); return false; }
+  if(State.interWindowTransfer&&State.interWindowTransfer.operationId===op.operationId) return true;
+  if(State.interWindowTransfer) clearInterWindowTransferLocal("",null,{announce:false});
+  // External copy is a synchronized modal operation and supersedes local pending copy/paste modes.
+  State.pending=null;
+  State.cssClipboard=null;
+  State.interWindowTransfer=JSON.parse(JSON.stringify(op));
+  if(op.kind==="tiles"){
+    const tiles=op.payload.tiles||[];
+    if(!tiles.length){ State.interWindowTransfer=null; return false; }
+    const anchorRow=Math.min(...tiles.map(t=>Number(t.row)||1));
+    const anchorCol=Math.min(...tiles.map(t=>Number(t.col)||1));
+    State.pending={action:"externalCopyTiles",anchorRow,anchorCol,push:State.overlaps==="push",buffer:0,preserve:false,operationId:op.operationId};
+    if(announce) status(`Tiles copied from ${op.sourceLabel}. Click a destination cell in any DLS window, or click Cancel.`);
+  }else if(op.kind==="css"){
+    State.cssClipboard={...op.payload,external:true,operationId:op.operationId,sourceWindowId:op.sourceWindowId,sourceLabel:op.sourceLabel};
+    if(announce) status(`CSS copied from ${op.sourceLabel}. Select destination tiles in any DLS window, choose a Paste CSS mode, or click Cancel.`);
+  }else{
+    State.interWindowTransfer=null; return false;
+  }
+  updateActionButtons();
+  if(State.active) render();
+  return true;
+}
+function beginInterWindowTransfer(kind,payload){
+  const op={protocol:INTERWINDOW_PROTOCOL,operationId:`${DLS_WINDOW_ID}-${Date.now().toString(36)}`,kind,sourceWindowId:DLS_WINDOW_ID,sourceLabel:interWindowDashboardLabel(),createdAt:Date.now(),payload};
+  if(!storeInterWindowOperation(op)){
+    toast("Unable to open the shared DLS clipboard in this browser.","err");
+    return false;
+  }
+  activateInterWindowTransfer(op,{announce:true});
+  return true;
+}
+function handleInterWindowMessage(msg){
+  if(!msg||msg.protocol!==INTERWINDOW_PROTOCOL) return;
+  if(msg.action==="start") activateInterWindowTransfer(msg.operation,{announce:true});
+  else if(msg.action==="end"){
+    clearStoredInterWindowOperation(msg.operationId);
+    clearInterWindowTransferLocal(msg.reason||"cancel",msg.operationId,{announce:true});
+  }
+}
+function initInterWindowTransfers(){
+  try{
+    if("BroadcastChannel" in window){
+      InterWindowChannel=new BroadcastChannel("dashboard-layout-studio-transfer-v1");
+      InterWindowChannel.addEventListener("message",e=>handleInterWindowMessage(e.data));
+    }
+  }catch(_e){ InterWindowChannel=null; }
+  window.addEventListener("storage",e=>{
+    if(e.key===INTERWINDOW_EVENT_KEY&&e.newValue){ try{ handleInterWindowMessage(JSON.parse(e.newValue)); }catch(_e){} }
+    else if(e.key===INTERWINDOW_TRANSFER_KEY&&e.newValue){ try{ activateInterWindowTransfer(JSON.parse(e.newValue),{announce:true}); }catch(_e){} }
+  });
+  try{
+    const op=JSON.parse(localStorage.getItem(INTERWINDOW_TRANSFER_KEY)||"null");
+    if(op) activateInterWindowTransfer(op,{announce:false});
+  }catch(_e){}
+}
+function interWindowModifierActive(event=null){
+  return !!((event&&(event.ctrlKey||event.metaKey)&&event.altKey)||State.interWindowModifierHeld);
+}
+function syncInterWindowModifierButtons(event=null){
+  const held=event ? !!((event.ctrlKey||event.metaKey)&&event.altKey) : !!State.interWindowModifierHeld;
+  State.interWindowModifierHeld=held;
+  const tileBtn=document.getElementById("btnCopyTo");
+  const cssBtn=document.getElementById("btnCssClipboard");
+  if(tileBtn) tileBtn.classList.toggle("inter-window-default",held&&!State.pending&&!State.cssClipboard&&!tileBtn.disabled);
+  if(cssBtn) cssBtn.classList.toggle("inter-window-default",held&&!State.pending&&!State.cssClipboard&&!cssBtn.disabled);
+}
 
 function clearConflictHighlight(redraw=false){
   // Red conflict highlights are transient warnings from a blocked/previewed action.
@@ -7500,7 +7638,8 @@ function retargetTileCssReferences(css,tileId){
 function cssClipboardDestinationIds(){
   if(!State.cssClipboard) return [];
   const sourceId=Number(State.cssClipboard.sourceId);
-  return currentSelectionTileIds().map(Number).filter(id=>id!==sourceId);
+  const excludeSource=!State.cssClipboard.external || State.cssClipboard.sourceWindowId===DLS_WINDOW_ID;
+  return currentSelectionTileIds().map(Number).filter(id=>!excludeSource||id!==sourceId);
 }
 function joinCssSections(){
   return [...arguments].map(x=>String(x||"").trim()).filter(Boolean).join("\n\n");
@@ -7546,22 +7685,34 @@ function filterCssDeclarationsByKeys(css,keys,removeMatching=true){
 }
 function cancelCssPasteMode(message=""){
   if(!State.cssClipboard) return;
+  if(State.cssClipboard.external){ endInterWindowTransfer("cancel",State.cssClipboard.operationId,{announce:true}); return; }
   State.cssClipboard=null;
   document.getElementById("cssPasteMenu")?.classList.add("hidden");
   updateActionButtons();
   if(message) status(message);
 }
-function beginCopyTileCss(){
+function selectedTileCssCopyPayload(){
   const ids=currentSelectionTileIds().map(Number);
-  if(ids.length!==1){ toast("Select exactly one tile to copy CSS from.","err"); return; }
+  if(ids.length!==1){ toast("Select exactly one tile to copy CSS from.","err"); return null; }
   const sourceId=ids[0];
   const external=extractTileScopedCssForEditor(externalCssRulesText(),sourceId);
   const local=extractTileScopedCssForEditor(State.customCSS||"",sourceId);
   const css=joinCssSections(external,local);
-  if(!css){ toast(`Tile #${sourceId} has no tile-scoped CSS to copy.`,"err"); return; }
-  State.cssClipboard={sourceId,css,hasExternal:!!external};
+  if(!css){ toast(`Tile #${sourceId} has no tile-scoped CSS to copy.`,"err"); return null; }
+  return {sourceId,css,hasExternal:!!external};
+}
+function beginCopyTileCss(){
+  const payload=selectedTileCssCopyPayload();
+  if(!payload) return;
+  const {sourceId,css,hasExternal}=payload;
+  State.cssClipboard={sourceId,css,hasExternal};
   updateActionButtons();
   status(`Copied CSS from Tile #${sourceId}. Select one or more destination tiles, choose a Paste CSS mode, or click Cancel.`);
+}
+function beginCopyTileCssToOtherWindow(){
+  const payload=selectedTileCssCopyPayload();
+  if(!payload) return;
+  if(beginInterWindowTransfer("css",payload)) toast("CSS copied to all open DLS windows.","ok");
 }
 function applyCssClipboardPaste(mode){
   if(!State.cssClipboard){ toast("Copy CSS from one tile first.","err"); return; }
@@ -7605,7 +7756,9 @@ function applyCssClipboardPaste(mode){
   State.tileSnapshotBlockedUntilReload=false;
   markRenderedSnapshotsStale(`CSS pasted from Tile #${sourceId}`,{message:false});
   refreshExternalCssImports({force:true});
-  State.cssClipboard=null;
+  const externalOperationId=State.cssClipboard&&State.cssClipboard.external?State.cssClipboard.operationId:null;
+  if(externalOperationId) endInterWindowTransfer("complete",externalOperationId,{announce:false});
+  else State.cssClipboard=null;
   document.getElementById("cssPasteMenu")?.classList.add("hidden");
   updateActionButtons();
   render();
@@ -9997,6 +10150,7 @@ function generateTileReport(){
 function onGridClick(e){
   if(State.pending&&State.pending.action==="moveTiles"){ completeMoveTiles(snapCellToDashboardStep(cellFromEvent(e))); return; }
   if(State.pending&&State.pending.action==="copyTiles"){ completeCopyTiles(snapCellToDashboardStep(cellFromEvent(e))); return; }
+  if(State.pending&&State.pending.action==="externalCopyTiles"){ completePasteBuf(snapCellToDashboardStep(cellFromEvent(e))); return; }
   if(State.pending&&State.pending.action==="pasteBuf"){ completePasteBuf(snapCellToDashboardStep(cellFromEvent(e))); return; }
   if(State.pending){ return; }
   // if a tile drag just completed (or was aborted), don't process as a click
@@ -10404,6 +10558,7 @@ function renderStackCard(){
 
 /* ---------- (selection is now automatic from what you click — no tool modes) ---------- */
 function cancelPending(){
+  if(State.pending&&State.pending.action==="externalCopyTiles"){ endInterWindowTransfer("cancel",State.pending.operationId,{announce:true}); return; }
   clearConflictHighlight();
   if(State.tileDrag){
     const saved=State.tileDrag.savedOverlaps;
@@ -10704,7 +10859,7 @@ function updateActionButtons(){
   }
 
   // Copy to — transforms to Cancel when a copy is pending
-  const isCopyPending=State.pending&&(State.pending.action==="copyTiles"||State.pending.action==="copyLines");
+  const isCopyPending=State.pending&&(State.pending.action==="copyTiles"||State.pending.action==="copyLines"||State.pending.action==="externalCopyTiles");
   const copyToBtn=document.getElementById("btnCopyTo");
   if(copyToBtn){
     copyToBtn.disabled=isCopyPending?false:(!anySel||!!State.pending);
@@ -10720,7 +10875,7 @@ function updateActionButtons(){
       if(copyToLbl) copyToLbl.textContent="Copy to";
       if(copyToChev) copyToChev.style.display="";
       if(copyToIcon) copyToIcon.innerHTML='<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/>';
-      copyToBtn.classList.remove("danger"); copyToBtn.title="Click: copy selection. Hold or Shift-click: more copy options.";
+      copyToBtn.classList.remove("danger"); copyToBtn.title="Click: copy selection. Hold or Shift-click: more copy options. Ctrl+Alt-click copies to other windows.";
     }
   }
 
@@ -10733,20 +10888,29 @@ function updateActionButtons(){
     infoTileItem.title=selectedTileCount===0?"Select a tile to view Tile Information.":"Show information for the selected tile.";
   }
   const cssBtn=document.getElementById("btnCssClipboard");
-  if(State.cssClipboard&&!State.tiles.some(t=>Number(t.id)===Number(State.cssClipboard.sourceId))) State.cssClipboard=null;
+  if(State.cssClipboard&&!State.cssClipboard.external&&!State.tiles.some(t=>Number(t.id)===Number(State.cssClipboard.sourceId))) State.cssClipboard=null;
   if(cssBtn){
     const pasteMode=!!State.cssClipboard;
     const destCount=pasteMode?cssClipboardDestinationIds().length:0;
     cssBtn.disabled=!!State.pending || (!pasteMode && selectedTileCount!==1);
     cssBtn.classList.toggle("css-paste-mode",pasteMode);
     cssBtn.classList.toggle("menu-only",pasteMode);
+    cssBtn.classList.toggle("alt-menu",!pasteMode);
     const cssLabel=document.getElementById("cssClipboardLabel");
     const cssChev=document.getElementById("cssClipboardChev");
     if(cssLabel) cssLabel.textContent=pasteMode?"Paste CSS":"Copy CSS";
-    if(cssChev) cssChev.classList.toggle("hidden",!pasteMode);
+    if(cssChev){ cssChev.classList.remove("hidden"); cssChev.textContent=pasteMode?"▾":"◢"; }
+    const copyItems=document.getElementById("cssCopyMenuItems");
+    const pasteItems=document.getElementById("cssPasteMenuItems");
+    if(copyItems) copyItems.classList.toggle("hidden",pasteMode);
+    if(pasteItems) pasteItems.classList.toggle("hidden",!pasteMode);
+    const cssCopyLocal=document.getElementById("cssCopyLocal");
+    const cssCopyOther=document.getElementById("cssCopyOtherWindow");
+    if(cssCopyLocal) cssCopyLocal.disabled=pasteMode||selectedTileCount!==1||!!State.pending;
+    if(cssCopyOther) cssCopyOther.disabled=pasteMode||selectedTileCount!==1||!!State.pending;
     cssBtn.title=pasteMode
       ? (destCount?`Paste CSS copied from Tile #${State.cssClipboard.sourceId} to ${destCount} selected destination tile${destCount===1?"":"s"}.`:`Select one or more destination tiles other than Tile #${State.cssClipboard.sourceId}.`)
-      : (selectedTileCount===1?"Copy tile-scoped CSS from the selected tile":"Select exactly one tile to copy CSS from");
+      : (selectedTileCount===1?"Click: copy CSS. Hold or Shift-click: copy locally or to another window. Ctrl+Alt-click copies to other windows.":"Select exactly one tile to copy CSS from");
     ["cssPastePreserve","cssPasteOverwrite","cssPasteReplace","cssPasteAdd"].forEach(id=>{
       const item=document.getElementById(id); if(item) item.disabled=!pasteMode||destCount===0||!!State.pending;
     });
@@ -10805,6 +10969,7 @@ function updateActionButtons(){
   updateSaveHubState();
   applyPendingUiLock();
   applyCssPasteUiLock();
+  syncInterWindowModifierButtons();
 }
 function applyPendingUiLock(){
   const pending=!!State.pending;
@@ -10812,7 +10977,7 @@ function applyPendingUiLock(){
     releasePendingUiLockIfNeeded();
     return;
   }
-  const cancelId=(State.pending.action==="moveTiles"||State.pending.action==="move")?"btnMoveTo":(State.pending.action==="copyTiles"||State.pending.action==="copyLines")?"btnCopyTo":State.pending.action==="pasteBuf"?"btnPasteBuf":null;
+  const cancelId=(State.pending.action==="moveTiles"||State.pending.action==="move")?"btnMoveTo":(State.pending.action==="copyTiles"||State.pending.action==="copyLines"||State.pending.action==="externalCopyTiles")?"btnCopyTo":State.pending.action==="pasteBuf"?"btnPasteBuf":null;
   const controls=document.querySelectorAll("#toolbar button,#toolbar select,#toolbar input,#topbar button,.topbar button,.side button");
   controls.forEach(el=>{
     if(el.id===cancelId){ el.disabled=false; return; }
@@ -12169,6 +12334,28 @@ function commitCopy(result){
        any later paste / copy / cross-dash  -> COPY/MERGE (new ids, remapped CSS)
    Faithful end-state to the CLI's move/copy/merge; the buffer is the GUI sugar.
    ============================================================ */
+function portableSelectionCopyBuffer(){
+  clearConflictHighlight();
+  const s=State.sel;
+  let ids;
+  if((s.type==="tile"||s.type==="rect")&&s.ids.length) ids=[...s.ids];
+  else if(s.type==="line"&&s.lines.length){
+    const T=targetFromLines([...s.lines],State.selKind);
+    ids=selectIndices(T,State.selMode).map(i=>State.tiles[i].id);
+  }else { toast("Select tiles first.","err"); return null; }
+  if(!ids.length){ toast("Nothing selected.","err"); return null; }
+  const idset=new Set(ids.map(Number));
+  const tiles=State.tiles.filter(t=>idset.has(Number(t.id))).map(t=>({
+    id:t.id,row:t.row,col:t.col,rowSpan:t.rowSpan,colSpan:t.colSpan,template:t.template,label:t.label,
+    _raw:t._raw?JSON.parse(JSON.stringify(t._raw)):null
+  }));
+  return {tiles,css:cssSourceForTileDuplication(),sourceId:State.active?State.active.id:null,mode:"copy",cutIds:[...idset],snapshots:{}};
+}
+function beginCopyToOtherWindow(){
+  const payload=portableSelectionCopyBuffer();
+  if(!payload) return;
+  if(beginInterWindowTransfer("tiles",payload)) toast(`${payload.tiles.length} tile${payload.tiles.length===1?"":"s"} copied to all open DLS windows.`,"ok");
+}
 function snapshotSelectionToBuffer(mode){
   clearConflictHighlight();
   const s=State.sel;
@@ -12821,10 +13008,14 @@ function confirmFullJsonDeviceValidation(data,onProceed){
     onCancel:()=>status("JSON replacement was not applied.")
   });
 }
+function activePasteBuffer(){
+  if(State.pending&&State.pending.action==="externalCopyTiles") return State.interWindowTransfer&&State.interWindowTransfer.kind==="tiles"?State.interWindowTransfer.payload:null;
+  return State.buffer;
+}
 function warnIfPasteHasUnselectedDevices(cell){
   const pending=State.pending;
   if(!pending || pending.deviceWarningAccepted) return true;
-  const invalid=invalidBufferedDeviceIdsForDestination(State.buffer);
+  const invalid=invalidBufferedDeviceIdsForDestination(activePasteBuffer());
   if(!invalid.length) return true;
   showImportedDeviceWarning({
     title:"Pasted tiles use unselected devices",
@@ -12838,7 +13029,8 @@ function warnIfPasteHasUnselectedDevices(cell){
   return false;
 }
 function completePasteBuf(cell){
-  const b=State.buffer; if(!b) return;
+  const b=activePasteBuffer(); if(!b) return;
+  const externalOperationId=State.pending&&State.pending.action==="externalCopyTiles"?State.pending.operationId:null;
   if(!warnIfPasteHasUnselectedDevices(cell)) return;
   const dr=cell.row-State.pending.anchorRow, dc=cell.col-State.pending.anchorCol;
   const sameDash = b.sourceId!=null && State.active && b.sourceId===State.active.id;
@@ -12930,9 +13122,11 @@ function completePasteBuf(cell){
     if(!cssIgnore){ const landed=new Map([...idMap]);
       const dup=generateCssForIdMapForCopy(b.css||"", landed, State.customCSS||"");
       if(dup.trim()){ State.customCSS=(State.customCSS||"").replace(/\s+$/,"")+"\n"+dup+"\n"; State.zMap=parseCssZ(currentCssForCascade()); } }
-    State.bufferUsed=true; State.conflictHighlight=null; State.pending=null;
+    if(externalOperationId) endInterWindowTransfer("complete",externalOperationId,{announce:false});
+    else { State.bufferUsed=true; State.pending=null; }
+    State.conflictHighlight=null;
     selectTileIds(copies.map(t=>Number(t.id))); render();
-    status(`Pasted ${copies.length} tile(s) with push (${pushDown?"down":"right"}).`);
+    status(`Pasted ${copies.length} tile(s)${externalOperationId?" from another DLS window":""} with push (${pushDown?"down":"right"}).`);
     return;
   }
   if(cp.length && State.overlaps==="none"){
@@ -12955,10 +13149,12 @@ function completePasteBuf(cell){
     if(landed.size){ const dup=generateCssForIdMapForCopy(b.css||"", landed, State.customCSS||"");
       if(dup.trim()){ State.customCSS=(State.customCSS||"").replace(/\s+$/,"")+"\n"+dup+"\n"; State.zMap=parseCssZ(currentCssForCascade()); } }
   }
-  State.bufferUsed=true; State.conflictHighlight=null; State.pending=null;
+  if(externalOperationId) endInterWindowTransfer("complete",externalOperationId,{announce:false});
+  else { State.bufferUsed=true; State.pending=null; }
+  State.conflictHighlight=null;
   selectTileIds(keep.map(t=>Number(t.id))); render();
-  const verb = sameDash ? "Copied" : "Merged";
-  status(`${verb} ${keep.length} tile(s)${skipped?`; skipped ${skipped}`:""} from buffer.`);
+  const verb = externalOperationId ? "Copied" : (sameDash ? "Copied" : "Merged");
+  status(`${verb} ${keep.length} tile(s)${skipped?`; skipped ${skipped}`:""}${externalOperationId?" from another DLS window":" from buffer"}.`);
 }
 
 /* Styled confirm modal — replaces browser native confirm() throughout the app */
@@ -18567,6 +18763,7 @@ function wireUpdateModal(){
 }
 
 async function wire(){
+  initInterWindowTransfers();
   const savedConn=restoreConn();
   updateDashboardJumpState();
   updateUndoControls();
@@ -19051,7 +19248,7 @@ Install the current stable release now, or keep the current installed version un
     });
     btn.addEventListener("mouseup",e=>{
       clearTimeout(timer);
-      if(!held){ menu.classList.add("hidden"); defaultAction(); }
+      if(!held){ menu.classList.add("hidden"); defaultAction(e); }
     });
     btn.addEventListener("mouseleave",()=>clearTimeout(timer));
   }
@@ -19073,12 +19270,14 @@ Install the current stable release now, or keep the current installed version un
   document.getElementById("moveNormal").addEventListener("click",()=>{ document.getElementById("moveHoldMenu").classList.add("hidden"); beginMove(false); });
   document.getElementById("movePush").addEventListener("click",()=>{ document.getElementById("moveHoldMenu").classList.add("hidden"); beginMove(true); });
 
-  wireHoldButton("btnCopyTo","copyHoldMenu",()=>{
-    if(State.pending&&(State.pending.action==="copyTiles"||State.pending.action==="copyLines")){ cancelPending(); return; }
-    beginCopy(State.overlaps==="push");
+  wireHoldButton("btnCopyTo","copyHoldMenu",e=>{
+    if(State.pending&&(State.pending.action==="copyTiles"||State.pending.action==="copyLines"||State.pending.action==="externalCopyTiles")){ cancelPending(); return; }
+    if(interWindowModifierActive(e)) beginCopyToOtherWindow();
+    else beginCopy(State.overlaps==="push");
   });
   document.getElementById("copyNormal").addEventListener("click",()=>{ document.getElementById("copyHoldMenu").classList.add("hidden"); beginCopy(false); });
   document.getElementById("copyPush").addEventListener("click",()=>{ document.getElementById("copyHoldMenu").classList.add("hidden"); beginCopy(true); });
+  document.getElementById("copyOtherWindow")?.addEventListener("click",()=>{ document.getElementById("copyHoldMenu")?.classList.add("hidden"); beginCopyToOtherWindow(); });
 
   document.getElementById("btnSelectAll")?.addEventListener("click",selectAllTiles);
 
@@ -19128,16 +19327,19 @@ Install the current stable release now, or keep the current installed version un
   document.getElementById("layoutScaleCols")?.addEventListener("keydown",e=>{ if(e.key==="Enter") applyLayoutScale(); });
   updateSpacingControls();
 
-  document.getElementById("btnCssClipboard")?.addEventListener("click",e=>{
-    const btn=e.currentTarget;
-    if(btn.disabled) return;
-    e.preventDefault(); e.stopPropagation();
-    if(!State.cssClipboard){ beginCopyTileCss(); return; }
-    const menu=document.getElementById("cssPasteMenu");
-    if(!menu) return;
-    if(menu.classList.contains("hidden")) showHoldMenu(btn,menu,"left");
-    else menu.classList.add("hidden");
+  wireHoldButton("btnCssClipboard","cssPasteMenu",e=>{
+    const btn=document.getElementById("btnCssClipboard");
+    if(!btn||btn.disabled) return;
+    if(State.cssClipboard){
+      const menu=document.getElementById("cssPasteMenu");
+      if(menu) showHoldMenu(btn,menu,"left");
+      return;
+    }
+    if(interWindowModifierActive(e)) beginCopyTileCssToOtherWindow();
+    else beginCopyTileCss();
   });
+  document.getElementById("cssCopyLocal")?.addEventListener("click",()=>{ document.getElementById("cssPasteMenu")?.classList.add("hidden"); beginCopyTileCss(); });
+  document.getElementById("cssCopyOtherWindow")?.addEventListener("click",()=>{ document.getElementById("cssPasteMenu")?.classList.add("hidden"); beginCopyTileCssToOtherWindow(); });
   document.getElementById("cssPastePreserve")?.addEventListener("click",()=>applyCssClipboardPaste("preserve"));
   document.getElementById("cssPasteOverwrite")?.addEventListener("click",()=>applyCssClipboardPaste("overwrite"));
   document.getElementById("cssPasteReplace")?.addEventListener("click",()=>applyCssClipboardPaste("replace"));
@@ -19278,8 +19480,15 @@ Install the current stable release now, or keep the current installed version un
     }
     syncPushAvailability();
   }
-  document.addEventListener("keydown",e=>{ if(e.key==="Shift"&&!e.repeat) updatePushModeButtons(true); });
-  document.addEventListener("keyup",e=>{ if(e.key==="Shift") updatePushModeButtons(false); });
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Shift"&&!e.repeat) updatePushModeButtons(true);
+    syncInterWindowModifierButtons(e);
+  });
+  document.addEventListener("keyup",e=>{
+    if(e.key==="Shift") updatePushModeButtons(false);
+    syncInterWindowModifierButtons(e);
+  });
+  window.addEventListener("blur",()=>{ State.interWindowModifierHeld=false; syncInterWindowModifierButtons(); });
   // when user manually changes overlaps dropdown, clear any shift-saved state
   document.getElementById("overlaps").addEventListener("change",e=>{
     State.shiftPushRestore=null;
@@ -19363,7 +19572,16 @@ Install the current stable release now, or keep the current installed version un
     if((e.ctrlKey||e.metaKey)&&e.key==="a"){ if(State.active&&State.tiles.length){ e.preventDefault(); selectAllTiles(); } return; }
     const hasSel = (State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.length
                 || State.sel.type==="line"&&State.sel.lines.length;
-    if((e.ctrlKey||e.metaKey)&&e.key==="c"){ if(hasSel&&!State.pending){ e.preventDefault(); copyToBuffer(); } return; }
+    const key=String(e.key||"").toLowerCase();
+    if((e.ctrlKey||e.metaKey)&&e.altKey&&e.shiftKey&&key==="c"){
+      if(currentSelectionTileIds().length===1&&!State.pending&&!State.cssClipboard){ e.preventDefault(); beginCopyTileCssToOtherWindow(); }
+      return;
+    }
+    if((e.ctrlKey||e.metaKey)&&e.altKey&&!e.shiftKey&&key==="c"){
+      if(hasSel&&!State.pending&&!State.cssClipboard){ e.preventDefault(); beginCopyToOtherWindow(); }
+      return;
+    }
+    if((e.ctrlKey||e.metaKey)&&key==="c"){ if(hasSel&&!State.pending){ e.preventDefault(); copyToBuffer(); } return; }
     if((e.ctrlKey||e.metaKey)&&e.key==="x"){ if(hasSel&&!State.pending){ e.preventDefault(); cutToBuffer(); } return; }
     if((e.ctrlKey||e.metaKey)&&e.key==="v"){
       if(State.buffer&&!State.pending){
