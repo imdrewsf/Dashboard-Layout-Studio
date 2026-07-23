@@ -159,6 +159,8 @@
   #cssPasteMenu{min-width:190px;}
   .launch-toolbar-btn{border-color:rgba(103,232,249,.28);background:rgba(103,232,249,.06);min-width:92px;}
   .launch-toolbar-btn:hover:not(:disabled){border-color:rgba(103,232,249,.48);background:rgba(103,232,249,.13);}
+  .launch-toolbar-btn.launch-shift-mode{border-color:#facc15!important;background:rgba(250,204,21,.12)!important;box-shadow:0 0 0 2px rgba(250,204,21,.28),0 0 12px rgba(250,204,21,.18)!important;}
+  .launch-toolbar-btn.preview-busy{border-color:rgba(148,163,184,.48);background:rgba(148,163,184,.10);}
   #dashboardLaunchLabel{display:inline-block;min-width:42px;text-align:left;}
   #dashboardLaunchLabel:empty::before{content:"Launch";}
   #btnCssClipboard.css-paste-mode{border-color:rgba(103,232,249,.48);background:rgba(103,232,249,.11);}
@@ -356,6 +358,7 @@
   .hb.alt-menu .hb-chev{font-size:.62rem;}
   .tool:hover:not(:disabled).hb .hb-chev{background:rgba(103,232,249,.20);border-color:rgba(103,232,249,.58);color:#fff;}
   .tool.push-mode{border-color:var(--amber-2)!important;box-shadow:0 0 0 2px rgba(245,166,35,.4)!important;}
+  .tool.report-mode{border-color:#facc15!important;box-shadow:0 0 0 2px rgba(250,204,21,.58),0 0 14px rgba(250,204,21,.42)!important;}
   .tool.inter-window-default{border-color:#ef4444!important;background:rgba(239,68,68,.13)!important;color:#fecaca!important;box-shadow:0 0 0 2px rgba(239,68,68,.38),0 0 13px rgba(239,68,68,.24)!important;}
   html[data-theme="light"] .tool.inter-window-default{color:#991b1b!important;background:#fee2e2!important;border-color:#dc2626!important;box-shadow:0 0 0 2px rgba(220,38,38,.25),0 0 10px rgba(220,38,38,.16)!important;}
   select.push-mode{border-color:var(--amber-2)!important;}
@@ -380,6 +383,17 @@
   .tool:disabled{opacity:.3;cursor:not-allowed;}
   .tool.danger.active{box-shadow:inset 0 0 0 1px rgba(239,68,68,.45);}
   .tool.danger.active svg{color:var(--danger);}
+  .tool.operation-cancel,
+  .tool.operation-cancel:hover:not(:disabled){background:#dc2626!important;border-color:#991b1b!important;color:#fff!important;box-shadow:0 0 0 1px rgba(127,29,29,.38),0 0 10px rgba(220,38,38,.24)!important;}
+  .tool.operation-cancel svg,
+  .tool.operation-cancel:hover:not(:disabled) svg{color:#fff!important;opacity:1!important;}
+  #btnCssClipboard.css-paste-ready,
+  #btnCssClipboard.css-paste-ready:hover:not(:disabled){background:#facc15!important;border-color:#a16207!important;color:#111827!important;box-shadow:0 0 0 1px rgba(161,98,7,.28),0 0 10px rgba(250,204,21,.28)!important;}
+  #btnCssClipboard.css-paste-ready svg,
+  #btnCssClipboard.css-paste-ready .hb-chev,
+  #btnCssClipboard.css-paste-ready:hover:not(:disabled) svg,
+  #btnCssClipboard.css-paste-ready:hover:not(:disabled) .hb-chev{color:#111827!important;opacity:1!important;}
+  #btnCssClipboard.css-paste-ready .hb-chev{background:rgba(255,255,255,.36)!important;border-color:rgba(17,24,39,.38)!important;box-shadow:none!important;}
   .toolbar .spacer{flex:1;}
   .zoom{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.68rem;color:var(--muted);}
   .zoom input{width:90px;accent-color:var(--accent);}
@@ -940,6 +954,10 @@
   .view-refresh-btn.ready{color:#86efac;border-color:#22c55e;background:rgba(20,83,45,.25);}
   .view-refresh-btn.unavailable{color:#fecaca;border-color:#ef4444;background:rgba(127,29,29,.25);text-shadow:0 0 8px rgba(239,68,68,.8);box-shadow:0 0 0 1px rgba(239,68,68,.18),0 0 12px rgba(239,68,68,.32),inset 0 0 10px rgba(239,68,68,.10);}
   .view-refresh-btn.busy{color:#bfdbfe;border-color:#38bdf8;background:rgba(14,116,144,.24);animation:viewspin 1s linear infinite;text-shadow:0 0 10px rgba(56,189,248,.9);box-shadow:0 0 0 1px rgba(56,189,248,.20),0 0 16px rgba(56,189,248,.45),inset 0 0 12px rgba(56,189,248,.12);}
+  .view-refresh-btn.preview-busy-partial{color:#fde68a;border-color:#f59e0b;background:rgba(120,53,15,.34);text-shadow:0 0 8px rgba(245,158,11,.76);box-shadow:0 0 0 1px rgba(245,158,11,.18),0 0 12px rgba(245,158,11,.34),inset 0 0 10px rgba(245,158,11,.10);}
+  .view-refresh-btn.preview-busy-blocked{color:#fecaca;border-color:#ef4444;background:rgba(127,29,29,.34);text-shadow:0 0 8px rgba(239,68,68,.82);box-shadow:0 0 0 1px rgba(239,68,68,.20),0 0 14px rgba(239,68,68,.38),inset 0 0 10px rgba(239,68,68,.12);}
+  .view-refresh-status.preview-warning{color:#fbbf24;text-shadow:0 0 7px rgba(245,158,11,.30);}
+  .view-refresh-status.preview-blocked{color:#fca5a5;text-shadow:0 0 7px rgba(239,68,68,.32);}
   .view-refresh-status{font-family:var(--mono);font-size:.62rem;color:rgba(103,232,249,.72);max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .view-refresh-status.hidden{display:none!important;}
   .view-refresh-status.busy{color:#ffffff;text-shadow:0 0 8px rgba(103,232,249,.45);}
@@ -1320,17 +1338,76 @@
   html[data-theme="light"] .external-css-pane pre{background:#f3f6fa;color:#334155;border-color:#cbd5e1;}
   html[data-theme="light"] .external-css-pane,
   html[data-theme="light"] .info-css-external{background:rgba(217,119,6,.06);}
-  html[data-theme="light"] .hub-op-step{background:#f8fafc;}
-  html[data-theme="light"] .hub-op-step.active{background:rgba(5,117,138,.08);}
+  html[data-theme="light"] #hubOperationModal{background:rgba(226,232,240,.78);}
+  html[data-theme="light"] #hubOperationModal .modal{background:#fff;color:#172033;border-color:#7f8da0;}
+  html[data-theme="light"] .hub-op-step{background:#f8fafc;color:#334155;border-color:#aebac7;}
+  html[data-theme="light"] .hub-op-step.active{background:#dff3f6;color:#172033;border-color:#0e7490;}
+  html[data-theme="light"] .hub-op-step-title{color:#172033;}
+  html[data-theme="light"] .hub-op-step-note,
+  html[data-theme="light"] .hub-op-message{color:#475569;}
   html[data-theme="light"] .hub-activity-banner{background:#fff;color:#172033;border-color:rgba(5,117,138,.48);box-shadow:0 10px 28px rgba(15,23,42,.18);}
   html[data-theme="light"] .json-manager-loading{background:rgba(5,117,138,.05);}
   html[data-theme="light"] .toast{background:#fff;color:#172033;border-color:#cbd5e1;box-shadow:var(--shadow);}
   html[data-theme="light"] .trace-body{color:#475569;}
   html[data-theme="light"] .prefs-panel .pp-row select{background:#fff;color:#172033;}
-  html[data-theme="light"] .orphan-ind.cleanup{background:rgba(4,120,87,.09);}
-  html[data-theme="light"] .orphan-ind.warn{background:rgba(180,83,9,.09);}
-  html[data-theme="light"] .orphan-ind.danger{background:rgba(198,40,40,.09);color:#991b1b;}
-  html[data-theme="light"] .conn-dot{box-shadow:0 0 0 1px rgba(15,23,42,.08);}
+  /* v476: Increase light-mode contrast for top status indicators. */
+  html[data-theme="light"] .topbar .orphan-ind{
+    border-width:2px;
+    font-weight:800;
+    letter-spacing:.005em;
+    box-shadow:0 1px 2px rgba(15,23,42,.14),inset 0 0 0 1px rgba(255,255,255,.45);
+  }
+  html[data-theme="light"] .topbar .orphan-ind svg{width:14px;height:14px;flex:none;}
+  html[data-theme="light"] .orphan-ind.cleanup{
+    background:#d1fae5;
+    border-color:#047857;
+    color:#065f46;
+  }
+  html[data-theme="light"] .orphan-ind.warn{
+    background:#fef3c7;
+    border-color:#b45309;
+    color:#78350f;
+  }
+  html[data-theme="light"] .orphan-ind.danger{
+    background:#fee2e2;
+    border-color:#b91c1c;
+    color:#7f1d1d;
+  }
+  html[data-theme="light"] .topbar .orphan-ind:hover{
+    filter:none;
+    box-shadow:0 0 0 2px rgba(15,23,42,.16),0 2px 5px rgba(15,23,42,.18);
+  }
+  html[data-theme="light"] .conn-dot{
+    width:10px;
+    height:10px;
+    border:2px solid #fff;
+    outline:1px solid #64748b;
+    box-shadow:none;
+  }
+  html[data-theme="light"] .conn-dot.live{
+    background:#059669;
+    outline-color:#047857;
+    box-shadow:0 0 0 3px #a7f3d0;
+  }
+  html[data-theme="light"] .conn-dot.demo{
+    background:#d97706;
+    outline-color:#b45309;
+    box-shadow:0 0 0 3px #fde68a;
+  }
+  html[data-theme="light"] .topbar .conn-label{
+    color:#1e293b;
+    font-weight:800;
+  }
+  html[data-theme="light"] #crumb span[style*="var(--amber-2)"]{
+    display:inline-block;
+    margin-left:4px;
+    padding:1px 6px;
+    border:1px solid #b45309;
+    border-radius:999px;
+    background:#fef3c7;
+    color:#78350f !important;
+    font-weight:800;
+  }
   html[data-theme="light"] .grid-dynamic-bound::after{background:#fff7d6;color:#7c4a03;border-color:rgba(180,83,9,.40);}
   html[data-theme="light"] .coord-readout{background:rgba(255,255,255,.66);border-color:rgba(15,23,42,.14);}
   html[data-theme="light"] .snap-title{background:rgba(15,23,42,.09);}
@@ -1358,6 +1435,10 @@
   html[data-theme="light"] .view-refresh-btn.ready{background:#ecfdf5;color:#047857;border-color:#10b981;}
   html[data-theme="light"] .view-refresh-btn.unavailable{background:#fff1f2;color:#991b1b;border-color:#dc2626;text-shadow:none;box-shadow:0 0 0 1px rgba(220,38,38,.10);}
   html[data-theme="light"] .view-refresh-btn.busy{background:#eff6ff;color:#075985;border-color:#0284c7;text-shadow:none;box-shadow:0 0 0 1px rgba(2,132,199,.12);}
+  html[data-theme="light"] .view-refresh-btn.preview-busy-partial{background:#fffbeb;color:#92400e;border-color:#d97706;text-shadow:none;box-shadow:0 0 0 2px rgba(217,119,6,.13);}
+  html[data-theme="light"] .view-refresh-btn.preview-busy-blocked{background:#fff1f2;color:#991b1b;border-color:#dc2626;text-shadow:none;box-shadow:0 0 0 2px rgba(220,38,38,.13);}
+  html[data-theme="light"] .view-refresh-status.preview-warning{color:#92400e;text-shadow:none;}
+  html[data-theme="light"] .view-refresh-status.preview-blocked{color:#991b1b;text-shadow:none;}
 
 
   /* ============================================================
@@ -1551,7 +1632,7 @@
   html[data-theme="light"] .dash-item.active{
     background:#d7edf1;
     border-color:#036b7d;
-    box-shadow:inset 3px 0 0 #036b7d;
+    box-shadow:none;
   }
   html[data-theme="light"] .stack-card,
   html[data-theme="light"] .sel-card,
@@ -1678,14 +1759,590 @@
     background:#d3e9ed;
     color:#064e5a;
     border-color:#036b7d;
-    box-shadow:inset 3px 0 0 #036b7d;
+    box-shadow:none;
+  }
+
+
+  /* ============================================================
+     LIGHT THEME DIALOG CONTRAST — v1.4.457
+     Makes modal/panel tools readable on light backgrounds without
+     changing the established dark theme.
+     ============================================================ */
+  html[data-theme="light"] .modal{
+    background:#ffffff;
+    color:#111827;
+    border:2px solid #526174;
+    box-shadow:0 22px 54px rgba(15,23,42,.32);
+  }
+  html[data-theme="light"] .modal-head{
+    background:linear-gradient(180deg,#17284d,#0d1a38);
+    color:#ffffff;
+    border-bottom:2px solid #071126;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+  }
+  html[data-theme="light"] .modal-head h3,
+  html[data-theme="light"] .modal-head .help-page-title{
+    color:#ffffff;
+    font-weight:750;
+  }
+  html[data-theme="light"] .modal-head .title-sub{
+    color:#a5f3fc;
+    text-shadow:none;
+  }
+  html[data-theme="light"] .modal-body{
+    background:#ffffff;
+    color:#111827;
+  }
+  html[data-theme="light"] .modal-body .hint,
+  html[data-theme="light"] .modal-body p,
+  html[data-theme="light"] .modal-body li,
+  html[data-theme="light"] .modal-body label,
+  html[data-theme="light"] .modal-body .json-manager-intro,
+  html[data-theme="light"] .modal-body .json-manager-status,
+  html[data-theme="light"] .modal-body .css-cleanup-note{
+    color:#27364a;
+  }
+  html[data-theme="light"] .modal-body code:not(pre code){
+    color:#0f172a;
+    background:#e7edf4;
+    border:1px solid #b3bfcc;
+    border-radius:4px;
+    padding:1px 4px;
+  }
+  html[data-theme="light"] .modal-foot{
+    background:#e7edf4;
+    border-top:2px solid #9aa7b6;
+    box-shadow:inset 0 1px 0 #ffffff;
+  }
+  html[data-theme="light"] .modal-foot .btn{
+    border-color:#69788b;
+    font-weight:650;
+  }
+  html[data-theme="light"] .modal-foot .btn.primary{
+    color:#032830;
+    border-color:#036b7d;
+  }
+
+  /* Help */
+  html[data-theme="light"] #helpModal .help-tabs{
+    background:#dce5ef;
+    border-right:2px solid #8090a3;
+  }
+  html[data-theme="light"] #helpModal .help-tab{
+    background:#f8fafc;
+    color:#26364b;
+    border:1px solid #91a0b1;
+    box-shadow:0 1px 1px rgba(15,23,42,.07);
+  }
+  html[data-theme="light"] #helpModal .help-tab:hover{
+    background:#cfdbe7;
+    color:#0f172a;
+    border-color:#526174;
+  }
+  html[data-theme="light"] #helpModal .help-tab.active{
+    background:#18345c;
+    color:#ffffff;
+    border-color:#0d1a38;
+    box-shadow:0 1px 2px rgba(15,23,42,.18);
+  }
+  html[data-theme="light"] #helpModal .help-content,
+  html[data-theme="light"] #helpModal .help-pages,
+  html[data-theme="light"] #helpModal .help-page{
+    background:#ffffff;
+    color:#111827;
+  }
+  html[data-theme="light"] #helpModal .help-page-kicker{
+    color:#526174;
+    font-weight:750;
+  }
+  html[data-theme="light"] #helpModal .help-page h4{
+    color:#0d1a38;
+    font-weight:800;
+  }
+  html[data-theme="light"] #helpModal .help-page h5{
+    color:#075985;
+    font-weight:800;
+    border-bottom:1px solid #a8b8c8;
+    padding-bottom:4px;
+  }
+  html[data-theme="light"] #helpModal .help-page p,
+  html[data-theme="light"] #helpModal .help-page ul,
+  html[data-theme="light"] #helpModal .help-page ol,
+  html[data-theme="light"] #helpModal .help-grid .v,
+  html[data-theme="light"] #helpModal .help-card p,
+  html[data-theme="light"] #helpModal .help-callout{
+    color:#26364b;
+  }
+  html[data-theme="light"] #helpModal .help-grid .v{
+    border-bottom-color:#b6c1cd;
+  }
+  html[data-theme="light"] #helpModal .help-callout{
+    background:#e9f5f7;
+    border:1px solid #78aab3;
+    border-left:5px solid #036b7d;
+    border-radius:6px;
+    padding:9px 11px;
+  }
+  html[data-theme="light"] #helpModal .help-callout.warn{
+    background:#fff4dc;
+    border-color:#d3a44b;
+    border-left-color:#9a5b00;
+    color:#533200;
+  }
+  html[data-theme="light"] #helpModal .help-card{
+    background:#f6f9fc;
+    border:1px solid #a9b6c4;
+    border-left:5px solid #3b7f8c;
+    border-radius:6px;
+    padding:9px 11px;
+  }
+  html[data-theme="light"] #helpModal .help-mode-grid{
+    color:#26364b;
+    border:1px solid #8d9bad;
+  }
+  html[data-theme="light"] #helpModal .help-mode-grid th{
+    background:#dce7f0;
+    color:#111827;
+    border:1px solid #8d9bad;
+  }
+  html[data-theme="light"] #helpModal .help-mode-grid td{
+    color:#26364b;
+    border:1px solid #aab6c4;
+  }
+  html[data-theme="light"] #helpModal .help-key{
+    background:#e3e9f0;
+    color:#0f172a;
+    border-color:#78879a;
+    border-bottom-color:#526174;
+    box-shadow:inset 0 -1px 0 rgba(15,23,42,.15);
+  }
+  html[data-theme="light"] #helpModal .help-page-nav{
+    background:linear-gradient(180deg,#233a61,#132443);
+    border-top:2px solid #071126;
+    box-shadow:0 -6px 18px rgba(15,23,42,.18);
+  }
+  html[data-theme="light"] #helpModal .help-page-nav .help-page-title,
+  html[data-theme="light"] #helpModal .help-page-nav .help-page-count{
+    color:#ffffff;
+  }
+  html[data-theme="light"] #helpModal .help-page-nav .btn{
+    background:#f8fafc;
+    color:#14213a;
+    border-color:#a7b7c8;
+    box-shadow:0 2px 5px rgba(0,0,0,.22);
+  }
+  html[data-theme="light"] #helpModal .help-page-nav .btn:hover:not(:disabled){
+    background:#d9eef2;
+    color:#072f38;
+    border-color:#67e8f9;
+  }
+  html[data-theme="light"] #helpModal .help-page-nav .btn:disabled{
+    background:#405270;
+    color:#aebbd0;
+    border-color:#5f708c;
+    opacity:.72;
+  }
+
+  /* CSS conflict and cleanup management */
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-summary{
+    gap:8px;
+  }
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-count{
+    background:#e3eaf2;
+    color:#27364a;
+    border:1px solid #748397;
+    box-shadow:inset 0 1px 0 #ffffff;
+  }
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-count b{
+    color:#0d1a38;
+  }
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-section{
+    background:#eef3f7;
+    border:1px solid #748397;
+    box-shadow:inset 0 1px 0 #ffffff;
+  }
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-section h4{
+    color:#0d4f63;
+    font-weight:850;
+  }
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-card,
+  html[data-theme="light"] #cssCleanupModal .css-conflict-group{
+    background:#ffffff;
+    color:#26364b;
+    border:1px solid #8593a4;
+    box-shadow:0 1px 2px rgba(15,23,42,.08);
+  }
+  html[data-theme="light"] #cssCleanupModal .css-conflict-title,
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-card code{
+    color:#0f172a;
+  }
+  html[data-theme="light"] #cssCleanupModal .css-conflict-meta,
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-comment-wrap,
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-option-wrap{
+    color:#3b4b60;
+  }
+  html[data-theme="light"] #cssCleanupModal .css-bubble span{
+    background:#ffffff;
+    color:#26364b;
+    border-color:#748397;
+  }
+  html[data-theme="light"] #cssCleanupModal .css-bubble input:checked+span{
+    background:#075d70;
+    color:#ffffff;
+    border-color:#043f4d;
+    box-shadow:0 0 0 2px rgba(3,107,125,.20);
+  }
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-help-btn{
+    background:#ffffff;
+    color:#075985;
+    border-color:#4d7182;
+  }
+  html[data-theme="light"] #cssCleanupModal .css-cleanup-help-btn:hover{
+    background:#075d70;
+    color:#ffffff;
+  }
+
+  /* Layout JSON editor and device managers */
+  html[data-theme="light"] #jsonModal .json-modebar{
+    background:#dce5ef;
+    border:1px solid #7f8da0;
+    border-radius:8px 8px 0 0;
+    padding:8px 8px 0;
+    gap:4px;
+  }
+  html[data-theme="light"] #jsonModal .json-modebar .btn{
+    background:#f8fafc;
+    color:#26364b;
+    border-color:#8492a4;
+  }
+  html[data-theme="light"] #jsonModal .json-modebar .btn:hover:not(:disabled){
+    background:#cdd9e5;
+    color:#0f172a;
+  }
+  html[data-theme="light"] #jsonModal .json-modebar .btn.active{
+    background:#18345c;
+    color:#ffffff;
+    border-color:#0d1a38;
+    border-bottom-color:#18345c;
+    box-shadow:none;
+  }
+  html[data-theme="light"] #jsonModal #jsonEditor{
+    background:#fbfdff;
+    color:#0b1220;
+    border:2px solid #526174;
+    border-top-left-radius:0;
+    box-shadow:inset 0 1px 3px rgba(15,23,42,.10);
+    caret-color:#0b1220;
+  }
+  html[data-theme="light"] #jsonModal .json-manager-pane{
+    background:#f8fafc;
+    border:2px solid #526174;
+  }
+  html[data-theme="light"] #jsonModal .json-manager-fixed-top,
+  html[data-theme="light"] #jsonModal .json-manager-fixed-bottom{
+    background:#dce5ef;
+    border-color:#7f8da0;
+  }
+  html[data-theme="light"] #jsonModal #jsonTileDevicesPane .json-manager-scroll,
+  html[data-theme="light"] #jsonModal .json-manager-scroll{
+    background:#ffffff;
+    color:#111827;
+  }
+  html[data-theme="light"] #jsonModal .json-tile-device-head,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-head{
+    background:#263d63;
+    color:#ffffff;
+    border-color:#0d1a38;
+  }
+  html[data-theme="light"] #jsonModal .json-sort-btn,
+  html[data-theme="light"] #jsonModal .json-tile-device-head .json-sort-arrow,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-head .json-sort-arrow{
+    color:#ffffff;
+  }
+  html[data-theme="light"] #jsonModal .json-tile-device-row,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row,
+  html[data-theme="light"] #jsonModal .device-picked-item{
+    color:#172033;
+    border-bottom-color:#b5c0cc;
+  }
+  html[data-theme="light"] #jsonModal .json-tile-device-row:nth-child(even),
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row:nth-child(even){
+    background:#f1f5f9;
+  }
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.selected{
+    background:#d5edf1;
+    box-shadow:inset 4px 0 0 #036b7d;
+  }
+  html[data-theme="light"] #jsonModal .json-view-label,
+  html[data-theme="light"] #jsonModal .device-note,
+  html[data-theme="light"] #jsonModal .json-mode-hint{
+    color:#3b4b60;
+  }
+  html[data-theme="light"] #jsonModal .json-manager-loading{
+    background:#e9f5f7;
+    color:#12343c;
+    border-color:#4d8792;
+  }
+
+  /* Tile Information and tile CSS editor */
+  html[data-theme="light"] #infoModal .modal{
+    border-color:#405168;
+    box-shadow:0 18px 46px rgba(15,23,42,.34);
+  }
+  html[data-theme="light"] #infoModal #infoBody .kv{
+    background:#f3f6fa;
+    border:1px solid #8e9bad;
+    border-radius:8px;
+    padding:10px 12px;
+    color:#111827;
+  }
+  html[data-theme="light"] #infoModal #infoBody .kv .k{
+    color:#334155;
+    font-weight:800;
+  }
+  html[data-theme="light"] #infoModal .info-device-static,
+  html[data-theme="light"] #infoModal .info-css-label,
+  html[data-theme="light"] #infoModal .info-css-auto-retarget,
+  html[data-theme="light"] #infoModal .info-css-external-note{
+    color:#26364b;
+  }
+  html[data-theme="light"] #infoModal #infoBody pre,
+  html[data-theme="light"] #infoModal .info-css-editor{
+    background:#fbfdff;
+    color:#0b1220;
+    border:2px solid #526174;
+    box-shadow:inset 0 1px 3px rgba(15,23,42,.10);
+  }
+  html[data-theme="light"] #infoModal .info-css-head{
+    border-bottom:1px solid #9eabb9;
+    padding-bottom:6px;
+  }
+  html[data-theme="light"] #infoModal .info-css-retarget-row,
+  html[data-theme="light"] #infoModal .info-css-instructions{
+    background:#e7f3f5;
+    color:#26364b;
+    border:1px solid #60939c;
+  }
+  html[data-theme="light"] #infoModal .info-css-retarget-btn,
+  html[data-theme="light"] #infoModal .info-css-edit-btn{
+    background:#ffffff;
+    color:#12343c;
+    border-color:#5d7882;
+    font-weight:700;
+  }
+  html[data-theme="light"] #infoModal .info-css-retarget-btn:hover,
+  html[data-theme="light"] #infoModal .info-css-edit-btn:hover{
+    background:#d5edf1;
+    border-color:#036b7d;
+  }
+  html[data-theme="light"] #infoModal .info-css-message{
+    background:#dcfce7;
+    color:#14532d;
+    border-color:#4f9b66;
+  }
+  html[data-theme="light"] #infoModal .info-css-external,
+  html[data-theme="light"] #infoModal .external-css-pane{
+    background:#fff4dc;
+    color:#533200;
+    border-color:#c48a28;
+  }
+  html[data-theme="light"] #infoModal .info-css-error{
+    background:#fee2e2;
+    color:#7f1d1d;
+    border-color:#dc2626;
+  }
+  html[data-theme="light"] #infoModal .info-icon-btn.ok{
+    background:#dcfce7;
+    color:#166534;
+    border-color:#4f9b66;
+  }
+  html[data-theme="light"] #infoModal .info-icon-btn.cancel{
+    background:#fee2e2;
+    color:#991b1b;
+    border-color:#dc2626;
+  }
+
+  /* Other editor/review panels inherit the same readable surfaces. */
+  html[data-theme="light"] #cssReviewModal pre,
+  html[data-theme="light"] #orphanModal pre,
+  html[data-theme="light"] #pasteModal textarea,
+  html[data-theme="light"] .external-css-pane pre{
+    background:#fbfdff;
+    color:#0b1220;
+    border:2px solid #526174;
+  }
+
+
+
+  /* Light-theme primary controls mirror the restrained cyan/slate dark-theme treatment. */
+  html[data-theme="light"] #btnOpenDashboard:not(:disabled):not(.launch-shift-mode):not(.preview-busy){
+    background:linear-gradient(180deg,#e3f2f5,#d5eaee)!important;
+    color:#17414a!important;
+    border-color:#6799a3!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 1px 2px rgba(15,23,42,.10)!important;
+  }
+  html[data-theme="light"] #btnOpenDashboard:not(:disabled):not(.launch-shift-mode):not(.preview-busy):hover{
+    background:linear-gradient(180deg,#d9edf1,#c9e2e7)!important;
+    border-color:#3f7f8b!important;
+    color:#0d3540!important;
+  }
+  html[data-theme="light"] #btnOpenDashboard.preview-busy:not(:disabled){
+    background:linear-gradient(180deg,#e4e9ef,#d8e0e8)!important;
+    color:#334155!important;
+    border-color:#7b8999!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.88),0 1px 2px rgba(15,23,42,.10)!important;
+  }
+  html[data-theme="light"] #btnOpenDashboard.launch-shift-mode:not(:disabled){
+    color:#111827!important;
+  }
+  html[data-theme="light"] #btnSave:not(:disabled){
+    background:linear-gradient(180deg,#e8edf3,#dce4ec)!important;
+    color:#24364a!important;
+    border-color:#718498!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.92),inset 0 0 0 1px rgba(5,117,138,.08),0 1px 2px rgba(15,23,42,.10)!important;
+  }
+  html[data-theme="light"] #btnSave:not(:disabled):hover{
+    background:linear-gradient(180deg,#dfe7ef,#d2dde7)!important;
+    border-color:#526b83!important;
+    color:#17283b!important;
+  }
+  html[data-theme="light"] #btnOpenDashboard:not(:disabled) svg,
+  html[data-theme="light"] #btnSave:not(:disabled) svg{
+    color:#05758a!important;
+    opacity:1!important;
+  }
+  html[data-theme="light"] #btnOpenDashboard:not(:disabled) .hb-chev,
+  html[data-theme="light"] #btnSave:not(:disabled) .hb-chev{
+    background:rgba(255,255,255,.58)!important;
+    border-color:rgba(5,117,138,.38)!important;
+    color:#05758a!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.78)!important;
+  }
+  html[data-theme="light"] #btnOpenDashboard.launch-shift-mode:not(:disabled) .hb-chev{
+    background:rgba(255,255,255,.46)!important;
+    border-color:rgba(17,24,39,.34)!important;
+    color:#111827!important;
+  }
+  html[data-theme="light"] #btnOpenDashboard:disabled,
+  html[data-theme="light"] #btnSave:disabled{
+    background:#edf1f5!important;
+    color:#9aa6b3!important;
+    border-color:#d4dbe3!important;
+    box-shadow:none!important;
+  }
+  html[data-theme="light"] #btnOpenDashboard:disabled svg,
+  html[data-theme="light"] #btnSave:disabled svg,
+  html[data-theme="light"] #btnOpenDashboard:disabled .hb-chev,
+  html[data-theme="light"] #btnSave:disabled .hb-chev{
+    color:#9aa6b3!important;
+    border-color:#d4dbe3!important;
+    background:#edf1f5!important;
+  }
+
+
+
+  /* v475: Preserve semantic device highlighting in Expert panels under Light mode. */
+  html[data-theme="light"] #jsonModal .json-tile-device-row.bad-assignment{
+    background:#fee2e2;
+    border:2px solid #dc2626;
+    color:#7f1d1d;
+  }
+  html[data-theme="light"] #jsonModal .json-tile-device-row.bad-assignment .json-tile-id,
+  html[data-theme="light"] #jsonModal .json-tile-device-row.bad-assignment .json-tile-label,
+  html[data-theme="light"] #jsonModal .json-tile-device-row.bad-assignment .json-tile-label small,
+  html[data-theme="light"] #jsonModal .json-tile-device-row.bad-assignment .device-note{
+    color:#991b1b;
+  }
+  html[data-theme="light"] #jsonModal .json-tile-device-row.bad-assignment .json-tile-device-control select{
+    background:#fff7f7;
+    color:#7f1d1d;
+    border:2px solid #dc2626;
+  }
+  html[data-theme="light"] #jsonModal .json-tile-device-row.missing-selection:not(.bad-assignment){
+    background:#fef3c7;
+    border:2px solid #d97706;
+    color:#78350f;
+  }
+  html[data-theme="light"] #jsonModal .json-tile-device-row.missing-selection:not(.bad-assignment) .json-tile-id,
+  html[data-theme="light"] #jsonModal .json-tile-device-row.missing-selection:not(.bad-assignment) .json-tile-label,
+  html[data-theme="light"] #jsonModal .json-tile-device-row.missing-selection:not(.bad-assignment) .json-tile-label small,
+  html[data-theme="light"] #jsonModal .json-tile-device-row.missing-selection:not(.bad-assignment) .device-note{
+    color:#92400e;
+  }
+  html[data-theme="light"] #jsonModal .json-tile-device-row.missing-selection:not(.bad-assignment) .json-tile-device-control select{
+    background:#fffbeb;
+    color:#78350f;
+    border:2px solid #d97706;
+  }
+  html[data-theme="light"] #jsonModal .json-css-alt.has-title{
+    color:#854d0e;
+    font-weight:700;
+  }
+
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.selected{
+    background:#dbeafe;
+    border:2px solid #2563eb;
+    color:#172554;
+    box-shadow:none;
+  }
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.selected .device-id,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.selected .device-label,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.selected .device-use{
+    color:#1e3a8a;
+  }
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.locked,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.used-selected{
+    background:#dcfce7;
+    border:2px solid #16a34a;
+    color:#14532d;
+    opacity:1;
+  }
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.locked .device-id,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.locked .device-label,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.locked .device-use,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.locked .device-lock,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.used-selected .device-id,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.used-selected .device-label,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.used-selected .device-use{
+    color:#166534;
+  }
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.used-unselected{
+    background:#fef3c7;
+    border:2px solid #d97706;
+    color:#78350f;
+  }
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.used-unselected .device-id,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.used-unselected .device-label,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.used-unselected .device-use,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.used-unselected .device-lock{
+    color:#92400e;
+  }
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.bad-assignment{
+    background:#fee2e2;
+    border:2px solid #dc2626;
+    color:#7f1d1d;
+  }
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.bad-assignment .device-id,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.bad-assignment .device-label,
+  html[data-theme="light"] #jsonModal .json-dashboard-device-row.bad-assignment .device-use{
+    color:#991b1b;
+  }
+  html[data-theme="light"] #jsonModal .json-view-filter.active{
+    background:#dbeafe!important;
+    border-color:#2563eb!important;
+    color:#1e3a8a!important;
+    font-weight:800;
+  }
+  html[data-theme="light"] #jsonModal .json-manager-status.err{
+    color:#991b1b;
+    font-weight:700;
   }
 
 </style>
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.455">1.4.455</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.4.476">1.4.476</span><span class="brand-beta" id="brandChannel"></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -1764,7 +2421,7 @@
       <div class="toolbar-row" id="toolbarRow1">
         <div class="tgroup">
           <div class="holdwrap">
-            <button class="tool hb alt-menu" id="btnInfo" disabled title="Click: show information for the selected tile. Hold or Shift-click: information and report options."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Info<span class="hb-chev" aria-hidden="true">◢</span></button>
+            <button class="tool hb alt-menu" id="btnInfo" disabled title="Click: show information for the selected tile. Hold for information and report options. Hold Shift to make Reports the default click."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="infoBtnLabel">Info</span><span class="hb-chev" aria-hidden="true">◢</span></button>
             <div class="holdmenu hidden" id="infoHoldMenu">
               <button class="hm-item" id="infoMenuTile">Tile Information</button>
               <button class="hm-item" id="infoMenuReports">Reports…</button>
@@ -1914,14 +2571,14 @@
           </button>
         </div>
         <div class="tgroup save-actions">
-          <button class="tool" id="btnJson" disabled title="View layout JSON"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H6a2 2 0 00-2 2v4a2 2 0 01-2 2 2 2 0 012 2v4a2 2 0 002 2h2M16 3h2a2 2 0 012 2v4a2 2 0 002 2 2 2 0 00-2 2v4a2 2 0 01-2 2h-2"/></svg>JSON</button>
+          <button class="tool" id="btnJson" disabled title="View layout JSON"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H6a2 2 0 00-2 2v4a2 2 0 01-2 2 2 2 0 012 2v4a2 2 0 002 2h2M16 3h2a2 2 0 012 2v4a2 2 0 002 2 2 2 0 00-2 2v4a2 2 0 01-2 2h-2"/></svg>Expert</button>
           <span class="toolbar-divider" aria-hidden="true"></span>
           <div class="holdwrap">
             <button class="tool hb launch-toolbar-btn" id="btnOpenDashboard" disabled title="Load a hub dashboard before opening it" aria-label="Open dashboard in new window">
-              <svg class="jump-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg><span id="dashboardLaunchLabel">Launch</span><span class="hb-chev hidden" id="dashboardLaunchChev" aria-hidden="true">▾</span>
+              <svg class="jump-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg><span id="dashboardLaunchLabel">Preview</span><span class="hb-chev" id="dashboardLaunchChev" aria-hidden="true">◢</span>
             </button>
             <div class="holdmenu hidden" id="dashboardLaunchMenu">
-              <button class="hm-item" id="dashboardLaunchPreview">Preview Changes</button>
+              <button class="hm-item hidden" id="dashboardLaunchPreview">Preview</button>
               <button class="hm-item" id="dashboardLaunchSaved">Launch Saved</button>
             </div>
           </div>
@@ -2068,7 +2725,7 @@
 <button class="help-tab" data-help-pane="helpSelect">Selecting Tiles</button>
 <button class="help-tab" data-help-pane="helpToolbar">Toolbar Buttons</button>
 <button class="help-tab" data-help-pane="helpMove">Move, Copy &amp; Spacing</button>
-<button class="help-tab" data-help-pane="helpJsonCss">JSON &amp; CSS</button>
+<button class="help-tab" data-help-pane="helpJsonCss">Expert &amp; CSS</button>
 <button class="help-tab" data-help-pane="helpShortcuts">Shortcuts</button>
 </div>
 <div class="help-content">
@@ -2076,7 +2733,7 @@
 <div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual layout editor for existing Hubitat Dashboard v1 layouts. It can rearrange, resize, duplicate, remove, and reassign existing tiles, and it can change supported presentation details through custom CSS. It does not replace the Hubitat dashboard and tile configuration interface.</p><p><b>Interface theme:</b> Preferences can switch Dashboard Layout Studio between Dark and Light themes. The choice is saved locally and restored before the interface is displayed.</p><div class="help-callout"><b>Use the Hubitat interface for source creation:</b> Create dashboards, create original tiles, choose templates, and configure template-specific properties in the native Hubitat dashboard editor. Reload the dashboard in Dashboard Layout Studio afterward to continue arranging it.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>It cannot add a completely new original tile from Hubitat's template list. Additional tiles can be created only by copying or duplicating an existing tile and then changing its supported assignment or layout settings.</li><li>It cannot change an existing tile from one Hubitat template to another.</li></ul><h5>Template-property limits</h5><ul><li>The graphical editor does not change template-specific properties such as custom icons, background images, background settings, or other properties that are not exposed through the layout operations or achievable with CSS.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
-<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><p><b>Dashboard launch shortcut:</b> Before a dashboard is loaded, the disabled button reads Launch. For an unchanged hub-loaded dashboard, Launch opens the saved dashboard immediately without a menu arrow. When unsaved changes exist, it changes to Preview with a down-arrow menu offering Preview Changes or Launch Saved. Preview Changes remains available after it is selected, so the preview can be reopened if its browser window is closed. The button remains disabled for offline layouts.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
+<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><p><b>Preview / Launch button:</b> For any hub-loaded dashboard, Preview is the normal short-click action, even when the working layout has no unsaved changes. Press and hold the down-right-arrow button to choose Launch Saved. While Shift is held, the button changes to Launch; a short click opens the saved dashboard and Preview becomes the hold-menu option. When a Preview window is actually open, all same-origin DLS windows detect its heartbeat, make Launch the default, and disable the menu item as Preview Unavailable until the Preview window closes. The Preview-opening warning appears before any Preview window is created, includes a Don't show me this again option, and Cancel opens nothing. DLS-generated Preview loading pages and warning dialogs use the active Light or Dark interface theme; the dashboard tiles and layout retain their own dashboard styling so the preview remains accurate. The button remains disabled for offline layouts and while Move To, Copy To, Paste, or Copy CSS/Paste CSS mode is active.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
 <div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
 <div class="k">Hub Connection Settings (Gear Icon)</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
 <div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
@@ -2114,7 +2771,7 @@
 <section class="help-pane" id="helpToolbar">
 <div class="help-pages"><article class="help-page active" data-help-title="Selection and tile actions"><div class="help-page-kicker">Toolbar Buttons</div><h4>Selection and tile actions</h4><h5>How the toolbar is organized</h5><p>The first toolbar group in the top row contains actions that operate on the current selection: tiles, rows, columns, or selected areas.</p><p>The next top-row group contains whole-layout actions such as Trim and Spacing.</p><div class="help-callout">Select first, then act. Selection actions use the current tile, row, column, or rectangular selection; whole-layout actions operate across the dashboard layout.</div><h5>Selection and structural actions</h5><div class="help-grid">
 <div class="k">Select</div><div class="v">Selects all tiles in the layout. This is the toolbar equivalent of Ctrl/Cmd+A.</div>
-<div class="k">Info</div><div class="v">Click to show tile id, position, size, device id from the layout JSON, hub device name when available, template details, and tile-scoped custom CSS for the selected tile. Hold or Shift-click for the Info menu, which also opens Reports. When no tile is selected, Tile Information remains visible in the menu but is disabled. The scoped CSS section can be edited directly; every saved selector must remain scoped to the current tile.</div>
+<div class="k">Info / Reports</div><div class="v">Click Info to show tile id, position, size, device id from the layout JSON, hub device name when available, template details, and tile-scoped custom CSS for the selected tile. Hold the button for the Tile Information and Reports menu. While Shift is held, the button glows yellow, its label changes to Reports, and a normal click opens Reports; releasing Shift restores Info as the default. When no tile is selected, Tile Information remains visible in the menu but is disabled. The scoped CSS section can be edited directly; every saved selector must remain scoped to the current tile.</div>
 <div class="k">Reports</div><div class="v">Opens from the Info hold menu. Creates printer-friendly Plain, Relationship Tree, Overlap Groups, Nested Groups, or Conflict Groups reports for either the selected tiles or the whole layout. Reports open in a separate window, support configurable sorting, selectable columns, common paper sizes, and portrait, landscape, or automatic orientation. Grouped reports can optionally include a proportional thumbnail showing each group’s actual tile footprints and overlaps. Reports are paginated into true paper-sized sheets with a header, footer, and page number on every page. Column headings repeat on every table page. Graphical relationship groups remain together when they fit; oversized groups continue across pages with repeated group headings, fixed readable typography, and connected hierarchy cards rather than page-wide text scaling.</div>
 <div class="k">Insert</div><div class="v">For row/column selections, inserts rows or columns before the selected line range and shifts affected tiles. With incl partial, tiles that start before the inserted line but cross into the selected range move with the selected tiles.</div>
 <div class="k">Delete</div><div class="v">Deletes selected rows/columns and shifts later tiles to close the gap. For tile selections, use Clear to remove without shifting.</div>
@@ -2125,22 +2782,22 @@
 <div class="k">Cut / Copy / Paste</div><div class="v">Uses an internal tile buffer. Cut keeps tiles visible until the first paste, which behaves as a move; later pastes create copies.</div>
 </div></article><article class="help-page" data-help-title="Layout and editor controls"><div class="help-page-kicker">Toolbar Buttons</div><h4>Layout and editor controls</h4><h5>Layout sizing and spacing actions</h5><div class="help-grid">
 <div class="k">Trim</div><div class="v">Whole-layout action that removes blank space above and/or left of the current layout. Hold the button for top-only or left-only choices.</div>
-<div class="k">Copy CSS / Paste CSS</div><div class="v">Select exactly one tile and click Copy CSS to capture its tile-scoped editable and imported CSS. Hold Copy CSS for local or other-window copy; Ctrl+Alt+Shift+C copies CSS to every open same-origin DLS window. The button changes to Paste CSS and Resize changes to Cancel. While CSS paste mode is active, all other controls are disabled, but tiles can still be selected. Select one or more other destination tiles; pasted selectors are retargeted separately to every destination. Paste - Preserve keeps existing conflicting declarations, Paste - Overwrite lets pasted declarations replace local conflicts, Paste - Replace All removes all editable CSS scoped to each destination before pasting, and Paste - Add All appends every pasted rule even when conflicts or duplicates result. Choose a paste mode to complete the operation, or click Cancel to return to Copy CSS. Imported destination rules remain read-only.</div>
+<div class="k">Copy CSS / Paste CSS</div><div class="v">Select exactly one tile and click Copy CSS to capture its tile-scoped editable and imported CSS. Hold Copy CSS for local or other-window copy; Ctrl+Alt+Shift+C copies CSS to every open same-origin DLS window. The button changes to Paste CSS but remains visibly disabled until at least one destination tile other than the source is selected. Once a valid destination is selected, Paste CSS turns yellow and Resize changes to a red Cancel button. While CSS paste mode is active, every other interface button—including Preview / Launch and Rendered View refresh—is disabled; tiles can still be selected. Select one or more other destination tiles; pasted selectors are retargeted separately to every destination. Paste - Preserve keeps existing conflicting declarations, Paste - Overwrite lets pasted declarations replace local conflicts, Paste - Replace All removes all editable CSS scoped to each destination before pasting, and Paste - Add All appends every pasted rule even when conflicts or duplicates result. Choose a paste mode to complete the operation, or click Cancel to return to Copy CSS. Imported destination rules remain read-only.</div>
 <div class="k">Resize</div><div class="v">Selection-action button that sets selected tiles to an exact height and width. Options can preserve spacing between resized tiles and/or push the surrounding layout out of the way. When Overlaps is set to push, or Shift is held, the Resize button glows and the dialog opens with Preserve spacing between resized tiles and Push layout to make room enabled.</div>
 <div class="k">Spacing</div><div class="v">Opens a dialog with all spacing actions: Set all, Set rows only, Set columns only, Unstack and Set All, Inc/Dec all, Inc/Dec rows only, and Inc/Dec columns only.</div>
 <div class="k">Enl/Rdc</div><div class="v">Opens the Enlarge / Reduce dialog for enlarging or reducing the entire layout by row and column amounts. Positive rows/columns enlarge tiles; negative rows/columns reduce them. This is equivalent to selecting all tiles and dragging the lower-right resize handle.</div>
 <div class="k">Unstack and Set All</div><div class="v">Set-menu option that is enabled only when tiles overlap. It breaks overlap stacks apart and sets spacing between individual tiles.</div>
 <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
-</div><h5>History, views, JSON, and Save</h5><div class="help-grid">
+</div><h5>History, views, Expert, and Save</h5><div class="help-grid">
 <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. Undo All follows undo history and remains disabled when there is no undo checkpoint. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Shift-click Undo All reloads the current dashboard from the hub when the layout originated from the hub and Undo All is enabled; otherwise it performs the normal Undo All action.</div>
-<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. When a dashboard is first loaded from the hub, DLS captures rendered tiles directly from that loaded dashboard and does not update the temporary dashboard. For later manual refreshes, DLS checks the current hub device inventory, changes any non-exempt tile device ID that does not exist on the hub to numeric 0 in the temporary preview copy only, authorizes the remaining valid devices used by the current working layout, prepares preview-only File Manager copies of matching dashboard JSON and Simple CSS Editor CSS files when present, saves the adjusted layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. Simple CSS preview imports are redirected to DLS_Temporary_Dashboard.css. When DLS finds a matching dashboard CSS import and JSON settings file, it creates temporary copies. If it also finds an attribute tile whose templateExtra is iFrameLauncher or a tile whose device maps to Simple CSS Editor, the preview warning identifies Simple CSS Editor specifically; otherwise it reports probable external-editor files. The warning is shown only when the Preview launch option is used. It appears in the rendered preview window with an OK button and a Don't warn me again checkbox. Changes made through a preview editor tile remain in the temporary JSON/CSS copies and are not saved back to the current dashboard's actual files when the preview window is closed. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
-<div class="k">JSON</div><div class="v">Opens the editable JSON editor for direct layout edits, formatting, load-file-into-editor, copy, download, and apply.</div>
+<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. When a dashboard is first loaded from the hub, DLS captures rendered tiles directly from that loaded dashboard and does not update the temporary dashboard. For later manual refreshes, DLS checks the current hub device inventory, changes any non-exempt tile device ID that does not exist on the hub to numeric 0 in the temporary preview copy only, authorizes the remaining valid devices used by the current working layout, prepares preview-only File Manager copies of matching dashboard JSON and Simple CSS Editor CSS files when present, saves the adjusted layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. Simple CSS preview imports are redirected to DLS_Temporary_Dashboard.css. When DLS finds a matching dashboard CSS import and JSON settings file, it creates temporary copies. If it also finds an attribute tile whose templateExtra is iFrameLauncher or a tile whose device maps to Simple CSS Editor, the preview warning identifies Simple CSS Editor specifically; otherwise it reports probable external-editor files. The warning is shown only when the Preview launch option is used. It appears in the rendered preview window with an OK button and a Don't warn me again checkbox. While that Preview window remains open, the temporary dashboard is reserved across all open DLS windows. Full unsaved Rendered View refreshes and additional previews are blocked; when the saved dashboard can still supply unchanged tiles, the refresh control turns yellow and performs a partial saved-dashboard refresh, leaving changed tiles in Simple View. Otherwise the refresh control turns red until Preview closes. Changes made through a preview editor tile remain in the temporary JSON/CSS copies and are not saved back to the current dashboard's actual files when the preview window is closed. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
+<div class="k">Expert</div><div class="v">Opens the Layout JSON Editor for direct JSON and custom-field edits, formatting, loading a file into the editor, copying, downloading, device review, and applying changes.</div>
 <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
 </div></article></div>
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpMove">
-<div class="help-pages"><article class="help-page active" data-help-title="Move, copy, paste, and overlaps"><div class="help-page-kicker">Move, Copy &amp; Spacing</div><h4>Move, copy, paste, and overlaps</h4><h5>Placement operations</h5><p>Move to, Copy to, and Paste put the editor into a pending placement mode.</p><ol class="help-step-list">
+<div class="help-pages"><article class="help-page active" data-help-title="Move, copy, paste, and overlaps"><div class="help-page-kicker">Move, Copy &amp; Spacing</div><h4>Move, copy, paste, and overlaps</h4><h5>Placement operations</h5><p>Move to, Copy to, and Paste put the editor into a pending placement mode. The active operation becomes a red Cancel button, and every other interface button—including Preview / Launch and Rendered View refresh—is disabled until the placement is completed or cancelled.</p><ol class="help-step-list">
 <li>Choose Move to, Copy to, or Paste.</li>
 <li>Click the destination grid cell.</li>
 <li>Use Escape to cancel the pending operation.</li>
@@ -2169,15 +2826,15 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpJsonCss">
-<div class="help-pages"><article class="help-page active" data-help-title="JSON editor and applying changes"><div class="help-page-kicker">JSON &amp; CSS</div><h4>JSON editor and applying changes</h4><h5>JSON editor and field views</h5><div class="help-grid">
-<div class="k">JSON editor</div><div class="v">Allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
+<div class="help-pages"><article class="help-page active" data-help-title="Expert tools and applying changes"><div class="help-page-kicker">Expert &amp; CSS</div><h4>Expert tools and applying changes</h4><h5>JSON editor and field views</h5><div class="help-grid">
+<div class="k">Expert button</div><div class="v">Opens the Layout JSON Editor, which allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
 <div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
 <div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid location and size, any tile-scoped CSS content that may supply an alternate title, and its assigned device. Location and size are shown as row/column followed by size in parentheses. The first device choice is Unassigned for blank device IDs. Online layouts use the same selected-device choices as Tile Information; device dropdowns are sorted by device name with the device number shown in parentheses. Offline layouts allow numeric or blank device IDs. In online mode, tiles with a nonblank, nonzero device ID that has no matching hub device are treated as unknown-device tiles and highlighted in red, except system, native-variable, navigation, and static templates such as HSM, Mode, Text Tile, Dashboard, Link, Image, HTML, Frame, Blank, Clock, and Date because those device fields are not regular hub-device assignments. Tile-device rows for valid hub devices that are not selected for the dashboard are highlighted in yellow and remain unselected until you explicitly add them in Dashboard Devices. A Preferences option can skip this save-time device validation while leaving the editor review tools available. Show Invalid and Unassign Invalid are online-only tools. Unassign Invalid clears every non-exempt tile device assignment whose device ID does not exist on the hub after confirmation.</div>
 <div class="k">Dashboard Devices</div><div class="v">Online only. Manages the devices selected for the Hubitat dashboard, locks devices used by current tiles, and can assign all devices, remove unused devices, reload the selection, or update it on the hub. Devices with assigned tiles that are not currently selected are marked yellow and remain unchecked until explicitly selected. Devices that are selected and assigned to tiles are shown in a slightly faded blue locked state.</div>
 </div><h5>Applying editor changes</h5><p><b>Apply changes</b> validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced.</p><div class="help-card-grid">
 <div class="help-card"><b>Custom field-only edits</b><p>If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed.</p></div>
 <div class="help-card"><b>Full JSON edits</b><p>Full JSON edits still invalidate Rendered View captures.</p></div>
-</div><p>If the layout was loaded from the hub, the hub save target is preserved.</p><div class="help-callout">Use the JSON editor when you want to replace the layout while preserving hub context. Use side panel Load file/Paste JSON when you want to open an offline layout.</div></article><article class="help-page" data-help-title="CSS validation and cleanup"><div class="help-page-kicker">JSON &amp; CSS</div><h4>CSS validation and cleanup</h4><h5>Validate / Format</h5><p>Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customHTML and customJS use very basic formatting and limited sanity checks. In customCSS view, the button opens choices for Validate / Reg Fmt or Validate / Comp Fmt.</p><p>In customCSS view, the format step opens a review dialog when it finds:</p><div class="help-card-grid">
+</div><p>If the layout was loaded from the hub, the hub save target is preserved.</p><div class="help-callout">Use the Expert button to open the Layout JSON Editor when you want to replace the layout while preserving hub context. Use side panel Load file/Paste JSON when you want to open an offline layout.</div></article><article class="help-page" data-help-title="CSS validation and cleanup"><div class="help-page-kicker">Expert &amp; CSS</div><h4>CSS validation and cleanup</h4><h5>Validate / Format</h5><p>Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customHTML and customJS use very basic formatting and limited sanity checks. In customCSS view, the button opens choices for Validate / Reg Fmt or Validate / Comp Fmt.</p><p>In customCSS view, the format step opens a review dialog when it finds:</p><div class="help-card-grid">
 <div class="help-card"><b>Duplicates</b><p>Duplicate selector/property declarations.</p></div>
 <div class="help-card"><b>Conflicts</b><p>Conflicting declarations for the same selector/property.</p></div>
 <div class="help-card"><b>Orphans</b><p>Tile rules that reference tiles no longer present.</p></div>
@@ -2211,7 +2868,7 @@
 <div class="k"><span class="help-key">Delete</span> / <span class="help-key">Backspace</span></div><div class="v">Clear the current selection without shifting other tiles.</div>
 <div class="k"><span class="help-key">Shift</span> + <span class="help-key">Delete</span></div><div class="v">For row/column selections, delete selected lines and shift tiles to close the gap.</div>
 <div class="k"><span class="help-key">Esc</span></div><div class="v">Cancel a pending move/copy/paste, cancel an active resize drag, or close/cancel the open dialog.</div>
-<div class="k"><span class="help-key">Shift</span> held</div><div class="v">Temporarily switches eligible Move to / Copy to / Paste actions into push mode and opens Resize with Preserve spacing between resized tiles + Push layout to make room enabled. Push-mode buttons glow while active.</div>
+<div class="k"><span class="help-key">Shift</span> held</div><div class="v">Temporarily switches eligible Move to / Copy to / Paste actions into push mode and opens Resize with Preserve spacing between resized tiles + Push layout to make room enabled. Push-mode buttons glow while active. The Info button also glows yellow, changes its label to Reports, and opens Reports on a normal click. The Preview button changes to Launch; a short click launches the saved dashboard and Preview moves to the hold menu until Shift is released.</div>
 <div class="k"><span class="help-key">Enter</span></div><div class="v">Submits the PIN prompt when opening a PIN-protected dashboard.</div>
 </div></article><article class="help-page" data-help-title="Mouse combinations"><div class="help-page-kicker">Shortcuts</div><h4>Mouse combinations</h4><h5>Mouse combinations</h5><div class="help-grid">
 <div class="k">Click tile</div><div class="v">Select tile; repeated clicks on the same overlapped cell cycle layers.</div>
@@ -2227,7 +2884,7 @@
 <div class="k">Right-click grid/header</div><div class="v">Open the context menu.</div>
 <div class="k">Shift-click active dashboard</div><div class="v">Reload the currently active dashboard from the hub from the left dashboard list, after confirmation.</div>
 <div class="k">Shift-click Undo All</div><div class="v">For a hub-originated layout, reload the current dashboard from the hub when Undo All is enabled. For other layouts, perform normal Undo All.</div>
-<div class="k">Press and hold toolbar buttons</div><div class="v">Open alternate options on buttons with a dropdown arrow, such as push placement, trim direction, spacing scope, and save destination.</div>
+<div class="k">Press and hold toolbar buttons</div><div class="v">Open alternate options on buttons with a dropdown arrow, including Preview / Launch Saved, push placement, trim direction, spacing scope, and save destination.</div>
 </div></article></div>
 <div class="help-page-nav"></div>
 </section>
@@ -2854,8 +3511,8 @@
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v455";
-const APP_VERSION = "1.4.455";
+const BUILD = "v476";
+const APP_VERSION = "1.4.476";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -2870,15 +3527,40 @@ const TEMP_DASHBOARD_NAME = "DLS Temporary Dashboard";
 const TEMP_SIMPLE_CSS_JSON_FILENAME = "DLS_Temporary_Dashboard.json";
 const TEMP_SIMPLE_CSS_CSS_FILENAME = "DLS_Temporary_Dashboard.css";
 const TEMP_SIMPLE_CSS_WARNING_SUPPRESS_KEY = "dls.suppressTemporarySimpleCssPreviewWarning";
+const PREVIEW_OPEN_WARNING_SUPPRESS_KEY = "dls.suppressPreviewOpenBusyWarning";
 const TILE_CSS_AUTO_RETARGET_KEY = "dls.autoRetargetTileCssPaste";
 const INTERWINDOW_TRANSFER_KEY = "dls.interWindowTransfer.v1";
 const INTERWINDOW_EVENT_KEY = "dls.interWindowTransferEvent.v1";
 const INTERWINDOW_PROTOCOL = "dls-interwindow-v1";
 const INTERWINDOW_MAX_AGE_MS = 30*60*1000;
+const PREVIEW_BUSY_KEY = "dls.previewBusy.v1";
+const PREVIEW_COORD_EVENT_KEY = "dls.previewCoordinationEvent.v1";
+const PREVIEW_PROTOCOL = "dls-preview-v1";
+const DLS_PRESENCE_PROTOCOL = "dls-presence-v1";
+const PREVIEW_HEARTBEAT_MS = 900;
+const PREVIEW_EXPIRE_MS = 4200;
+const DLS_PRESENCE_EXPIRE_MS = 6500;
 const DLS_WINDOW_ID = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;
 let InterWindowChannel=null;
+let PreviewCoordinationChannel=null;
 const THEME_KEY = "dls.theme";
 function normalizeTheme(value){ return String(value||"").toLowerCase()==="light" ? "light" : "dark"; }
+function currentPreviewTheme(){
+  return normalizeTheme((typeof State!=="undefined"&&State.theme)||document.documentElement.getAttribute("data-theme"));
+}
+function previewThemePalette(error=false){
+  const light=currentPreviewTheme()==="light";
+  if(light) return {
+    theme:"light",page:"#eef3f8",card:"#ffffff",text:error?"#7f1d1d":"#172033",muted:"#475569",
+    border:error?"#dc8c8c":"#8fa0b3",accent:error?"#b91c1c":"#075985",overlay:"rgba(226,232,240,.86)",
+    shadow:"rgba(15,23,42,.28)",buttonBg:error?"#b91c1c":"#075985",buttonText:"#ffffff",themeColor:"#f4f7fb"
+  };
+  return {
+    theme:"dark",page:"#0d1526",card:"#162034",text:error?"#fecaca":"#eef2fa",muted:"#bcc8e0",
+    border:error?"rgba(248,113,113,.48)":"rgba(103,232,249,.45)",accent:error?"#ef4444":"#67e8f9",overlay:"rgba(2,6,23,.72)",
+    shadow:"rgba(0,0,0,.65)",buttonBg:error?"#ef4444":"#67e8f9",buttonText:error?"#ffffff":"#06222b",themeColor:"#0b1220"
+  };
+}
 function applyTheme(value,{persist=true,announce=false}={}){
   const theme=normalizeTheme(value);
   State.theme=theme;
@@ -2978,7 +3660,33 @@ const State = {
   cssClipboard:null,             // {sourceId,css,hasExternal,external,operationId}: tile-scoped CSS awaiting paste
   interWindowTransfer:null,         // synchronized same-origin tile/CSS copy operation
   interWindowModifierHeld:false,    // Ctrl/Cmd+Alt changes Copy To / Copy CSS default to other-window copy
+  infoShiftReports:false,         // Shift temporarily makes Reports the Info button default
+  launchShiftMode:false,          // Shift temporarily makes Launch the Preview/Launch button default
+  previewBusy:null,               // active temporary-dashboard Preview window heartbeat record
+  previewWindowRef:null,          // Preview window opened by this DLS window
+  previewWindowId:"",             // unique ID for the owned Preview window
+  previewHeartbeatTimer:null,     // owner-side actual-window closed/heartbeat monitor
+  dlsWindowPresence:new Map(),    // recently seen DLS windows on this origin
+  previewBusyUiKey:"",            // suppress repeated busy-state announcements
 };
+
+function updateInfoShiftReports(shiftHeld){
+  State.infoShiftReports=!!shiftHeld;
+  const btn=document.getElementById("btnInfo");
+  const label=document.getElementById("infoBtnLabel");
+  if(btn){
+    btn.classList.toggle("report-mode",State.infoShiftReports);
+    btn.title=State.infoShiftReports
+      ? "Reports is the default click while Shift is held. Release Shift to restore Tile Information."
+      : "Click: show information for the selected tile. Hold for information and report options. Hold Shift to make Reports the default click.";
+  }
+  if(label) label.textContent=State.infoShiftReports?"Reports":"Info";
+}
+
+function updateLaunchShiftMode(shiftHeld){
+  State.launchShiftMode=!!shiftHeld;
+  updateDashboardJumpState();
+}
 
 function interWindowDashboardLabel(){
   return String(State.active&&State.active.label || State.original&&State.original.name || "another DLS window").trim() || "another DLS window";
@@ -3085,6 +3793,170 @@ function initInterWindowTransfers(){
     if(op) activateInterWindowTransfer(op,{announce:false});
   }catch(_e){}
 }
+function previewRecordFresh(record){
+  return !!(record&&record.protocol===PREVIEW_PROTOCOL&&record.previewId&&Number(record.heartbeatAt||0)>0&&Date.now()-Number(record.heartbeatAt||0)<PREVIEW_EXPIRE_MS);
+}
+function readPreviewBusyRecord(){
+  try{
+    const record=JSON.parse(localStorage.getItem(PREVIEW_BUSY_KEY)||"null");
+    return previewRecordFresh(record)?record:null;
+  }catch(_e){ return null; }
+}
+function previewBusyActive(){
+  if(previewRecordFresh(State.previewBusy)) return State.previewBusy;
+  const record=readPreviewBusyRecord();
+  State.previewBusy=record;
+  return record;
+}
+function previewCoordinationMessage(message){
+  const msg={nonce:`${Date.now()}-${Math.random()}`,...message};
+  try{ PreviewCoordinationChannel?.postMessage(msg); }catch(_e){}
+  try{ localStorage.setItem(PREVIEW_COORD_EVENT_KEY,JSON.stringify(msg)); }catch(_e){}
+}
+function previewBusyUiSummary(record){
+  if(!record) return "";
+  const label=String(record.sourceLabel||TEMP_DASHBOARD_NAME).trim()||TEMP_DASHBOARD_NAME;
+  return `${label} is open in a Preview window.`;
+}
+function applyPreviewBusyRecord(record,{announce=false}={}){
+  const next=previewRecordFresh(record)?record:null;
+  const before=State.previewBusy&&State.previewBusy.previewId||"";
+  const after=next&&next.previewId||"";
+  State.previewBusy=next;
+  if(before!==after){
+    updateDashboardJumpState();
+    updateTileDisplayIndicator();
+    const key=after?`busy:${after}`:"clear";
+    if(announce&&State.previewBusyUiKey!==key){
+      State.previewBusyUiKey=key;
+      status(after?`${previewBusyUiSummary(next)} Preview and temporary-dashboard refresh actions are restricted until it closes.`:"Preview window closed. Preview and Rendered View refresh controls are available again.");
+    }
+  }
+  return next;
+}
+function storePreviewBusyRecord(record,{announce=false}={}){
+  const next={...record,protocol:PREVIEW_PROTOCOL,heartbeatAt:Date.now(),expiresAt:Date.now()+PREVIEW_EXPIRE_MS};
+  try{ localStorage.setItem(PREVIEW_BUSY_KEY,JSON.stringify(next)); }catch(_e){}
+  previewCoordinationMessage({protocol:PREVIEW_PROTOCOL,action:"heartbeat",record:next});
+  applyPreviewBusyRecord(next,{announce});
+  return next;
+}
+function clearPreviewBusyRecord(previewId,{announce=true}={}){
+  let current=null;
+  try{ current=JSON.parse(localStorage.getItem(PREVIEW_BUSY_KEY)||"null"); }catch(_e){}
+  if(!previewId||!current||current.previewId===previewId){
+    try{ localStorage.removeItem(PREVIEW_BUSY_KEY); }catch(_e){}
+  }
+  previewCoordinationMessage({protocol:PREVIEW_PROTOCOL,action:"closed",previewId:previewId||current&&current.previewId||""});
+  if(!previewId||!State.previewBusy||State.previewBusy.previewId===previewId) applyPreviewBusyRecord(null,{announce});
+}
+function announceDlsPresence(action="presence"){
+  const msg={protocol:DLS_PRESENCE_PROTOCOL,action,windowId:DLS_WINDOW_ID,heartbeatAt:Date.now()};
+  State.dlsWindowPresence.set(DLS_WINDOW_ID,msg.heartbeatAt);
+  previewCoordinationMessage(msg);
+}
+function activeDlsWindowCount(){
+  const now=Date.now();
+  State.dlsWindowPresence.set(DLS_WINDOW_ID,now);
+  for(const [id,ts] of State.dlsWindowPresence){ if(now-Number(ts||0)>DLS_PRESENCE_EXPIRE_MS) State.dlsWindowPresence.delete(id); }
+  return Math.max(1,State.dlsWindowPresence.size);
+}
+async function activeDlsWindowCountAfterProbe(){
+  announceDlsPresence("presence-query");
+  await new Promise(resolve=>setTimeout(resolve,180));
+  return activeDlsWindowCount();
+}
+function previewWindowRecord(previewId){
+  return {protocol:PREVIEW_PROTOCOL,previewId,ownerWindowId:DLS_WINDOW_ID,sourceLabel:interWindowDashboardLabel(),dashboardId:String(temporaryDashboardState().meta&&temporaryDashboardState().meta.id||"")};
+}
+function installPreviewWindowHeartbeat(win,record){
+  if(!win||win.closed) return false;
+  try{
+    const doc=win.document;
+    if(!doc||!doc.documentElement||win.location.origin!==window.location.origin) return false;
+    const previewLocation=new URL(win.location.href);
+    if(!previewLocation.searchParams.has("dlsPreview")) return false;
+    const previewTheme=currentPreviewTheme();
+    doc.documentElement.setAttribute("data-dls-theme",previewTheme);
+    doc.documentElement.style.colorScheme=previewTheme;
+    let themeMeta=doc.querySelector('meta[name="theme-color"]');
+    if(!themeMeta){ themeMeta=doc.createElement("meta"); themeMeta.setAttribute("name","theme-color"); (doc.head||doc.documentElement).appendChild(themeMeta); }
+    themeMeta.setAttribute("content",previewTheme==="light"?"#f4f7fb":"#0b1220");
+    if(win.__DLS_PREVIEW_MONITOR__&&win.__DLS_PREVIEW_MONITOR__.previewId===record.previewId) return true;
+    const data=JSON.stringify({protocol:PREVIEW_PROTOCOL,previewId:record.previewId,ownerWindowId:record.ownerWindowId,sourceLabel:record.sourceLabel,dashboardId:record.dashboardId});
+    const code=`(()=>{try{const base=${data};const key=${JSON.stringify(PREVIEW_BUSY_KEY)};const eventKey=${JSON.stringify(PREVIEW_COORD_EVENT_KEY)};const channelName="dashboard-layout-studio-preview-v1";const expire=${PREVIEW_EXPIRE_MS};const beat=()=>{const rec={...base,heartbeatAt:Date.now(),expiresAt:Date.now()+expire};try{localStorage.setItem(key,JSON.stringify(rec));localStorage.setItem(eventKey,JSON.stringify({protocol:${JSON.stringify(PREVIEW_PROTOCOL)},action:"heartbeat",record:rec,nonce:String(Date.now())}));}catch(_e){}try{window.__DLS_PREVIEW_BC__?.postMessage({protocol:${JSON.stringify(PREVIEW_PROTOCOL)},action:"heartbeat",record:rec});}catch(_e){}};try{window.__DLS_PREVIEW_BC__=new BroadcastChannel(channelName);window.__DLS_PREVIEW_BC__.onmessage=e=>{if(e.data&&e.data.protocol===${JSON.stringify(PREVIEW_PROTOCOL)}&&e.data.action==="probe")beat();};}catch(_e){}if(window.__DLS_PREVIEW_MONITOR__&&window.__DLS_PREVIEW_MONITOR__.timer)clearInterval(window.__DLS_PREVIEW_MONITOR__.timer);const timer=setInterval(beat,${PREVIEW_HEARTBEAT_MS});window.__DLS_PREVIEW_MONITOR__={previewId:base.previewId,timer};beat();}catch(_e){}})();`;
+    const script=doc.createElement("script");
+    script.textContent=code;
+    (doc.head||doc.documentElement).appendChild(script);
+    script.remove();
+    return true;
+  }catch(_e){ return false; }
+}
+function stopOwnedPreviewTracking(previewId,{announce=true,clear=true}={}){
+  if(previewId&&State.previewWindowId&&State.previewWindowId!==previewId) return;
+  if(State.previewHeartbeatTimer){ clearInterval(State.previewHeartbeatTimer); State.previewHeartbeatTimer=null; }
+  const id=previewId||State.previewWindowId;
+  State.previewWindowRef=null;
+  State.previewWindowId="";
+  if(clear) clearPreviewBusyRecord(id,{announce});
+}
+function beginPreviewWindowTracking(win,previewId){
+  if(State.previewHeartbeatTimer) clearInterval(State.previewHeartbeatTimer);
+  State.previewWindowRef=win;
+  State.previewWindowId=previewId;
+  const record=previewWindowRecord(previewId);
+  storePreviewBusyRecord(record,{announce:true});
+  const tick=()=>{
+    if(!State.previewWindowRef||State.previewWindowRef.closed){ stopOwnedPreviewTracking(previewId,{announce:true,clear:true}); return; }
+    storePreviewBusyRecord(record,{announce:false});
+    installPreviewWindowHeartbeat(State.previewWindowRef,record);
+  };
+  tick();
+  State.previewHeartbeatTimer=setInterval(tick,PREVIEW_HEARTBEAT_MS);
+}
+function handlePreviewCoordinationMessage(msg){
+  if(!msg) return;
+  if(msg.protocol===DLS_PRESENCE_PROTOCOL){
+    if(msg.windowId) State.dlsWindowPresence.set(msg.windowId,Number(msg.heartbeatAt)||Date.now());
+    if(msg.action==="presence-query") announceDlsPresence("presence");
+    return;
+  }
+  if(msg.protocol!==PREVIEW_PROTOCOL) return;
+  if(msg.action==="heartbeat"&&msg.record) applyPreviewBusyRecord(msg.record,{announce:true});
+  else if(msg.action==="closed"){
+    if(!msg.previewId||!State.previewBusy||State.previewBusy.previewId===msg.previewId) applyPreviewBusyRecord(null,{announce:true});
+  }else if(msg.action==="probe"){
+    if(State.previewWindowRef&&!State.previewWindowRef.closed&&State.previewWindowId) storePreviewBusyRecord(previewWindowRecord(State.previewWindowId),{announce:false});
+  }
+}
+function refreshPreviewBusyState(){
+  const record=readPreviewBusyRecord();
+  if(record) applyPreviewBusyRecord(record,{announce:false});
+  else if(State.previewBusy&&!State.previewWindowRef) applyPreviewBusyRecord(null,{announce:true});
+  previewCoordinationMessage({protocol:PREVIEW_PROTOCOL,action:"probe",windowId:DLS_WINDOW_ID});
+  if(State.previewWindowRef&&State.previewWindowRef.closed) stopOwnedPreviewTracking(State.previewWindowId,{announce:true,clear:true});
+}
+function initPreviewBusyCoordination(){
+  try{
+    if("BroadcastChannel" in window){
+      PreviewCoordinationChannel=new BroadcastChannel("dashboard-layout-studio-preview-v1");
+      PreviewCoordinationChannel.addEventListener("message",e=>handlePreviewCoordinationMessage(e.data));
+    }
+  }catch(_e){ PreviewCoordinationChannel=null; }
+  window.addEventListener("storage",e=>{
+    if(e.key===PREVIEW_BUSY_KEY){
+      let record=null; try{ record=e.newValue?JSON.parse(e.newValue):null; }catch(_e){}
+      applyPreviewBusyRecord(record,{announce:true});
+    }else if(e.key===PREVIEW_COORD_EVENT_KEY&&e.newValue){
+      try{ handlePreviewCoordinationMessage(JSON.parse(e.newValue)); }catch(_e){}
+    }
+  });
+  announceDlsPresence("presence-query");
+  refreshPreviewBusyState();
+  setInterval(()=>announceDlsPresence("presence"),2000);
+  setInterval(refreshPreviewBusyState,1200);
+}
+
 function interWindowModifierActive(event=null){
   return !!((event&&(event.ctrlKey||event.metaKey)&&event.altKey)||State.interWindowModifierHeld);
 }
@@ -3249,7 +4121,14 @@ function showHubConnectionError(err){
   modal.classList.remove("hidden");
 }
 function hubRoot(){
-  return `http://${State.conn.ip}`;
+  // When DLS is running from Hubitat File Manager, the browser's current
+  // origin is the authoritative hub address. A saved connection IP can be
+  // stale after a hub address change and must not redirect device inventory
+  // requests to a different host.
+  if(State.hubAvailable && pageLooksHubHosted()) return window.location.origin;
+  const target=String(State.conn.ip||"").trim().replace(/\/+$/g,"");
+  if(/^https?:\/\//i.test(target)) return target;
+  return `http://${target}`;
 }
 function hubDevicesUrl(){
   return `${hubRoot()}/device/listJson?capability=capability.*`;
@@ -4278,8 +5157,9 @@ async function sanitizeTemporaryPreviewInvalidDeviceAssignments(doc){
     }
   }
   if(!State.deviceNamesAvailable || !State.hubDevices || !State.hubDevices.length){
-    trace("temporary preview device sanitization skipped because the hub device inventory is unavailable",null,"err");
-    return result;
+    const message="The current hub device inventory could not be read. DLS did not update the temporary preview dashboard because invalid device assignments could not be safely identified.";
+    trace(message,null,"err");
+    throw new Error(message);
   }
   result.inventoryAvailable=true;
   const known=new Set(State.hubDevices.map(d=>canonicalDeviceId(d&&d.id)).filter(Boolean));
@@ -4300,12 +5180,15 @@ async function sanitizeTemporaryPreviewInvalidDeviceAssignments(doc){
   return result;
 }
 function temporaryDashboardDeviceSignature(ids){ return sortDeviceIds(ids||[]).map(String).join(","); }
-async function synchronizeTemporaryDashboardDevices(doc){
+async function synchronizeTemporaryDashboardDevices(doc,opts={}){
   const td=temporaryDashboardState();
   if(!temporaryDashboardReady()) throw new Error("temporary preview dashboard is not ready");
   const ids=temporaryDashboardDeviceIds(doc);
   const signature=temporaryDashboardDeviceSignature(ids);
-  if(td.deviceSignature===signature) return ids.size;
+  // Hubitat's actual child-app authorization can change independently of this
+  // browser's cached signature. Compatibility captures and Preview therefore
+  // force a fresh authorization pass before loading the temporary dashboard.
+  if(td.deviceSignature===signature && !opts.force) return ids.size;
   setSnapshotRefreshStatus("Updating preview dashboard devices…",true);
   status("Updating temporary preview dashboard devices…",true);
   await configureTemporaryDashboardChild(td.meta.id,ids);
@@ -4480,6 +5363,7 @@ function temporarySimpleCssPreviewWarningContent(info){
 function showTemporarySimpleCssWarningInPreviewWindow(previewWindow,info){
   const warning=temporarySimpleCssPreviewWarningContent(info);
   if(!warning || !previewWindow || previewWindow.closed) return;
+  const palette=previewThemePalette(false);
   let attempts=0;
   const maxAttempts=80;
   const tryInject=()=>{
@@ -4497,33 +5381,36 @@ function showTemporarySimpleCssWarningInPreviewWindow(previewWindow,info){
         return;
       }
       if(doc.getElementById("dlsTemporarySimpleCssWarning")) return;
+      doc.documentElement.setAttribute("data-dls-theme",palette.theme);
+      doc.documentElement.style.colorScheme=palette.theme;
       const overlay=doc.createElement("div");
       overlay.id="dlsTemporarySimpleCssWarning";
+      overlay.dataset.theme=palette.theme;
       overlay.setAttribute("role","dialog");
       overlay.setAttribute("aria-modal","true");
       overlay.setAttribute("aria-labelledby","dlsTemporarySimpleCssWarningTitle");
-      overlay.style.cssText="position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(2,6,23,.72);backdrop-filter:blur(3px);font-family:system-ui,-apple-system,Segoe UI,sans-serif;";
+      overlay.style.cssText=`position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;background:${palette.overlay};backdrop-filter:blur(3px);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color-scheme:${palette.theme};`;
       const card=doc.createElement("div");
-      card.style.cssText="width:min(620px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;border:1px solid rgba(103,232,249,.45);border-radius:14px;background:#162034;color:#eef2fa;box-shadow:0 24px 70px rgba(0,0,0,.65);padding:22px;";
+      card.style.cssText=`width:min(620px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;border:2px solid ${palette.border};border-radius:14px;background:${palette.card};color:${palette.text};box-shadow:0 24px 70px ${palette.shadow};padding:22px;`;
       const title=doc.createElement("h2");
       title.id="dlsTemporarySimpleCssWarningTitle";
       title.textContent=warning.title;
-      title.style.cssText="margin:0 0 10px;color:#67e8f9;font-size:1.15rem;line-height:1.25;";
+      title.style.cssText=`margin:0 0 10px;color:${palette.accent};font-size:1.15rem;line-height:1.25;`;
       const body=doc.createElement("p");
       body.textContent=warning.message;
-      body.style.cssText="margin:0 0 16px;color:#d8e2f3;font-size:.95rem;line-height:1.55;";
+      body.style.cssText=`margin:0 0 16px;color:${palette.muted};font-size:.95rem;line-height:1.55;`;
       const controls=doc.createElement("div");
       controls.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;";
       const label=doc.createElement("label");
-      label.style.cssText="display:inline-flex;align-items:center;gap:8px;color:#eef2fa;font-size:.9rem;cursor:pointer;";
+      label.style.cssText=`display:inline-flex;align-items:center;gap:8px;color:${palette.text};font-size:.9rem;cursor:pointer;`;
       const checkbox=doc.createElement("input");
       checkbox.type="checkbox";
-      checkbox.style.cssText="width:16px;height:16px;accent-color:#67e8f9;";
+      checkbox.style.cssText=`width:16px;height:16px;accent-color:${palette.accent};`;
       label.append(checkbox,doc.createTextNode("Don't warn me again"));
       const ok=doc.createElement("button");
       ok.type="button";
       ok.textContent="OK";
-      ok.style.cssText="min-width:96px;padding:8px 18px;border:0;border-radius:8px;background:#67e8f9;color:#06222b;font-weight:750;font-size:.92rem;cursor:pointer;";
+      ok.style.cssText=`min-width:96px;padding:8px 18px;border:1px solid ${palette.border};border-radius:8px;background:${palette.buttonBg};color:${palette.buttonText};font-weight:750;font-size:.92rem;cursor:pointer;`;
       ok.addEventListener("click",()=>{
         if(checkbox.checked) suppressTemporaryPreviewSimpleCssWarnings();
         overlay.remove();
@@ -4589,12 +5476,39 @@ async function prepareTemporaryDashboardPreview(){
   const files=await prepareTemporaryPreviewFileCopies(payload);
   payload=files.payload;
   const invalidDevices=await sanitizeTemporaryPreviewInvalidDeviceAssignments(payload);
-  await synchronizeTemporaryDashboardDevices(payload);
+  await synchronizeTemporaryDashboardDevices(payload,{force:true});
   const context=await postTemporaryPreviewLayout(payload);
   return {payload,context,fileCopies:files.info,invalidDevices};
 }
 function askConfirmAsync(title,message,opts={}){
   return new Promise(resolve=>showConfirm(title,message,()=>resolve(true),()=>resolve(false),opts));
+}
+function askConfirmWithOptionAsync(title,message,opts={}){
+  return new Promise(resolve=>showConfirm(
+    title,
+    message,
+    value=>resolve({confirmed:true,checked:!!(value&&value.checked)}),
+    value=>resolve({confirmed:false,checked:!!(value&&value.checked)}),
+    opts
+  ));
+}
+function askPreviewOpenWarningAsync(title,message,opts={}){
+  // Re-apply the active theme before showing the Preview warning so its modal
+  // always matches the current DLS interface theme.
+  applyTheme(State.theme,{persist:false});
+  // Open the Preview window only from the confirmation button's click handler.
+  // This keeps the browser user gesture intact while ensuring Cancel opens nothing.
+  return new Promise(resolve=>showConfirm(
+    title,
+    message,
+    value=>resolve({
+      confirmed:true,
+      checked:!!(value&&value.checked),
+      previewWindow:window.open("about:blank","_blank")
+    }),
+    value=>resolve({confirmed:false,checked:!!(value&&value.checked),previewWindow:null}),
+    opts
+  ));
 }
 async function capturePrimaryAfterTemporaryFailure(opts,error){
   const td=temporaryDashboardState();
@@ -5436,29 +6350,56 @@ function updateTileDisplayIndicator(){
   }
   const showRefresh=mode==="snapshot" || (enabled && State.active && !a.ok);
   const busy=State.tileSnapshotStatus==="loading";
-  const unavailable=showRefresh && !a.ok;
-  const refreshDisabled=!showRefresh || !a.ok || busy;
+  const previewPlan=showRefresh?previewBusyRefreshPlan():{busy:false,mode:"normal"};
+  const previewPartial=previewPlan.busy&&previewPlan.mode==="partial";
+  const previewBlocked=previewPlan.busy&&previewPlan.mode==="blocked";
+  const unavailable=showRefresh && (!a.ok||previewBlocked);
+  const operationLocked=operationUiLockActive();
+  const refreshDisabled=operationLocked || !showRefresh || busy || previewBlocked || (!a.ok&&!previewPartial);
   if(refreshTop){
     refreshTop.classList.toggle("hidden", !showRefresh);
-    refreshTop.classList.toggle("ready", showRefresh && a.ok && !busy);
+    refreshTop.classList.toggle("ready", showRefresh && a.ok && !busy && !previewPlan.busy);
     refreshTop.classList.toggle("busy", busy);
-    refreshTop.classList.toggle("unavailable", unavailable);
+    refreshTop.classList.toggle("unavailable", unavailable&&!previewBlocked);
+    refreshTop.classList.toggle("preview-busy-partial",previewPartial&&!busy);
+    refreshTop.classList.toggle("preview-busy-blocked",previewBlocked&&!busy);
     refreshTop.disabled=refreshDisabled;
-    refreshTop.title=!a.ok
-      ? `Rendered View is unavailable: ${a.reason}`
-      : busy
-        ? "Rendered snapshots are refreshing."
-        : (State.tileSnapshotStatus==="failed" && State.tileSnapshotLastError
-          ? `Retry rendered snapshot refresh. Last error: ${State.tileSnapshotLastError}`
-          : "Refresh rendered tile snapshots.");
+    refreshTop.title=operationLocked
+      ? operationUiLockReason()
+      : previewPlan.busy
+        ? previewBusyRefreshStatusText(previewPlan)
+      : !a.ok
+        ? `Rendered View is unavailable: ${a.reason}`
+        : busy
+          ? "Rendered snapshots are refreshing."
+          : (State.tileSnapshotStatus==="failed" && State.tileSnapshotLastError
+            ? `Retry rendered snapshot refresh. Last error: ${State.tileSnapshotLastError}`
+            : "Refresh rendered tile snapshots.");
   }
   if(refreshPref){
     refreshPref.disabled=refreshDisabled;
     refreshPref.title=refreshTop ? refreshTop.title : "Refresh rendered tile snapshots.";
   }
-  if(mode!=="snapshot" || !busy) setSnapshotRefreshStatus("", false);
+  if(operationLocked){
+    simple.disabled=true;
+    if(rendered) rendered.disabled=true;
+    if(refreshPref){ refreshPref.disabled=true; refreshPref.title=operationUiLockReason(); }
+  }
+  const st=document.getElementById("viewRefreshStatus");
+  if(st){
+    st.classList.toggle("preview-warning",previewPartial);
+    st.classList.toggle("preview-blocked",previewBlocked);
+  }
+  if(previewPlan.busy&&mode==="snapshot") setSnapshotRefreshStatus(previewBusyRefreshStatusText(previewPlan),false);
+  else if(mode!=="snapshot" || !busy) setSnapshotRefreshStatus("", false);
 }
 function renderedSnapshotAvailability(){
+  const previewPlan=previewBusyRefreshPlan();
+  if(previewPlan.busy){
+    if(previewPlan.mode==="partial") return {ok:true,reason:"",previewBusy:true,partial:true};
+    if(hasReusableTileSnapshots()) return {ok:true,reason:"",previewBusy:true,blocked:true,existingOnly:true};
+    return {ok:false,reason:previewPlan.reason||"Preview window is open",previewBusy:true,blocked:true};
+  }
   if(temporaryDashboardPreviewUsable()) return {ok:true,reason:"",temporary:true};
   return primaryRenderedSnapshotAvailability();
 }
@@ -6340,6 +7281,16 @@ async function waitForSnapshotFrameLoad(frame,timeoutMs=8000,token=null){
 async function captureHubTileSnapshots(opts={}){
   if(tileDisplayMode()!=="snapshot") return 0;
   if(!ensureSnapshotModeApplicable({warn:!opts.silent,redraw:true})) return 0;
+  if(!opts.previewBusyOverride&&!opts.forcePrimaryDashboard){
+    const previewPlan=previewBusyRefreshPlan();
+    if(previewPlan.busy){
+      if(previewPlan.mode==="partial") return captureSavedDashboardWhilePreviewBusy(opts);
+      if(!opts.silent) toast(previewPlan.reason||"Close the Preview window before refreshing Rendered View.","err");
+      status(previewPlan.reason||"Rendered View refresh is blocked while Preview is open.");
+      updateTileDisplayIndicator();
+      return 0;
+    }
+  }
   if(!(State.tiles&&State.tiles.length)) return completeEmptyRenderedViewCapture(opts);
   if(!opts.temporaryPrepared && !opts.forcePrimaryDashboard && temporaryDashboardPreviewUsable()){
     const td=temporaryDashboardState();
@@ -9853,7 +10804,7 @@ function dlsReportWindowHtml(opts){
   return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><style>
 @page{size:${paper.width} ${paper.height};margin:0}
 *{box-sizing:border-box}
-:root{--page-width:${paper.width};--page-height:${paper.height};--page-pad-x:.44in;--page-pad-top:.28in;--page-pad-bottom:.25in;--page-head-h:.42in;--page-foot-h:.34in}
+:root{--page-width:${paper.width};--page-height:${paper.height};--page-pad-x:.44in;--page-pad-top:.28in;--page-pad-bottom:.25in;--page-head-h:.50in;--page-foot-h:.34in}
 html{background:#d8dee8}
 body{margin:0;background:#d8dee8;color:#172033;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:9pt;line-height:1.35;orphans:3;widows:3}
 .report-actions{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:10px 28px;background:rgba(238,242,247,.96);backdrop-filter:blur(8px);border-bottom:1px solid #cbd5e1;box-shadow:0 3px 12px rgba(15,23,42,.10)}
@@ -9864,18 +10815,18 @@ body{margin:0;background:#d8dee8;color:#172033;font-family:Inter,ui-sans-serif,s
 .sheets{padding:24px 0 44px}
 .sheet{width:var(--page-width);height:var(--page-height);margin:0 auto 24px;padding:var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom);display:grid;grid-template-rows:var(--page-head-h) minmax(0,1fr) var(--page-foot-h);background:#eef2f7;box-shadow:0 14px 38px rgba(15,23,42,.22);overflow:hidden;break-after:page;page-break-after:always}
 .sheet:last-child{break-after:auto;page-break-after:auto}
-.page-running-header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;border-bottom:1px solid #94a3b8;color:#334155;font-size:8pt;font-weight:750;white-space:nowrap;min-width:0}
-.page-running-header .page-title{overflow:hidden;text-overflow:ellipsis}
-.page-running-header .page-context{max-width:48%;overflow:hidden;text-overflow:ellipsis;text-align:right;color:#64748b;font-weight:600}
+.page-running-header{display:grid;grid-template-columns:minmax(0,1fr) minmax(1.5in,46%);align-items:center;gap:12px;border-bottom:1px solid #94a3b8;color:#334155;font-size:8pt;font-weight:750;min-width:0}
+.page-running-header .page-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.page-running-header .page-context{min-width:0;max-width:none;overflow-wrap:anywhere;word-break:normal;white-space:normal;text-align:right;color:#64748b;font-weight:600;line-height:1.18}
 .sheet-body{min-height:0;overflow:hidden;padding:.12in 0 .10in}
 .page-running-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:16px;border-top:1px solid #cbd5e1;color:#64748b;font-size:7pt;white-space:nowrap;min-width:0}
 .page-running-footer .footer-left{overflow:hidden;text-overflow:ellipsis}
 .page-running-footer .footer-right{text-align:right}
-.report-header{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;padding:20px 22px;border-radius:14px;background:linear-gradient(135deg,#10243d,#173d55 58%,#0f766e);color:white;box-shadow:0 10px 26px rgba(15,23,42,.16);break-inside:avoid-page;page-break-inside:avoid}
-.report-header h1{margin:0 0 7px;font-size:18pt;line-height:1.15}
+.report-header{display:grid;grid-template-columns:minmax(0,1fr) minmax(1.55in,42%);gap:16px;align-items:end;padding:20px 22px;border-radius:14px;background:linear-gradient(135deg,#10243d,#173d55 58%,#0f766e);color:white;box-shadow:0 10px 26px rgba(15,23,42,.16);break-inside:avoid-page;page-break-inside:avoid;min-width:0}
+.report-header>div:first-child{min-width:0}.report-header h1{margin:0 0 7px;font-size:18pt;line-height:1.15;overflow-wrap:anywhere}
 .report-header p{margin:0;color:#d8f3f1;font-size:9pt}
-.report-meta{text-align:right;font-size:8pt;color:#dbeafe}
-.report-meta b{display:block;color:white;font-size:9.5pt;margin-bottom:3px}
+.report-meta{min-width:0;max-width:100%;text-align:right;font-size:8pt;color:#dbeafe;overflow-wrap:anywhere;word-break:normal;line-height:1.25}
+.report-meta b{display:block;max-width:100%;color:white;font-size:9.5pt;margin-bottom:3px;overflow-wrap:anywhere}
 .summary-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;margin:12px 0 14px;break-inside:avoid-page;page-break-inside:avoid}
 .summary-card{border:1px solid #cbd5e1;border-radius:9px;background:white;padding:8px 9px;box-shadow:0 2px 8px rgba(15,23,42,.05);break-inside:avoid-page;page-break-inside:avoid}
 .summary-card b{display:block;font-size:11pt;color:#0f766e}
@@ -10822,9 +11773,17 @@ function pushBlockedToast(){
   toast("Push is blocked for disconnected multi-cluster selections or clipboards.","err");
   status("Push disabled — use one tile/cluster, or clear the selection/clipboard to preselect push mode.");
 }
+function operationUiLockActive(){
+  return !!State.pending || !!State.cssClipboard;
+}
+function operationUiLockReason(){
+  if(State.cssClipboard) return "Finish or cancel CSS paste mode before using other controls.";
+  if(State.pending) return "Finish or cancel the active placement operation before using other controls.";
+  return "";
+}
 function releasePendingUiLockIfNeeded(){
   if(State.pending) return;
-  const controls=document.querySelectorAll("#toolbar button,#toolbar select,#toolbar input,#topbar button,.topbar button,.side button");
+  const controls=document.querySelectorAll("button,select,input");
   controls.forEach(el=>{
     if(el.dataset.pendingLocked==="1"){
       if(el.dataset.wasDisabled==="1") el.disabled=true;
@@ -10838,7 +11797,7 @@ function releasePendingUiLockIfNeeded(){
 }
 function releaseCssPasteUiLockIfNeeded(){
   if(State.cssClipboard) return;
-  const controls=document.querySelectorAll("#toolbar button,#toolbar select,#toolbar input,#topbar button,.topbar button,.side button");
+  const controls=document.querySelectorAll("button,select,input");
   controls.forEach(el=>{
     if(el.dataset.cssPasteLocked==="1"){
       if(el.dataset.cssPasteWasDisabled==="1") el.disabled=true;
@@ -10854,7 +11813,7 @@ function applyCssPasteUiLock(){
     "btnCssClipboard","btnSetTileSize",
     "cssPastePreserve","cssPasteOverwrite","cssPasteReplace","cssPasteAdd"
   ]);
-  const controls=document.querySelectorAll("#toolbar button,#toolbar select,#toolbar input,#topbar button,.topbar button,.side button");
+  const controls=document.querySelectorAll("button,select,input");
   controls.forEach(el=>{
     if(allowed.has(el.id)) return;
     if(el.dataset.cssPasteLocked!=="1") el.dataset.cssPasteWasDisabled=el.disabled?"1":"0";
@@ -10886,12 +11845,12 @@ function updateActionButtons(){
       if(moveLbl) moveLbl.textContent="Cancel";
       if(moveChev) moveChev.style.display="none";
       if(moveIcon) moveIcon.innerHTML='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
-      moveBtn.classList.add("danger"); moveBtn.title="Cancel move";
+      moveBtn.classList.add("danger","operation-cancel"); moveBtn.title="Cancel move";
     } else {
       if(moveLbl) moveLbl.textContent="Move to";
       if(moveChev) moveChev.style.display="";
       if(moveIcon) moveIcon.innerHTML='<path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/>';
-      moveBtn.classList.remove("danger"); moveBtn.title="Click: move selection. Hold or Shift-click: more move options.";
+      moveBtn.classList.remove("danger","operation-cancel"); moveBtn.title="Click: move selection. Hold or Shift-click: more move options.";
     }
   }
 
@@ -10907,18 +11866,19 @@ function updateActionButtons(){
       if(copyToLbl) copyToLbl.textContent="Cancel";
       if(copyToChev) copyToChev.style.display="none";
       if(copyToIcon) copyToIcon.innerHTML='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
-      copyToBtn.classList.add("danger"); copyToBtn.title="Cancel copy";
+      copyToBtn.classList.add("danger","operation-cancel"); copyToBtn.title="Cancel copy";
     } else {
       if(copyToLbl) copyToLbl.textContent="Copy to";
       if(copyToChev) copyToChev.style.display="";
       if(copyToIcon) copyToIcon.innerHTML='<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/>';
-      copyToBtn.classList.remove("danger"); copyToBtn.title="Click: copy selection. Hold or Shift-click: more copy options. Ctrl+Alt-click copies to other windows.";
+      copyToBtn.classList.remove("danger","operation-cancel"); copyToBtn.title="Click: copy selection. Hold or Shift-click: more copy options. Ctrl+Alt-click copies to other windows.";
     }
   }
 
   const selectedTileCount=currentSelectionTileIds().length;
   const bInfo=document.getElementById("btnInfo");
   if(bInfo) bInfo.disabled=!State.tiles.length||!!State.pending;
+  updateInfoShiftReports(State.infoShiftReports);
   const infoTileItem=document.getElementById("infoMenuTile");
   if(infoTileItem){
     infoTileItem.disabled=selectedTileCount===0||!!State.pending;
@@ -10929,8 +11889,9 @@ function updateActionButtons(){
   if(cssBtn){
     const pasteMode=!!State.cssClipboard;
     const destCount=pasteMode?cssClipboardDestinationIds().length:0;
-    cssBtn.disabled=!!State.pending || (!pasteMode && selectedTileCount!==1);
+    cssBtn.disabled=!!State.pending || (pasteMode ? destCount===0 : selectedTileCount!==1);
     cssBtn.classList.toggle("css-paste-mode",pasteMode);
+    cssBtn.classList.toggle("css-paste-ready",pasteMode&&destCount>0);
     cssBtn.classList.toggle("menu-only",pasteMode);
     cssBtn.classList.toggle("alt-menu",!pasteMode);
     const cssLabel=document.getElementById("cssClipboardLabel");
@@ -10959,13 +11920,13 @@ function updateActionButtons(){
     const sizeIcon=document.getElementById("tileSizeIcon");
     if(cssPasteMode){
       bSize.disabled=false;
-      bSize.classList.add("danger");
+      bSize.classList.add("danger","operation-cancel");
       bSize.title="Cancel CSS paste mode";
       if(sizeLabel) sizeLabel.textContent="Cancel";
       if(sizeIcon) sizeIcon.innerHTML='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
     }else{
       bSize.disabled=selectedTileCount===0||!!State.pending;
-      bSize.classList.remove("danger");
+      bSize.classList.remove("danger","operation-cancel");
       bSize.title="Resize selected tiles to an exact height and width";
       if(sizeLabel) sizeLabel.textContent="Resize";
       if(sizeIcon) sizeIcon.innerHTML='<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 4v16M16 4v16M4 8h16M4 16h16"/>';
@@ -11015,9 +11976,10 @@ function applyPendingUiLock(){
     return;
   }
   const cancelId=(State.pending.action==="moveTiles"||State.pending.action==="move")?"btnMoveTo":(State.pending.action==="copyTiles"||State.pending.action==="copyLines"||State.pending.action==="externalCopyTiles")?"btnCopyTo":State.pending.action==="pasteBuf"?"btnPasteBuf":null;
-  const controls=document.querySelectorAll("#toolbar button,#toolbar select,#toolbar input,#topbar button,.topbar button,.side button");
+  const allowed=new Set([cancelId].filter(Boolean));
+  const controls=document.querySelectorAll("button,select,input");
   controls.forEach(el=>{
-    if(el.id===cancelId){ el.disabled=false; return; }
+    if(allowed.has(el.id)){ el.disabled=false; return; }
     if(el.dataset.pendingLocked!=="1") el.dataset.wasDisabled=el.disabled?"1":"0";
     el.dataset.pendingLocked="1";
     el.disabled=true;
@@ -15404,6 +16366,71 @@ function renderAffectingUnsavedChangeMessage(){
   if(!hasUnsavedChanges() || !hasRenderAffectingChangesSinceHubBaseline()) return "";
   return "The working layout has unsaved changes that affect what Hubitat renders, such as tile content, device assignments, custom CSS/HTML/JS, or tile definitions. Refreshing Rendered View captures the current hub dashboard, so those unsaved changes will not be reflected until the dashboard is saved to the hub.";
 }
+function renderAffectedTileIdsSinceHubBaseline(doc=serializeLayout()){
+  const current=doc||serializeLayout();
+  const baseline=State.hubSaveBaseline;
+  const currentIds=(current.tiles||[]).map(t=>String(t&&t.id)).filter(Boolean);
+  if(!baseline) return hasUnsavedChanges()?currentIds:[];
+  const top=(source)=>{
+    const out={};
+    Object.keys(source||{}).sort().forEach(k=>{ if(k!=="tiles"&&!RENDER_LAYOUT_ONLY_TOP_LEVEL_FIELDS.has(k)) out[k]=source[k]; });
+    return stableStringifyForCompare(out);
+  };
+  if(top(current)!==top(baseline)) return currentIds;
+  const normalizeTile=(tile)=>{
+    const out={};
+    Object.keys(tile||{}).sort().forEach(k=>{ if(!RENDER_LAYOUT_ONLY_TILE_FIELDS.has(k)) out[k]=tile[k]; });
+    return stableStringifyForCompare(out);
+  };
+  const baseById=new Map((baseline.tiles||[]).map(t=>[String(t&&t.id),normalizeTile(t)]));
+  return (current.tiles||[]).filter(t=>{
+    const id=String(t&&t.id);
+    return !baseById.has(id)||baseById.get(id)!==normalizeTile(t);
+  }).map(t=>String(t.id));
+}
+function previewBusyRefreshPlan(){
+  const busy=previewBusyActive();
+  if(!busy) return {busy:false,mode:"normal",record:null,affectedIds:[],usableCount:0,totalCount:(State.tiles||[]).length,reason:""};
+  const primary=primaryRenderedSnapshotAvailability();
+  if(!primary.ok) return {busy:true,mode:"blocked",record:busy,affectedIds:[],usableCount:0,totalCount:(State.tiles||[]).length,reason:`Close the Preview window first. A saved-dashboard refresh is unavailable because ${primary.reason}.`};
+  const affectedIds=renderAffectedTileIdsSinceHubBaseline();
+  const totalCount=(State.tiles||[]).length;
+  const affectedSet=new Set(affectedIds);
+  const usableCount=(State.tiles||[]).filter(t=>!affectedSet.has(String(t.id))).length;
+  if(totalCount>0&&usableCount===0&&affectedIds.length){
+    return {busy:true,mode:"blocked",record:busy,affectedIds,usableCount,totalCount,reason:"Close the Preview window first. Every current tile has unsaved render-affecting changes, so the saved dashboard cannot provide a useful partial Rendered View refresh."};
+  }
+  return {busy:true,mode:"partial",record:busy,affectedIds,usableCount,totalCount,reason:affectedIds.length?`The Preview window is open. Refresh will use the saved dashboard; ${affectedIds.length} changed tile${affectedIds.length===1?"":"s"} will remain in Simple View.`:"The Preview window is open. Refresh will use the saved dashboard because the temporary dashboard is reserved."};
+}
+function previewBusyRefreshStatusText(plan=previewBusyRefreshPlan()){
+  if(!plan.busy) return "";
+  return plan.mode==="partial"?plan.reason:(plan.reason||"Close the Preview window before refreshing Rendered View.");
+}
+async function captureSavedDashboardWhilePreviewBusy(opts={}){
+  const plan=previewBusyRefreshPlan();
+  if(!plan.busy) return captureHubTileSnapshots({...opts,previewBusyOverride:true});
+  if(plan.mode!=="partial"){
+    toast(plan.reason||"Close the Preview window before refreshing Rendered View.","err");
+    status(plan.reason||"Rendered View refresh is blocked while Preview is open.");
+    updateTileDisplayIndicator();
+    return 0;
+  }
+  status(plan.reason,true);
+  const count=await captureHubTileSnapshots({...opts,previewBusyOverride:true,temporaryPrepared:true,forcePrimaryDashboard:true,dashboardUrl:State.lastDashUrl});
+  if(plan.affectedIds.length&&State.tileSnapshotStatus!=="failed"){
+    invalidateRenderedSnapshotsForTiles(plan.affectedIds,"unsaved changes unavailable while Preview is open",{message:false});
+    const renderedCount=Object.keys(State.tileSnapshots||{}).length;
+    State.tileSnapshotLastSummary=`${renderedCount} saved-dashboard tile${renderedCount===1?"":"s"} captured; ${plan.affectedIds.length} changed tile${plan.affectedIds.length===1?" remains":"s remain"} in Simple View.`;
+    setSnapshotRefreshStatus(State.tileSnapshotLastSummary,false);
+    if(State.active) render();
+    status(`Rendered View partially refreshed from the saved dashboard. ${plan.affectedIds.length} changed tile${plan.affectedIds.length===1?" remains":"s remain"} in Simple View until the Preview window closes.`);
+  }else if(!plan.affectedIds.length&&count>=0){
+    status("Rendered View refreshed from the saved dashboard while the Preview window remains open.");
+  }
+  updateTileDisplayIndicator();
+  return count;
+}
+
 function markLayoutClean(){
   State.savedSnapshot=currentLayoutSnapshot();
   updateDirtyIndicator();
@@ -15644,41 +16671,61 @@ function updateDashboardJumpState(){
   const url=currentDashboardUrl();
   const online=State.conn.mode==="live"&&!!State.active&&!!url;
   const offline=State.conn.mode==="offline"&&!!State.active;
-  const dirty=online&&hasUnsavedChanges();
+  const busy=!!previewBusyActive();
+  const operationLocked=operationUiLockActive();
+  const launchDefault=busy||State.launchShiftMode;
   b.style.display="inline-flex";
-  b.disabled=!online;
-  b.classList.toggle("menu-only",dirty);
-  b.classList.toggle("active",dirty);
-  b.setAttribute("aria-haspopup",dirty?"menu":"false");
-  b.setAttribute("aria-expanded",dirty&&menu&&!menu.classList.contains("hidden")?"true":"false");
-  if(label) label.textContent=dirty?"Preview":"Launch";
-  if(chev) chev.classList.toggle("hidden",!dirty);
-  if(!dirty&&menu) menu.classList.add("hidden");
+  b.disabled=!online||operationLocked;
+  b.classList.toggle("menu-only",online);
+  b.classList.toggle("active",online);
+  b.classList.toggle("launch-shift-mode",online&&!busy&&State.launchShiftMode);
+  b.classList.toggle("preview-busy",online&&busy);
+  b.setAttribute("aria-haspopup",online?"menu":"false");
+  b.setAttribute("aria-expanded",online&&menu&&!menu.classList.contains("hidden")?"true":"false");
+  if(label) label.textContent=launchDefault?"Launch":"Preview";
+  if(chev) chev.classList.toggle("hidden",!online);
+  if(!online&&menu) menu.classList.add("hidden");
   if(previewItem){
-    const previewReady=dirty&&temporaryDashboardPreviewUsable()&&!hubOperationActive();
+    const previewReady=online&&temporaryDashboardPreviewUsable()&&!hubOperationActive()&&!busy&&!operationLocked;
+    previewItem.textContent=busy?"Preview Unavailable":"Preview";
     previewItem.disabled=!previewReady;
-    previewItem.title=previewReady
-      ? "Update the temporary preview dashboard with the current working layout and open or reopen it."
-      : (dirty?"Preview requires the temporary preview dashboard to be enabled, ready, and hosted on the hub.":"");
+    previewItem.classList.toggle("hidden",!launchDefault&&!busy);
+    previewItem.title=busy
+      ? "Close the open Preview window before opening another preview."
+      : previewReady
+        ? "Update the temporary preview dashboard with the current working layout and open it."
+        : "Preview requires the temporary preview dashboard to be enabled, ready, and hosted on the hub.";
   }
-  if(savedItem) savedItem.disabled=!dirty||!url;
-  if(offline){
-    b.title="Dashboard launch is unavailable for offline layouts.";
+  if(savedItem){
+    savedItem.textContent="Launch Saved";
+    savedItem.disabled=!online||!url||operationLocked;
+    savedItem.classList.toggle("hidden",launchDefault||busy);
+  }
+  if(operationLocked){
+    b.title=operationUiLockReason();
+    b.setAttribute("aria-label",b.title);
+    if(menu) menu.classList.add("hidden");
+  }else if(offline){
+    b.title="Preview and dashboard launch are unavailable for offline layouts.";
     b.setAttribute("aria-label",b.title);
   }else if(!State.active){
-    b.title="Load a hub dashboard before opening it.";
+    b.title="Load a hub dashboard before opening Preview or Launch.";
     b.setAttribute("aria-label",b.title);
   }else if(!online){
-    b.title="Launch is available only for a hub-loaded dashboard with an active connection.";
+    b.title="Preview and Launch are available only for a hub-loaded dashboard with an active connection.";
     b.setAttribute("aria-label",b.title);
-  }else if(dirty){
-    b.title="Choose whether to open a preview of the unsaved layout or the dashboard currently saved on the hub.";
-    b.setAttribute("aria-label","Preview options for unsaved dashboard changes");
+  }else if(busy){
+    b.title="Launch the saved dashboard. Preview is unavailable until the open Preview window is closed.";
+    b.setAttribute("aria-label",b.title);
+  }else if(launchDefault){
+    b.title="Launch the dashboard currently saved on the hub. Hold for Preview, or release Shift to restore Preview as the default.";
+    b.setAttribute("aria-label","Launch saved dashboard; hold for Preview");
   }else{
-    b.title="Launch the current dashboard in a new window.";
-    b.setAttribute("aria-label",b.title);
+    b.title="Open Preview. Hold for Launch Saved, or hold Shift to make Launch the default.";
+    b.setAttribute("aria-label","Preview dashboard; hold for Launch Saved");
   }
 }
+
 function openDashboardWindow(url){
   const w=window.open(url,"_blank","noopener");
   if(!w) toast("The browser blocked the dashboard window.","err");
@@ -15701,16 +16748,22 @@ function previewLaunchUrl(raw){
 function writePreviewLaunchPage(win,title,message,error=false){
   if(!win||win.closed) return;
   try{
-    const fg=error?"#fecaca":"#eef2fa";
-    const accent=error?"#ef4444":"#67e8f9";
+    const palette=previewThemePalette(error);
     win.document.open();
-    win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title><style>html,body{height:100%;margin:0}body{display:grid;place-items:center;background:#0d1526;color:${fg};font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}.card{max-width:560px;margin:24px;padding:28px;border:1px solid rgba(148,163,184,.3);border-radius:14px;background:#162034;box-shadow:0 20px 50px rgba(0,0,0,.45)}h1{margin:0 0 10px;font-size:1.2rem;color:${accent}}p{margin:0;color:#bcc8e0;white-space:pre-wrap}</style></head><body><div class="card"><h1>${esc(title)}</h1><p>${esc(message)}</p></div></body></html>`);
+    win.document.write(`<!doctype html><html data-theme="${palette.theme}"><head><meta charset="utf-8"><meta name="color-scheme" content="${palette.theme}"><meta name="theme-color" content="${palette.themeColor}"><title>${esc(title)}</title><style>html,body{height:100%;margin:0;color-scheme:${palette.theme}}body{display:grid;place-items:center;background:${palette.page};color:${palette.text};font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}.card{max-width:560px;margin:24px;padding:28px;border:2px solid ${palette.border};border-radius:14px;background:${palette.card};box-shadow:0 20px 50px ${palette.shadow}}h1{margin:0 0 10px;font-size:1.2rem;color:${palette.accent}}p{margin:0;color:${palette.muted};white-space:pre-wrap}</style></head><body><div class="card"><h1>${esc(title)}</h1><p>${esc(message)}</p></div></body></html>`);
     win.document.close();
   }catch(_e){}
 }
 async function openCurrentDashboardPreview(){
-  if(!(State.conn.mode==="live"&&State.active&&hasUnsavedChanges())){
-    openCurrentDashboard();
+  if(!(State.conn.mode==="live"&&State.active&&currentDashboardUrl())){
+    toast("Preview is available only for a hub-loaded dashboard.","err");
+    updateDashboardJumpState();
+    return;
+  }
+  const existingBusy=previewBusyActive();
+  if(existingBusy){
+    toast("Preview is unavailable while another Preview window is open. Close that window first.","err");
+    updateDashboardJumpState();
     return;
   }
   if(!temporaryDashboardPreviewUsable()){
@@ -15723,11 +16776,54 @@ async function openCurrentDashboardPreview(){
     updateDashboardJumpState();
     return;
   }
-  updateDashboardJumpState();
-  const previewWindow=window.open("about:blank","_blank");
-  if(!previewWindow){ toast("The browser blocked the preview window.","err"); return; }
+  let previewWindow=null;
+  let suppressPreviewOpenWarning=false;
+  try{ suppressPreviewOpenWarning=localStorage.getItem(PREVIEW_OPEN_WARNING_SUPPRESS_KEY)==="1"; }catch(_e){}
+  if(tileDisplayMode()==="snapshot"&&!suppressPreviewOpenWarning){
+    const windowCount=await activeDlsWindowCountAfterProbe();
+    const warning=windowCount>1
+      ? `There are ${windowCount} DLS windows open. While this Preview window remains open, Preview and temporary-dashboard Rendered View refreshes will not be available to the other DLS windows. Saved-dashboard partial refreshes may remain available.\n\nClose the Preview window to release the temporary dashboard.`
+      : "While this Preview window remains open, full Rendered View refreshes that need the temporary dashboard will not be possible. A saved-dashboard partial refresh may remain available.\n\nClose the Preview window to release the temporary dashboard.";
+    const decision=await askPreviewOpenWarningAsync(
+      "Open Preview window?",
+      warning,
+      {okText:"Open Preview",cancelText:"Cancel",defaultButton:"cancel",checkboxText:"Don't show me this again"}
+    );
+    if(!decision.confirmed){
+      status("Preview cancelled. No Preview window was opened.");
+      updateDashboardJumpState();
+      return;
+    }
+    if(decision.checked){
+      try{ localStorage.setItem(PREVIEW_OPEN_WARNING_SUPPRESS_KEY,"1"); }catch(_e){}
+    }
+    previewWindow=decision.previewWindow;
+  }else{
+    previewWindow=window.open("about:blank","_blank");
+  }
+  if(!previewWindow){
+    toast("The browser blocked the preview window.","err");
+    status("Preview could not open because the browser blocked the new window.");
+    updateDashboardJumpState();
+    return;
+  }
   try{ previewWindow.opener=null; }catch(_e){}
-  writePreviewLaunchPage(previewWindow,"Preparing Dashboard Preview","DLS is updating the temporary preview dashboard with the current unsaved layout.");
+  writePreviewLaunchPage(previewWindow,"Preparing Dashboard Preview","DLS is checking whether the shared temporary preview dashboard is available.");
+  const previewId=`${DLS_WINDOW_ID}-preview-${Date.now().toString(36)}`;
+  const claim=previewWindowRecord(previewId);
+  storePreviewBusyRecord(claim,{announce:true});
+  await new Promise(resolve=>setTimeout(resolve,140));
+  const winner=readPreviewBusyRecord();
+  if(!winner||winner.previewId!==previewId){
+    if(previewWindow&&!previewWindow.closed) previewWindow.close();
+    applyPreviewBusyRecord(winner,{announce:true});
+    toast("Another DLS window acquired the temporary Preview dashboard first. Close its Preview window before trying again.","err");
+    status("Preview unavailable because another DLS window is using the temporary dashboard.");
+    updateDashboardJumpState();
+    return;
+  }
+  beginPreviewWindowTracking(previewWindow,previewId);
+  writePreviewLaunchPage(previewWindow,"Preparing Dashboard Preview","DLS is updating the temporary preview dashboard with the current working layout.");
   try{
     const context=await runHubOperation(
       "Open dashboard preview",
@@ -15749,13 +16845,13 @@ async function openCurrentDashboardPreview(){
         hubOperationStep(op,"files",copied.length?"done":"skipped",copied.length?`Created ${copied.join(" and ")} for preview only.`:"No matching preview support files were found.");
         hubOperationStep(op,"devices","active","Checking device assignments and matching the preview dashboard device list…");
         const invalidDevices=await sanitizeTemporaryPreviewInvalidDeviceAssignments(payload);
-        const deviceCount=await synchronizeTemporaryDashboardDevices(payload);
+        const deviceCount=await synchronizeTemporaryDashboardDevices(payload,{force:true});
         checkHubOperationAbort(op);
         const invalidNote=invalidDevices.assignmentCount
           ? ` ${invalidDevices.assignmentCount} invalid tile device assignment${invalidDevices.assignmentCount===1?" was":"s were"} changed to device 0 in the preview copy.`
           : "";
         hubOperationStep(op,"devices","done",`${deviceCount} device${deviceCount===1?"":"s"} authorized.${invalidNote}`);
-        hubOperationStep(op,"save","active","Saving the current unsaved working layout…");
+        hubOperationStep(op,"save","active","Saving the current working layout…");
         const result=await postTemporaryPreviewLayout(payload);
         checkHubOperationAbort(op);
         hubOperationStep(op,"save","done","Working layout saved only to the temporary preview dashboard.");
@@ -15764,23 +16860,29 @@ async function openCurrentDashboardPreview(){
         if(!url) throw new Error("the temporary preview dashboard URL is unavailable");
         writePreviewLaunchPage(previewWindow,"Opening Dashboard Preview","The preview is ready and is opening now.");
         previewWindow.location.replace(url);
+        setTimeout(()=>installPreviewWindowHeartbeat(previewWindow,previewWindowRecord(previewId)),700);
         showTemporarySimpleCssWarningInPreviewWindow(previewWindow,preparedFiles.info);
         hubOperationStep(op,"open","done","Preview opened in a new window.");
         return result;
       },
       {doneMessage:"Dashboard preview opened."}
     );
-    if(!context&&previewWindow&&!previewWindow.closed) previewWindow.close();
-    else status("Opened a preview of the current unsaved layout. The saved dashboard was not changed.");
+    if(!context){
+      if(previewWindow&&!previewWindow.closed) previewWindow.close();
+      stopOwnedPreviewTracking(previewId,{announce:true,clear:true});
+    }else status("Opened a preview of the current working layout. The saved dashboard was not changed.");
   }catch(e){
     const msg=e&&e.message?e.message:String(e||"unknown preview error");
     writePreviewLaunchPage(previewWindow,"Dashboard Preview Failed",msg,true);
+    stopOwnedPreviewTracking(previewId,{announce:true,clear:true});
     toast(`Could not open dashboard preview: ${msg}`,"err");
     status("Dashboard preview could not be opened.");
   }finally{
     updateDashboardJumpState();
+    updateTileDisplayIndicator();
   }
 }
+
 function openCurrentDashboard(){
   const url=currentDashboardUrl();
   if(!url){
@@ -18806,6 +19908,7 @@ function wireUpdateModal(){
 
 async function wire(){
   initInterWindowTransfers();
+  initPreviewBusyCoordination();
   const savedConn=restoreConn();
   updateDashboardJumpState();
   updateUndoControls();
@@ -19058,6 +20161,12 @@ Install the current stable release now, or keep the current installed version un
   });
   const refreshSnapshots=()=>{
     if(tileDisplayMode()!=="snapshot"){ toast("Switch to Rendered View before refreshing rendered tiles.","err"); return; }
+    const previewPlan=previewBusyRefreshPlan();
+    if(previewPlan.busy){
+      if(previewPlan.mode!=="partial"){ toast(previewPlan.reason||"Close the Preview window before refreshing Rendered View.","err"); status(previewPlan.reason||"Rendered View refresh is blocked while Preview is open."); updateTileDisplayIndicator(); return; }
+      captureSavedDashboardWhilePreviewBusy({silent:false,timeoutMs:30000,retryCount:1});
+      return;
+    }
     const a=renderedSnapshotAvailability();
     if(!a.ok){ toast(`Rendered View is unavailable: ${a.reason}.`,"err"); updateTileDisplayIndicator(); return; }
     const warn=temporaryDashboardPreviewUsable()?"":renderAffectingUnsavedChangeMessage();
@@ -19196,20 +20305,8 @@ Install the current stable release now, or keep the current installed version un
     document.getElementById("shell").classList.toggle("collapsed");
     updateSideToggleIcon();
   });
-  document.getElementById("btnOpenDashboard").addEventListener("click",e=>{
-    const btn=e.currentTarget;
-    if(btn.disabled) return;
-    if(State.conn.mode==="live"&&hasUnsavedChanges()){
-      const menu=document.getElementById("dashboardLaunchMenu");
-      if(!menu) return;
-      if(menu.classList.contains("hidden")) showHoldMenu(btn,menu,"left");
-      else menu.classList.add("hidden");
-      btn.setAttribute("aria-expanded",menu.classList.contains("hidden")?"false":"true");
-      return;
-    }
-    openCurrentDashboard();
-  });
-  document.getElementById("dashboardLaunchPreview")?.addEventListener("click",()=>{
+  document.getElementById("dashboardLaunchPreview")?.addEventListener("click",e=>{
+    if(e.currentTarget.disabled) return;
     document.getElementById("dashboardLaunchMenu")?.classList.add("hidden");
     document.getElementById("btnOpenDashboard")?.setAttribute("aria-expanded","false");
     openCurrentDashboardPreview();
@@ -19278,14 +20375,14 @@ Install the current stable release now, or keep the current installed version un
     menu.style.top=Math.round(top)+"px";
     menu.style.visibility="";
   }
-  function wireHoldButton(btnId, menuId, defaultAction, align="left"){
+  function wireHoldButton(btnId, menuId, defaultAction, align="left", shiftOpensMenu=true){
     const btn=document.getElementById(btnId), menu=document.getElementById(menuId);
     if(!btn||!menu) return;
     let timer=null, held=false;
     btn.addEventListener("mousedown",e=>{
       if(btn.disabled) return;
       held=false;
-      if(e.shiftKey){ held=true; showHoldMenu(btn,menu,align); e.preventDefault(); return; }
+      if(e.shiftKey&&shiftOpensMenu){ held=true; showHoldMenu(btn,menu,align); e.preventDefault(); return; }
       timer=setTimeout(()=>{ held=true; showHoldMenu(btn,menu,align); }, 450);
     });
     btn.addEventListener("mouseup",e=>{
@@ -19294,9 +20391,17 @@ Install the current stable release now, or keep the current installed version un
     });
     btn.addEventListener("mouseleave",()=>clearTimeout(timer));
   }
-  wireHoldButton("btnInfo","infoHoldMenu",openSelectedTileInfo);
+  wireHoldButton("btnInfo","infoHoldMenu",e=>{
+    if(State.infoShiftReports||e?.shiftKey) openReportsModal();
+    else openSelectedTileInfo();
+  },"left",false);
   document.getElementById("infoMenuTile")?.addEventListener("click",()=>{ document.getElementById("infoHoldMenu")?.classList.add("hidden"); openSelectedTileInfo(); });
   document.getElementById("infoMenuReports")?.addEventListener("click",()=>{ document.getElementById("infoHoldMenu")?.classList.add("hidden"); openReportsModal(); });
+
+  wireHoldButton("btnOpenDashboard","dashboardLaunchMenu",e=>{
+    if(previewBusyActive()||State.launchShiftMode||e?.shiftKey) openSavedDashboardFromLaunchMenu();
+    else openCurrentDashboardPreview();
+  },"left",false);
 
   wireHoldButton("btnPasteBuf","pasteHoldMenu",()=>{
     if(State.pending&&State.pending.action==="pasteBuf"){ cancelPending(); return; }
@@ -19502,7 +20607,8 @@ Install the current stable release now, or keep the current installed version un
   document.getElementById("gridmap").addEventListener("dblclick",e=>{ const c=cellFromEvent(e); selectGroupAt(c.row,c.col); });
 
   document.getElementById("zoom")?.addEventListener("input",e=>setGridZoom(e.target.value,{allowActualSnap:true}));
-  // Shift key: temporarily switches eligible operations to push mode.
+  // Shift key: temporarily switches eligible operations to push mode and
+  // makes Reports the default action of the Info button.
   // Push can be preselected with no active source, but is unavailable for
   // disconnected multi-cluster selections/buffers once a source exists.
   function updatePushModeButtons(shiftHeld){
@@ -19523,14 +20629,28 @@ Install the current stable release now, or keep the current installed version un
     syncPushAvailability();
   }
   document.addEventListener("keydown",e=>{
-    if(e.key==="Shift"&&!e.repeat) updatePushModeButtons(true);
+    if(e.key==="Shift"&&!e.repeat){
+      updatePushModeButtons(true);
+      updateInfoShiftReports(true);
+      updateLaunchShiftMode(true);
+    }
     syncInterWindowModifierButtons(e);
   });
   document.addEventListener("keyup",e=>{
-    if(e.key==="Shift") updatePushModeButtons(false);
+    if(e.key==="Shift"){
+      updatePushModeButtons(false);
+      updateInfoShiftReports(false);
+      updateLaunchShiftMode(false);
+    }
     syncInterWindowModifierButtons(e);
   });
-  window.addEventListener("blur",()=>{ State.interWindowModifierHeld=false; syncInterWindowModifierButtons(); });
+  window.addEventListener("blur",()=>{
+    State.interWindowModifierHeld=false;
+    updatePushModeButtons(false);
+    updateInfoShiftReports(false);
+    updateLaunchShiftMode(false);
+    syncInterWindowModifierButtons();
+  });
   // when user manually changes overlaps dropdown, clear any shift-saved state
   document.getElementById("overlaps").addEventListener("change",e=>{
     State.shiftPushRestore=null;
