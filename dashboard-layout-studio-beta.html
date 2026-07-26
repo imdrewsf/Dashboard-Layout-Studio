@@ -2450,7 +2450,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.5.499">1.5.499</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.5.501">1.5.501</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -3022,7 +3022,7 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpAbout">
-<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.5.499 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
+<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.5.501 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
 <div class="help-page-nav"></div>
 </section>
 </div>
@@ -3689,8 +3689,8 @@ SOFTWARE.</pre></div>
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v499";
-const APP_VERSION = "1.5.499";
+const BUILD = "v501";
+const APP_VERSION = "1.5.501";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -12603,6 +12603,16 @@ function updateActionButtons(){
   applyCssPasteUiLock();
   syncInterWindowModifierButtons();
 }
+function pendingUiLockExemptControl(el,allowed){
+  if(!el) return false;
+  if(allowed&&allowed.has(el.id)) return true;
+  // A destination dashboard may need the missing-device review while an
+  // inter-window tile copy is still active. Keep that visible dialog usable so
+  // devices can be added (or the copy can continue/cancel) without first
+  // cancelling the synchronized copy in the source window.
+  const deviceModal=el.closest?.("#importDeviceWarningModal");
+  return !!(deviceModal&&!deviceModal.classList.contains("hidden"));
+}
 function applyPendingUiLock(){
   const pending=!!State.pending;
   if(!pending){
@@ -12613,7 +12623,13 @@ function applyPendingUiLock(){
   const allowed=new Set([cancelId].filter(Boolean));
   const controls=document.querySelectorAll("button,select,input");
   controls.forEach(el=>{
-    if(allowed.has(el.id)){ el.disabled=false; return; }
+    if(pendingUiLockExemptControl(el,allowed)){
+      // The dialog's own sync routine owns its enabled/disabled states.
+      delete el.dataset.pendingLocked;
+      delete el.dataset.wasDisabled;
+      if(allowed.has(el.id)) el.disabled=false;
+      return;
+    }
     if(el.dataset.pendingLocked!=="1") el.dataset.wasDisabled=el.disabled?"1":"0";
     el.dataset.pendingLocked="1";
     el.disabled=true;
@@ -14543,6 +14559,16 @@ function showImportedDeviceWarning(opts){
   };
   resetModalPosition("importDeviceWarningModal");
   modal.classList.remove("hidden");
+  // These controls may have been disabled while the placement operation was
+  // armed and the modal was still hidden. Release only this modal from that
+  // lock, then let sync() apply the correct device-review button states.
+  [confirm,lossConfirm,openHub,cancel,proceed,add].forEach(el=>{
+    if(!el) return;
+    delete el.dataset.pendingLocked;
+    delete el.dataset.wasDisabled;
+  });
+  confirm.disabled=false;
+  lossConfirm.disabled=false;
   document.addEventListener("keydown",onKeyDown,true);
   sync();
   setTimeout(()=>{ const target=informationalOnly?proceed:confirm; if(target) target.focus({preventScroll:true}); },0);
