@@ -2,6 +2,27 @@
 
 ---
 
+## 1.5.501
+
+**Changes since beta 1.5.499**
+
+- Fixed: Copy To Other Window disabled UX when device was not valid in the destination dashboard.
+
+## 1.5.499
+
+**Changes since beta 1.4.479**
+
+- First 1.5 beta release.
+- Added: Hierarchical List and Tree views in the Selection panel, with separate cluster groups, nested-container relationships, z-index ordering, cluster-specific controls, and clearer active-tile identification.
+- Added: Z-index report sorting and a selectable Z-index report field; improved nested-container classification in reports.
+- Changed: Light mode is now the default for new installations, with additional interface contrast and selection-visibility improvements.
+- Added: Release-note, GitHub, issue-reporting, and MIT License links to the Update and Help/About panels.
+- Added: A conditional yellow **Beta** indicator below the version number when the application identifies itself as a beta build.
+- Added: **Reset Settings** restores all preferences to beta defaults and re-enables dismissed notifications without clearing hub credentials or the current layout.
+- Changed: Reorganized Reports into Report, Sorting, and Fields tabs; reorganized Preferences into logical groups and disabled Rendered View method when Rendered View is not enabled.
+- Fixed: Removing an external `@import` immediately clears stale imported-CSS conflicts and reruns validation.
+- Bug fixes and UX improvements.
+
 ## 1.4.479
 
 **Changes since beta 1.4.476**

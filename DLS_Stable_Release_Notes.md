@@ -2,6 +2,20 @@
 
 ---
 
+## 1.4.498
+
+**Changes since stable 1.2.441**
+
+- First 1.4 stable release.
+- Added: Light and Dark interface themes
+- Changed: Shift key temporarily changes the Info button to Reports; renamed the JSON toolbar control to **Expert** and updated Help to identify it as the Layout JSON Editor.
+- Fixed: Clearer active-tile identification in the grid and Selection panel, including stronger selection visibility and cluster-grouped tile lists.
+- Added: Release-note, GitHub, issue-reporting, and MIT License links to the Update and Help/About panels.
+- Added: **Reset Settings** restores all preferences to stable defaults and re-enables dismissed notifications without clearing hub credentials or the current layout.
+- Changed: Reorganized Reports into Report, Sorting, and Fields tabs; reorganized Preferences into logical groups and disabled Rendered View method when Rendered View is not enabled.
+- Fixed: Rendered View no longer hangs on dashboards with no tiles, and removing an external `@import` immediately clears stale imported-CSS conflicts.
+- Bug fixes and UX improvements.
+
 ## 1.2.441
 
 **Changes since stable 1.2.425**
