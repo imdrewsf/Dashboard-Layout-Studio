@@ -358,6 +358,12 @@
   input.modesel{background-image:none;padding:0 6px;width:38px;text-align:center;}
   .msel{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;min-height:26px;}
   .msel>span{font-family:var(--mono);font-size:.62rem;letter-spacing:.02em;color:var(--faint);white-space:nowrap;user-select:none;}
+  .modesel-shell{position:relative;display:inline-flex;align-items:center;}
+  .modesel-shell select.modesel{padding-right:20px;background-image:none!important;}
+  .modesel-chevron{position:absolute;right:6px;top:50%;transform:translateY(-52%);pointer-events:none;
+    color:var(--faint);font-family:var(--sans);font-size:.72rem;font-weight:800;line-height:1;}
+  .modesel-shell select.modesel:disabled + .modesel-chevron{opacity:.55;}
+  html[data-theme="light"] .modesel-chevron{color:#334155;}
   .msel:has(.push-mode) .modesel{border-color:var(--amber-2)!important;box-shadow:0 0 0 2px rgba(245,166,35,.3)!important;}
   .tgroup.modifiers{gap:8px;padding:1px 14px;align-items:center;min-height:30px;flex:0 0 auto;justify-content:flex-start;transition:width .12s ease;}
   .tgroup.modifiers.toolbar-balanced{justify-content:space-evenly;}
@@ -1608,6 +1614,7 @@
     border-color:#b7c0cc;
     box-shadow:none;
   }
+
   html[data-theme="light"] .tool{
     background:#ffffff;
     color:#172033;
@@ -2450,7 +2457,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.5.502">1.5.502</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.5.504">1.5.504</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -2632,19 +2639,19 @@
       <div class="toolbar-row" id="toolbarRow2">
                 <div class="tgroup modifiers">
           <label class="msel"><span>Selection:</span>
-            <select id="selMode" class="modesel" title="How tiles crossing the target boundary are selected (spec --select)">
+            <span class="modesel-shell"><select id="selMode" class="modesel" title="How tiles crossing the target boundary are selected (spec --select)">
               <option value="default">default</option>
               <option value="include_partial">incl partial</option>
               <option value="exclude_partial">excl partial</option>
               <option value="only_partial">only partial</option>
-            </select></label>
+            </select><span class="modesel-chevron" aria-hidden="true">▾</span></span></label>
           <label class="msel"><span>Overlaps:</span>
-            <select id="overlaps" class="modesel" title="What happens when a move/copy/paste would overlap existing tiles">
+            <span class="modesel-shell"><select id="overlaps" class="modesel" title="What happens when a move/copy/paste would overlap existing tiles">
               <option value="none" selected>warn</option>
               <option value="allow">allow</option>
               <option value="skip">skip</option>
               <option value="push">push</option>
-            </select></label>
+            </select><span class="modesel-chevron" aria-hidden="true">▾</span></span></label>
           <label class="msel" title="Empty cells to leave between placed tiles and pushed tiles when Overlaps is set to Push"><span>Push buf:</span>
             <input type="number" id="pushBufInput" min="0" max="99" value="0" class="modesel" style="width:42px;text-align:center" /></label>
           <label class="chk" title="Duplicate tile-scoped customCSS for copied tiles (CLI default). Uncheck = --css:ignore"><input type="checkbox" id="chkDupCss" checked /> Dup CSS</label>
@@ -2923,7 +2930,7 @@
 <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
 </div><h5>History, views, Expert, and Save</h5><div class="help-grid">
 <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. Undo All follows undo history and remains disabled when there is no undo checkpoint. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Shift-click Undo All reloads the current dashboard from the hub when the layout originated from the hub and Undo All is enabled; otherwise it performs the normal Undo All action.</div>
-<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. When a dashboard is first loaded from the hub, DLS captures rendered tiles directly from that loaded dashboard and does not update the temporary dashboard. For later manual refreshes, DLS checks the current hub device inventory, changes any non-exempt tile device ID that does not exist on the hub to numeric 0 in the temporary preview copy only, authorizes the remaining valid devices used by the current working layout, prepares preview-only File Manager copies of matching dashboard JSON and Simple CSS Editor CSS files when present, saves the adjusted layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. Simple CSS preview imports are redirected to DLS_Temporary_Dashboard.css. When DLS finds a matching dashboard CSS import and JSON settings file, it creates temporary copies. If it also finds an attribute tile whose templateExtra is iFrameLauncher or a tile whose device maps to Simple CSS Editor, the preview warning identifies Simple CSS Editor specifically; otherwise it reports probable external-editor files. The warning is shown only when the Preview launch option is used. It appears in the rendered preview window with an OK button and a Don't warn me again checkbox. While that Preview window is displaying the DLS temporary dashboard, the temporary dashboard is reserved across all open DLS windows. Full unsaved Rendered View refreshes and additional previews are blocked; when the saved dashboard can still supply unchanged tiles, the refresh control turns yellow and performs a partial saved-dashboard refresh, leaving changed tiles in Simple View. Otherwise the refresh control turns red until Preview closes or navigates away from the temporary dashboard. Changes made through a preview editor tile remain in the temporary JSON/CSS copies and are not saved back to the current dashboard's actual files when the preview window is closed. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
+<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. When a dashboard is first loaded from the hub, DLS captures rendered tiles directly from that loaded dashboard and does not update the temporary dashboard. For later manual refreshes, DLS checks the current hub device inventory, changes any non-exempt tile device ID that does not exist on the hub to numeric 0 in the temporary preview copy only, authorizes the remaining valid devices used by the current working layout, prepares preview-only File Manager copies of matching dashboard JSON and Simple CSS Editor CSS files when present, saves the adjusted layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. Simple CSS preview imports are redirected to DLS_Temporary_Dashboard.css. When DLS finds a matching dashboard CSS import and JSON settings file, it creates temporary copies. If it also finds an attribute tile whose templateExtra is iFrameLauncher or a tile whose device maps to Simple CSS Editor, the preview warning identifies Simple CSS Editor specifically; otherwise it reports probable external-editor files. The warning is shown only when the Preview launch option is used. It appears in the rendered preview window with an OK button and a Don't warn me again checkbox. While that Preview window remains open, the temporary dashboard is reserved across all open DLS windows. Full unsaved Rendered View refreshes and additional previews are blocked; when the saved dashboard can still supply unchanged tiles, the refresh control turns yellow and performs a partial saved-dashboard refresh, leaving changed tiles in Simple View. Otherwise the refresh control turns red until Preview closes. Changes made through a preview editor tile remain in the temporary JSON/CSS copies and are not saved back to the current dashboard's actual files when the preview window is closed. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
 <div class="k">Expert</div><div class="v">Opens the Layout JSON Editor for direct JSON and custom-field edits, formatting, loading a file into the editor, copying, downloading, device review, and applying changes.</div>
 <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
 </div></article></div>
@@ -3022,7 +3029,7 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpAbout">
-<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.5.502 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
+<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.5.504 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
 <div class="help-page-nav"></div>
 </section>
 </div>
@@ -3689,8 +3696,8 @@ SOFTWARE.</pre></div>
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v502";
-const APP_VERSION = "1.5.502";
+const BUILD = "v504";
+const APP_VERSION = "1.5.504";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -17419,7 +17426,7 @@ function updateDashboardJumpState(){
     b.title="Preview and Launch are available only for a hub-loaded dashboard with an active connection.";
     b.setAttribute("aria-label",b.title);
   }else if(busy){
-    b.title="Launch the saved dashboard. Preview is unavailable until the Preview window closes or leaves the temporary dashboard.";
+    b.title="Launch the saved dashboard. Preview is unavailable until the open Preview window is closed.";
     b.setAttribute("aria-label",b.title);
   }else if(launchDefault){
     b.title="Launch the dashboard currently saved on the hub. Hold for Preview, or release Shift to restore Preview as the default.";

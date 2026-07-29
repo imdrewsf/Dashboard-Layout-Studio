@@ -2,6 +2,12 @@
 
 ---
 
+## 1.5.504
+
+**Changes since beta 1.5.502**
+
+- Fixed: Down arrows missing on light mode drop downs on edit actions toolbar
+
 ## 1.5.502
 
 **Changes since beta 1.5.501**
