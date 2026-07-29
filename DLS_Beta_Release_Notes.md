@@ -2,6 +2,12 @@
 
 ---
 
+## 1.5.502
+
+**Changes since beta 1.5.501**
+
+- Fixed: Preview Dashboard lock releases when url changes in preview tab/window.  Lock restored on browser back.
+
 ## 1.5.501
 
 **Changes since beta 1.5.499**
