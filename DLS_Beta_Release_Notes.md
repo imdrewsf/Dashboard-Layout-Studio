@@ -1,6 +1,18 @@
 # Dashboard Layout Studio — Beta Release Notes
 
 ---
+## 1.5.510
+
+**Changes since beta 1.5.504**
+
+- Changed: Temporary Preview dashboard can only be opened by DLS.
+- Changed: Temporary Preview dashboards have Hubitat navigation disabled.
+- Fixed: Preview window lock releases when navigating away in the Preview tab/window.
+- Changed: DLS now warns when closing or navigating away while its Preview dashboard remains open and closes the owned Preview after the user leaves.
+- Fixed: Grid Columns and Grid Rows no longer appear manually editable while Auto-size dashboard bounds controls them. 
+- Fixed: Abort now cancels the complete Save to Hub verification process, including the Checking current hub layout stage, token refresh, response reading, and retries.
+- Changed: Save-verification requests now have a finite network timeout, preventing DLS from remaining indefinitely stuck after a VPN, network, routing, or hub failure.
+- Bug fixes and UX improvements.
 
 ## 1.5.504
 
