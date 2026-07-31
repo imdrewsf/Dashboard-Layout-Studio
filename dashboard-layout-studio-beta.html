@@ -1090,6 +1090,12 @@
   .grid-dialog-grid.compact .field label{font-size:.62rem;}
   .grid-dialog-grid.compact .input{padding:5px 7px;font-size:.72rem;}
   .grid-dialog-note{margin-top:7px;color:var(--faint);font-size:.72rem;line-height:1.35;}
+  .grid-autosize-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 2px;padding:8px 10px;border:1px solid rgba(245,158,11,.38);border-radius:9px;background:rgba(245,158,11,.09);color:var(--muted);font-size:.72rem;line-height:1.4;}
+  .grid-autosize-notice.hidden{display:none;}
+  .grid-autosize-notice b{color:var(--amber-2);}
+  .grid-autosize-notice .btn{width:auto;flex:0 0 auto;padding:5px 9px;font-size:.68rem;}
+  .grid-bound-field.auto-controlled{opacity:.58;}
+  .grid-bound-field.auto-controlled label{cursor:not-allowed;}
   .grid-main-tabs{display:flex;flex-direction:column;min-height:0;flex:1;margin-top:0;overflow:hidden;}
   .grid-main-tabs .grid-tabbar{flex:none;}
   .grid-main-tabs .grid-tab-pane{min-height:0;overflow:auto;padding-right:2px;}
@@ -1277,6 +1283,8 @@
   html[data-theme="light"] .grid-view-btn:hover:not(:disabled){background:#e5edf6;color:#0f172a;border-color:var(--border-2);}
   html[data-theme="light"] .btn.primary{background:linear-gradient(135deg,#67e8f9,#46b6cf);color:#06222b;border-color:transparent;}
   html[data-theme="light"] .btn.primary:disabled{background:#e5eaf1;color:#64748b;border-color:#cbd5e1;}
+  html[data-theme="light"] .grid-autosize-notice{background:#fff7ed;border-color:#f59e0b;color:#475569;}
+  html[data-theme="light"] .grid-autosize-notice b{color:#92400e;}
   html[data-theme="light"] .btn.primary.busy:disabled{background:linear-gradient(135deg,#67e8f9,#46b6cf,#67e8f9);color:#06222b;border-color:transparent;}
   html[data-theme="light"] .btn.primary.hub-connected{background:linear-gradient(135deg,#34d399,#10b981);color:#042014;}
   html[data-theme="light"] .tool{color:#263449;}
@@ -2457,7 +2465,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.5.504">1.5.504</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.5.510">1.5.510</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -2873,7 +2881,7 @@
 <div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual layout editor for existing Hubitat Dashboard v1 layouts. It can rearrange, resize, duplicate, remove, and reassign existing tiles, and it can change supported presentation details through custom CSS. It does not replace the Hubitat dashboard and tile configuration interface.</p><p><b>Interface theme:</b> New installations start in Light mode. Preferences can switch Dashboard Layout Studio between Light and Dark themes, and the saved choice is restored before the interface is displayed. The Reset Settings button restores all saved preferences to their defaults, re-enables notifications dismissed with a don't-show-again option, and leaves hub credentials and the current dashboard layout unchanged.</p><div class="help-callout"><b>Use the Hubitat interface for source creation:</b> Create dashboards, create original tiles, choose templates, and configure template-specific properties in the native Hubitat dashboard editor. Reload the dashboard in Dashboard Layout Studio afterward to continue arranging it.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>It cannot add a completely new original tile from Hubitat's template list. Additional tiles can be created only by copying or duplicating an existing tile and then changing its supported assignment or layout settings.</li><li>It cannot change an existing tile from one Hubitat template to another.</li></ul><h5>Template-property limits</h5><ul><li>The graphical editor does not change template-specific properties such as custom icons, background images, background settings, or other properties that are not exposed through the layout operations or achievable with CSS.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
-<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><p><b>Preview / Launch button:</b> For any hub-loaded dashboard, Preview is the normal short-click action, even when the working layout has no unsaved changes. Press and hold the down-right-arrow button to choose Launch Saved. While Shift is held, the button changes to Launch; a short click opens the saved dashboard and Preview becomes the hold-menu option. When a Preview window is displaying the DLS temporary dashboard, all same-origin DLS windows detect its heartbeat, make Launch the default, and disable the menu item as Preview Unavailable. The lock is released if that window closes or navigates away from the temporary dashboard, and is reacquired if the same window returns with the browser Back button. The Preview-opening warning appears before any Preview window is created, includes a Don't show me this again option, and Cancel opens nothing. DLS-generated Preview loading pages and warning dialogs use the active Light or Dark interface theme; the dashboard tiles and layout retain their own dashboard styling so the preview remains accurate. The button remains disabled for offline layouts and while Move To, Copy To, Paste, or Copy CSS/Paste CSS mode is active.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
+<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><p><b>Preview / Launch button:</b> For any hub-loaded dashboard, Preview is the normal short-click action, even when the working layout has no unsaved changes. Press and hold the down-right-arrow button to choose Launch Saved. While Shift is held, the button changes to Launch; a short click opens the saved dashboard and Preview becomes the hold-menu option. When a Preview window is displaying the DLS temporary dashboard, all same-origin DLS windows detect its heartbeat, make Launch the default, and disable the menu item as Preview Unavailable. The lock is released if that window closes or navigates away from the temporary dashboard, and is reacquired if the same window returns with the browser Back button. If DLS is closed or navigated away from while its Preview dashboard is still open, the browser asks whether to leave; leaving closes the owned Preview window. Loading a different hub dashboard also closes the Preview because it no longer represents the active layout. The Preview-opening warning appears before any Preview window is created, includes a Don't show me this again option, and Cancel opens nothing. DLS-generated Preview loading pages and warning dialogs use the active Light or Dark interface theme; the dashboard tiles and layout retain their own dashboard styling so the preview remains accurate. The button remains disabled for offline layouts and while Move To, Copy To, Paste, or Copy CSS/Paste CSS mode is active.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
 <div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
 <div class="k">Hub Connection Settings (Gear Icon)</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
 <div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
@@ -2930,7 +2938,7 @@
 <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
 </div><h5>History, views, Expert, and Save</h5><div class="help-grid">
 <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. Undo All follows undo history and remains disabled when there is no undo checkpoint. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Shift-click Undo All reloads the current dashboard from the hub when the layout originated from the hub and Undo All is enabled; otherwise it performs the normal Undo All action.</div>
-<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. When a dashboard is first loaded from the hub, DLS captures rendered tiles directly from that loaded dashboard and does not update the temporary dashboard. For later manual refreshes, DLS checks the current hub device inventory, changes any non-exempt tile device ID that does not exist on the hub to numeric 0 in the temporary preview copy only, authorizes the remaining valid devices used by the current working layout, prepares preview-only File Manager copies of matching dashboard JSON and Simple CSS Editor CSS files when present, saves the adjusted layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. Simple CSS preview imports are redirected to DLS_Temporary_Dashboard.css. When DLS finds a matching dashboard CSS import and JSON settings file, it creates temporary copies. If it also finds an attribute tile whose templateExtra is iFrameLauncher or a tile whose device maps to Simple CSS Editor, the preview warning identifies Simple CSS Editor specifically; otherwise it reports probable external-editor files. The warning is shown only when the Preview launch option is used. It appears in the rendered preview window with an OK button and a Don't warn me again checkbox. While that Preview window remains open, the temporary dashboard is reserved across all open DLS windows. Full unsaved Rendered View refreshes and additional previews are blocked; when the saved dashboard can still supply unchanged tiles, the refresh control turns yellow and performs a partial saved-dashboard refresh, leaving changed tiles in Simple View. Otherwise the refresh control turns red until Preview closes. Changes made through a preview editor tile remain in the temporary JSON/CSS copies and are not saved back to the current dashboard's actual files when the preview window is closed. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
+<div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. When a dashboard is first loaded from the hub, DLS captures rendered tiles directly from that loaded dashboard and does not update the temporary dashboard. For later manual refreshes, DLS checks the current hub device inventory, changes any non-exempt tile device ID that does not exist on the hub to numeric 0 in the temporary preview copy only, authorizes the remaining valid devices used by the current working layout, prepares preview-only File Manager copies of matching dashboard JSON and Simple CSS Editor CSS files when present, saves the adjusted layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. Simple CSS preview imports are redirected to DLS_Temporary_Dashboard.css. When DLS finds a matching dashboard CSS import and JSON settings file, it creates temporary copies. If it also finds an attribute tile whose templateExtra is iFrameLauncher or a tile whose device maps to Simple CSS Editor, the preview warning identifies Simple CSS Editor specifically; otherwise it reports probable external-editor files. The warning is shown only when the Preview launch option is used. It appears in the rendered preview window with an OK button and a Don't warn me again checkbox. While that Preview window remains open, the temporary dashboard is reserved across all open DLS windows. Full unsaved Rendered View refreshes and additional previews are blocked; when the saved dashboard can still supply unchanged tiles, the refresh control turns yellow and performs a partial saved-dashboard refresh, leaving changed tiles in Simple View. Otherwise the refresh control turns red until Preview closes. Changes made through a preview editor tile remain in the temporary JSON/CSS copies and are not saved back to the current dashboard's actual files when the preview window is closed. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. Preview launches force the temporary dashboard setting showNavigation to false so the preview cannot navigate back to the hub. Preview launches also add a full-screen warning tile and preview-only CSS to the temporary dashboard. DLS removes that warning only from the Preview window it opened and then removes the token from the visible URL; opening the temporary dashboard directly in another tab or browser leaves the warning page in place. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
 <div class="k">Expert</div><div class="v">Opens the Layout JSON Editor for direct JSON and custom-field edits, formatting, loading a file into the editor, copying, downloading, device review, and applying changes.</div>
 <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
 </div></article></div>
@@ -2952,7 +2960,7 @@
 <div class="help-card"><b>Resize by dragging</b><p>Drag the resize handle at the bottom-right of a selected tile to resize the selection.</p></div>
 <div class="help-card"><b>Mouse-resize behavior</b><p>Mouse resizing grows from the upper-left corner and adjusts neighboring selected tiles to avoid growing over each other.</p></div>
 <div class="help-card"><b>Exact size</b><p>The Resize dialog does the same kind of spacing-aware resize, but uses an exact height and width entered by the user.</p></div>
-</div><p>The Enl/Rdc (Enlarge / Reduce) dialog applies that same resize-drag behavior to the full layout by treating every tile as selected and applying row/column deltas.</p><h5>Grid settings and editor grid view</h5><p>The Grid dialog changes the dashboard grid metadata and cell sizes. The current grid summary and editable grid values stay visible at the top of the dialog while the lower area is organized into tabs. The grid change mode is shown in the main Grid Settings box and offers two choices: Change grid only and Preserve layout. Use the question-mark icon next to the Grid change mode title to compare the modes. Change grid only keeps tile coordinates untouched. Preserve layout is experimental and changes tile positions and spans to keep the dashboard as close as possible to its current visual geometry. Because Hubitat tile coordinates and spans are whole numbers, DLS warns when an enlarged grid cannot preserve the current geometry exactly; when Preserve layout is selected, Column Size and Row Size are constrained so no existing tile would have to shrink below 1×1. Preserve layout uses a relationship-first scale pass: connected, nested, and overlapped tiles are scaled with shared rounded grid lines; positive margins and empty-cell gaps remain visible; and container/background tiles grow only as needed so nested or overlay tiles stay inside and aligned. The Recommended tab is enabled only when Preserve layout is selected and scores preservation-friendly Column Size / Row Size / Grid Gap combinations for the current layout. It evaluates columns and rows independently, so dashboards with different column and row sizes still get useful sweet-spot recommendations. The Auto Fit tab calculates Column Size / Row Size / Grid Gap values for a target screen and includes expanded presets for common PCs, Macs, Fire tablets, kiosk/wall displays, tablets, phones, plus a remembered custom size. Fire and kiosk presets use full-screen display dimensions for wall-dashboard use, including Fully Kiosk Browser setups. The Statistics tab compares current and new dashboard size side by side and lists warnings. The CSS Issues tab is enabled only when Preserve layout is selected and issues are detected; issues are grouped by change type, such as font/icon sizes or padding/fixed-size CSS. Each group has one Fix checkbox and lists the matching CSS declarations plus the proposed scaled value, so users can apply font fixes while leaving padding or positioning CSS unchanged. Toolbar buttons use two menu indicators: a full down arrow means the button always opens a menu, while a small corner marker means the button has a normal click action plus hold/Shift-click alternates. The Grid toolbar button uses the full arrow and opens a dropdown with Edit and Trim. Edit opens this Grid Settings dialog; Trim immediately sets the declared Grid Columns/Rows to the current used layout area. The toolbar rows are balanced so the second-row settings group is widened only enough to match the first row after the Grid dropdown was added. The dialog footer includes Reset to Current, which restores the dialog fields to the current dashboard grid values. DLS always preserves dashboard row/column aspect ratio and shows grid gaps by default; Preferences includes a Don't show grid gap option for a tighter editing view and a grouped Auto-size dashboard bounds setting with a Bounds buffer that grows or shrinks declared rows/columns to the used layout plus optional padding. The Grid Zoom control in the lower bar provides a slider, an Actual button, and a Fit button. Dashboards load in Fit view by default so the whole used layout is visible. Actual jumps to the dashboard cell size and gap regardless of fit. Fit zooms the used layout into the editor area without shrinking displayed row/column cells below 3px. When zoomed out, DLS keeps drawing enough rows and columns to fill the editor viewport so the blank canvas is not mistaken for a layout boundary. Applying grid-size changes switches the editor to Actual view so the new dashboard cell sizes can be inspected immediately. The displayed grid size appears at the lower right after the legend. Dashboards with Column Size or Row Size set to 0 are treated as dynamic Auto-sized dashboards. DLS simulates only the dynamic axis: Column Size 0 uses the Auto Fit target width, Row Size 0 uses the Auto Fit target height, and any fixed axis keeps its explicit dashboard size. When a dynamic dashboard is loaded, DLS shows a notice explaining which Auto Fit preset is being used and offers a button to open Grid Settings → Auto Fit; the notice can be suppressed. The lower status area shows the active dynamic preset, and the grid size readout labels dynamic and fixed axes separately. DLS draws a yellow dashed Dynamic target boundary on the grid so 0-sized dashboards, including 0 / 0 / 0 layouts, remain readable. When Grid Gap is 0, DLS writes it as quoted "0" in saved/exported JSON to avoid the Hubitat zero-gap reset issue.</p></article><article class="help-page" data-help-title="Resize selected tiles"><div class="help-page-kicker">Move, Copy &amp; Spacing</div><h4>Resize selected tiles</h4><h5>Resize dialog: preserving spacing and growing</h5><div class="help-card"><b>Preserve spacing between resized tiles</b><p>Preserves the original spacing between the selected tiles while their sizes change.</p></div><div class="help-card" style="margin-top:10px"><b>Push layout to make room</b><p>If the target size is larger than the selected tiles, the layout option is Push layout to make room. It automatically enables Preserve spacing between resized tiles and moves affected surrounding tiles to make room, using the same push buffer and overlap behavior as Move to, Copy to, and Paste.</p></div><h5>Resize dialog: reducing, pulling, and conflicts</h5><ul>
+</div><p>The Enl/Rdc (Enlarge / Reduce) dialog applies that same resize-drag behavior to the full layout by treating every tile as selected and applying row/column deltas.</p><h5>Grid settings and editor grid view</h5><p>The Grid dialog changes the dashboard grid metadata and cell sizes. The current grid summary and editable grid values stay visible at the top of the dialog while the lower area is organized into tabs. The grid change mode is shown in the main Grid Settings box and offers two choices: Change grid only and Preserve layout. Use the question-mark icon next to the Grid change mode title to compare the modes. Change grid only keeps tile coordinates untouched. Preserve layout is experimental and changes tile positions and spans to keep the dashboard as close as possible to its current visual geometry. Because Hubitat tile coordinates and spans are whole numbers, DLS warns when an enlarged grid cannot preserve the current geometry exactly; when Preserve layout is selected, Column Size and Row Size are constrained so no existing tile would have to shrink below 1×1. Preserve layout uses a relationship-first scale pass: connected, nested, and overlapped tiles are scaled with shared rounded grid lines; positive margins and empty-cell gaps remain visible; and container/background tiles grow only as needed so nested or overlay tiles stay inside and aligned. The Recommended tab is enabled only when Preserve layout is selected and scores preservation-friendly Column Size / Row Size / Grid Gap combinations for the current layout. It evaluates columns and rows independently, so dashboards with different column and row sizes still get useful sweet-spot recommendations. The Auto Fit tab calculates Column Size / Row Size / Grid Gap values for a target screen and includes expanded presets for common PCs, Macs, Fire tablets, kiosk/wall displays, tablets, phones, plus a remembered custom size. Fire and kiosk presets use full-screen display dimensions for wall-dashboard use, including Fully Kiosk Browser setups. The Statistics tab compares current and new dashboard size side by side and lists warnings. The CSS Issues tab is enabled only when Preserve layout is selected and issues are detected; issues are grouped by change type, such as font/icon sizes or padding/fixed-size CSS. Each group has one Fix checkbox and lists the matching CSS declarations plus the proposed scaled value, so users can apply font fixes while leaving padding or positioning CSS unchanged. Toolbar buttons use two menu indicators: a full down arrow means the button always opens a menu, while a small corner marker means the button has a normal click action plus hold/Shift-click alternates. The Grid toolbar button uses the full arrow and opens a dropdown with Edit and Trim. Edit opens this Grid Settings dialog; Trim immediately sets the declared Grid Columns/Rows to the current used layout area. The toolbar rows are balanced so the second-row settings group is widened only enough to match the first row after the Grid dropdown was added. The dialog footer includes Reset to Current, which restores the dialog fields to the current dashboard grid values. DLS always preserves dashboard row/column aspect ratio and shows grid gaps by default; Preferences includes a Don't show grid gap option for a tighter editing view and a grouped Auto-size dashboard bounds setting with a Bounds buffer that grows or shrinks declared rows/columns to the used layout plus optional padding. While automatic bounds sizing is enabled, Grid Columns and Grid Rows are visibly disabled in Grid Settings and a Use manual bounds button disables the preference so those values can be edited; Column Size, Row Size, and Grid Gap remain available. The Grid Zoom control in the lower bar provides a slider, an Actual button, and a Fit button. Dashboards load in Fit view by default so the whole used layout is visible. Actual jumps to the dashboard cell size and gap regardless of fit. Fit zooms the used layout into the editor area without shrinking displayed row/column cells below 3px. When zoomed out, DLS keeps drawing enough rows and columns to fill the editor viewport so the blank canvas is not mistaken for a layout boundary. Applying grid-size changes switches the editor to Actual view so the new dashboard cell sizes can be inspected immediately. The displayed grid size appears at the lower right after the legend. Dashboards with Column Size or Row Size set to 0 are treated as dynamic Auto-sized dashboards. DLS simulates only the dynamic axis: Column Size 0 uses the Auto Fit target width, Row Size 0 uses the Auto Fit target height, and any fixed axis keeps its explicit dashboard size. When a dynamic dashboard is loaded, DLS shows a notice explaining which Auto Fit preset is being used and offers a button to open Grid Settings → Auto Fit; the notice can be suppressed. The lower status area shows the active dynamic preset, and the grid size readout labels dynamic and fixed axes separately. DLS draws a yellow dashed Dynamic target boundary on the grid so 0-sized dashboards, including 0 / 0 / 0 layouts, remain readable. When Grid Gap is 0, DLS writes it as quoted "0" in saved/exported JSON to avoid the Hubitat zero-gap reset issue.</p></article><article class="help-page" data-help-title="Resize selected tiles"><div class="help-page-kicker">Move, Copy &amp; Spacing</div><h4>Resize selected tiles</h4><h5>Resize dialog: preserving spacing and growing</h5><div class="help-card"><b>Preserve spacing between resized tiles</b><p>Preserves the original spacing between the selected tiles while their sizes change.</p></div><div class="help-card" style="margin-top:10px"><b>Push layout to make room</b><p>If the target size is larger than the selected tiles, the layout option is Push layout to make room. It automatically enables Preserve spacing between resized tiles and moves affected surrounding tiles to make room, using the same push buffer and overlap behavior as Move to, Copy to, and Paste.</p></div><h5>Resize dialog: reducing, pulling, and conflicts</h5><ul>
 <li>If the target size is smaller than the selected tiles, the option changes to <b>Pull layout to close gaps</b>.</li>
 <li>When Pull layout to close gaps is unchecked, unselected tiles do not move; only the selected tiles resize, though Preserve spacing between resized tiles can still move selected tiles relative to each other to preserve their internal gaps.</li>
 <li>When Pull layout to close gaps is checked, every row/column band freed by the shrink is removed from downstream tiles, so the collapse continues through the full layout rather than stopping at the first nearby row or column.</li>
@@ -3029,7 +3037,7 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpAbout">
-<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.5.504 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
+<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.5.510 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
 <div class="help-page-nav"></div>
 </section>
 </div>
@@ -3512,13 +3520,14 @@
       <div class="grid-static-top">
         <div class="grid-current-summary" id="gridCurrentSummary">No dashboard loaded.</div>
         <div class="grid-dialog-grid compact">
-          <div class="field"><label>Grid Columns</label><input class="input" id="gridColsInput" type="number" min="1" max="9999" step="1" value="100" /></div>
-          <div class="field"><label>Grid Rows</label><input class="input" id="gridRowsInput" type="number" min="1" max="9999" step="1" value="80" /></div>
+          <div class="field grid-bound-field" id="gridColsField"><label>Grid Columns</label><input class="input" id="gridColsInput" type="number" min="1" max="9999" step="1" value="100" /></div>
+          <div class="field grid-bound-field" id="gridRowsField"><label>Grid Rows</label><input class="input" id="gridRowsInput" type="number" min="1" max="9999" step="1" value="80" /></div>
           <div class="field"><label>Column Size</label><input class="input" id="gridColWidthInput" type="number" min="0" max="999" step="1" value="6" /></div>
           <div class="field"><label>Row Size</label><input class="input" id="gridRowHeightInput" type="number" min="0" max="999" step="1" value="6" /></div>
           <div class="field"><label>Grid Gap</label><input class="input" id="gridGapInput" type="number" min="0" max="999" step="1" value="6" /></div>
         </div>
         <div class="grid-dialog-note">The dashed boundary shows the declared Hubitat dashboard size. The DLS edit grid remains usable beyond that boundary.</div>
+        <div class="grid-autosize-notice hidden" id="gridAutoSizeNotice"><span><b>Grid Columns and Grid Rows are controlled by Auto-size dashboard bounds.</b> Cell size and gap can still be changed here.</span><button class="btn ghost" id="gridUseManualBounds" type="button">Use manual bounds</button></div>
         <div class="grid-preserve-inline" aria-label="Grid change mode">
           <div class="grid-preserve-title">Grid change mode <button type="button" class="qcircle" data-grid-mode-help="all" aria-label="Explain grid change modes">?</button></div>
           <div class="grid-mode-options">
@@ -3696,8 +3705,8 @@ SOFTWARE.</pre></div>
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v504";
-const APP_VERSION = "1.5.504";
+const BUILD = "v510";
+const APP_VERSION = "1.5.510";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -3708,6 +3717,7 @@ const UPDATE_RELEASE_MODE_STABLE = "stable";
 const UPDATE_RELEASE_MODE_BETA = "beta";
 const APP_RELEASE_CHANNEL = "beta";
 const IS_BETA_BUILD = APP_RELEASE_CHANNEL === UPDATE_RELEASE_MODE_BETA;
+const HUB_SAVE_VERIFY_TIMEOUT_MS = 20000;
 function defaultUpdateReleaseModeForBuild(){ return IS_BETA_BUILD ? UPDATE_RELEASE_MODE_BETA : UPDATE_RELEASE_MODE_STABLE; }
 const DLS_PROJECT_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio";
 const DLS_RELEASES_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases";
@@ -3758,6 +3768,9 @@ const INTERWINDOW_EVENT_KEY = "dls.interWindowTransferEvent.v1";
 const INTERWINDOW_PROTOCOL = "dls-interwindow-v1";
 const INTERWINDOW_MAX_AGE_MS = 30*60*1000;
 const PREVIEW_BUSY_KEY = "dls.previewBusy.v1";
+const PREVIEW_ACCESS_TOKEN_PARAM = "dlsToken";
+const PREVIEW_ACCESS_TOKEN_STORAGE_KEY = "dls.previewToken.v1";
+const PREVIEW_ACCESS_AUTH_STORAGE_KEY = "dls.previewAuthorized.v1";
 const PREVIEW_COORD_EVENT_KEY = "dls.previewCoordinationEvent.v1";
 const PREVIEW_PROTOCOL = "dls-preview-v1";
 const DLS_PRESENCE_PROTOCOL = "dls-presence-v1";
@@ -3905,6 +3918,9 @@ const State = {
   previewWindowId:"",             // unique ID for the owned Preview window
   previewWindowGuardArmed:false,  // true after navigation to the actual temporary Preview dashboard begins
   previewWindowLockHeld:false,    // owner currently holds the shared temporary-dashboard Preview lock
+  previewWindowAccessToken:"",    // token placed on the DLS-opened Preview URL and removed after authorization
+  previewWarningTileId:null,       // temporary text-tile overlay removed only from the tracked Preview window
+  previewWindowAuthorized:false,   // tracked Preview window has been recognized and had its warning removed
   previewHeartbeatTimer:null,     // owner-side window URL/closed/heartbeat monitor
   dlsWindowPresence:new Map(),    // recently seen DLS windows on this origin
   previewBusyUiKey:"",            // suppress repeated busy-state announcements
@@ -4110,7 +4126,7 @@ async function activeDlsWindowCountAfterProbe(){
   return activeDlsWindowCount();
 }
 function previewWindowRecord(previewId){
-  return {protocol:PREVIEW_PROTOCOL,previewId,ownerWindowId:DLS_WINDOW_ID,sourceLabel:interWindowDashboardLabel(),dashboardId:String(temporaryDashboardState().meta&&temporaryDashboardState().meta.id||"")};
+  return {protocol:PREVIEW_PROTOCOL,previewId,ownerWindowId:DLS_WINDOW_ID,sourceLabel:interWindowDashboardLabel(),dashboardId:String(temporaryDashboardState().meta&&temporaryDashboardState().meta.id||""),warningTileId:State.previewWarningTileId==null?null:Number(State.previewWarningTileId)};
 }
 function previewWindowIsExpectedDashboard(win,previewId){
   if(!win||win.closed) return false;
@@ -4118,6 +4134,56 @@ function previewWindowIsExpectedDashboard(win,previewId){
     if(win.location.origin!==window.location.origin) return false;
     const previewLocation=new URL(win.location.href);
     return previewLocation.searchParams.get("dlsPreview")===String(previewId||"");
+  }catch(_e){ return false; }
+}
+function ownedPreviewDashboardIsOpen(){
+  return !!(State.previewWindowRef&&State.previewWindowId&&!State.previewWindowRef.closed&&previewWindowIsExpectedDashboard(State.previewWindowRef,State.previewWindowId));
+}
+function retireOwnedPreviewWindow({closeIfPreview=true,announce=true,statusMessage=""}={}){
+  const win=State.previewWindowRef;
+  const previewId=State.previewWindowId;
+  if(!win&&!previewId) return false;
+  const showingPreview=!!(win&&previewId&&!win.closed&&previewWindowIsExpectedDashboard(win,previewId));
+  if(showingPreview&&closeIfPreview){
+    try{ win.close(); }catch(_e){}
+  }
+  stopOwnedPreviewTracking(previewId,{announce,clear:true});
+  if(statusMessage) status(statusMessage);
+  return showingPreview;
+}
+function retirePreviewForDashboardChange(){
+  const showingPreview=ownedPreviewDashboardIsOpen();
+  if(!State.previewWindowRef&&!State.previewWindowId) return false;
+  retireOwnedPreviewWindow({closeIfPreview:true,announce:true});
+  if(showingPreview) status("Closed the previous Preview because a different hub dashboard is loading.");
+  return showingPreview;
+}
+function authorizeTrackedPreviewWindow(win,record){
+  if(!win||win.closed||!record||!previewWindowIsExpectedDashboard(win,record.previewId)) return false;
+  try{
+    const doc=win.document;
+    if(!doc||!doc.documentElement) return false;
+    State.previewWindowAuthorized=true;
+    const tileId=Number(record.warningTileId==null?State.previewWarningTileId:record.warningTileId);
+    const removeWarning=()=>{
+      if(!Number.isFinite(tileId)) return;
+      const warningTile=doc.getElementById(`tile-${tileId}`);
+      if(warningTile) warningTile.remove();
+    };
+    removeWarning();
+    if(Number.isFinite(tileId)&&(!win.__DLS_PREVIEW_WARNING_OBSERVER__||win.__DLS_PREVIEW_WARNING_TILE_ID__!==tileId)){
+      try{ win.__DLS_PREVIEW_WARNING_OBSERVER__?.disconnect(); }catch(_e){}
+      const observer=new win.MutationObserver(removeWarning);
+      observer.observe(doc.documentElement,{childList:true,subtree:true});
+      win.__DLS_PREVIEW_WARNING_OBSERVER__=observer;
+      win.__DLS_PREVIEW_WARNING_TILE_ID__=tileId;
+    }
+    const url=new URL(win.location.href);
+    if(url.searchParams.has(PREVIEW_ACCESS_TOKEN_PARAM)){
+      url.searchParams.delete(PREVIEW_ACCESS_TOKEN_PARAM);
+      win.history.replaceState(win.history.state,"",url.toString());
+    }
+    return true;
   }catch(_e){ return false; }
 }
 function installPreviewWindowHeartbeat(win,record){
@@ -4131,6 +4197,7 @@ function installPreviewWindowHeartbeat(win,record){
     let themeMeta=doc.querySelector('meta[name="theme-color"]');
     if(!themeMeta){ themeMeta=doc.createElement("meta"); themeMeta.setAttribute("name","theme-color"); (doc.head||doc.documentElement).appendChild(themeMeta); }
     themeMeta.setAttribute("content",previewTheme==="light"?"#f4f7fb":"#0b1220");
+    authorizeTrackedPreviewWindow(win,record);
     if(win.__DLS_PREVIEW_MONITOR__&&win.__DLS_PREVIEW_MONITOR__.previewId===record.previewId) return true;
     const data=JSON.stringify({protocol:PREVIEW_PROTOCOL,previewId:record.previewId,ownerWindowId:record.ownerWindowId,sourceLabel:record.sourceLabel,dashboardId:record.dashboardId});
     const code=`(()=>{try{const base=${data};const key=${JSON.stringify(PREVIEW_BUSY_KEY)};const eventKey=${JSON.stringify(PREVIEW_COORD_EVENT_KEY)};const channelName="dashboard-layout-studio-preview-v1";const expire=${PREVIEW_EXPIRE_MS};const fresh=rec=>!!(rec&&rec.protocol===${JSON.stringify(PREVIEW_PROTOCOL)}&&rec.previewId&&Number(rec.heartbeatAt||0)>0&&Date.now()-Number(rec.heartbeatAt||0)<expire);const current=()=>{try{return JSON.parse(localStorage.getItem(key)||"null");}catch(_e){return null;}};const send=msg=>{try{localStorage.setItem(eventKey,JSON.stringify({...msg,nonce:String(Date.now())}));}catch(_e){}try{window.__DLS_PREVIEW_BC__?.postMessage(msg);}catch(_e){}};const beat=()=>{const active=current();if(fresh(active)&&active.previewId!==base.previewId)return false;const rec={...base,heartbeatAt:Date.now(),expiresAt:Date.now()+expire};try{localStorage.setItem(key,JSON.stringify(rec));}catch(_e){}send({protocol:${JSON.stringify(PREVIEW_PROTOCOL)},action:"heartbeat",record:rec});return true;};const release=()=>{const active=current();if(!active||active.previewId===base.previewId){try{localStorage.removeItem(key);}catch(_e){}send({protocol:${JSON.stringify(PREVIEW_PROTOCOL)},action:"closed",previewId:base.previewId});}};try{window.__DLS_PREVIEW_BC__=new BroadcastChannel(channelName);window.__DLS_PREVIEW_BC__.onmessage=e=>{if(e.data&&e.data.protocol===${JSON.stringify(PREVIEW_PROTOCOL)}&&e.data.action==="probe")beat();};}catch(_e){}if(window.__DLS_PREVIEW_MONITOR__&&window.__DLS_PREVIEW_MONITOR__.timer)clearInterval(window.__DLS_PREVIEW_MONITOR__.timer);const start=()=>{if(window.__DLS_PREVIEW_MONITOR__.timer)clearInterval(window.__DLS_PREVIEW_MONITOR__.timer);beat();window.__DLS_PREVIEW_MONITOR__.timer=setInterval(beat,${PREVIEW_HEARTBEAT_MS});};window.__DLS_PREVIEW_MONITOR__={previewId:base.previewId,timer:null};window.addEventListener("pageshow",start);window.addEventListener("pagehide",()=>{if(window.__DLS_PREVIEW_MONITOR__.timer)clearInterval(window.__DLS_PREVIEW_MONITOR__.timer);window.__DLS_PREVIEW_MONITOR__.timer=null;release();});start();}catch(_e){}})();`;
@@ -4151,9 +4218,13 @@ function stopOwnedPreviewTracking(previewId,{announce=true,clear=true}={}){
   if(previewId&&State.previewWindowId&&State.previewWindowId!==previewId) return;
   if(State.previewHeartbeatTimer){ clearInterval(State.previewHeartbeatTimer); State.previewHeartbeatTimer=null; }
   const id=previewId||State.previewWindowId;
+  try{ State.previewWindowRef?.__DLS_PREVIEW_WARNING_OBSERVER__?.disconnect(); }catch(_e){}
   State.previewWindowRef=null;
   State.previewWindowId="";
   State.previewWindowGuardArmed=false;
+  State.previewWindowAccessToken="";
+  State.previewWarningTileId=null;
+  State.previewWindowAuthorized=false;
   const held=State.previewWindowLockHeld;
   State.previewWindowLockHeld=false;
   if(clear&&(held||previewBusyActive()?.previewId===id)) clearPreviewBusyRecord(id,{announce});
@@ -5158,6 +5229,36 @@ function hubOperationFetch(op,url,options={}){
     throw e;
   }).finally(()=>{ clearTimeout(timer); op.aborters=op.aborters.filter(fn=>fn!==aborter); });
 }
+async function hubOperationFetchText(op,url,options={}){
+  checkHubOperationAbort(op);
+  if(!op){
+    const opts={...options};
+    delete opts.timeoutMs;
+    const res=await fetch(url,opts);
+    return {res,text:await res.text()};
+  }
+  const ctrl=new AbortController();
+  let timedOut=false;
+  const timeoutMs=Number(options.timeoutMs)||45000;
+  const aborter=()=>ctrl.abort();
+  const timer=setTimeout(()=>{ timedOut=true; ctrl.abort(); },timeoutMs);
+  op.aborters.push(aborter);
+  const opts={...options,signal:ctrl.signal};
+  delete opts.timeoutMs;
+  try{
+    const res=await fetch(url,opts);
+    const text=await res.text();
+    checkHubOperationAbort(op);
+    return {res,text};
+  }catch(e){
+    if(op.token&&op.token.aborted) throw hubOperationAbortError();
+    if(timedOut) throw new Error(`hub request timed out after ${Math.round(timeoutMs/1000)} seconds`);
+    throw e;
+  }finally{
+    clearTimeout(timer);
+    op.aborters=op.aborters.filter(fn=>fn!==aborter);
+  }
+}
 async function captureRenderedSnapshotsForLoadOperation(op){
   if(!renderedViewEnabled()){ hubOperationSkip(op,"render","Rendered View is not enabled."); setTileDisplayMode("simple",{redraw:false,warn:false}); return 0; }
   const a=renderedSnapshotAvailability();
@@ -5538,6 +5639,58 @@ async function sanitizeTemporaryPreviewInvalidDeviceAssignments(doc){
   return result;
 }
 function temporaryDashboardDeviceSignature(ids){ return sortDeviceIds(ids||[]).map(String).join(","); }
+async function loadTemporaryDashboardAdminConfig(dashboardId){
+  const id=String(dashboardId==null?"":dashboardId).trim();
+  if(!id) throw new Error("temporary dashboard id is unavailable");
+  const selectUrl=new URL("/dashboard/select",window.location.origin).toString();
+  trace("GET Hubitat dashboard administration page for temporary dashboard",selectUrl);
+  const selectRes=await temporaryDashboardFetch(selectUrl,{credentials:"same-origin",cache:"no-store"});
+  const selectHtml=await selectRes.text();
+  if(!selectRes.ok) throw new Error(`dashboard administration page returned HTTP ${selectRes.status}`);
+  const pinToken=dashboardAdminPinTokenFromHtml(selectHtml);
+  if(!pinToken) throw new Error("the dashboard administration token could not be read; sign in to the hub UI and try again");
+  const allUrl=new URL("/dashboard/all",window.location.origin);
+  allUrl.searchParams.set("pinToken",pinToken);
+  trace("GET temporary dashboard definition",allUrl.toString());
+  const allRes=await temporaryDashboardFetch(allUrl.toString(),{credentials:"same-origin",cache:"no-store"});
+  const responseText=await allRes.text();
+  if(!allRes.ok) throw new Error(`dashboard configuration returned HTTP ${allRes.status}`);
+  let data;
+  try{ data=JSON.parse(responseText); }
+  catch(_){ throw new Error("dashboard configuration response was not JSON"); }
+  const config=findDashboardConfigById(data,id);
+  if(!config){
+    const ids=dashboardAdminCandidateIds(data);
+    const detail=ids.length?` Available dashboard-like IDs: ${ids.slice(0,20).join(", ")}${ids.length>20?", …":""}.`:"";
+    throw new Error(`temporary dashboard ${id} was not found in the administration response.${detail}`);
+  }
+  return config;
+}
+async function forceTemporaryDashboardNavigationOff(dashboardId,deviceIds){
+  const config=await loadTemporaryDashboardAdminConfig(dashboardId);
+  const expectedIds=normalizeDashboardDeviceIds(deviceIds);
+  const params=buildDashboardUpdateParamsForDeviceSet(config,expectedIds);
+  params.set("showNavigation","false");
+  const expectedSettings=new URLSearchParams(params);
+  expectedSettings.delete("deviceIds");
+  const url=new URL("/dashboard/update",window.location.origin);
+  url.search=params.toString();
+  setSnapshotRefreshStatus("Disabling preview dashboard navigation…",true);
+  status("Disabling navigation on the temporary preview dashboard…",true);
+  trace("POST temporary dashboard definition with showNavigation=false",url.toString());
+  const res=await temporaryDashboardFetch(url.toString(),{credentials:"same-origin",cache:"no-store",headers:{Accept:"*/*"}});
+  const responseText=await res.text().catch(()=>"");
+  if(!res.ok) throw new Error(`temporary dashboard definition update returned HTTP ${res.status}${responseText?`: ${responseText.slice(0,180)}`:""}`);
+  const verifyConfig=await loadTemporaryDashboardAdminConfig(dashboardId);
+  const changed=changedDashboardSettings(expectedSettings,verifyConfig);
+  if(changed.length) throw new Error(`Hubitat did not preserve these temporary dashboard settings: ${changed.join(", ")}`);
+  const verifyIds=normalizeDashboardDeviceIds(dashboardConfigValue(verifyConfig,["deviceIds","devices","selectedDeviceIds"],{required:true}));
+  if(!deviceIdSetsEqual(expectedIds,verifyIds)) throw new Error("Hubitat did not preserve the requested temporary-dashboard device assignments");
+  const showNavigation=dashboardBooleanParam(dashboardConfigValue(verifyConfig,["showNavigation"],{required:true}));
+  if(showNavigation!=="false") throw new Error("Hubitat did not set showNavigation=false on the temporary dashboard");
+  trace("temporary dashboard definition verified with showNavigation=false",null,"ok");
+  return true;
+}
 async function synchronizeTemporaryDashboardDevices(doc,opts={}){
   const td=temporaryDashboardState();
   if(!temporaryDashboardReady()) throw new Error("temporary preview dashboard is not ready");
@@ -5550,6 +5703,9 @@ async function synchronizeTemporaryDashboardDevices(doc,opts={}){
   setSnapshotRefreshStatus("Updating preview dashboard devices…",true);
   status("Updating temporary preview dashboard devices…",true);
   await configureTemporaryDashboardChild(td.meta.id,ids);
+  // Hubitat stores showNavigation in the dashboard definition updated through
+  // /dashboard/update, alongside deviceIds and the other dashboard settings.
+  await forceTemporaryDashboardNavigationOff(td.meta.id,ids);
   td.deviceSignature=signature;
   return ids.size;
 }
@@ -5590,6 +5746,8 @@ async function resolveDashboardLayoutContext(meta){
   throw new Error(`could not resolve temporary preview layout endpoint: ${lastError||"no valid layout response"}`);
 }
 async function postTemporaryPreviewLayout(payload){
+  // showNavigation is a dashboard-definition setting, not a layout-JSON setting.
+  // It is forced off through /dashboard/update while synchronizing the temporary dashboard.
   const td=temporaryDashboardState();
   let context=await resolveDashboardLayoutContext(td.meta);
   const body=JSON.stringify(payload);
@@ -6100,15 +6258,15 @@ const Hub = {
       toast(`Could not load layout: ${e.message}`,"err");
     }
   },
-  async refreshLayoutUrlForSave(){
+  async refreshLayoutUrlForSave(op=null){
     const meta=State.active;
     if(!meta) throw new Error("no active dashboard");
     const dtok=meta.accessToken;
     let dashUrl=State.lastDashUrl||`${this.base()}/${meta.id}/dashboard/${meta.id}?access_token=${dtok}&local=true`;
     if(State.loadPin && !dashUrl.includes("pin=")) dashUrl+=`&pin=${encodeURIComponent(State.loadPin)}`;
     trace("GET dashboard page to refresh requestToken",dashUrl);
-    const pres=await fetch(dashUrl,{credentials:"same-origin"});
-    const phtml=await pres.text();
+    const {res:pres,text:phtml}=await hubOperationFetchText(op,dashUrl,{credentials:"same-origin",cache:"no-store",timeoutMs:HUB_SAVE_VERIFY_TIMEOUT_MS});
+    checkHubOperationAbort(op);
     if(!pres.ok) throw hubHttpError("dashboard refresh",pres.status,dashUrl,{
       method:"GET",
       statusText:pres.statusText,
@@ -6123,14 +6281,14 @@ const Hub = {
     trace("refreshed layout URL",newLayoutUrl,"ok");
     return newLayoutUrl;
   },
-  async fetchHubLayoutForSaveCheck(){
+  async fetchHubLayoutForSaveCheck(op=null){
     if(State.conn.mode!=="live") return null;
     const fetchLayout=async(url)=>{
       let getUrl=url;
       if(State.loadPin && !getUrl.includes("pin=")) getUrl+=`&pin=${encodeURIComponent(State.loadPin)}`;
       trace("GET current hub layout before save",getUrl);
-      const res=await fetch(getUrl,{credentials:"same-origin"});
-      const text=await res.text();
+      const {res,text}=await hubOperationFetchText(op,getUrl,{credentials:"same-origin",cache:"no-store",timeoutMs:HUB_SAVE_VERIFY_TIMEOUT_MS});
+      checkHubOperationAbort(op);
       trace(`current hub layout → ${res.status}`,null,res.ok?"ok":"err");
       if(!res.ok) throw hubHttpError("layout check",res.status,getUrl,{
         method:"GET",
@@ -6148,20 +6306,22 @@ const Hub = {
     try{
       return await fetchLayout(State.lastLayoutUrl);
     }catch(firstErr){
+      if(firstErr&&firstErr.aborted) throw firstErr;
       trace(`layout check failed: ${firstErr.message}; refreshing requestToken and retrying`,null,"err");
-      const refreshed=await this.refreshLayoutUrlForSave();
+      const refreshed=await this.refreshLayoutUrlForSave(op);
       return await fetchLayout(refreshed);
     }
   },
-  async confirmHubBaselineIsCurrent(){
+  async confirmHubBaselineIsCurrent(op=null){
     if(State.conn.mode!=="live") return true;
     if(!State.hubSaveBaseline){
       toast("Cannot verify hub changes because no hub-loaded baseline is stored. Reload the dashboard from the hub before saving.","err");
       return false;
     }
     let current;
-    try{ current=await this.fetchHubLayoutForSaveCheck(); }
+    try{ current=await this.fetchHubLayoutForSaveCheck(op); }
     catch(e){
+      if(e&&e.aborted) throw e;
       trace(`hub change check failed: ${e.message}`,null,"err");
       toast(`Save cancelled — could not verify current hub layout: ${e.message}`,"err");
       return false;
@@ -6219,7 +6379,7 @@ const Hub = {
         trace("save simulated (no live connection)",null,"ok"); return;
       }
       hubOperationStep(op,"verify","active");
-      const verified=await this.confirmHubBaselineIsCurrent();
+      const verified=await this.confirmHubBaselineIsCurrent(op);
       checkHubOperationAbort(op);
       if(!verified){ finishHubOperation(op,{skipPending:true,delayMs:350}); return; }
       hubOperationStep(op,"verify","done");
@@ -6245,7 +6405,7 @@ const Hub = {
       trace(`save → ${res.status}`,null,res.ok?"ok":"err");
       if(!res.ok){
         trace("Save failed, refreshing requestToken and retrying…",null,"err");
-        const newLayoutUrl=await this.refreshLayoutUrlForSave();
+        const newLayoutUrl=await this.refreshLayoutUrlForSave(op);
         checkHubOperationAbort(op);
         trace("Retrying POST with refreshed token",newLayoutUrl);
         res=await doPost(newLayoutUrl);
@@ -15430,6 +15590,44 @@ function updateAutoResizeDashboardPreferenceControls(){
   }
   if(row) row.classList.toggle("disabled",!enabled);
 }
+function updateGridAutoSizeManualControls(){
+  const enabled=autoResizeDashboardEnabled();
+  const cols=document.getElementById("gridColsInput");
+  const rows=document.getElementById("gridRowsInput");
+  const colsField=document.getElementById("gridColsField");
+  const rowsField=document.getElementById("gridRowsField");
+  const notice=document.getElementById("gridAutoSizeNotice");
+  const target=targetDeclaredGridForTiles(State.tiles||[],autoResizeDashboardPadding());
+  const title=enabled
+    ? `Controlled by Auto-size dashboard bounds: ${target.cols} columns × ${target.rows} rows (${target.used.cols} × ${target.used.rows} used${autoResizeDashboardPadding()?`, ${autoResizeDashboardPadding()} buffer`:""}).`
+    : "Edit the declared Hubitat dashboard bounds manually.";
+  for(const input of [cols,rows]){
+    if(!input) continue;
+    input.disabled=enabled;
+    input.title=title;
+    input.setAttribute("aria-disabled",enabled?"true":"false");
+  }
+  colsField?.classList.toggle("auto-controlled",enabled);
+  rowsField?.classList.toggle("auto-controlled",enabled);
+  if(notice){
+    notice.classList.toggle("hidden",!enabled);
+    const text=notice.querySelector("span");
+    if(text) text.innerHTML=`<b>Grid Columns and Grid Rows are controlled by Auto-size dashboard bounds.</b> Current automatic target: ${esc(target.cols+"×"+target.rows)} (${esc(target.used.cols+"×"+target.used.rows)} used${autoResizeDashboardPadding()?`, ${esc(String(autoResizeDashboardPadding()))} buffer`:""}). Cell size and gap can still be changed here.`;
+  }
+}
+function useManualGridBoundsFromDialog(){
+  if(!autoResizeDashboardEnabled()) return;
+  State.autoResizeDashboardGrid=false;
+  const pref=document.getElementById("prefAutoResizeDashboard");
+  if(pref) pref.checked=false;
+  updateAutoResizeDashboardPreferenceControls();
+  updateGridAutoSizeManualControls();
+  saveConn();
+  updateGridPreview();
+  status("Auto-size dashboard bounds disabled. Grid Columns and Grid Rows can now be edited manually.");
+  toast("Manual grid bounds enabled.","ok");
+  setTimeout(()=>document.getElementById("gridColsInput")?.focus(),0);
+}
 function maybeAutoResizeDashboardGrid(reason){
   if(!autoResizeDashboardEnabled()) return false;
   if(!State.active||!State.tiles||!State.tiles.length) return false;
@@ -16520,6 +16718,7 @@ function gridCandidateHasPendingChanges(candidate){
 
 function updateGridPreview(){
   updateGridCurrentSummary();
+  updateGridAutoSizeManualControls();
   updateGridAdjustInputLimits();
   const box=document.getElementById("gridPreviewBox"), list=document.getElementById("gridWarningsList"), err=document.getElementById("gridErr"), apply=document.getElementById("gridApply");
   if(err){ err.style.display="none"; err.textContent=""; }
@@ -16555,6 +16754,7 @@ function openGridModal(){
   setGridDialogCfg(currentGridCfg());
   setGridAutoFitPresetValue(State.gridAutoFitPreset,State.gridAutoFitOrientation,State.gridAutoFitCustom);
   updateGridCurrentSummary();
+  updateGridAutoSizeManualControls();
   setGridDialogTab("recommend");
   updateGridPreview();
   resetModalPosition("gridModal");
@@ -17304,6 +17504,11 @@ function renderDashList(){
       }
       if(sameActive) return;
       confirmUnsavedLayoutChange(`Loading "${d.label||'the selected dashboard'}"`, ()=>{
+        // A Preview belongs to the dashboard/layout that created it. Close that
+        // Preview before loading a different hub dashboard. If the tracked
+        // window has already navigated elsewhere, stop tracking it without
+        // closing the unrelated page now displayed in that window.
+        retirePreviewForDashboardChange();
         document.querySelectorAll(".dash-item").forEach(x=>x.classList.remove("active")); b.classList.add("active");
         if(State.conn.mode==="demo"||State.conn.mode==="offline") adoptLayout(d, d._layout);
         else Hub.loadLayout(d);
@@ -17447,14 +17652,69 @@ function openSavedDashboardFromLaunchMenu(){
   openDashboardWindow(url);
   status("Opened the dashboard currently saved on the hub. Unsaved DLS changes remain local.");
 }
-function previewLaunchUrl(raw,previewId){
+function createPreviewAccessToken(){
+  try{
+    const bytes=new Uint8Array(18);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");
+  }catch(_e){
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+  }
+}
+function addTemporaryPreviewAccessWarning(payload){
+  if(!payload||typeof payload!=="object") return {payload,tileId:null};
+  if(!Array.isArray(payload.tiles)) payload.tiles=[];
+  const used=new Set(payload.tiles.map(t=>Number(t&&t.id)).filter(Number.isFinite));
+  let tileId=used.size?Math.max(...used)+1:1;
+  while(used.has(tileId)) tileId++;
+  payload.tiles.push({
+    rowSpan:1,
+    template:"texttile",
+    col:1,
+    colSpan:1,
+    id:tileId,
+    row:1,
+    device:"0",
+    templateExtra:"DLS Temporary Dashboard"
+  });
+  const css=`
+/* DLS temporary preview access warning — removed only in the Preview window opened by DLS */
+#tile-${tileId}{
+  position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;
+  margin:0!important;padding:24px!important;transform:none!important;z-index:2147483647!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  overflow:auto!important;border:0!important;border-radius:0!important;background:#0b1220!important;
+  color:#eef2fa!important;font-size:0!important;text-shadow:none!important;box-sizing:border-box!important;
+}
+#tile-${tileId}>*{display:none!important}
+#tile-${tileId}::before{
+  content:"DLS Temporary Dashboard\\A\\A This dashboard is reserved for previews created by Dashboard Layout Studio.\\A\\A Close this page and use Preview from within DLS.";
+  display:block!important;width:min(640px,calc(100vw - 48px))!important;padding:30px!important;
+  border:2px solid #fbbf24!important;border-radius:16px!important;background:#162034!important;
+  color:#eef2fa!important;box-shadow:0 24px 70px rgba(0,0,0,.5)!important;text-align:center!important;
+  white-space:pre-line!important;font:600 18px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  box-sizing:border-box!important;
+}
+@media (prefers-color-scheme:light){
+  #tile-${tileId}{background:#eef3f8!important;color:#172033!important}
+  #tile-${tileId}::before{background:#fff!important;border-color:#b77900!important;color:#172033!important;box-shadow:0 20px 55px rgba(15,23,42,.18)!important}
+}
+`;
+  payload.customCSS=String(payload.customCSS||"").replace(/\s+$/g,"")+"\n"+css;
+  return {payload,tileId};
+}
+function previewLaunchUrl(raw,previewId,previewToken){
   const marker=String(previewId||Date.now());
+  const token=String(previewToken||"");
   try{
     const u=new URL(raw,window.location.href);
     u.searchParams.set("dlsPreview",marker);
+    if(token) u.searchParams.set(PREVIEW_ACCESS_TOKEN_PARAM,token);
     return u.toString();
   }catch(_e){
-    return String(raw||"")+(String(raw||"").includes("?")?"&":"?")+"dlsPreview="+encodeURIComponent(marker);
+    let result=String(raw||"")+(String(raw||"").includes("?")?"&":"?")+"dlsPreview="+encodeURIComponent(marker);
+    if(token) result+="&"+encodeURIComponent(PREVIEW_ACCESS_TOKEN_PARAM)+"="+encodeURIComponent(token);
+    return result;
   }
 }
 function writePreviewLaunchPage(win,title,message,error=false){
@@ -17522,6 +17782,10 @@ async function openCurrentDashboardPreview(){
   try{ previewWindow.opener=null; }catch(_e){}
   writePreviewLaunchPage(previewWindow,"Preparing Dashboard Preview","DLS is checking whether the shared temporary preview dashboard is available.");
   const previewId=`${DLS_WINDOW_ID}-preview-${Date.now().toString(36)}`;
+  const previewAccessToken=createPreviewAccessToken();
+  State.previewWindowAccessToken=previewAccessToken;
+  State.previewWarningTileId=null;
+  State.previewWindowAuthorized=false;
   const claim=previewWindowRecord(previewId);
   storePreviewBusyRecord(claim,{announce:true});
   await new Promise(resolve=>setTimeout(resolve,140));
@@ -17549,7 +17813,10 @@ async function openCurrentDashboardPreview(){
         let payload=serializeLayout();
         hubOperationStep(op,"files","active","Checking File Manager for dashboard JSON and Simple CSS Editor files…");
         const preparedFiles=await prepareTemporaryPreviewFileCopies(payload);
-        payload=preparedFiles.payload;
+        const previewWarning=addTemporaryPreviewAccessWarning(preparedFiles.payload);
+        payload=previewWarning.payload;
+        State.previewWarningTileId=previewWarning.tileId;
+        storePreviewBusyRecord(previewWindowRecord(previewId),{announce:false});
         checkHubOperationAbort(op);
         const copied=[];
         if(preparedFiles.info.jsonCopied) copied.push(TEMP_SIMPLE_CSS_JSON_FILENAME);
@@ -17568,7 +17835,7 @@ async function openCurrentDashboardPreview(){
         checkHubOperationAbort(op);
         hubOperationStep(op,"save","done","Working layout saved only to the temporary preview dashboard.");
         hubOperationStep(op,"open","active","Opening the temporary preview dashboard…");
-        const url=previewLaunchUrl(result.dashUrl||dashboardPageUrlForMeta(temporaryDashboardState().meta),previewId);
+        const url=previewLaunchUrl(result.dashUrl||dashboardPageUrlForMeta(temporaryDashboardState().meta),previewId,previewAccessToken);
         if(!url) throw new Error("the temporary preview dashboard URL is unavailable");
         writePreviewLaunchPage(previewWindow,"Opening Dashboard Preview","The preview is ready and is opening now.");
         armPreviewWindowNavigation(previewId);
@@ -20886,6 +21153,7 @@ async function wire(){
   document.getElementById("prefAutoResizeDashboard")?.addEventListener("change",e=>{
     State.autoResizeDashboardGrid=!!e.target.checked;
     updateAutoResizeDashboardPreferenceControls();
+    updateGridAutoSizeManualControls();
     saveConn();
     if(State.active && State.autoResizeDashboardGrid) maybeAutoResizeDashboardGrid("preference");
     status(State.autoResizeDashboardGrid ? "Dashboard bounds will auto-size to the used layout." : "Dashboard bounds will prompt before expanding.");
@@ -21328,6 +21596,7 @@ Install the current stable release now, or keep the current installed version un
   document.getElementById("gridAutoFitCalc")?.addEventListener("click",gridAutoFitCalculate);
   document.querySelectorAll("#gridModal .grid-tab").forEach(b=>b.addEventListener("click",()=>setGridDialogTab(b.dataset.gridTab)));
   // Grid Settings is intentionally modal: backdrop clicks do not dismiss it. Use Cancel, Apply, or Escape instead.
+  document.getElementById("gridUseManualBounds")?.addEventListener("click",useManualGridBoundsFromDialog);
   ["gridColsInput","gridRowsInput","gridColWidthInput","gridRowHeightInput","gridGapInput","gridAutoFitArea","gridAutoFitAllowGap"].forEach(id=>document.getElementById(id)?.addEventListener("input",()=>{ if(!document.getElementById("gridModal")?.classList.contains("hidden")) updateGridPreview(); }));
   ["gridAutoFitPreset","gridAutoFitOrientation"].forEach(id=>document.getElementById(id)?.addEventListener("change",()=>{ syncGridAutoFitPresetControls({force:true,user:true}); if(!document.getElementById("gridModal")?.classList.contains("hidden")) updateGridPreview(); if(State.active) render(); updateGridControls(); }));
   ["gridTargetWidth","gridTargetHeight","gridBrowserZoom"].forEach(id=>document.getElementById(id)?.addEventListener("input",()=>{ if(State.gridAutoFitPreset==="custom") syncGridAutoFitPresetControls({user:true}); if(!document.getElementById("gridModal")?.classList.contains("hidden")) updateGridPreview(); if(State.active&&gridCfgUsesAutoSize(State.cfg)) render(); updateGridControls(); }));
@@ -21708,11 +21977,22 @@ Install the current stable release now, or keep the current installed version un
       p.classList.add("hidden");
   });
   window.addEventListener("beforeunload",e=>{
-    if(!hasUnsavedChanges()) return;
+    // Browsers do not permit a custom unload dialog. Trigger the browser's
+    // native Leave/Stay confirmation when there are unsaved changes or when
+    // this DLS window still owns a visible Preview dashboard. If the user
+    // leaves, pagehide closes that Preview; if the user stays, it remains open.
+    if(!hasUnsavedChanges()&&!ownedPreviewDashboardIsOpen()) return;
     e.preventDefault();
     e.returnValue="";
     return "";
   });
+  window.addEventListener("pagehide",()=>{
+    if(!State.previewWindowRef&&!State.previewWindowId) return;
+    // Close only if the tracked window is still displaying the DLS Preview.
+    // If it navigated elsewhere, merely retire tracking so DLS does not close
+    // an unrelated page or later reacquire a stale Preview through Back.
+    retireOwnedPreviewWindow({closeIfPreview:true,announce:false});
+  },{once:true});
 
   // Finish startup only after settings, hub-host detection, and optional app/token
   // discovery have completed. This prevents an early click from racing initialization.
