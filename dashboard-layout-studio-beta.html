@@ -863,6 +863,8 @@
   .orphan-ind{display:inline-flex;align-items:center;gap:7px;margin-left:12px;padding:3px 10px;border-radius:14px;cursor:pointer;
     background:rgba(245,166,35,.14);border:1px solid rgba(245,166,35,.4);color:var(--amber-2);font-size:.72rem;}
   .device-status-ind{margin-left:8px;}
+  .preview-open-ind{margin-left:8px;background:#7f1d1d!important;border-color:#ef4444!important;color:#fff!important;cursor:default;font-weight:800;letter-spacing:.035em;text-transform:uppercase;box-shadow:0 0 0 1px rgba(127,29,29,.35),0 2px 8px rgba(69,10,10,.35);}
+  .preview-open-ind:hover{filter:none;}
   .orphan-ind.cleanup{background:rgba(52,211,153,.13);border-color:rgba(52,211,153,.42);color:var(--ok);}
   .orphan-ind.warn{background:rgba(245,166,35,.14);border-color:rgba(245,166,35,.4);color:var(--amber-2);}
   .orphan-ind.danger{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.5);color:#fecaca;}
@@ -1443,6 +1445,12 @@
   html[data-theme="light"] .topbar .orphan-ind:hover{
     filter:none;
     box-shadow:0 0 0 2px rgba(15,23,42,.16),0 2px 5px rgba(15,23,42,.18);
+  }
+  html[data-theme="light"] .topbar .preview-open-ind{
+    background:#7f1d1d!important;
+    border-color:#991b1b!important;
+    color:#fff!important;
+    box-shadow:0 1px 3px rgba(69,10,10,.32),inset 0 0 0 1px rgba(255,255,255,.16);
   }
   html[data-theme="light"] .conn-dot{
     width:10px;
@@ -2461,11 +2469,127 @@
   html[data-theme="light"] #infoModal .info-zindex-source{color:#475569}
   html[data-theme="light"] #cssCleanupModal .css-zindex-conflict-row{border-color:#b45309;background:#fff7ed}
   html[data-theme="light"] #cssCleanupModal .css-zindex-plan code{background:#fff;color:#172033;border-color:#c48a28}
+
+  /* v520: Add Tile, Preview progress, and updated in-app Help */
+  #gridmap.add-tile-mode{cursor:crosshair!important;}
+  .add-tile-group{flex:0 0 auto;}
+  .add-tile-preview{position:absolute;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:2147483000;border:2px dashed #67e8f9;border-radius:6px;background:rgba(14,165,233,.24);box-shadow:0 0 0 2px rgba(2,6,23,.55),inset 0 0 18px rgba(103,232,249,.16);color:#ecfeff;font-weight:800;text-shadow:0 1px 2px #000;overflow:hidden;}
+  .add-tile-preview.overlap{border-color:#facc15;background:rgba(234,179,8,.28);color:#fff7b2;}
+  .add-tile-preview .add-tile-preview-label{padding:6px 8px;border-radius:5px;background:rgba(2,6,23,.72);font-size:.72rem;line-height:1.35;text-align:center;white-space:nowrap;}
+  .add-tile-modal{width:min(760px,calc(100vw - 24px));max-height:min(90vh,850px);}
+  .add-tile-modal .modal-body{overflow:auto;padding:12px 16px;}
+  .add-tile-modal .hidden{display:none!important;}
+  .add-tile-dialog-section{border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.03);padding:10px;margin-top:10px;}
+  .add-tile-dialog-section:first-of-type{margin-top:0;}
+  .add-tile-section-title{margin:0 0 9px;font-family:var(--mono);font-size:.62rem;letter-spacing:.10em;text-transform:uppercase;color:var(--accent);font-weight:800;}
+  .add-tile-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;}
+  .add-tile-span-2{grid-column:1/-1;}
+  .add-tile-modal .field{margin:0;padding:9px;border:1px solid rgba(148,163,184,.24);border-radius:8px;background:rgba(2,6,23,.12);}
+  .add-tile-modal .field>label{display:block;margin-bottom:6px;font-weight:800;color:var(--text);}
+  .add-tile-device-scope{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px;}
+  .add-tile-device-scope-label{font-size:.7rem;font-weight:800;color:var(--muted);margin-right:2px;}
+  .add-tile-scope-btn,.add-tile-icon-filter{appearance:none;border:1px solid var(--border);border-radius:999px;background:var(--panel-2);color:var(--muted);padding:5px 10px;font-size:.7rem;font-weight:800;cursor:pointer;}
+  .add-tile-scope-btn:hover:not(:disabled),.add-tile-icon-filter:hover:not(:disabled){border-color:var(--accent);color:var(--text);}
+  .add-tile-scope-btn.active,.add-tile-icon-filter.active{border-color:var(--accent);background:rgba(103,232,249,.14);color:var(--accent);box-shadow:inset 0 0 0 1px rgba(103,232,249,.12);}
+  .add-tile-scope-btn:disabled{opacity:.48;cursor:not-allowed;}
+  .add-tile-device-hint{margin:7px 0 0;line-height:1.45;}
+  .add-tile-placement{padding:10px 12px;margin-bottom:10px;border:1px solid rgba(103,232,249,.34);border-radius:9px;background:rgba(103,232,249,.06);font-family:var(--mono);font-size:.78rem;color:var(--muted);}
+  .add-tile-options{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;}
+  .add-tile-options .field.full{grid-column:1/-1;}
+  .add-tile-options textarea.input{min-height:92px;resize:vertical;}
+  .add-tile-error{display:none;margin-top:12px;padding:8px 10px;border:1px solid rgba(248,113,113,.55);border-radius:7px;background:rgba(127,29,29,.25);color:#fecaca;font-size:.76rem;font-weight:700;white-space:pre-wrap;}
+  .add-tile-error.show{display:block;}
+  .add-tile-note{grid-column:1/-1;margin:0;padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:rgba(148,163,184,.08);color:var(--muted);font-size:.72rem;line-height:1.45;}
+  .info-config-btn{width:auto!important;padding:5px 9px!important;font-size:.72rem!important;}
+
+  .add-tile-icon-field{grid-column:1/-1;}
+  .add-tile-icon-summary{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:10px;align-items:center;}
+  .add-tile-icon-preview{width:52px;height:52px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.04);color:var(--text);overflow:hidden;}
+  .add-tile-icon-preview svg{width:38px;height:38px;fill:currentColor;display:block;}
+  .add-tile-icon-preview.empty{font-size:1.4rem;color:var(--faint);}
+  .add-tile-icon-current{min-width:0;}
+  .add-tile-icon-current b{display:block;color:var(--text);font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .add-tile-icon-current span{display:block;color:var(--muted);font-size:.68rem;margin-top:2px;}
+  .add-tile-icon-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+  .add-tile-icon-actions .btn{width:auto;padding:6px 9px;font-size:.7rem;}
+  .add-tile-icon-picker{margin-top:10px;padding:10px;border:1px solid rgba(103,232,249,.28);border-radius:9px;background:rgba(2,6,23,.20);}
+  .add-tile-icon-toolbar{display:grid;grid-template-columns:minmax(180px,1fr) auto;gap:8px;align-items:center;}
+  .add-tile-icon-search{width:100%;}
+  .add-tile-icon-filters{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
+  .add-tile-icon-status{margin:7px 0;color:var(--muted);font-size:.69rem;line-height:1.4;}
+  .add-tile-icon-status.error{color:var(--danger);font-weight:700;}
+  .add-tile-icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;max-height:310px;overflow:auto;padding:2px;scrollbar-gutter:stable;}
+  .add-tile-icon-choice{appearance:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:66px;padding:6px 4px;border:1px solid rgba(148,163,184,.26);border-radius:7px;background:rgba(255,255,255,.035);color:var(--text);cursor:pointer;overflow:hidden;}
+  .add-tile-icon-choice:hover{border-color:var(--accent);background:rgba(103,232,249,.10);}
+  .add-tile-icon-choice.selected{border:2px solid var(--accent);background:rgba(103,232,249,.14);box-shadow:inset 0 0 0 1px rgba(103,232,249,.10);}
+  .add-tile-icon-choice svg{width:30px;height:30px;fill:currentColor;display:block;flex:none;}
+  .add-tile-icon-choice span{max-width:100%;font-family:var(--mono);font-size:.55rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .add-tile-icon-manual{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;margin-top:8px;}
+  .add-tile-icon-manual label{font-size:.69rem;font-weight:800;color:var(--text);}
+
+  html[data-theme="light"] .add-tile-preview{border-color:#0369a1;background:rgba(14,165,233,.22);color:#082f49;box-shadow:0 0 0 2px rgba(255,255,255,.8),inset 0 0 18px rgba(3,105,161,.12);text-shadow:none;}
+  html[data-theme="light"] .add-tile-preview.overlap{border-color:#b45309;background:rgba(245,158,11,.28);color:#78350f;}
+  html[data-theme="light"] .add-tile-preview .add-tile-preview-label{background:rgba(255,255,255,.88);}
+  html[data-theme="light"] #addTileModal .add-tile-dialog-section{background:#f8fafc;border-color:#8e9bad;}
+  html[data-theme="light"] #addTileModal .add-tile-dialog-section:first-of-type{background:#eef9fb;border-color:#148096;}
+  html[data-theme="light"] #addTileModal .add-tile-section-title{color:#075d6c;}
+  html[data-theme="light"] #addTileModal .field{background:#ffffff;border-color:#7f8c9d;box-shadow:0 1px 2px rgba(15,23,42,.09);}
+  html[data-theme="light"] #addTileModal .field>label{color:#111827;}
+  html[data-theme="light"] #addTileModal .hint{color:#334155;}
+  html[data-theme="light"] #addTileModal .add-tile-scope-btn,
+  html[data-theme="light"] #addTileModal .add-tile-icon-filter{background:#ffffff;color:#334155;border-color:#69788b;box-shadow:0 1px 1px rgba(15,23,42,.08);}
+  html[data-theme="light"] #addTileModal .add-tile-scope-btn:hover:not(:disabled),
+  html[data-theme="light"] #addTileModal .add-tile-icon-filter:hover:not(:disabled){background:#e3ebf4;color:#0f172a;border-color:#526174;}
+  html[data-theme="light"] #addTileModal .add-tile-scope-btn.active,
+  html[data-theme="light"] #addTileModal .add-tile-icon-filter.active{background:#d2e8ed;color:#073b47;border-color:#036b7d;box-shadow:inset 0 0 0 1px rgba(3,107,125,.24);}
+  html[data-theme="light"] #addTileModal .add-tile-device-scope-label{color:#334155;}
+  html[data-theme="light"] #addTileModal .add-tile-placement{background:#ecfeff;color:#1e293b;border-color:#087f98;}
+  html[data-theme="light"] #addTileModal .add-tile-error{background:#fee2e2;color:#991b1b;border-color:#dc2626;}
+  html[data-theme="light"] #addTileModal .add-tile-note{background:#eef2f7;color:#334155;border-color:#7f8c9d;}
+  html[data-theme="light"] #addTileModal .add-tile-icon-preview{background:#ffffff;color:#172033;border-color:#69788b;}
+  html[data-theme="light"] #addTileModal .add-tile-icon-picker{background:#eef3f8;border-color:#718096;}
+  html[data-theme="light"] #addTileModal .add-tile-icon-choice{background:#ffffff;color:#172033;border-color:#8e9bad;box-shadow:0 1px 1px rgba(15,23,42,.06);}
+  html[data-theme="light"] #addTileModal .add-tile-icon-choice:hover{background:#e3ebf4;border-color:#526174;}
+  html[data-theme="light"] #addTileModal .add-tile-icon-choice.selected{background:#d2e8ed;border-color:#036b7d;box-shadow:inset 0 0 0 1px rgba(3,107,125,.24);}
+  @media(max-width:700px){.add-tile-form-grid,.add-tile-options{grid-template-columns:1fr}.add-tile-span-2,.add-tile-options .field.full{grid-column:1}.add-tile-icon-summary{grid-template-columns:48px minmax(0,1fr)}.add-tile-icon-actions{grid-column:1/-1;justify-content:flex-start}.add-tile-icon-toolbar{grid-template-columns:1fr}.add-tile-icon-filters{justify-content:flex-start}}
+
+  /* v520: authoritative high-contrast dialog chrome in Light mode */
+  html[data-theme="light"] .modal{
+    background:#ffffff!important;
+    color:#111827!important;
+    border:2px solid #526174!important;
+    box-shadow:0 22px 54px rgba(15,23,42,.32)!important;
+  }
+  html[data-theme="light"] .modal .modal-head{
+    background:linear-gradient(180deg,#17284d,#0d1a38)!important;
+    color:#ffffff!important;
+    border-bottom:2px solid #071126!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10)!important;
+  }
+  html[data-theme="light"] .modal .modal-head h3,
+  html[data-theme="light"] .modal .modal-head .help-page-title{
+    color:#ffffff!important;
+    font-weight:750!important;
+  }
+  html[data-theme="light"] .modal .modal-head .title-sub{color:#a5f3fc!important;text-shadow:none!important;}
+  html[data-theme="light"] .modal .modal-head .icon-btn,
+  html[data-theme="light"] .modal .modal-head button{color:#ffffff;}
+  html[data-theme="light"] .modal .modal-head .icon-btn:hover,
+  html[data-theme="light"] .modal .modal-head button:hover{background:rgba(255,255,255,.12);color:#ffffff;}
+  html[data-theme="light"] .modal .modal-body{background:#ffffff!important;color:#111827!important;}
+  html[data-theme="light"] .modal .modal-foot{
+    background:#e7edf4!important;
+    color:#111827!important;
+    border-top:2px solid #9aa7b6!important;
+    box-shadow:inset 0 1px 0 #ffffff!important;
+  }
+  html[data-theme="light"] #hubOperationModal .hub-op-step{background:#f8fafc;color:#334155;border-color:#aebac7;}
+  html[data-theme="light"] #hubOperationModal .hub-op-step.active{background:#dff3f6;color:#172033;border-color:#0e7490;}
 </style>
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.5.510">1.5.510</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.6.520">1.6.520</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -2483,6 +2607,9 @@
     <span class="orphan-ind external-css-ind" id="externalCssInd" style="display:none" title="Review imported tile-scoped CSS rules">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
       <span class="oi-txt">External CSS Rules</span>
+    </span>
+    <span class="orphan-ind preview-open-ind" id="previewOpenInd" style="display:none" title="A Dashboard Preview window is open">
+      <span class="oi-txt">Preview Open</span>
     </span>
     <span class="spacer"></span>
     <span class="conn-dot" id="connDot"></span>
@@ -2542,6 +2669,11 @@
       <div class="tbar-wrap">
       <button class="tbar-arrow left" data-row="0" aria-label="Scroll left">‹</button>
       <div class="toolbar-row" id="toolbarRow1">
+        <div class="tgroup add-tile-group">
+          <button class="tool" id="btnAddTile" disabled title="Add a new tile by dragging its position and size on the grid.">
+            <svg id="addTileIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 8v8M8 12h8"/></svg><span id="addTileLabel">Add</span>
+          </button>
+        </div>
         <div class="tgroup">
           <div class="holdwrap">
             <button class="tool hb alt-menu" id="btnInfo" disabled title="Click: show information for the selected tile. Hold for information and report options. Hold Shift to make Reports the default click."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="infoBtnLabel">Info</span><span class="hb-chev" aria-hidden="true">◢</span></button>
@@ -2869,7 +3001,9 @@
 <div aria-label="Help topics" class="help-tabs" role="tablist">
 <button class="help-tab active" data-help-pane="helpOverview">Overview</button>
 <button class="help-tab" data-help-pane="helpLoadSave">Load &amp; Save</button>
+<button class="help-tab" data-help-pane="helpPreview">Preview Dashboards</button>
 <button class="help-tab" data-help-pane="helpSelect">Selecting Tiles</button>
+<button class="help-tab" data-help-pane="helpAddTile">Add Tile</button>
 <button class="help-tab" data-help-pane="helpToolbar">Toolbar Buttons</button>
 <button class="help-tab" data-help-pane="helpMove">Move, Copy &amp; Spacing</button>
 <button class="help-tab" data-help-pane="helpJsonCss">Expert &amp; CSS</button>
@@ -2878,10 +3012,10 @@
 </div>
 <div class="help-content">
 <section class="help-pane active" id="helpOverview">
-<div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual layout editor for existing Hubitat Dashboard v1 layouts. It can rearrange, resize, duplicate, remove, and reassign existing tiles, and it can change supported presentation details through custom CSS. It does not replace the Hubitat dashboard and tile configuration interface.</p><p><b>Interface theme:</b> New installations start in Light mode. Preferences can switch Dashboard Layout Studio between Light and Dark themes, and the saved choice is restored before the interface is displayed. The Reset Settings button restores all saved preferences to their defaults, re-enables notifications dismissed with a don't-show-again option, and leaves hub credentials and the current dashboard layout unchanged.</p><div class="help-callout"><b>Use the Hubitat interface for source creation:</b> Create dashboards, create original tiles, choose templates, and configure template-specific properties in the native Hubitat dashboard editor. Reload the dashboard in Dashboard Layout Studio afterward to continue arranging it.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>It cannot add a completely new original tile from Hubitat's template list. Additional tiles can be created only by copying or duplicating an existing tile and then changing its supported assignment or layout settings.</li><li>It cannot change an existing tile from one Hubitat template to another.</li></ul><h5>Template-property limits</h5><ul><li>The graphical editor does not change template-specific properties such as custom icons, background images, background settings, or other properties that are not exposed through the layout operations or achievable with CSS.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
+<div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual editor for Hubitat Dashboard v1 layouts. It can add original tiles, edit supported tile configuration, rearrange, resize, duplicate, remove, and reassign tiles, and change supported presentation details through custom CSS. Dashboard creation and advanced Hubitat-specific configuration remain in the native Hubitat interface.</p><p><b>Interface theme:</b> New installations start in Light mode. Preferences can switch Dashboard Layout Studio between Light and Dark themes, and the saved choice is restored before the interface is displayed. The Reset Settings button restores all saved preferences to their defaults, re-enables notifications dismissed with a don't-show-again option, and leaves hub credentials and the current dashboard layout unchanged.</p><div class="help-callout"><b>New tile workflow:</b> The Add button is its own toolbar group immediately before Info. Click Add, drag the tile rectangle, then complete Tile Configuration. The button changes to Cancel, all other toolbar controls are disabled, and overlap is temporarily allowed until the tile is added or cancelled. See <b>Add Tile</b> for the full workflow.</div><div class="help-callout"><b>Preview dashboards:</b> Preview opens a compact working window that mirrors the DLS preparation checklist and automatically changes to the temporary dashboard when ready. The deep-red <b>Preview Open</b> pill shows when that window owns the shared preview dashboard. See <b>Preview Dashboards</b> for the complete lifecycle and safeguards.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>Add Tile supports the native template catalog and the basic parameters exposed by DLS. Advanced or firmware-specific options not recognized by DLS may still require Hubitat's editor.</li><li>Changing a tile template preserves unknown properties when possible, but incompatible template-specific settings are replaced by the newly selected template configuration.</li></ul><h5>Template-property limits</h5><ul><li>Tile Configuration supports common properties such as device, template-specific values, a searchable Hubitat and Material icon chooser, background images, links, refresh intervals, and unit display. Advanced or firmware-specific properties that DLS does not recognize may still require Hubitat's editor.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
-<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><p><b>Preview / Launch button:</b> For any hub-loaded dashboard, Preview is the normal short-click action, even when the working layout has no unsaved changes. Press and hold the down-right-arrow button to choose Launch Saved. While Shift is held, the button changes to Launch; a short click opens the saved dashboard and Preview becomes the hold-menu option. When a Preview window is displaying the DLS temporary dashboard, all same-origin DLS windows detect its heartbeat, make Launch the default, and disable the menu item as Preview Unavailable. The lock is released if that window closes or navigates away from the temporary dashboard, and is reacquired if the same window returns with the browser Back button. If DLS is closed or navigated away from while its Preview dashboard is still open, the browser asks whether to leave; leaving closes the owned Preview window. Loading a different hub dashboard also closes the Preview because it no longer represents the active layout. The Preview-opening warning appears before any Preview window is created, includes a Don't show me this again option, and Cancel opens nothing. DLS-generated Preview loading pages and warning dialogs use the active Light or Dark interface theme; the dashboard tiles and layout retain their own dashboard styling so the preview remains accurate. The button remains disabled for offline layouts and while Move To, Copy To, Paste, or Copy CSS/Paste CSS mode is active.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td><td>Move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
+<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><p><b>Preview / Launch button:</b> Preview is the normal short-click action for a hub-loaded dashboard; hold the corner-menu button for Launch Saved. Holding Shift temporarily makes Launch the default. Preview uses the DLS Temporary Dashboard to show the current working layout without saving over the dashboard being edited. The working window displays the same preparation checklist shown in DLS and opens the temporary dashboard automatically when ready. See <b>Preview Dashboards</b> for status indicators, multi-window locking, direct-open protection, navigation behavior, and cleanup.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices</td><td>Can validate, add, remove, and update selected dashboard devices.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Add Tile, move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Add Tile temporarily allows overlap while the new tile rectangle is drawn, then opens Tile Configuration.</td><td>Add Tile for static tiles and manually entered device IDs, plus move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Hub templates, variables, attributes, and device validation require an online layout.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
 <div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
 <div class="k">Hub Connection Settings (Gear Icon)</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
 <div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
@@ -2894,13 +3028,17 @@
 </div><h5>Important hub-save distinction</h5><p>If you load a layout with the side panel file/paste tools, the tool treats it as offline JSON.</p><p>If you instead load from the hub and then use the JSON editor to replace or edit the layout, the existing hub save target is preserved.</p><div class="help-callout warn"><b>JSON editor replacement warning:</b> When the entire Full JSON document is replaced in the JSON editor, the editor warns that it is still attached to the online dashboard. Saving afterward will overwrite that same hub dashboard with the replacement layout. Use the side-panel file/paste tools when you want to open JSON as an offline layout instead.</div></article></div>
 <div class="help-page-nav"></div>
 </section>
+<section class="help-pane" id="helpPreview">
+<div class="help-pages"><article class="help-page active" data-help-title="Preview versus Launch Saved"><div class="help-page-kicker">Preview Dashboards</div><h4>Preview versus Launch Saved</h4><div class="help-grid"><div class="k">Preview</div><div class="v">Builds the current DLS working layout on the reusable DLS Temporary Dashboard. Unsaved tile, device, CSS, HTML, and supported configuration changes can be shown without overwriting the dashboard being edited.</div><div class="k">Launch Saved</div><div class="v">Opens the dashboard version currently saved on the hub. It does not upload the unsaved working layout.</div><div class="k">Normal click</div><div class="v">Preview is the normal short-click action for a hub-loaded dashboard.</div><div class="k">Hold menu</div><div class="v">Use the corner-menu indicator to choose Launch Saved.</div><div class="k">Shift held</div><div class="v">Temporarily changes the button label and normal action to Launch; Preview becomes the alternate menu choice until Shift is released.</div></div><p>The Preview / Launch button is disabled while incompatible placement or CSS-transfer modes are active. The temporary preview dashboard is local to the hub; DLS does not use a cloud preview service.</p></article><article class="help-page" data-help-title="Preview preparation and progress"><div class="help-page-kicker">Preview Dashboards</div><h4>Preview preparation and progress</h4><p>Preview opens a compact working window immediately so the browser recognizes it as user-requested. The window uses the same dark-title loading-dialog style and mirrors the preparation checklist shown in DLS.</p><ol><li>Prepare preview support files.</li><li>Authorize the devices needed by the working layout.</li><li>Save the adjusted working layout to the temporary dashboard.</li><li>Verify the temporary dashboard URL and open it.</li></ol><p>Pending steps become active and then completed, skipped, or failed as DLS progresses. An animated working indicator confirms that the window is still active. There is no final Open Preview prompt: the working window automatically changes to the prepared temporary dashboard when the checklist completes.</p><p>If preparation fails, the working window changes to a clear error page. Cancelling or aborting preparation closes the working window. When the optional preview-sharing warning is enabled, that warning appears before the working window is created.</p><div class="help-callout"><b>Preview Open indicator:</b> From the time the working window begins preparation until it closes or leaves the temporary dashboard, a deep-red <b>Preview Open</b> pill appears at the end of the upper status indicators in every same-origin DLS window.</div></article><article class="help-page" data-help-title="Temporary dashboard safeguards"><div class="help-page-kicker">Preview Dashboards</div><h4>Temporary dashboard safeguards</h4><ul><li>The temporary dashboard is hidden from the normal DLS dashboard list and is reused for later previews.</li><li>Preview updates only the temporary dashboard; the active dashboard and its normal Save target are unchanged.</li><li>Invalid non-exempt device IDs are changed to numeric 0 only in the temporary preview copy so one invalid device does not stop the preview.</li><li>Valid devices used by the working layout are authorized for the temporary dashboard.</li><li>Matching external dashboard JSON and Simple CSS Editor files can be copied to temporary preview-only files. Changes made through the preview copies are not written back to the original files.</li><li>Hubitat navigation is disabled on the temporary dashboard. A full-screen warning blocks direct opening; only the Preview window launched by DLS removes the warning.</li></ul><h5>One shared Preview at a time</h5><p>While a Preview is preparing or open, the temporary dashboard is reserved across same-origin DLS windows. Other DLS windows make Launch the default and show Preview as unavailable. Full temporary-dashboard Rendered View refreshes are blocked; a saved-dashboard partial refresh may remain available for unchanged tiles.</p><h5>Closing and navigation</h5><ul><li>Closing the Preview window or navigating it away releases the reservation.</li><li>Using browser Back to return to that temporary dashboard reacquires the reservation when no newer Preview owns it.</li><li>Loading a different dashboard in DLS closes the owned Preview because it no longer represents the active layout.</li><li>Closing or navigating away from DLS while its Preview remains open triggers the browser's leave warning; leaving closes the owned Preview window.</li></ul></article></div>
+<div class="help-page-nav"></div>
+</section>
 <section class="help-pane" id="helpSelect">
 <div class="help-pages"><article class="help-page active" data-help-title="How tile selection works"><div class="help-page-kicker">Selecting Tiles</div><h4>How tile selection works</h4><h5>Selecting individual tiles and stacks</h5><p>Like the Hubitat native editor, each tile location is defined by the row and column of the tile’s upper-left corner. Dashboard Layout Studio uses that same upper-left-corner location when deciding whether a tile belongs to a row, column, or rectangular selection.</p><p>A tile may extend beyond the selected area because its height and width span additional grid cells. The Selection mode controls whether a tile whose upper-left corner is outside the target—but whose span crosses into it—is included, excluded, or selected by itself as a partial tile.</p><div class="help-grid">
 <div class="k">Click a tile</div><div class="v">Selects the tile at that cell. Repeated clicks on the same overlapped cell cycle through the stack.</div>
 <div class="k">Ctrl/Cmd-click tile</div><div class="v">Adds or removes a tile from the current tile selection. On overlapped stacks, repeated Ctrl/Cmd-clicks cycle through layers.</div>
 <div class="k">Alt-click tile</div><div class="v">Selects the connected tile cluster at that cell.</div>
 <div class="k">Ctrl/Cmd+Alt-click tile</div><div class="v">Adds the connected tile cluster at that cell to the current tile selection.</div><div class="k">Selection pane List / Tree</div><div class="v">List groups selected tiles by cluster. Tree preserves those same separate cluster groups, but presents each cluster hierarchically with containers, nested containers, and tiles ordered by effective z-index from top to bottom. Each row displays its z-index; equal values follow dashboard source order. A partial cluster's Select cluster button appears inside that cluster group.</div><div class="k">Active tile in a multi-selection</div><div class="v">The active tile is outlined with a high-contrast amber marker drawn above all overlapping tiles. Clicking a selected tile in the Selection panel, Ctrl/Cmd-clicking a tile, or selecting a cluster makes that tile active without changing the dashboard z-order.</div>
-<div class="k">Double-click tile/grid cell</div><div class="v">Selects the connected tile cluster at that cell.</div>
+<div class="k">Double-click selected tile</div><div class="v">If the tile was already selected before the first click, keeps the complete current selection, makes that tile active, and opens Tile Information for it. A multi-tile selection is not reduced to the double-clicked tile.</div><div class="k">Double-click unselected tile</div><div class="v">Is intentionally processed as two ordinary clicks. It does not open Tile Information. On an overlap stack, the two clicks can advance through two normal selection/layer-cycle steps.</div>
 </div><h5>Selecting areas, rows, and columns</h5><div class="help-grid">
 <div class="k">Drag on grid</div><div class="v">Creates a rectangular selection. The Selection mode option determines which crossing tiles are included.</div>
 <div class="k">Ctrl/Cmd-drag grid</div><div class="v">Adds the rectangular drag selection to the current tile selection.</div>
@@ -2916,8 +3054,16 @@
 </div></article></div>
 <div class="help-page-nav"></div>
 </section>
+<section class="help-pane" id="helpAddTile">
+<div class="help-pages"><article class="help-page active" data-help-title="Place a new tile"><div class="help-page-kicker">Add Tile</div><h4>Place a new tile</h4><ol><li>Click the standalone <b>Add</b> button immediately before Info.</li><li>Add changes to <b>Cancel</b>, all other toolbar buttons are disabled, and the pointer changes for placement.</li><li>Drag across grid cells to define the tile's row, column, width, and height. Click and release in one cell to create a 1 × 1 placement.</li><li>Release the mouse to open Tile Configuration.</li><li>Choose the source, template, device or variable, and applicable options, then click <b>Add Tile</b>.</li></ol><div class="help-callout"><b>Overlap behavior:</b> Add Tile temporarily treats Overlaps as Allow. Existing tiles are not pushed, moved, or resized. The previous Overlaps setting is restored after Add Tile or Cancel.</div><p>The placement is not committed until Add Tile is pressed. Cancel, Esc, or the toolbar Cancel button removes the pending placement and creates no tile. Placement can be changed afterward with the normal move and resize tools.</p><p>Adding a tile creates one Undo checkpoint, selects the new tile, refreshes Simple View, and marks Rendered View as needing refresh. It does not immediately save to the hub; use the normal Save command when ready.</p></article><article class="help-page" data-help-title="Choose source, template, and device"><div class="help-page-kicker">Add Tile</div><h4>Choose source, template, and device</h4><div class="help-grid"><div class="k">Device</div><div class="v">Creates a normal device-backed tile. The template list combines the hub's current template names with DLS's complete fallback catalog, including Color Bulb and other native templates.</div><div class="k">Hub Variable</div><div class="v">Shows authorized Hub Variables and automatically chooses the matching variable template from the variable's data type.</div><div class="k">Static or System</div><div class="v">Provides templates that do not use a normal physical-device assignment, such as Text, Link, Image, Video, Dashboard Link, Clock, Mode, and HSM.</div><div class="k">Dashboard devices</div><div class="v">Shows only devices already selected for the active dashboard.</div><div class="k">All hub devices</div><div class="v">Shows the complete hub device inventory. A device not selected for this dashboard is identified in the list; applying the configuration adds and verifies that device before the tile is committed.</div><div class="k">Offline device ID</div><div class="v">Offline layouts use a numeric Device ID field because the hub inventory and selected-device list cannot be verified.</div></div><h5>Template-specific options</h5><p>The lower section changes with the chosen template. It can show Attribute, button number and command, target dashboard, text, URL, link name, image refresh interval, thermostat step, unit display, background image, or another template-specific value.</p><div class="help-callout"><b>Attribute tiles:</b> After a device is selected, DLS requests both standard and custom device attributes. Custom values supplied by the device, such as <code>iframeLauncher</code>, appear in the Attribute list when the hub returns them.</div><div class="help-callout"><b>Custom icon:</b> Choose icon opens a searchable visual picker with All, Hubitat, and Material filters. Use Default removes the custom icon and restores the template's normal icon.</div></article><article class="help-page" data-help-title="Edit tile configuration later"><div class="help-page-kicker">Add Tile</div><h4>Edit tile configuration later</h4><p>Open Tile Information and choose <b>Edit tile configuration…</b>. The same form used by Add Tile is reused for an existing tile.</p><ul><li>The tile's row, column, width, and height remain unchanged.</li><li>Changing the device can add an unselected hub device to the dashboard's selected-device list.</li><li>Changing to Attribute reloads the selected device's current standard and custom attributes.</li><li>Changing the template preserves unknown tile properties when possible while replacing incompatible template-specific settings.</li><li>Applying the configuration creates one Undo checkpoint, refreshes Simple View, and marks Rendered View as stale.</li></ul><div class="help-callout"><b>Fast access:</b> Double-click a tile that was already selected to open Tile Information without resetting the rest of the selection. Double-clicking an unselected tile remains two normal clicks and does not open Tile Information.</div></article></div>
+<div class="help-page-nav"></div>
+</section>
 <section class="help-pane" id="helpToolbar">
-<div class="help-pages"><article class="help-page active" data-help-title="Selection and tile actions"><div class="help-page-kicker">Toolbar Buttons</div><h4>Selection and tile actions</h4><h5>How the toolbar is organized</h5><p>The first toolbar group in the top row contains actions that operate on the current selection: tiles, rows, columns, or selected areas.</p><p>The next top-row group contains whole-layout actions such as Trim and Spacing.</p><div class="help-callout">Select first, then act. Selection actions use the current tile, row, column, or rectangular selection; whole-layout actions operate across the dashboard layout.</div><h5>Selection and structural actions</h5><div class="help-grid">
+<div class="help-pages"><article class="help-page active" data-help-title="Selection and tile actions"><div class="help-page-kicker">Toolbar Buttons</div><h4>Selection and tile actions</h4><h5>How the toolbar is organized</h5><p>The top row begins with the standalone <b>Add</b> group immediately before <b>Info</b>. Add does not operate on the current selection; it starts the drag-to-create workflow and becomes Cancel until the workflow ends.</p>
+<p>The following top-row group contains selection actions such as Info, Insert, Delete, Clear, Move To, Copy To, Copy CSS, and Resize. The next group contains whole-layout actions such as Select, Trim, Spacing, Enl/Rdc, and Grid.</p>
+<p>A full down arrow means the button always opens a menu. A small corner marker means the button has a normal click action and alternate hold or Shift-click choices.</p><div class="help-callout">Select first, then act. Selection actions use the current tile, row, column, or rectangular selection; whole-layout actions operate across the dashboard layout.</div><h5>Add, selection, and structural actions</h5>
+<div class="help-grid">
+<div class="k">Add / Cancel</div><div class="v">Starts Add Tile placement. Add changes to Cancel, every other toolbar button is disabled, and Overlaps is temporarily treated as Allow. Drag the new tile rectangle and release to open Tile Configuration. Add Tile does not push or move existing tiles. Add Tile or Cancel restores the prior Overlaps setting and normal toolbar state.</div>
 <div class="k">Select</div><div class="v">Selects all tiles in the layout. This is the toolbar equivalent of Ctrl/Cmd+A.</div>
 <div class="k">Info / Reports</div><div class="v">Click Info to show tile id, position, size, device id from the layout JSON, hub device name when available, template details, and tile-scoped custom CSS for the selected tile. Hold the button for the Tile Information and Reports menu. While Shift is held, the button glows yellow, its label changes to Reports, and a normal click opens Reports; releasing Shift restores Info as the default. When no tile is selected, Tile Information remains visible in the menu but is disabled. The scoped CSS section can be edited directly; every saved selector must remain scoped to the current tile. The z-index field uses the same pencil Edit button, Save, and Cancel workflow as the other editable Tile Information fields; saving writes or updates a tile-scoped CSS rule. If an overlapping tile has the same explicit z-index, DLS warns before saving.</div>
 <div class="k">Reports</div><div class="v">Opens from the Info hold menu. Creates printer-friendly Plain, Relationship Tree, Overlap Groups, Nested Groups, or Conflict Groups reports for either the selected tiles or the whole layout. Z-index is available as both a selectable report field and a sort key. Container classification distinguishes top-level containers, nested containers, nested tiles, and overlapping tiles so multi-level containment is labeled correctly in report trees. Reports open in a separate window. The compact Report, Sorting, and Fields tabs provide configurable sorting, selectable columns, common paper sizes, and portrait, landscape, or automatic orientation. Grouped reports can optionally include a proportional thumbnail showing each group’s actual tile footprints and overlaps. Reports are paginated into true paper-sized sheets with a header, footer, and page number on every page. Column headings repeat on every table page. Graphical relationship groups remain together when they fit; oversized groups continue across pages with repeated group headings, fixed readable typography, and connected hierarchy cards rather than page-wide text scaling.</div>
@@ -2938,6 +3084,7 @@
 <div class="k">Spacing value</div><div class="v">In the Spacing dialog, positive values increase spacing, negative values decrease spacing, and zero disables Inc/Dec while still allowing Set actions.</div>
 </div><h5>History, views, Expert, and Save</h5><div class="help-grid">
 <div class="k">Undo / Redo / Undo All</div><div class="v">Step backward, step forward, or restore the layout to the state it had when first loaded. Undo All follows undo history and remains disabled when there is no undo checkpoint. For hub-loaded layouts, Undo All restores the hub-equivalent state and refreshes Rendered View instead of disabling it. Shift-click Undo All reloads the current dashboard from the hub when the layout originated from the hub and Undo All is enabled; otherwise it performs the normal Undo All action.</div>
+<div class="k">Preview / Launch</div><div class="v">Click Preview to build the current working layout on the DLS Temporary Dashboard. The working window immediately shows a compact progress checklist and opens the prepared dashboard automatically when ready. Hold the corner menu for Launch Saved. While Shift is held, Launch becomes the normal click and Preview moves to the menu. While a Preview is building or open, the upper bar shows a deep-red Preview Open pill, Launch becomes the default, and another Preview cannot be started.</div>
 <div class="k">Rendered View engine</div><div class="v">Preferences can choose the Rendered View startup engine: Style Copy clones rendered tile HTML and computed styles, Image Snapshot uses image-style tile snapshots and keeps styled HTML for icon-font tiles when the image converter cannot preserve dashboard icons, Compatibility Mode starts with the mobile-compatible hidden dashboard frame, and Simple View Only disables Rendered View. By default, DLS creates or reuses an internal dashboard named DLS Temporary Dashboard. When a dashboard is first loaded from the hub, DLS captures rendered tiles directly from that loaded dashboard and does not update the temporary dashboard. For later manual refreshes, DLS checks the current hub device inventory, changes any non-exempt tile device ID that does not exist on the hub to numeric 0 in the temporary preview copy only, authorizes the remaining valid devices used by the current working layout, prepares preview-only File Manager copies of matching dashboard JSON and Simple CSS Editor CSS files when present, saves the adjusted layout only to the temporary dashboard, and captures rendered tiles there without changing the active dashboard or its save target. Simple CSS preview imports are redirected to DLS_Temporary_Dashboard.css. When DLS finds a matching dashboard CSS import and JSON settings file, it creates temporary copies. If it also finds an attribute tile whose templateExtra is iFrameLauncher or a tile whose device maps to Simple CSS Editor, the preview warning identifies Simple CSS Editor specifically; otherwise it reports probable external-editor files. The warning is shown only when the Preview launch option is used. It appears in the rendered preview window with an OK button and a Don't warn me again checkbox. While that Preview window remains open, the temporary dashboard is reserved across all open DLS windows. Full unsaved Rendered View refreshes and additional previews are blocked; when the saved dashboard can still supply unchanged tiles, the refresh control turns yellow and performs a partial saved-dashboard refresh, leaving changed tiles in Simple View. Otherwise the refresh control turns red until Preview closes. Changes made through a preview editor tile remain in the temporary JSON/CSS copies and are not saved back to the current dashboard's actual files when the preview window is closed. The temporary dashboard is hidden from the normal dashboard list and remains on the hub for reuse. Preview launches force the temporary dashboard setting showNavigation to false so the preview cannot navigate back to the hub. Preview launches also add a full-screen warning tile and preview-only CSS to the temporary dashboard. DLS removes that warning only from the Preview window it opened and then removes the token from the visible URL; opening the temporary dashboard directly in another tab or browser leaves the warning page in place. If Use temporary preview dashboard is disabled or the temporary dashboard is unavailable, DLS uses the original dashboard-rendering workflow and retains the existing warnings when unsaved tile content, device, CSS, HTML, JS, or other render-affecting changes would not appear in the capture.</div>
 <div class="k">Expert</div><div class="v">Opens the Layout JSON Editor for direct JSON and custom-field edits, formatting, loading a file into the editor, copying, downloading, device review, and applying changes.</div>
 <div class="k">Save</div><div class="v">Choose hub save, file download, or clipboard copy.</div>
@@ -3015,14 +3162,14 @@
 <div class="k"><span class="help-key">Ctrl/Cmd</span> + <span class="help-key">Shift</span> + <span class="help-key">V</span></div><div class="v">Begin paste with push when the clipboard/buffer is push-eligible.</div>
 <div class="k"><span class="help-key">Delete</span> / <span class="help-key">Backspace</span></div><div class="v">Clear the current selection without shifting other tiles.</div>
 <div class="k"><span class="help-key">Shift</span> + <span class="help-key">Delete</span></div><div class="v">For row/column selections, delete selected lines and shift tiles to close the gap.</div>
-<div class="k"><span class="help-key">Esc</span></div><div class="v">Cancel a pending move/copy/paste, cancel an active resize drag, or close/cancel the open dialog.</div>
+<div class="k"><span class="help-key">Esc</span></div><div class="v">Cancel Add Tile placement or Tile Configuration, cancel a pending move/copy/paste, cancel an active resize drag, or close/cancel the open dialog.</div>
 <div class="k"><span class="help-key">Shift</span> held</div><div class="v">Temporarily switches eligible Move to / Copy to / Paste actions into push mode and opens Resize with Preserve spacing between resized tiles + Push layout to make room enabled. Push-mode buttons glow while active. The Info button also glows yellow, changes its label to Reports, and opens Reports on a normal click. The Preview button changes to Launch; a short click launches the saved dashboard and Preview moves to the hold menu until Shift is released.</div>
 <div class="k"><span class="help-key">Enter</span></div><div class="v">Submits the PIN prompt when opening a PIN-protected dashboard.</div>
 </div></article><article class="help-page" data-help-title="Mouse combinations"><div class="help-page-kicker">Shortcuts</div><h4>Mouse combinations</h4><h5>Mouse combinations</h5><div class="help-grid">
 <div class="k">Click tile</div><div class="v">Select tile; repeated clicks on the same overlapped cell cycle layers.</div>
 <div class="k">Ctrl/Cmd-click tile</div><div class="v">Toggle tile in multi-selection; repeated clicks on overlapped cells cycle/toggle layers.</div>
 <div class="k">Alt-click tile</div><div class="v">Select the connected cluster.</div>
-<div class="k">Double-click tile/cell</div><div class="v">Select the connected cluster.</div>
+<div class="k">Double-click selected tile</div><div class="v">Open Tile Information for that tile while preserving the complete existing selection and making the tile active.</div><div class="k">Double-click unselected tile</div><div class="v">Process the gesture as two ordinary tile clicks. Tile Information does not open; an overlap stack advances according to the normal click-cycle rules.</div><div class="k">Add mode: drag grid</div><div class="v">Define the new tile position and size. Click and release in one cell for a 1 × 1 tile. Releasing opens Tile Configuration; the Add/Cancel button or Esc cancels without creating a tile.</div>
 <div class="k">Drag selected tile</div><div class="v">Move the selected tile or selected group. Already-overlapped tiles can be dragged while temporarily allowing the existing overlap; the previous Overlaps setting returns after drop.</div>
 <div class="k">Drag resize handle</div><div class="v">Resize selected tiles from their lower-right edge.</div>
 <div class="k">Drag grid background</div><div class="v">Create a rectangular tile selection.</div>
@@ -3037,7 +3184,7 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpAbout">
-<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.5.510 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
+<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.6.520 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
 <div class="help-page-nav"></div>
 </section>
 </div>
@@ -3195,6 +3342,57 @@
       <p class="err" id="pinErr" style="display:none;margin-top:8px">That PIN was not accepted. Try again:</p>
     </div>
     <div class="modal-foot"><button class="btn ghost" id="pinCancel">Cancel</button><button class="btn primary" id="pinSubmit">Open dashboard</button></div>
+  </div>
+</div>
+
+<div class="modal-back hidden" id="addTileModal">
+  <div class="modal add-tile-modal">
+    <div class="modal-head"><h3 id="addTileTitle">Add Tile</h3></div>
+    <div class="modal-body">
+      <div class="add-tile-placement" id="addTilePlacement"></div>
+      <section class="add-tile-dialog-section">
+        <div class="add-tile-section-title">Tile source and template</div>
+        <div class="add-tile-form-grid">
+          <div class="field">
+            <label for="addTileSource">Tile source</label>
+            <select class="input" id="addTileSource">
+              <option value="device">Device</option>
+              <option value="variable">Hub Variable</option>
+              <option value="static">Static or System</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="addTileTemplate">Template</label>
+            <select class="input" id="addTileTemplate"></select>
+          </div>
+          <div class="field add-tile-span-2" id="addTileDeviceField">
+            <label for="addTileDevice">Device</label>
+            <div class="add-tile-device-scope hidden" id="addTileDeviceScope" role="group" aria-label="Device list scope">
+              <span class="add-tile-device-scope-label">Show</span>
+              <button class="add-tile-scope-btn" id="addTileDeviceScopeDashboard" type="button" data-device-scope="dashboard" aria-pressed="false">Dashboard devices</button>
+              <button class="add-tile-scope-btn" id="addTileDeviceScopeAll" type="button" data-device-scope="all" aria-pressed="false">All hub devices</button>
+            </div>
+            <select class="input" id="addTileDevice"></select>
+            <input class="input hidden" id="addTileDeviceManual" inputmode="numeric" pattern="[0-9]*" placeholder="Device ID" />
+            <p class="hint add-tile-device-hint" id="addTileDeviceHint"></p>
+          </div>
+          <div class="field add-tile-span-2 hidden" id="addTileVariableField">
+            <label for="addTileVariable">Hub Variable</label>
+            <select class="input" id="addTileVariable"></select>
+            <p class="hint" id="addTileVariableHint"></p>
+          </div>
+        </div>
+      </section>
+      <section class="add-tile-dialog-section">
+        <div class="add-tile-section-title">Template options</div>
+        <div class="add-tile-options" id="addTileOptions"></div>
+      </section>
+      <div class="add-tile-error" id="addTileError" role="alert"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="addTileCancel">Cancel</button>
+      <button class="btn primary" id="addTileApply">Add Tile</button>
+    </div>
   </div>
 </div>
 
@@ -3674,6 +3872,11 @@ SOFTWARE.</pre></div>
         </div>
       </div>
       <p class="hint" id="updateIntro" style="margin:0">DLS can install this update directly into Hubitat File Manager.</p>
+      <div id="updateStableDowngradeFeatures" hidden style="display:none;padding:10px 12px;border:1px solid rgba(245,158,11,.48);border-radius:9px;background:rgba(245,158,11,.10);color:var(--text)">
+        <div id="updateStableDowngradeTitle" style="font-size:.82rem;font-weight:700;margin-bottom:6px">Major beta features unavailable in Stable</div>
+        <ul id="updateStableDowngradeList" style="margin:0;padding-left:1.35em;display:flex;flex-direction:column;gap:4px;font-size:.77rem;line-height:1.45;color:var(--muted)"></ul>
+        <p id="updateStableDowngradeNote" class="hint" style="margin:7px 0 0;font-size:.72rem"></p>
+      </div>
       <ol style="margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px;font-size:.82rem;color:var(--muted);line-height:1.5">
         <li id="updateStep1" class="update-step step-active">Download the release asset.</li>
         <li id="updateStep2" class="update-step">Validate its version, size, and SHA-256 checksum.</li>
@@ -3705,8 +3908,8 @@ SOFTWARE.</pre></div>
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v510";
-const APP_VERSION = "1.5.510";
+const BUILD = "v520";
+const APP_VERSION = "1.6.520";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -3718,6 +3921,36 @@ const UPDATE_RELEASE_MODE_BETA = "beta";
 const APP_RELEASE_CHANNEL = "beta";
 const IS_BETA_BUILD = APP_RELEASE_CHANNEL === UPDATE_RELEASE_MODE_BETA;
 const HUB_SAVE_VERIFY_TIMEOUT_MS = 20000;
+
+const DLS_NATIVE_TILE_TEMPLATE_FALLBACK = Object.freeze({
+  "acceleration":"Acceleration","attribute":"Attribute","battery":"Battery","bulb":"Bulb","bulb-color":"Color Bulb","buttons":"Button",
+  "carbon-dioxide":"Carbon Dioxide","carbon-monoxide":"Carbon Monoxide","clock-analog":"Analog Clock","clock-date":"Clock with Date","clock":"Clock",
+  "contact":"Contact Sensor","dashboard":"Dashboard Link","date":"Date","dimmer":"Dimmer","door-control":"Door (Control)","door":"Door",
+  "energy":"Energy","fan":"Fan","garage-control":"Garage Door (Control)","garage":"Garage Door","generic":"Generic","hsm":"HSM",
+  "humidity":"Humidity","illuminance":"Illuminance","images":"Image","level-step":"Level Step","level-vertical":"Vertical Level","links":"Link",
+  "lock":"Lock","mode":"Mode","momentary":"Momentary","motion":"Motion","multi":"Multi Sensor","music-player":"Music Player","outlet":"Outlet","power":"Power",
+  "presence":"Presence","relay":"Relay","scene":"Scene","shades":"Shades","shock":"Shock","smoke":"Smoke","switches":"Switch",
+  "temperature":"Temperature","texttile":"Text","thermostat":"Thermostat","valve":"Valve","variable-bool":"Variable Boolean",
+  "variable-date":"Variable Date","variable-decimal":"Variable Decimal","variable-number":"Variable Number","variable-string":"Variable String",
+  "variable-time":"Variable Time","video-player":"Video Player","volume":"Volume","water":"Water","weather":"Weather","window":"Window"
+});
+const DLS_VARIABLE_TILE_TEMPLATES = new Set(["global-variable","variable-bool","variable-date","variable-decimal","variable-number","variable-string","variable-time"]);
+const DLS_STATIC_TILE_TEMPLATES = new Set(["clock","clock-analog","clock-date","dashboard","date","hsm","images","links","mode","texttile","video-player"]);
+const DLS_UNIT_TILE_TEMPLATES = new Set(["attribute","carbon-dioxide","humidity","illuminance","temperature"]);
+const DLS_TEMPLATE_EXTRA_LABELS = Object.freeze({
+  "level-step":"Attribute or level name","level-vertical":"Attribute or level name","generic":"Template option","music-player":"Player option","volume":"Volume attribute"
+});
+
+// BETA RELEASE MAINTENANCE: Review this list for every beta build. Include only
+// major features that the current stable build deliberately hides or blocks.
+const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.6.520";
+const STABLE_DOWNGRADE_FEATURES = Object.freeze([
+  "Add Tile creation and Tile Configuration editing",
+  "Working-layout Preview through the DLS Temporary Dashboard",
+  "Copy to Other Window and Copy CSS to Other Window",
+  "Selection pane Tree view",
+  "Tile z-index editing, z-index report options, and automatic z-index conflict resolution"
+]);
 function defaultUpdateReleaseModeForBuild(){ return IS_BETA_BUILD ? UPDATE_RELEASE_MODE_BETA : UPDATE_RELEASE_MODE_STABLE; }
 const DLS_PROJECT_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio";
 const DLS_RELEASES_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases";
@@ -3799,14 +4032,18 @@ function currentPreviewTheme(){
 function previewThemePalette(error=false){
   const light=currentPreviewTheme()==="light";
   if(light) return {
-    theme:"light",page:"#eef3f8",card:"#ffffff",text:error?"#7f1d1d":"#172033",muted:"#475569",
-    border:error?"#dc8c8c":"#8fa0b3",accent:error?"#b91c1c":"#075985",overlay:"rgba(226,232,240,.86)",
-    shadow:"rgba(15,23,42,.28)",buttonBg:error?"#b91c1c":"#075985",buttonText:"#ffffff",themeColor:"#f4f7fb"
+    theme:"light",page:"#eef3f8",card:"#ffffff",body:"#ffffff",text:error?"#7f1d1d":"#172033",muted:"#475569",
+    border:error?"#dc8c8c":"#aebac7",modalBorder:error?"#b91c1c":"#526174",accent:error?"#b91c1c":"#0e7490",ok:"#15803d",
+    header:"linear-gradient(180deg,#17284d,#0d1a38)",headerText:"#ffffff",headerBorder:"#071126",
+    step:"#f8fafc",stepActive:"#dff3f6",footer:"#e7edf4",footerBorder:"#9aa7b6",
+    overlay:"rgba(226,232,240,.86)",shadow:"rgba(15,23,42,.32)",buttonBg:error?"#b91c1c":"#075985",buttonText:"#ffffff",themeColor:"#f4f7fb"
   };
   return {
-    theme:"dark",page:"#0d1526",card:"#162034",text:error?"#fecaca":"#eef2fa",muted:"#bcc8e0",
-    border:error?"rgba(248,113,113,.48)":"rgba(103,232,249,.45)",accent:error?"#ef4444":"#67e8f9",overlay:"rgba(2,6,23,.72)",
-    shadow:"rgba(0,0,0,.65)",buttonBg:error?"#ef4444":"#67e8f9",buttonText:error?"#ffffff":"#06222b",themeColor:"#0b1220"
+    theme:"dark",page:"#0d1526",card:"#162034",body:"#162034",text:error?"#fecaca":"#eef2fa",muted:"#bcc8e0",
+    border:error?"rgba(248,113,113,.48)":"rgba(148,163,184,.30)",modalBorder:error?"rgba(248,113,113,.62)":"rgba(103,232,249,.45)",accent:error?"#ef4444":"#67e8f9",ok:"#4ade80",
+    header:"linear-gradient(180deg,#172033,#101827)",headerText:"#f8fafc",headerBorder:"rgba(103,232,249,.24)",
+    step:"rgba(255,255,255,.035)",stepActive:"rgba(103,232,249,.08)",footer:"rgba(2,6,23,.30)",footerBorder:"rgba(148,163,184,.28)",
+    overlay:"rgba(2,6,23,.72)",shadow:"rgba(0,0,0,.65)",buttonBg:error?"#ef4444":"#67e8f9",buttonText:error?"#ffffff":"#06222b",themeColor:"#0b1220"
   };
 }
 function applyTheme(value,{persist=true,announce=false}={}){
@@ -3873,6 +4110,8 @@ const State = {
   drag:null,                     // active drag: {mode:'col'|'row'|'rect', ...}
   stackInfo:null,                // {row,col} of last clicked cell
   stackCycle:{key:null, idx:0},  // for re-click layer cycling
+  gridDoubleClickCandidate:null, // first-click snapshot used to open Info without changing an existing selection
+  gridDoubleClickHandledAt:0,     // suppress the native dblclick that may follow manual same-cell detection
   pending:null,                  // {action:'move',kind,indices}
   history:[], future:[],
   flag:false, zoom:9,
@@ -3918,12 +4157,24 @@ const State = {
   previewWindowId:"",             // unique ID for the owned Preview window
   previewWindowGuardArmed:false,  // true after navigation to the actual temporary Preview dashboard begins
   previewWindowLockHeld:false,    // owner currently holds the shared temporary-dashboard Preview lock
+  previewReservationPhase:"",     // building|ready|open while this DLS window owns the preview reservation
   previewWindowAccessToken:"",    // token placed on the DLS-opened Preview URL and removed after authorization
   previewWarningTileId:null,       // temporary text-tile overlay removed only from the tracked Preview window
   previewWindowAuthorized:false,   // tracked Preview window has been recognized and had its warning removed
   previewHeartbeatTimer:null,     // owner-side window URL/closed/heartbeat monitor
   dlsWindowPresence:new Map(),    // recently seen DLS windows on this origin
   previewBusyUiKey:"",            // suppress repeated busy-state announcements
+  addTileMode:null,                 // {savedOverlaps,phase,drag,rect}: toolbar Add Tile placement transaction
+  addTileDialog:null,               // shared Add/Edit Tile Configuration dialog state
+  nativeTileTemplates:null,         // localized template map loaded from the active dashboard endpoint
+  nativeTileVariables:null,         // native Hub Variable list loaded from /variables
+  nativeTileAttributeCache:new Map(), // device id -> attribute names from /device/{id} and /devices2
+  nativeTileDevices:null,           // native dashboard device records loaded from /devices2
+  nativeTileDevicesLoadPromise:null,// shared in-flight /devices2 request
+  nativeTileIcons:null,             // parsed Hubitat + Material icon glyphs from the hub SVG fonts
+  nativeTileIconMap:new Map(),      // icon name -> parsed glyph metadata
+  nativeTileIconLoadPromise:null,   // shared in-flight icon catalog request
+  nativeTileIconError:"",          // user-visible icon catalog failure message
 };
 
 function updateInfoShiftReports(shiftHeld){
@@ -4072,20 +4323,39 @@ function previewCoordinationMessage(message){
 function previewBusyUiSummary(record){
   if(!record) return "";
   const label=String(record.sourceLabel||TEMP_DASHBOARD_NAME).trim()||TEMP_DASHBOARD_NAME;
+  if(record.phase==="building") return `${label} Preview is being prepared.`;
+  if(record.phase==="ready") return `${label} Preview is ready and opening.`;
   return `${label} is open in a Preview window.`;
+}
+function updatePreviewOpenIndicator(record=State.previewBusy){
+  const el=document.getElementById("previewOpenInd");
+  if(!el) return;
+  const active=previewRecordFresh(record);
+  el.style.display=active?"inline-flex":"none";
+  if(!active) return;
+  const phase=String(record.phase||"open");
+  el.title=phase==="building"
+    ? "A Preview working window is open while DLS builds the temporary dashboard."
+    : phase==="ready"
+      ? "The Preview window is open and the temporary dashboard is about to load."
+      : "A Dashboard Preview window is open. Close it or navigate away to release the temporary dashboard.";
 }
 function applyPreviewBusyRecord(record,{announce=false}={}){
   const next=previewRecordFresh(record)?record:null;
   const before=State.previewBusy&&State.previewBusy.previewId||"";
   const after=next&&next.previewId||"";
   State.previewBusy=next;
+  updatePreviewOpenIndicator(next);
   if(before!==after){
     updateDashboardJumpState();
     updateTileDisplayIndicator();
     const key=after?`busy:${after}`:"clear";
     if(announce&&State.previewBusyUiKey!==key){
       State.previewBusyUiKey=key;
-      status(after?`${previewBusyUiSummary(next)} Preview and temporary-dashboard refresh actions are restricted until it closes.`:"Preview window closed or left the temporary dashboard. Preview and Rendered View refresh controls are available again.");
+      const restriction=next&&next.phase!=="open"
+        ? " Preview and temporary-dashboard refresh actions are restricted while preparation is in progress."
+        : " Preview and temporary-dashboard refresh actions are restricted until it closes.";
+      status(after?`${previewBusyUiSummary(next)}${restriction}`:"Preview window closed or left the temporary dashboard. Preview and Rendered View refresh controls are available again.");
     }
   }
   return next;
@@ -4125,8 +4395,9 @@ async function activeDlsWindowCountAfterProbe(){
   await new Promise(resolve=>setTimeout(resolve,180));
   return activeDlsWindowCount();
 }
-function previewWindowRecord(previewId){
-  return {protocol:PREVIEW_PROTOCOL,previewId,ownerWindowId:DLS_WINDOW_ID,sourceLabel:interWindowDashboardLabel(),dashboardId:String(temporaryDashboardState().meta&&temporaryDashboardState().meta.id||""),warningTileId:State.previewWarningTileId==null?null:Number(State.previewWarningTileId)};
+function previewWindowRecord(previewId,phase=""){
+  const resolvedPhase=phase||State.previewReservationPhase||(State.previewWindowRef?"open":"building");
+  return {protocol:PREVIEW_PROTOCOL,previewId,ownerWindowId:DLS_WINDOW_ID,sourceLabel:interWindowDashboardLabel(),dashboardId:String(temporaryDashboardState().meta&&temporaryDashboardState().meta.id||""),warningTileId:State.previewWarningTileId==null?null:Number(State.previewWarningTileId),phase:resolvedPhase};
 }
 function previewWindowIsExpectedDashboard(win,previewId){
   if(!win||win.closed) return false;
@@ -4222,6 +4493,7 @@ function stopOwnedPreviewTracking(previewId,{announce=true,clear=true}={}){
   State.previewWindowRef=null;
   State.previewWindowId="";
   State.previewWindowGuardArmed=false;
+  State.previewReservationPhase="";
   State.previewWindowAccessToken="";
   State.previewWarningTileId=null;
   State.previewWindowAuthorized=false;
@@ -4233,13 +4505,39 @@ function armPreviewWindowNavigation(previewId){
   if(!previewId||State.previewWindowId!==previewId) return;
   State.previewWindowGuardArmed=true;
 }
+function beginPreviewBuildReservation(previewId){
+  if(State.previewHeartbeatTimer) clearInterval(State.previewHeartbeatTimer);
+  State.previewWindowRef=null;
+  State.previewWindowId=previewId;
+  State.previewWindowGuardArmed=false;
+  State.previewWindowLockHeld=true;
+  State.previewReservationPhase="building";
+  const tick=()=>{
+    const active=readPreviewBusyRecord();
+    if(active&&active.previewId!==previewId){
+      State.previewWindowLockHeld=false;
+      return false;
+    }
+    State.previewWindowLockHeld=true;
+    storePreviewBusyRecord(previewWindowRecord(previewId,State.previewReservationPhase||"building"),{announce:false});
+    return true;
+  };
+  tick();
+  State.previewHeartbeatTimer=setInterval(tick,PREVIEW_HEARTBEAT_MS);
+}
+function setPreviewBuildReservationPhase(previewId,phase){
+  if(!previewId||State.previewWindowId!==previewId||!State.previewWindowLockHeld) return;
+  State.previewReservationPhase=phase||"building";
+  storePreviewBusyRecord(previewWindowRecord(previewId,State.previewReservationPhase),{announce:false});
+}
 function beginPreviewWindowTracking(win,previewId){
   if(State.previewHeartbeatTimer) clearInterval(State.previewHeartbeatTimer);
   State.previewWindowRef=win;
   State.previewWindowId=previewId;
   State.previewWindowGuardArmed=false;
   State.previewWindowLockHeld=true;
-  const record=previewWindowRecord(previewId);
+  State.previewReservationPhase="open";
+  const record=previewWindowRecord(previewId,"open");
   storePreviewBusyRecord(record,{announce:true});
   const tick=()=>{
     if(!State.previewWindowRef||State.previewWindowRef.closed){ stopOwnedPreviewTracking(previewId,{announce:true,clear:true}); return; }
@@ -5278,7 +5576,7 @@ async function runHubOperation(title,steps,fn,opts={}){
   if(!op){ toast("Another hub operation is already in progress. Wait for it to finish or abort it first.","err"); return null; }
   try{
     const result=await fn(op);
-    finishHubOperation(op,{message:opts.doneMessage});
+    finishHubOperation(op,{message:opts.doneMessage,delayMs:opts.delayMs});
     return result;
   }catch(e){
     finishHubOperation(op,{error:e});
@@ -6012,8 +6310,9 @@ function askPreviewOpenWarningAsync(title,message,opts={}){
   // Re-apply the active theme before showing the Preview warning so its modal
   // always matches the current DLS interface theme.
   applyTheme(State.theme,{persist:false});
-  // Open the Preview window only from the confirmation button's click handler.
-  // This keeps the browser user gesture intact while ensuring Cancel opens nothing.
+  // Open the Preview working window from the warning confirmation click. This
+  // preserves the browser user gesture while allowing preparation to continue
+  // without a second, final Open Preview prompt. Cancel opens nothing.
   return new Promise(resolve=>showConfirm(
     title,
     message,
@@ -6225,6 +6524,13 @@ const Hub = {
       State.loadPin = pin || null;
       State.lastLayoutUrl = successUrl;
       State.lastDashUrl = href;
+      // Native Add Tile metadata is dashboard-specific. Do not carry a prior
+      // dashboard's templates, variables, devices, or attribute cache forward.
+      State.nativeTileTemplates=null;
+      State.nativeTileVariables=null;
+      State.nativeTileDevices=null;
+      State.nativeTileDevicesLoadPromise=null;
+      State.nativeTileAttributeCache.clear();
       hubOperationStep(op,"devices","active");
       status(`Loading "${meta.label||"dashboard"}" — loading device names…`, true);
       await loadHubDeviceNames();
@@ -10702,6 +11008,7 @@ function applyResizeExactToSelection(tiles, selIds, targetRowSpan, targetColSpan
 }
 
 function onGridMouseDown(e){
+  if(State.addTileMode){ handleAddTileMouseDown(e); return; }
   if(State.pending) return;
   if(e.button===0) clearConflictHighlight();
   // Resize handle takes priority — start a resize drag
@@ -10756,6 +11063,7 @@ function onGridMouseDown(e){
   State.drag={mode:"rectArm", r1:cell.row, c1:cell.col, r2:cell.row, c2:cell.col, moved:false, additive, baseIds};
 }
 function onGridMouseMove(e){
+  if(State.addTileMode){ handleAddTileMouseMove(e); return; }
   // Handle active tile drag (already promoted from tileArm)
   if(State.tileDrag){
     const cell=cellFromEvent(e);
@@ -10837,6 +11145,815 @@ function applyRectFromStored(){
   State.sel={type:"rect", ids, lines:[], rect:r};
   if(!(State.focusTileId!=null&&ids.includes(Number(State.focusTileId)))) State.focusTileId=ids.length?Number(ids[ids.length-1]):null;
   updateActionButtons();
+}
+
+
+/* ---------- Add Tile / shared Tile Configuration ---------- */
+function dlsTileRaw(tile){ return tile&&tile._raw ? tile._raw : (tile||{}); }
+function normalizedTileTemplate(value){
+  const v=String(value||"").trim().toLowerCase();
+  return ({button:"buttons",image:"images",link:"links",switch:"switches",modes:"mode",hsmstatus:"hsm"})[v]||v;
+}
+function tileTemplateSource(template,raw={}){
+  const t=normalizedTileTemplate(template);
+  if(DLS_VARIABLE_TILE_TEMPLATES.has(t)||String(raw.globalVar||"").trim()) return "variable";
+  if(DLS_STATIC_TILE_TEMPLATES.has(t)) return "static";
+  return "device";
+}
+function tileTemplateUsesRegularDevice(template,source="device"){
+  const t=normalizedTileTemplate(template);
+  return source==="device"&&!DLS_STATIC_TILE_TEMPLATES.has(t)&&!DLS_VARIABLE_TILE_TEMPLATES.has(t);
+}
+function staticDeviceForTemplate(template){
+  const t=normalizedTileTemplate(template);
+  if(t==="hsm") return "-3";
+  if(t==="mode") return "-2";
+  return "0";
+}
+function nativeVariableTemplate(variable){
+  const type=String(variable&&variable.type||"").trim().toLowerCase();
+  if(type.includes("bool")) return "variable-bool";
+  if(type.includes("decimal")||type.includes("float")||type.includes("double")) return "variable-decimal";
+  if(type.includes("number")||type.includes("integer")||type==="int"||type==="long") return "variable-number";
+  if(type.includes("date")&&!type.includes("time")) return "variable-date";
+  if(type.includes("time")) return "variable-time";
+  return "variable-string";
+}
+function templateMapForAddTile(){ return State.nativeTileTemplates||DLS_NATIVE_TILE_TEMPLATE_FALLBACK; }
+function nativeDashboardEndpointUrl(path){
+  if(!(State.conn.mode==="live"&&State.lastLayoutUrl)) return null;
+  try{
+    const u=new URL(State.lastLayoutUrl,window.location.href);
+    u.pathname=u.pathname.replace(/\/layout\/?$/i,"/"+String(path||"").replace(/^\/+/,""));
+    return u.toString();
+  }catch(_){ return null; }
+}
+async function loadNativeTileTemplates(force=false){
+  if(State.nativeTileTemplates&&!force) return State.nativeTileTemplates;
+  const fallback={...DLS_NATIVE_TILE_TEMPLATE_FALLBACK};
+  const url=nativeDashboardEndpointUrl("localization/templates");
+  if(!url){ State.nativeTileTemplates=fallback; return fallback; }
+  try{
+    const res=await fetch(url,{credentials:"same-origin",cache:"no-store"});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
+    const map={};
+    for(const [key,value] of Object.entries(data||{})){
+      const k=normalizedTileTemplate(key);
+      if(k) map[k]=String(value||key);
+    }
+    // Merge Hubitat's live localization map over the complete built-in catalog.
+    // Some firmware/localization responses can be partial; a partial response must
+    // never hide otherwise supported templates such as Color Bulb.
+    State.nativeTileTemplates=Object.keys(map).length?{...fallback,...map}:fallback;
+  }catch(e){
+    State.nativeTileTemplates=fallback;
+    trace(`native template catalog unavailable: ${e.message}`,null,"err");
+  }
+  return State.nativeTileTemplates;
+}
+async function loadNativeTileVariables(force=false){
+  if(Array.isArray(State.nativeTileVariables)&&!force) return State.nativeTileVariables;
+  const url=nativeDashboardEndpointUrl("variables");
+  if(!url){ State.nativeTileVariables=[]; return []; }
+  try{
+    const res=await fetch(url,{credentials:"same-origin",cache:"no-store"});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
+    State.nativeTileVariables=Array.isArray(data)?data:[];
+  }catch(e){
+    State.nativeTileVariables=[];
+    trace(`native Hub Variable list unavailable: ${e.message}`,null,"err");
+  }
+  return State.nativeTileVariables;
+}
+const DLS_NATIVE_ATTRIBUTE_META_KEYS=new Set(["unit","value","currentValue","dataType","type","description","displayName","label","id","deviceId","date","dateValue","name"]);
+function addNativeAttributeName(set,value){
+  const name=String(value==null?"":value).trim();
+  if(name) set.add(name);
+}
+function collectNativeAttributeNames(container,set){
+  if(container==null) return;
+  if(Array.isArray(container)){
+    for(const item of container){
+      if(typeof item==="string") addNativeAttributeName(set,item);
+      else if(item&&typeof item==="object"){
+        if(typeof item.name==="string"&&item.name.trim()) addNativeAttributeName(set,item.name);
+        const keys=Object.keys(item).filter(k=>!DLS_NATIVE_ATTRIBUTE_META_KEYS.has(k));
+        if(keys.length) keys.forEach(k=>addNativeAttributeName(set,k));
+        else if(!item.name){
+          const first=Object.keys(item)[0];
+          if(first&&!DLS_NATIVE_ATTRIBUTE_META_KEYS.has(first)) addNativeAttributeName(set,first);
+        }
+      }
+    }
+    return;
+  }
+  if(typeof container==="object"){
+    for(const [key,value] of Object.entries(container)){
+      if(!DLS_NATIVE_ATTRIBUTE_META_KEYS.has(key)) addNativeAttributeName(set,key);
+      if(key==="attributes"||key==="attr"||key==="currentStates"||key==="states") collectNativeAttributeNames(value,set);
+    }
+  }
+}
+function nativeAttributeNamesFromRecord(record){
+  const set=new Set();
+  if(!record||typeof record!=="object") return [];
+  for(const key of ["attr","attributes","currentStates","states"]) collectNativeAttributeNames(record[key],set);
+  const capabilities=record.capabilities;
+  if(Array.isArray(capabilities)) for(const cap of capabilities) if(cap&&typeof cap==="object") collectNativeAttributeNames(cap.attributes,set);
+  return [...set];
+}
+function layoutKnownAttributeNames(deviceId){
+  const id=canonicalDeviceId(deviceId),set=new Set();
+  if(!id) return [];
+  for(const tile of State.tiles||[]){
+    const raw=dlsTileRaw(tile);
+    if(canonicalDeviceId(raw.device)!==id||normalizedTileTemplate(raw.template)!=="attribute") continue;
+    const name=String(raw.templateExtra||"").trim();
+    if(name) set.add(name);
+  }
+  return [...set];
+}
+function nativeDashboardFetchOptions(){
+  const headers={Accept:"application/json"};
+  const token=String(State.conn&&State.conn.token||"").trim();
+  if(token) headers.Authorization=`Bearer ${token}`;
+  return {credentials:"same-origin",cache:"no-store",headers};
+}
+async function loadNativeTileDevices(force=false){
+  if(Array.isArray(State.nativeTileDevices)&&!force) return State.nativeTileDevices;
+  if(State.nativeTileDevicesLoadPromise&&!force) return State.nativeTileDevicesLoadPromise;
+  const url=nativeDashboardEndpointUrl("devices2");
+  if(!url){ State.nativeTileDevices=[]; return []; }
+  State.nativeTileDevicesLoadPromise=(async()=>{
+    const res=await fetch(url,nativeDashboardFetchOptions());
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
+    State.nativeTileDevices=Array.isArray(data)?data:[];
+    return State.nativeTileDevices;
+  })().catch(e=>{
+    trace(`native dashboard device records unavailable: ${e.message}`,null,"err");
+    State.nativeTileDevices=[];
+    return [];
+  }).finally(()=>{ State.nativeTileDevicesLoadPromise=null; });
+  return State.nativeTileDevicesLoadPromise;
+}
+async function loadNativeTileAttributes(deviceId,force=false){
+  const id=canonicalDeviceId(deviceId);
+  if(!id||id==="0") return [];
+  const known=layoutKnownAttributeNames(id);
+  if(!force&&State.nativeTileAttributeCache.has(id)){
+    return [...new Set([...(State.nativeTileAttributeCache.get(id)||[]),...known])].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true,sensitivity:"base"}));
+  }
+  const names=new Set(known);
+  let primaryError=null;
+  const url=nativeDashboardEndpointUrl(`device/${encodeURIComponent(id)}`);
+  if(url){
+    try{
+      const res=await fetch(url,nativeDashboardFetchOptions());
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data=await res.json();
+      const records=Array.isArray(data)?data:[data];
+      for(const record of records) nativeAttributeNamesFromRecord(record).forEach(name=>names.add(name));
+    }catch(e){ primaryError=e; }
+  }
+  // Hubitat's /devices2 payload can expose custom attributes that are absent
+  // from a stale or partial /device/{id} response. Merge both sources.
+  try{
+    const devices=await loadNativeTileDevices(force);
+    const record=(devices||[]).find(d=>canonicalDeviceId(d&&d.id)===id);
+    nativeAttributeNamesFromRecord(record).forEach(name=>names.add(name));
+  }catch(_e){}
+  // The hub inventory record is another useful fallback on firmware that
+  // includes capability/attribute metadata in /device/listJson.
+  const inventory=(State.hubDevices||[]).find(d=>canonicalDeviceId(d&&d.id)===id);
+  nativeAttributeNamesFromRecord(inventory&&inventory.raw).forEach(name=>names.add(name));
+  const attrs=[...names].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true,sensitivity:"base"}));
+  if(attrs.length) State.nativeTileAttributeCache.set(id,attrs);
+  else State.nativeTileAttributeCache.delete(id); // never preserve a transient empty result
+  if(primaryError&&!attrs.length) trace(`attributes for device #${id} unavailable: ${primaryError.message}`,null,"err");
+  return attrs;
+}
+function addTileTemplateEntries(source,current=""){
+  const map=templateMapForAddTile();
+  let entries=Object.entries(map).map(([key,label])=>[normalizedTileTemplate(key),String(label||key)]);
+  const category=t=>DLS_VARIABLE_TILE_TEMPLATES.has(t)?"variable":DLS_STATIC_TILE_TEMPLATES.has(t)?"static":"device";
+  entries=entries.filter(([t])=>category(t)===source);
+  if(current&&!entries.some(([t])=>t===current)) entries.push([current,map[current]||current]);
+  const seen=new Set();
+  return entries.filter(([t])=>t&&!seen.has(t)&&seen.add(t)).sort((a,b)=>a[1].localeCompare(b[1],undefined,{numeric:true,sensitivity:"base"}));
+}
+function addTileDefaultTemplate(source){
+  const preferred={device:"switches",variable:"variable-string",static:"texttile"}[source]||"switches";
+  const entries=addTileTemplateEntries(source);
+  return entries.some(([t])=>t===preferred)?preferred:(entries[0]&&entries[0][0])||preferred;
+}
+function addTileDialogFormFromTile(tile){
+  const raw=dlsTileRaw(tile),template=normalizedTileTemplate(raw.template||tile.template);
+  const source=tileTemplateSource(template,raw);
+  return {
+    source,template,device:String(raw.device==null?"":raw.device),globalVar:String(raw.globalVar==null?"":raw.globalVar),
+    templateExtra:raw.templateExtra==null?"":String(raw.templateExtra),buttonCommand:String(raw.buttonCommand||"push"),
+    hideUnit:!!raw.hideUnit,bgImage:String(raw.bgImage||""),customIcon:String(raw.customIcon||""),
+    refreshInterval:raw.refreshInterval==null?"":String(raw.refreshInterval),linkName:String(raw.linkName||"")
+  };
+}
+function blankAddTileDialogForm(){
+  return {source:"device",template:"switches",device:"",globalVar:"",templateExtra:"",buttonCommand:"push",hideUnit:false,bgImage:"",customIcon:"",refreshInterval:"",linkName:""};
+}
+function setAddTileError(message=""){
+  const el=document.getElementById("addTileError"); if(!el) return;
+  el.textContent=String(message||""); el.classList.toggle("show",!!message);
+}
+function addTileInitialDeviceScope(selected=""){
+  const id=canonicalDeviceId(selected);
+  if(!(State.conn.mode==="live"&&State.deviceNamesAvailable&&State.devicePickedAvailable)) return "all";
+  return id&&!isDeviceSelectedForActiveDashboard(id)?"all":"dashboard";
+}
+function addTileDeviceOptionsHtml(selected,scope="dashboard"){
+  const all=(State.hubDevices||[]).slice().sort(hubDeviceListSort);
+  const dashboardOnly=scope==="dashboard"&&State.devicePickedAvailable;
+  const devices=dashboardOnly?all.filter(d=>isDeviceSelectedForActiveDashboard(canonicalDeviceId(d.id))):all;
+  const emptyLabel=dashboardOnly?"No dashboard devices are selected":"No hub devices are available";
+  const opts=[`<option value="">${devices.length?"Choose a device…":emptyLabel}</option>`];
+  for(const d of devices){
+    const id=canonicalDeviceId(d.id),picked=isDeviceSelectedForActiveDashboard(id);
+    const suffix=!dashboardOnly&&!picked&&State.devicePickedAvailable?" — will be added to dashboard":"";
+    opts.push(`<option value="${esc(id)}" ${String(selected)===String(id)?"selected":""}>${esc(d.name||`Device ${id}`)} (#${esc(id)})${suffix}</option>`);
+  }
+  return opts.join("");
+}
+function addTileVariableOptionsHtml(selected){
+  const vars=Array.isArray(State.nativeTileVariables)?State.nativeTileVariables:[];
+  const opts=['<option value="">Choose a Hub Variable…</option>'];
+  for(const v of vars.slice().sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),undefined,{numeric:true,sensitivity:"base"}))){
+    const name=String(v.name||"");
+    opts.push(`<option value="${esc(name)}" ${String(selected)===name?"selected":""}>${esc(name)}${v.type?` (${esc(v.type)})`:""}</option>`);
+  }
+  return opts.join("");
+}
+function addTileField(label,control,full=false){ return `<div class="field ${full?"full":""}"><label>${esc(label)}</label>${control}</div>`; }
+function addTileOptionInput(field,value,type="text",attrs=""){
+  return `<input class="input" type="${type}" data-add-field="${field}" value="${esc(value==null?"":String(value))}" ${attrs}>`;
+}
+function nativeTileIconBaseUrl(){
+  if(pageLooksHubHosted()) return window.location.origin;
+  if(State.hubAvailable&&State.conn.mode==="live") return hubRoot();
+  return "";
+}
+function nativeMaterialGlyphNameAllowed(name){
+  return !!name&&!/^[0-9a-z_-]$/.test(String(name));
+}
+function parseNativeTileIconFont(svgText,{prefix="",family="material"}={}){
+  const doc=(new DOMParser()).parseFromString(String(svgText||""),"image/svg+xml");
+  if(doc.querySelector("parsererror")) throw new Error("The icon font SVG could not be parsed.");
+  const font=doc.querySelector("font"),face=doc.querySelector("font-face");
+  const units=Math.max(1,Number(face?.getAttribute("units-per-em"))||1024);
+  const ascent=Number(face?.getAttribute("ascent"));
+  const descent=Number(face?.getAttribute("descent"));
+  const defaultAdvance=Math.max(1,Number(font?.getAttribute("horiz-adv-x"))||units);
+  const resolvedAscent=Number.isFinite(ascent)?ascent:units;
+  const resolvedDescent=Number.isFinite(descent)?descent:0;
+  const icons=[];
+  for(const glyph of doc.querySelectorAll("glyph[glyph-name]")){
+    const glyphName=String(glyph.getAttribute("glyph-name")||"").trim();
+    const path=String(glyph.getAttribute("d")||"").trim();
+    if(!glyphName||!path) continue;
+    if(family==="material"&&!nativeMaterialGlyphNameAllowed(glyphName)) continue;
+    icons.push({
+      name:prefix+glyphName,
+      glyphName,
+      family,
+      path,
+      units,
+      ascent:resolvedAscent,
+      descent:resolvedDescent,
+      advance:Math.max(1,Number(glyph.getAttribute("horiz-adv-x"))||defaultAdvance)
+    });
+  }
+  return icons;
+}
+async function fetchNativeTileIconFont(filename,options){
+  const base=nativeTileIconBaseUrl();
+  if(!base) throw new Error("Open DLS from the hub to load the Hubitat icon catalog.");
+  const url=new URL(`/ui2/dashboard2/fonts/${filename}`,base).toString();
+  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);
+  try{
+    const sameOrigin=new URL(url).origin===window.location.origin;
+    const res=await fetch(url,{credentials:sameOrigin?"same-origin":"omit",cache:"force-cache",signal:ctrl.signal});
+    if(!res.ok) throw new Error(`${filename} returned HTTP ${res.status}`);
+    return parseNativeTileIconFont(await res.text(),options);
+  }catch(e){
+    if(e&&e.name==="AbortError") throw new Error(`${filename} timed out.`);
+    throw e;
+  }finally{ clearTimeout(timer); }
+}
+async function loadNativeTileIcons(force=false){
+  if(Array.isArray(State.nativeTileIcons)&&!force) return State.nativeTileIcons;
+  if(State.nativeTileIconLoadPromise&&!force) return State.nativeTileIconLoadPromise;
+  State.nativeTileIconError="";
+  State.nativeTileIconLoadPromise=(async()=>{
+    const results=await Promise.allSettled([
+      fetchNativeTileIconFont("hubitat.svg",{prefix:"he-",family:"hubitat"}),
+      fetchNativeTileIconFont("MaterialIcons-Regular.svg",{prefix:"",family:"material"})
+    ]);
+    const icons=[],errors=[];
+    for(const result of results){
+      if(result.status==="fulfilled") icons.push(...result.value);
+      else errors.push(String(result.reason&&result.reason.message||result.reason||"Unknown icon-font error"));
+    }
+    const byName=new Map();
+    for(const icon of icons) if(!byName.has(icon.name)) byName.set(icon.name,icon);
+    State.nativeTileIcons=[...byName.values()].sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:"base"}));
+    State.nativeTileIconMap=new Map(State.nativeTileIcons.map(icon=>[icon.name,icon]));
+    State.nativeTileIconError=errors.length?errors.join(" "):"";
+    if(!State.nativeTileIcons.length&&State.nativeTileIconError) trace(`native icon catalog unavailable: ${State.nativeTileIconError}`,null,"err");
+    return State.nativeTileIcons;
+  })().finally(()=>{ State.nativeTileIconLoadPromise=null; });
+  return State.nativeTileIconLoadPromise;
+}
+function addTileIconSvg(icon){
+  if(!icon||!icon.path) return "";
+  const width=Math.max(1,Number(icon.advance)||Number(icon.units)||1024);
+  const ascent=Number(icon.ascent)||Number(icon.units)||1024;
+  const descent=Number.isFinite(Number(icon.descent))?Number(icon.descent):0;
+  const height=Math.max(1,ascent-descent);
+  return `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"><g transform="translate(0 ${ascent}) scale(1 -1)"><path d="${esc(icon.path)}"></path></g></svg>`;
+}
+function filteredAddTileIcons(dialog){
+  const search=String(dialog.iconSearch||"").trim().toLowerCase();
+  const family=dialog.iconFamily||"all";
+  return (State.nativeTileIcons||[]).filter(icon=>(family==="all"||icon.family===family)&&(!search||icon.name.toLowerCase().includes(search)));
+}
+function addTileIconResultsHtml(dialog){
+  const icons=filteredAddTileIcons(dialog),selected=String(dialog.form.customIcon||"");
+  if(State.nativeTileIconLoadPromise&&!State.nativeTileIcons) return `<p class="add-tile-icon-status">Loading Hubitat and Material icons from this hub…</p>`;
+  if(!icons.length){
+    const msg=State.nativeTileIconError&&!State.nativeTileIcons?.length
+      ? `Icon list unavailable: ${State.nativeTileIconError}`
+      : "No icons match the current search and filter.";
+    return `<p class="add-tile-icon-status ${State.nativeTileIconError&&!State.nativeTileIcons?.length?"error":""}">${esc(msg)}</p>`;
+  }
+  return icons.map(icon=>`<button class="add-tile-icon-choice ${selected===icon.name?"selected":""}" type="button" data-add-icon="${esc(icon.name)}" title="${esc(icon.name)}" aria-label="Choose ${esc(icon.name)}">${addTileIconSvg(icon)}<span>${esc(icon.name)}</span></button>`).join("");
+}
+function addTileIconPickerHtml(dialog){
+  const selected=String(dialog.form.customIcon||"");
+  const icon=State.nativeTileIconMap.get(selected);
+  const preview=icon?addTileIconSvg(icon):selected?`<span title="Icon preview unavailable">?</span>`:`<span aria-hidden="true">—</span>`;
+  const selectedLabel=selected||"Default template icon";
+  const picker=dialog.iconPickerOpen?`<div class="add-tile-icon-picker" id="addTileIconPicker">
+    <div class="add-tile-icon-toolbar">
+      <input class="input add-tile-icon-search" id="addTileIconSearch" type="search" value="${esc(dialog.iconSearch||"")}" placeholder="Search icon names" autocomplete="off">
+      <div class="add-tile-icon-filters" role="group" aria-label="Icon family">
+        ${[["all","All"],["hubitat","Hubitat"],["material","Material"]].map(([value,label])=>`<button class="add-tile-icon-filter ${(dialog.iconFamily||"all")===value?"active":""}" type="button" data-icon-family="${value}" aria-pressed="${(dialog.iconFamily||"all")===value}">${label}</button>`).join("")}
+      </div>
+    </div>
+    <p class="add-tile-icon-status" id="addTileIconStatus">${State.nativeTileIcons?`${filteredAddTileIcons(dialog).length} matching icon${filteredAddTileIcons(dialog).length===1?"":"s"}. Select an icon to apply it.`:"Loading icon catalog…"}</p>
+    <div class="add-tile-icon-grid" id="addTileIconGrid">${addTileIconResultsHtml(dialog)}</div>
+    ${!State.nativeTileIcons?.length&&State.nativeTileIconError?`<div class="add-tile-icon-manual"><label for="addTileManualIconName">Enter an icon name manually</label>${addTileOptionInput("customIcon",selected,"text",'id="addTileManualIconName" placeholder="Example: lightbulb_outline or he-switch"')}</div>`:""}
+  </div>`:"";
+  return `<div class="field full add-tile-icon-field" id="addTileIconField"><label>Custom icon</label>
+    <div class="add-tile-icon-summary">
+      <div class="add-tile-icon-preview ${selected?"":"empty"}">${preview}</div>
+      <div class="add-tile-icon-current"><b>${esc(selectedLabel)}</b><span>${selected?`${icon?icon.family==="hubitat"?"Hubitat icon":"Material icon":"Saved icon name"}`:"Uses the template's normal icon"}</span></div>
+      <div class="add-tile-icon-actions"><button class="btn ghost" id="addTileChooseIcon" type="button">${dialog.iconPickerOpen?"Hide icons":"Choose icon…"}</button><button class="btn ghost" id="addTileClearIcon" type="button" ${selected?"":"disabled"}>Use default</button></div>
+    </div>${picker}</div>`;
+}
+function renderAddTileIconResults(){
+  const d=State.addTileDialog,grid=document.getElementById("addTileIconGrid"),statusEl=document.getElementById("addTileIconStatus");
+  if(!d||!grid) return;
+  const icons=filteredAddTileIcons(d);
+  grid.innerHTML=addTileIconResultsHtml(d);
+  if(statusEl) statusEl.textContent=State.nativeTileIcons?`${icons.length} matching icon${icons.length===1?"":"s"}. Select an icon to apply it.`:"Loading icon catalog…";
+  document.querySelectorAll("#addTileModal [data-icon-family]").forEach(btn=>{
+    const active=(d.iconFamily||"all")===btn.dataset.iconFamily;
+    btn.classList.toggle("active",active);btn.setAttribute("aria-pressed",active?"true":"false");
+  });
+}
+function addTileOptionsHtml(dialog){
+  const f=dialog.form,t=normalizedTileTemplate(f.template);
+  const pieces=[];
+  if(t==="attribute"){
+    const special=new Set(["hsmStatus","modeStatus","lastUpdated"]);
+    const attrs=[...new Set([...(dialog.attributes||[]),...(!special.has(String(f.templateExtra||""))&&String(f.templateExtra||"").trim()?[String(f.templateExtra).trim()]:[])])].filter(a=>!special.has(a));
+    const options=['<option value="">Choose an attribute…</option>',
+      ...(dialog.attributesLoading?['<option value="" disabled>Loading device attributes…</option>']:[]),
+      `<option value="hsmStatus" ${f.templateExtra==="hsmStatus"?"selected":""}>HSM Status</option>`,
+      `<option value="modeStatus" ${f.templateExtra==="modeStatus"?"selected":""}>Mode Status</option>`,
+      `<option value="lastUpdated" ${f.templateExtra==="lastUpdated"?"selected":""}>Last Updated</option>`,
+      ...attrs.map(a=>`<option value="${esc(a)}" ${f.templateExtra===a?"selected":""}>${esc(a)}</option>`)
+    ];
+    pieces.push(addTileField("Attribute",`<select class="input" data-add-field="templateExtra" ${dialog.attributesLoading?"disabled":""}>${options.join("")}</select>`,true));
+    if(!dialog.attributesLoading&&!attrs.length) pieces.push(`<p class="add-tile-note">No device attributes were returned. DLS will retry whenever the device or Attribute template is selected.</p>`);
+  }else if(t==="buttons"){
+    pieces.push(addTileField("Button number",addTileOptionInput("templateExtra",f.templateExtra||"1","number",'min="1" step="1"')));
+    pieces.push(addTileField("Button command",`<select class="input" data-add-field="buttonCommand"><option value="push" ${f.buttonCommand==="push"?"selected":""}>Push</option><option value="hold" ${f.buttonCommand==="hold"?"selected":""}>Hold</option><option value="release" ${f.buttonCommand==="release"?"selected":""}>Release</option><option value="doubleTap" ${f.buttonCommand==="doubleTap"?"selected":""}>Double Tap</option></select>`));
+  }else if(t==="dashboard"){
+    const opts=['<option value="">Choose a dashboard…</option>',...(State.dashboards||[]).map(d=>`<option value="${esc(d.id)}" ${String(f.templateExtra)===String(d.id)?"selected":""}>${esc(d.label||d.name||`Dashboard ${d.id}`)}</option>`)];
+    pieces.push(addTileField("Target dashboard",`<select class="input" data-add-field="templateExtra">${opts.join("")}</select>`,true));
+  }else if(t==="links"){
+    pieces.push(addTileField("URL",addTileOptionInput("templateExtra",f.templateExtra,"url"),true));
+    pieces.push(addTileField("Link name",addTileOptionInput("linkName",f.linkName),true));
+  }else if(t==="images"){
+    pieces.push(addTileField("Image URL",addTileOptionInput("templateExtra",f.templateExtra,"url"),true));
+    pieces.push(addTileField("Refresh interval (seconds)",addTileOptionInput("refreshInterval",f.refreshInterval,"number",'min="0" step="1"')));
+  }else if(t==="video-player"){
+    pieces.push(addTileField("Video URL",addTileOptionInput("templateExtra",f.templateExtra,"url"),true));
+  }else if(t==="texttile"){
+    pieces.push(addTileField("Text",`<textarea class="input" data-add-field="templateExtra">${esc(f.templateExtra)}</textarea>`,true));
+  }else if(t==="thermostat"){
+    pieces.push(addTileField("Temperature change step",addTileOptionInput("templateExtra",f.templateExtra||"1","number",'step="0.1"')));
+  }else if(DLS_UNIT_TILE_TEMPLATES.has(t)){
+    pieces.push(addTileField("Unit override",addTileOptionInput("templateExtra",f.templateExtra)));
+  }else if(DLS_TEMPLATE_EXTRA_LABELS[t]){
+    pieces.push(addTileField(DLS_TEMPLATE_EXTRA_LABELS[t],addTileOptionInput("templateExtra",f.templateExtra),true));
+  }
+  if(DLS_UNIT_TILE_TEMPLATES.has(t)){
+    pieces.push(addTileField("Unit display",`<label class="chk"><input type="checkbox" data-add-field="hideUnit" ${f.hideUnit?"checked":""}> Hide unit</label>`));
+  }
+  if(!DLS_VARIABLE_TILE_TEMPLATES.has(t)){
+    pieces.push(addTileIconPickerHtml(dialog));
+    pieces.push(addTileField("Tile background image",addTileOptionInput("bgImage",f.bgImage,"url")));
+  }
+  if(!pieces.length) pieces.push(`<p class="add-tile-note">This template has no additional basic parameters. Device, template, position, and size are sufficient.</p>`);
+  return pieces.join("");
+}
+function renderAddTileDialog(){
+  const d=State.addTileDialog;if(!d) return;
+  if(typeof d.iconPickerOpen!=="boolean") d.iconPickerOpen=false;
+  if(typeof d.iconSearch!=="string") d.iconSearch="";
+  if(!["all","hubitat","material"].includes(d.iconFamily)) d.iconFamily="all";
+  const f=d.form;
+  document.getElementById("addTileTitle").textContent=d.mode==="edit"?`Edit Tile #${d.tileId} Configuration`:"Add Tile";
+  document.getElementById("addTileApply").textContent=d.mode==="edit"?"Apply Changes":"Add Tile";
+  const p=d.rect;
+  document.getElementById("addTilePlacement").innerHTML=d.mode==="edit"
+    ? `<b>Tile #${esc(d.tileId)}</b> · row ${esc(p.row)}, column ${esc(p.col)} · ${esc(p.colSpan)} × ${esc(p.rowSpan)} cells. Placement and size remain unchanged here.`
+    : `<b>New tile placement:</b> row ${esc(p.row)}, column ${esc(p.col)} · ${esc(p.colSpan)} × ${esc(p.rowSpan)} cells. Overlap is allowed during creation.`;
+  const source=document.getElementById("addTileSource"); source.value=f.source;
+  const entries=addTileTemplateEntries(f.source,f.template);
+  const template=document.getElementById("addTileTemplate");
+  template.innerHTML=entries.map(([key,label])=>`<option value="${esc(key)}" ${key===f.template?"selected":""}>${esc(label)}</option>`).join("");
+  if(!entries.some(([key])=>key===f.template)){ f.template=addTileDefaultTemplate(f.source); template.value=f.template; }
+  const deviceField=document.getElementById("addTileDeviceField"),variableField=document.getElementById("addTileVariableField");
+  const useDevice=tileTemplateUsesRegularDevice(f.template,f.source),useVariable=f.source==="variable";
+  deviceField.classList.toggle("hidden",!useDevice); variableField.classList.toggle("hidden",!useVariable);
+  const deviceSelect=document.getElementById("addTileDevice"),manual=document.getElementById("addTileDeviceManual"),scopeWrap=document.getElementById("addTileDeviceScope");
+  const online=State.conn.mode==="live"&&State.deviceNamesAvailable;
+  deviceSelect.classList.toggle("hidden",!online); manual.classList.toggle("hidden",online); scopeWrap.classList.toggle("hidden",!online);
+  if(useDevice){
+    if(online){
+      if(!State.devicePickedAvailable) d.deviceScope="all";
+      d.deviceScope=d.deviceScope||addTileInitialDeviceScope(f.device);
+      const dashScope=document.getElementById("addTileDeviceScopeDashboard"),allScope=document.getElementById("addTileDeviceScopeAll");
+      for(const [btn,scope] of [[dashScope,"dashboard"],[allScope,"all"]]){
+        const active=d.deviceScope===scope;
+        btn.classList.toggle("active",active);btn.setAttribute("aria-pressed",active?"true":"false");
+      }
+      dashScope.disabled=!State.devicePickedAvailable;
+      deviceSelect.innerHTML=addTileDeviceOptionsHtml(f.device,d.deviceScope);deviceSelect.value=f.device;
+      const selectedId=canonicalDeviceId(f.device),selectedOutside=selectedId&&State.devicePickedAvailable&&!isDeviceSelectedForActiveDashboard(selectedId);
+      const shownCount=d.deviceScope==="dashboard"&&State.devicePickedAvailable
+        ? (State.hubDevices||[]).filter(x=>isDeviceSelectedForActiveDashboard(canonicalDeviceId(x.id))).length
+        : (State.hubDevices||[]).length;
+      document.getElementById("addTileDeviceHint").textContent=!State.devicePickedAvailable
+        ? `Showing all ${shownCount} hub devices because DLS could not read this dashboard's selected-device list.`
+        : d.deviceScope==="dashboard"
+          ? `Showing ${shownCount} device${shownCount===1?"":"s"} currently selected for this dashboard.`
+          : selectedOutside
+            ? "This device is not selected for the dashboard. DLS will add and verify it when you apply the tile configuration."
+            : "Showing all hub devices. Choosing an unselected device will add and verify it for this dashboard when you apply.";
+    }else{
+      manual.value=f.device;
+      document.getElementById("addTileDeviceHint").textContent="Offline layouts cannot verify device compatibility. Enter a numeric device ID or leave it blank while drafting.";
+    }
+  }
+  const variable=document.getElementById("addTileVariable");
+  if(useVariable){
+    variable.innerHTML=addTileVariableOptionsHtml(f.globalVar); variable.value=f.globalVar;
+    document.getElementById("addTileVariableHint").textContent=State.conn.mode==="live"
+      ? (State.nativeTileVariables&&State.nativeTileVariables.length?"The template follows the selected variable's Hubitat data type.":"No authorized Hub Variables were returned by the dashboard endpoint.")
+      : "Hub Variables can be selected only for layouts loaded directly from the hub.";
+  }
+  document.getElementById("addTileOptions").innerHTML=addTileOptionsHtml(d);
+  setAddTileError("");
+  resetModalPosition("addTileModal");
+  document.getElementById("addTileModal").classList.remove("hidden");
+  applyAddTileUiLock();
+}
+async function refreshAddTileDialogAttributes(d,{force=true}={}){
+  if(!d||d.form.template!=="attribute"||!d.form.device){ if(d){ d.attributes=[];d.attributesLoading=false; } return []; }
+  d.attributesLoading=true;
+  if(State.addTileDialog===d) renderAddTileDialog();
+  const attrs=await loadNativeTileAttributes(d.form.device,force);
+  if(State.addTileDialog!==d) return attrs;
+  d.attributes=attrs;d.attributesLoading=false;
+  renderAddTileDialog();
+  return attrs;
+}
+async function refreshAddTileDialogData(){
+  const d=State.addTileDialog;if(!d) return;
+  await Promise.all([loadNativeTileTemplates(),loadNativeTileIcons(),d.form.source==="variable"?loadNativeTileVariables():Promise.resolve([])]);
+  if(State.addTileDialog!==d) return;
+  if(d.form.template==="attribute"&&d.form.device){ await refreshAddTileDialogAttributes(d,{force:true}); return; }
+  renderAddTileDialog();
+}
+function addTileRectFromSelection(r){ return {row:r.r1,col:r.c1,rowSpan:r.r2-r.r1+1,colSpan:r.c2-r.c1+1}; }
+function addTilePreviewElement(){
+  let el=document.getElementById("addTilePreview");
+  if(!el){ el=document.createElement("div");el.id="addTilePreview";el.className="add-tile-preview";document.getElementById("gridmap")?.appendChild(el); }
+  return el;
+}
+function removeAddTilePreview(){ document.getElementById("addTilePreview")?.remove(); }
+function updateAddTilePreview(rect){
+  const el=addTilePreviewElement(),m=gridDisplayMetrics();
+  const shape=addTileRectFromSelection(rect);
+  el.style.left=m.xForCol(shape.col)+"px";el.style.top=m.yForRow(shape.row)+"px";
+  el.style.width=m.tileW(shape.colSpan)+"px";el.style.height=m.tileH(shape.rowSpan)+"px";
+  const proposed={...shape};
+  const hasOverlap=State.tiles.some(t=>overlaps(proposed,t));
+  el.classList.toggle("overlap",hasOverlap);
+  el.innerHTML=`<span class="add-tile-preview-label">New Tile<br>r${shape.row}, c${shape.col} · ${shape.colSpan}×${shape.rowSpan}${hasOverlap?" · overlap allowed":""}</span>`;
+}
+function syncAddTileButton(){
+  const b=document.getElementById("btnAddTile"),label=document.getElementById("addTileLabel"),icon=document.getElementById("addTileIcon");if(!b)return;
+  const active=!!State.addTileMode;
+  b.disabled=active?false:(!State.active||!!State.pending||!!State.cssClipboard||hubOperationActive());
+  b.classList.toggle("danger",active);b.classList.toggle("operation-cancel",active);
+  if(label) label.textContent=active?"Cancel":"Add";
+  if(icon) icon.innerHTML=active?'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>':'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 8v8M8 12h8"/>';
+  b.title=active?"Cancel Add Tile mode":"Add a new tile by dragging its position and size on the grid.";
+}
+function addTileUiControlExempt(el){
+  if(!el) return false;
+  if(el.id==="btnAddTile") return true;
+  if(el.closest&&el.closest("#addTileModal")) return true;
+  const deviceModal=el.closest&&el.closest("#importDeviceWarningModal");
+  return !!(deviceModal&&!deviceModal.classList.contains("hidden"));
+}
+function releaseAddTileUiLock(){
+  document.querySelectorAll('[data-add-tile-locked="1"]').forEach(el=>{
+    const was=el.dataset.addTileWasDisabled==="1";delete el.dataset.addTileLocked;delete el.dataset.addTileWasDisabled;
+    el.disabled=was;
+  });
+  document.getElementById("dropZone")?.classList.remove("add-tile-disabled");
+}
+function applyAddTileUiLock(){
+  if(!State.addTileMode){ releaseAddTileUiLock();syncAddTileButton();return; }
+  document.querySelectorAll("button,select,input,textarea").forEach(el=>{
+    if(addTileUiControlExempt(el)){ delete el.dataset.addTileLocked;delete el.dataset.addTileWasDisabled;return; }
+    if(el.dataset.addTileLocked!=="1") el.dataset.addTileWasDisabled=el.disabled?"1":"0";
+    el.dataset.addTileLocked="1";el.disabled=true;
+  });
+  syncAddTileButton();
+}
+function beginAddTileMode(){
+  if(!State.active){ toast("Load a dashboard before adding a tile.","err");return; }
+  if(State.pending||State.cssClipboard||hubOperationActive()){ toast("Finish or cancel the current operation before adding a tile.","err");return; }
+  clearSelection();
+  State.addTileMode={savedOverlaps:State.overlaps,phase:"placement",drag:null,rect:null};
+  State.overlaps="allow";
+  const overlap=document.getElementById("overlaps");if(overlap) overlap.value="allow";
+  document.getElementById("gridmap")?.classList.add("add-tile-mode");
+  render();updateActionButtons();applyAddTileUiLock();
+  status("Add Tile: drag on the grid to define the tile's position and size. Overlap is temporarily allowed.");
+}
+function finishAddTileMode(opts={}){
+  const mode=State.addTileMode;
+  removeAddTilePreview();
+  document.getElementById("addTileModal")?.classList.add("hidden");
+  State.addTileDialog=null;
+  if(mode){
+    State.overlaps=mode.savedOverlaps||"none";
+    const overlap=document.getElementById("overlaps");if(overlap) overlap.value=State.overlaps;
+  }
+  State.addTileMode=null;
+  document.getElementById("gridmap")?.classList.remove("add-tile-mode");
+  releaseAddTileUiLock();syncPushAvailability();updateActionButtons();render();
+  if(opts.status) status(opts.status);
+}
+function cancelAddTileWorkflow(){
+  const d=State.addTileDialog;
+  if(d&&d.mode==="edit"){
+    document.getElementById("addTileModal")?.classList.add("hidden");State.addTileDialog=null;
+    if(d.returnTileId!=null&&State.tiles.some(t=>Number(t.id)===Number(d.returnTileId))) showTileInfo(d.returnTileId);
+    return;
+  }
+  finishAddTileMode({status:"Add Tile cancelled."});
+}
+function handleAddTileMouseDown(e){
+  const mode=State.addTileMode;if(!mode||mode.phase!=="placement"||e.button!==0)return;
+  e.preventDefault();e.stopPropagation();
+  const c=snapCellToDashboardStep(cellFromEvent(e));
+  mode.drag={r1:c.row,c1:c.col,r2:c.row,c2:c.col};
+  updateAddTilePreview(mode.drag);
+}
+function handleAddTileMouseMove(e){
+  const mode=State.addTileMode;if(!mode||mode.phase!=="placement"||!mode.drag)return;
+  const c=snapCellToDashboardStep(cellFromEvent(e));
+  mode.drag.r2=c.row;mode.drag.c2=c.col;updateAddTilePreview(mode.drag);
+}
+function finishAddTileDrag(){
+  const mode=State.addTileMode;if(!mode||!mode.drag)return false;
+  const d=mode.drag;mode.drag=null;
+  const rect={r1:Math.min(d.r1,d.r2),c1:Math.min(d.c1,d.c2),r2:Math.max(d.r1,d.r2),c2:Math.max(d.c1,d.c2)};
+  mode.rect=addTileRectFromSelection(rect);mode.phase="configure";
+  removeAddTilePreview();
+  const form=blankAddTileDialogForm();
+  State.addTileDialog={mode:"add",rect:{...mode.rect},form,deviceScope:addTileInitialDeviceScope(form.device),attributes:[],iconPickerOpen:false,iconSearch:"",iconFamily:"all"};
+  renderAddTileDialog();refreshAddTileDialogData();
+  return true;
+}
+function openTileConfigurationForEdit(tileId){
+  const tile=State.tiles.find(t=>Number(t.id)===Number(tileId));if(!tile)return;
+  document.getElementById("infoModal")?.classList.add("hidden");
+  const form=addTileDialogFormFromTile(tile);
+  State.addTileDialog={mode:"edit",tileId:Number(tile.id),returnTileId:Number(tile.id),rect:{row:tile.row,col:tile.col,rowSpan:tile.rowSpan,colSpan:tile.colSpan},form,deviceScope:addTileInitialDeviceScope(form.device),attributes:[],iconPickerOpen:false,iconSearch:"",iconFamily:"all"};
+  renderAddTileDialog();refreshAddTileDialogData();
+}
+function collectAddTileFormFromDom(){
+  const d=State.addTileDialog;if(!d)return null;
+  const f=d.form;
+  document.querySelectorAll("#addTileModal [data-add-field]").forEach(el=>{
+    const key=el.dataset.addField;if(!key)return;
+    f[key]=el.type==="checkbox"?!!el.checked:el.value;
+  });
+  f.source=document.getElementById("addTileSource")?.value||f.source;
+  f.template=normalizedTileTemplate(document.getElementById("addTileTemplate")?.value||f.template);
+  if(tileTemplateUsesRegularDevice(f.template,f.source)){
+    f.device=(State.conn.mode==="live"&&State.deviceNamesAvailable)?(document.getElementById("addTileDevice")?.value||""):(document.getElementById("addTileDeviceManual")?.value||"");
+  }
+  if(f.source==="variable") f.globalVar=document.getElementById("addTileVariable")?.value||"";
+  return f;
+}
+function validateAddTileForm(form){
+  const t=normalizedTileTemplate(form.template),errors=[];
+  if(!t) errors.push("Choose a template.");
+  if(tileTemplateUsesRegularDevice(t,form.source)){
+    const id=String(form.device||"").trim();
+    if(!id) errors.push("Choose or enter a device.");
+    else if(!/^\d+$/.test(id)) errors.push("Device ID must be numeric.");
+  }
+  if(form.source==="variable"&&!String(form.globalVar||"").trim()) errors.push("Choose a Hub Variable.");
+  if(t==="attribute"&&!String(form.templateExtra||"").trim()) errors.push("Choose an attribute.");
+  if(t==="buttons"&&!(Number(form.templateExtra)>0)) errors.push("Enter a valid button number.");
+  if(t==="dashboard"&&!String(form.templateExtra||"").trim()) errors.push("Choose a target dashboard.");
+  if(t==="links"&&!String(form.templateExtra||"").trim()) errors.push("Enter the link URL.");
+  if(t==="images"&&!String(form.templateExtra||"").trim()) errors.push("Enter the image URL.");
+  if(t==="video-player"&&!String(form.templateExtra||"").trim()) errors.push("Enter the video URL.");
+  return errors;
+}
+function buildConfiguredTileRaw(existing,form,rect,id){
+  const raw=existing?JSON.parse(JSON.stringify(existing)):{};
+  for(const key of ["device","globalVar","templateExtra","buttonCommand","hideUnit","bgImage","customIcon","refreshInterval","linkName"]) delete raw[key];
+  const t=normalizedTileTemplate(form.template);
+  raw.id=id;raw.row=rect.row;raw.col=rect.col;raw.rowSpan=rect.rowSpan;raw.colSpan=rect.colSpan;raw.template=t;
+  if(form.source==="variable"){
+    raw.device="-4";raw.globalVar=String(form.globalVar||"");
+  }else if(tileTemplateUsesRegularDevice(t,form.source)) raw.device=String(form.device||"");
+  else{
+    const previousTemplate=existing?normalizedTileTemplate(existing.template):"";
+    raw.device=(existing&&previousTemplate===t&&existing.device!=null)?String(existing.device):staticDeviceForTemplate(t);
+  }
+  const extra=String(form.templateExtra==null?"":form.templateExtra);
+  if(extra!==""||["attribute","buttons","dashboard","images","links","texttile","thermostat","video-player"].includes(t)) raw.templateExtra=extra;
+  if(t==="buttons") raw.buttonCommand=String(form.buttonCommand||"push");
+  if(DLS_UNIT_TILE_TEMPLATES.has(t)) raw.hideUnit=!!form.hideUnit;
+  if(String(form.bgImage||"").trim()) raw.bgImage=String(form.bgImage);
+  if(String(form.customIcon||"").trim()) raw.customIcon=String(form.customIcon);
+  if(t==="images"&&String(form.refreshInterval||"").trim()!=="") raw.refreshInterval=String(form.refreshInterval);
+  if(t==="links"&&String(form.linkName||"").trim()) raw.linkName=String(form.linkName);
+  return raw;
+}
+function nextAddTileId(){ return State.tiles.length?Math.max(...State.tiles.map(t=>Number(t.id)||0))+1:0; }
+function setAddTileDialogBusy(busy,label=""){
+  const modal=document.getElementById("addTileModal"),d=State.addTileDialog;if(!modal||!d)return;
+  d.busy=!!busy;
+  modal.querySelectorAll("input,select,textarea,button").forEach(el=>{
+    if(busy){
+      if(el.dataset.addTileBusyWasDisabled==null) el.dataset.addTileBusyWasDisabled=el.disabled?"1":"0";
+      el.disabled=true;
+    }else if(el.dataset.addTileBusyWasDisabled!=null){
+      el.disabled=el.dataset.addTileBusyWasDisabled==="1";
+      delete el.dataset.addTileBusyWasDisabled;
+    }
+  });
+  const apply=document.getElementById("addTileApply");
+  if(apply&&busy) apply.textContent=label||"Working…";
+}
+async function commitConfiguredTile(){
+  const d=State.addTileDialog;if(!d)return;
+  const form=collectAddTileFormFromDom(),errors=validateAddTileForm(form);
+  if(errors.length){ setAddTileError(errors.map(x=>`• ${x}`).join("\n"));return; }
+  const doCommit=()=>{
+    if(d.mode==="add"){
+      const id=nextAddTileId(),raw=buildConfiguredTileRaw(null,form,d.rect,id);
+      pushHistory();
+      const tile={id,row:d.rect.row,col:d.rect.col,rowSpan:d.rect.rowSpan,colSpan:d.rect.colSpan,template:raw.template,label:raw.templateExtra||raw.label||"",_raw:raw};
+      State.tiles.push(tile);maybeAutoResizeDashboardGrid("add tile");
+      markRenderedSnapshotsStale(`Tile #${id} was added`,{message:false});
+      finishAddTileMode({status:`Added Tile #${id} (${templateMapForAddTile()[raw.template]||raw.template}) at row ${tile.row}, column ${tile.col}.`});
+      selectTile(id);render();toast(`Tile #${id} added.`,"ok");
+    }else{
+      const tile=State.tiles.find(t=>Number(t.id)===Number(d.tileId));if(!tile)return;
+      const raw=buildConfiguredTileRaw(dlsTileRaw(tile),form,d.rect,tile.id);
+      pushHistory();
+      tile.template=raw.template;tile.label=raw.templateExtra||raw.label||"";tile._raw=raw;
+      markRenderedSnapshotsStale(`Tile #${tile.id} configuration changed`,{message:false});
+      State.addTileDialog=null;document.getElementById("addTileModal")?.classList.add("hidden");
+      updateSaveHubState();render();showTileInfo(tile.id);status(`Updated Tile #${tile.id} configuration.`);toast(`Tile #${tile.id} configuration updated.`,"ok");
+    }
+  };
+  const t=normalizedTileTemplate(form.template),id=canonicalDeviceId(form.device);
+  const needsDashboardAdd=tileTemplateUsesRegularDevice(t,form.source)&&State.conn.mode==="live"&&State.devicePickedAvailable&&id&&!isDeviceSelectedForActiveDashboard(id);
+  if(needsDashboardAdd){
+    setAddTileError("");
+    setAddTileDialogBusy(true,"Adding device…");
+    const ownsActivity=!hubOperationActive();
+    if(ownsActivity) showHubActivity(`Adding ${hubDeviceDisplayName(id)||`device #${id}`} to this dashboard…`);
+    try{
+      await experimentallyAddDevicesToActiveDashboard([id]);
+      if(State.addTileDialog!==d) return;
+      doCommit();
+    }catch(e){
+      if(State.addTileDialog===d){
+        setAddTileDialogBusy(false);
+        renderAddTileDialog();
+        setAddTileError(`DLS could not add device #${id} to this dashboard: ${e.message}`);
+      }
+      trace(`Add Tile dashboard-device assignment failed for #${id}: ${e.message}`,null,"err");
+    }finally{
+      if(ownsActivity) hideHubActivity();
+    }
+    return;
+  }
+  doCommit();
+}
+function wireAddTileFeature(){
+  document.getElementById("btnAddTile")?.addEventListener("click",()=>{ State.addTileMode?cancelAddTileWorkflow():beginAddTileMode(); });
+  document.getElementById("addTileCancel")?.addEventListener("click",cancelAddTileWorkflow);
+  document.getElementById("addTileApply")?.addEventListener("click",commitConfiguredTile);
+  document.getElementById("addTileModal")?.addEventListener("input",e=>{
+    const d=State.addTileDialog;if(!d)return;
+    const el=e.target;if(el.dataset&&el.dataset.addField) d.form[el.dataset.addField]=el.type==="checkbox"?!!el.checked:el.value;
+    setAddTileError("");
+  });
+  document.getElementById("addTileSource")?.addEventListener("change",async e=>{
+    const d=State.addTileDialog;if(!d)return;
+    d.form.source=e.target.value;d.form.template=addTileDefaultTemplate(d.form.source);d.form.device="";d.form.globalVar="";d.form.templateExtra="";d.deviceScope=addTileInitialDeviceScope("");d.attributes=[];
+    if(d.form.source==="variable") await loadNativeTileVariables();
+    if(State.addTileDialog===d) renderAddTileDialog();
+  });
+  document.getElementById("addTileTemplate")?.addEventListener("change",async e=>{
+    const d=State.addTileDialog;if(!d)return;
+    d.form.template=normalizedTileTemplate(e.target.value);d.form.templateExtra="";d.attributes=[];
+    if(d.form.template==="buttons") d.form.templateExtra="1";
+    if(d.form.template==="attribute"&&d.form.device){ await refreshAddTileDialogAttributes(d,{force:true}); return; }
+    if(State.addTileDialog===d) renderAddTileDialog();
+  });
+  document.getElementById("addTileDeviceScope")?.addEventListener("click",e=>{
+    const button=e.target.closest("[data-device-scope]");
+    const d=State.addTileDialog;if(!button||!d||button.disabled)return;
+    d.deviceScope=button.dataset.deviceScope==="all"?"all":"dashboard";
+    if(d.deviceScope==="dashboard"&&d.form.device&&!isDeviceSelectedForActiveDashboard(d.form.device)){
+      d.form.device="";d.attributes=[];
+    }
+    renderAddTileDialog();
+  });
+  document.getElementById("addTileDevice")?.addEventListener("change",async e=>{
+    const d=State.addTileDialog;if(!d)return;d.form.device=e.target.value;d.attributes=[];
+    if(d.form.template==="attribute"&&d.form.device){ await refreshAddTileDialogAttributes(d,{force:true}); return; }
+    if(State.addTileDialog===d) renderAddTileDialog();
+  });
+  document.getElementById("addTileDeviceManual")?.addEventListener("input",e=>{ if(State.addTileDialog) State.addTileDialog.form.device=e.target.value; });
+  document.getElementById("addTileVariable")?.addEventListener("change",e=>{
+    const d=State.addTileDialog;if(!d)return;d.form.globalVar=e.target.value;
+    const variable=(State.nativeTileVariables||[]).find(v=>String(v.name)===String(d.form.globalVar));
+    d.form.template=nativeVariableTemplate(variable);renderAddTileDialog();
+  });
+  document.getElementById("addTileModal")?.addEventListener("input",e=>{
+    const d=State.addTileDialog;if(!d||e.target.id!=="addTileIconSearch")return;
+    d.iconSearch=e.target.value;renderAddTileIconResults();
+  });
+  document.getElementById("addTileModal")?.addEventListener("click",async e=>{
+    const d=State.addTileDialog;if(!d)return;
+    if(e.target.id==="addTileModal"){ cancelAddTileWorkflow();return; }
+    const choose=e.target.closest("#addTileChooseIcon");
+    if(choose){
+      d.iconPickerOpen=!d.iconPickerOpen;renderAddTileDialog();
+      if(d.iconPickerOpen&&!State.nativeTileIcons&&!State.nativeTileIconLoadPromise){
+        await loadNativeTileIcons();
+        if(State.addTileDialog===d&&d.iconPickerOpen) renderAddTileDialog();
+      }
+      return;
+    }
+    if(e.target.closest("#addTileClearIcon")){ d.form.customIcon="";d.iconPickerOpen=false;renderAddTileDialog();return; }
+    const family=e.target.closest("[data-icon-family]");
+    if(family){ d.iconFamily=family.dataset.iconFamily||"all";renderAddTileIconResults();return; }
+    const icon=e.target.closest("[data-add-icon]");
+    if(icon){ d.form.customIcon=icon.dataset.addIcon||"";d.iconPickerOpen=false;renderAddTileDialog();return; }
+  });
 }
 
 /* ============================================================
@@ -11140,6 +12257,7 @@ function showTileInfo(tileId){
     ["device id",renderInfoDeviceIdCell(t),true],
     ["device name",esc(String(deviceNameInfoValue(t)))],
     ["template",esc(String(t.template||"—"))],
+    ["configuration",`<button type="button" class="btn ghost info-config-btn" id="infoEditTileConfig">Edit tile configuration…</button>`],
     ...(isTextTileTemplate(t)?[["templateExtra",renderInfoTemplateExtraCell(t),true]]:[]),
     ["position",esc(`row ${t.row}, col ${t.col}`)],
     ["span",esc(`${t.colSpan} × ${t.rowSpan} (w×h)`) ],
@@ -11160,6 +12278,9 @@ function showTileInfo(tileId){
   wireInfoTemplateExtraEditor(tileId);
   wireInfoZIndexEditor(tileId);
   wireInfoCssEditor(tileId);
+  document.getElementById("infoEditTileConfig")?.addEventListener("click",()=>{
+    guardInfoEditDiscard("edit this tile's configuration",()=>{ clearInfoEditStates(); openTileConfigurationForEdit(tileId); });
+  });
   restoreModalPosition("infoModal"); document.getElementById("infoModal").classList.remove("hidden");
 }
 
@@ -11915,7 +13036,21 @@ function generateTileReport(){
   status(`Opened ${records.length}-tile ${type} report in a new window.`);
 }
 
+const GRID_DOUBLE_CLICK_WINDOW_MS=700;
+function restoreGridSelectionForTileInfo(candidate,cell){
+  State.sel=JSON.parse(JSON.stringify(candidate.sel));
+  State.selKind=candidate.selKind;
+  State.focusTileId=Number(candidate.tileId);
+  State.stackCycle={...candidate.stackCycle};
+  State.stackInfo=candidate.stackInfo?{...candidate.stackInfo}:{row:cell.row,col:cell.col};
+  State.gridDoubleClickCandidate=null;
+  State.gridDoubleClickHandledAt=Date.now();
+  updateActionButtons();
+  render();
+  showTileInfo(candidate.tileId);
+}
 function onGridClick(e){
+  if(State.addTileMode) return;
   if(State.pending&&State.pending.action==="moveTiles"){ completeMoveTiles(snapCellToDashboardStep(cellFromEvent(e))); return; }
   if(State.pending&&State.pending.action==="copyTiles"){ completeCopyTiles(snapCellToDashboardStep(cellFromEvent(e))); return; }
   if(State.pending&&State.pending.action==="externalCopyTiles"){ completePasteBuf(snapCellToDashboardStep(cellFromEvent(e))); return; }
@@ -11930,6 +13065,44 @@ function onGridClick(e){
   State.stackInfo=cell;
   if(!stack.length){ if(!(e.ctrlKey||e.metaKey)) { clearTileSel(); State.stackCycle={key:null,idx:0}; } render(); return; }
   const topDown=stackOrder(stack).reverse();
+  const key=`${cell.row},${cell.col}`;
+  const plainClick=!e.altKey&&!e.ctrlKey&&!e.metaKey;
+  const now=Date.now();
+  const prior=plainClick?State.gridDoubleClickCandidate:null;
+  const sameCellSecondClick=!!(prior&&prior.key===key&&now-prior.at<=GRID_DOUBLE_CLICK_WINDOW_MS);
+
+  // render() replaces the tile DOM after the first click, so browsers often do
+  // not emit a native dblclick for the replacement element. Detect the second
+  // same-cell click ourselves. Only a tile that was already selected before the
+  // first click opens Tile Information; an initially unselected tile continues
+  // through the ordinary two-click selection/layer-cycling path.
+  if(sameCellSecondClick){
+    State.gridDoubleClickCandidate=null;
+    if(prior.wasSelected){
+      e.preventDefault();
+      e.stopPropagation();
+      restoreGridSelectionForTileInfo(prior,cell);
+      return;
+    }
+  }else if(plainClick){
+    const nextIndex=State.stackCycle.key===key?(State.stackCycle.idx+1)%topDown.length:0;
+    const selectedBefore=currentSelectionTileIds().map(Number);
+    const selectedAtCell=topDown.map(i=>Number(State.tiles[i].id)).filter(id=>selectedBefore.includes(id));
+    const focused=Number(State.focusTileId);
+    const tileId=selectedAtCell.includes(focused)
+      ? focused
+      : selectedAtCell.length
+        ? selectedAtCell[0]
+        : Number(State.tiles[topDown[nextIndex]].id);
+    State.gridDoubleClickCandidate={
+      key,tileId,wasSelected:selectedBefore.includes(tileId),at:now,
+      sel:JSON.parse(JSON.stringify(State.sel||{type:null,ids:[],lines:[],rect:null})),
+      selKind:State.selKind,focusTileId:State.focusTileId,
+      stackCycle:{...(State.stackCycle||{key:null,idx:0})},stackInfo:State.stackInfo?{...State.stackInfo}:null
+    };
+  }else{
+    State.gridDoubleClickCandidate=null;
+  }
   // Alt-click selects the whole cluster. Ctrl/Cmd+Alt-click adds that
   // cluster to the existing tile selection instead of replacing it.
   if(e.altKey){ selectGroupAt(cell.row,cell.col,!!(e.ctrlKey||e.metaKey)); return; }
@@ -11949,7 +13122,6 @@ function onGridClick(e){
     render(); return;
   }
   State.ctrlCycle=null;
-  const key=`${cell.row},${cell.col}`;
   if(State.stackCycle.key===key){ State.stackCycle.idx=(State.stackCycle.idx+1)%topDown.length; }
   else{ State.stackCycle={key,idx:0}; }
   selectTile(State.tiles[topDown[State.stackCycle.idx]].id);
@@ -11992,6 +13164,7 @@ function clearTileSel(){ clearConflictHighlight(); State.focusTileId=null; State
 
 /* ---------- header gestures (col/row) — selKind set automatically ---------- */
 function onHeaderMouseDown(kind,idx,e){
+  if(State.addTileMode) return;
   idx=snapLineIndexToDashboardStep(kind,idx);
   if(!State.pending) clearConflictHighlight();
   if(State.pending){
@@ -12022,6 +13195,7 @@ function onHeaderMouseEnter(kind,idx){
   updateActionButtons(); render();
 }
 function endDrag(){
+  if(State.addTileMode&&State.addTileMode.drag){ finishAddTileDrag(); State.lastDragMoved=true; return; }
   // Resize drag: commit or discard
   if(State.resizeDrag){
     const rd=State.resizeDrag;
@@ -12811,6 +13985,8 @@ function updateActionButtons(){
   updateSaveHubState();
   applyPendingUiLock();
   applyCssPasteUiLock();
+  syncAddTileButton();
+  applyAddTileUiLock();
   syncInterWindowModifierButtons();
 }
 function pendingUiLockExemptControl(el,allowed){
@@ -15631,7 +16807,7 @@ function useManualGridBoundsFromDialog(){
 function maybeAutoResizeDashboardGrid(reason){
   if(!autoResizeDashboardEnabled()) return false;
   if(!State.active||!State.tiles||!State.tiles.length) return false;
-  if(State.pending||State.tileDrag||State.resizeDrag||State.outOfBoundsPromptActive) return false;
+  if(State.pending||State.tileDrag||State.resizeDrag||(State.addTileMode&&reason!=="add tile")||State.outOfBoundsPromptActive) return false;
   if(!document.getElementById("gridModal")?.classList.contains("hidden")) return false;
   const cfg=currentGridCfg();
   const target=targetDeclaredGridForTiles(State.tiles,autoResizeDashboardPadding());
@@ -17721,11 +18897,53 @@ function writePreviewLaunchPage(win,title,message,error=false){
   if(!win||win.closed) return;
   try{
     const palette=previewThemePalette(error);
+    const indicator=error?"":`<div class="working" aria-label="Working"><span></span><span></span><span></span></div>`;
+    const steps=error?"":`<ol class="steps" aria-label="Preview preparation progress">
+      <li class="step pending" data-preview-step="files"><span class="step-marker" aria-hidden="true"></span><span class="step-copy"><strong>Prepare preview support files</strong><small>Waiting to start…</small></span></li>
+      <li class="step pending" data-preview-step="devices"><span class="step-marker" aria-hidden="true"></span><span class="step-copy"><strong>Authorize preview devices</strong><small>Waiting to start…</small></span></li>
+      <li class="step pending" data-preview-step="save"><span class="step-marker" aria-hidden="true"></span><span class="step-copy"><strong>Save working layout to preview</strong><small>Waiting to start…</small></span></li>
+      <li class="step pending" data-preview-step="ready"><span class="step-marker" aria-hidden="true"></span><span class="step-copy"><strong>Make preview ready to open</strong><small>Waiting to start…</small></span></li>
+    </ol><div class="current" id="previewCurrent" aria-live="polite">Starting preview preparation…</div>`;
     win.document.open();
-    win.document.write(`<!doctype html><html data-theme="${palette.theme}"><head><meta charset="utf-8"><meta name="color-scheme" content="${palette.theme}"><meta name="theme-color" content="${palette.themeColor}"><title>${esc(title)}</title><style>html,body{height:100%;margin:0;color-scheme:${palette.theme}}body{display:grid;place-items:center;background:${palette.page};color:${palette.text};font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}.card{max-width:560px;margin:24px;padding:28px;border:2px solid ${palette.border};border-radius:14px;background:${palette.card};box-shadow:0 20px 50px ${palette.shadow}}h1{margin:0 0 10px;font-size:1.2rem;color:${palette.accent}}p{margin:0;color:${palette.muted};white-space:pre-wrap}</style></head><body><div class="card"><h1>${esc(title)}</h1><p>${esc(message)}</p></div></body></html>`);
+    win.document.write(`<!doctype html><html data-theme="${palette.theme}"><head><meta charset="utf-8"><meta name="color-scheme" content="${palette.theme}"><meta name="theme-color" content="${palette.themeColor}"><title>${esc(title)}</title><style>
+html,body{min-height:100%;margin:0;color-scheme:${palette.theme}}body{display:grid;place-items:center;background:${palette.page};color:${palette.text};font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}.card{width:min(520px,calc(100vw - 40px));margin:20px;padding:0;border:2px solid ${palette.modalBorder};border-radius:10px;background:${palette.body};box-shadow:0 22px 54px ${palette.shadow};box-sizing:border-box;overflow:hidden}h1{margin:0;padding:15px 18px;border-bottom:2px solid ${palette.headerBorder};background:${palette.header};color:${palette.headerText};box-shadow:inset 0 1px 0 rgba(255,255,255,.10);font-size:.98rem;font-weight:750;line-height:1.3;text-align:left}p{margin:0;padding:12px 18px 0;background:${palette.body};color:${palette.muted};font-size:.78rem;line-height:1.45;white-space:pre-wrap;text-align:left}.working{height:18px;margin:8px auto 4px;display:flex;align-items:center;justify-content:center;gap:6px;background:${palette.body}}.working span{width:7px;height:7px;border-radius:50%;background:${palette.accent};animation:dlsPulse 1.05s ease-in-out infinite}.working span:nth-child(2){animation-delay:.14s}.working span:nth-child(3){animation-delay:.28s}.steps{list-style:none;margin:8px 18px 14px;padding:0;display:grid;gap:8px;background:${palette.body}}.step{display:grid;grid-template-columns:24px minmax(0,1fr);gap:9px;align-items:start;padding:8px 10px;border:1px solid ${palette.border};border-radius:9px;background:${palette.step};color:${palette.muted};text-align:left}.step-marker{width:20px;height:20px;border:1px solid ${palette.border};border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px;box-sizing:border-box;color:${palette.muted};background:transparent}.step-copy{min-width:0;display:grid;gap:2px}.step-copy strong{font-size:.8rem;line-height:1.25;color:${palette.text}}.step-copy small{font-size:.76rem;line-height:1.38;color:${palette.muted};white-space:normal}.step.active{border-color:${palette.accent};background:${palette.stepActive};color:${palette.text}}.step.active .step-marker{border:2px solid ${palette.accent};border-top-color:transparent;color:transparent;animation:dlsSpin .75s linear infinite}.step.done .step-marker{border-color:${palette.ok};color:${palette.ok};background:transparent}.step.skipped .step-marker{border-color:${palette.muted};color:${palette.muted};background:transparent}.step.error{border-color:#dc2626}.step.error .step-marker{border-color:#dc2626;color:#dc2626;background:transparent}.current{margin:0;padding:11px 18px;border-top:2px solid ${palette.footerBorder};background:${palette.footer};color:${palette.muted};font-size:.76rem;line-height:1.4;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,.10)}.card.complete .working span{animation:none;opacity:1}.card.complete .current{color:${palette.ok};font-weight:700}@keyframes dlsPulse{0%,70%,100%{transform:translateY(0);opacity:.38}35%{transform:translateY(-7px);opacity:1}}@keyframes dlsSpin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){.working span,.step.active .step-marker{animation:none}.step.active .step-marker{border-top-color:${palette.accent}}}
+</style></head><body><div class="card" id="previewCard"><h1 id="previewTitle">${esc(title)}</h1><p id="previewMessage">${esc(message)}</p>${indicator}${steps}</div></body></html>`);
     win.document.close();
   }catch(_e){}
 }
+function updatePreviewLaunchProgress(win,stepId,state,detail=""){
+  if(!win||win.closed) return;
+  try{
+    const doc=win.document;
+    const step=doc.querySelector(`[data-preview-step="${String(stepId||"")}"]`);
+    if(!step) return;
+    step.className=`step ${state||"pending"}`;
+    const marker=step.querySelector(".step-marker");
+    if(marker){
+      marker.textContent=state==="done"?"✓":state==="skipped"?"–":state==="error"?"!":"";
+      marker.setAttribute("aria-label",state==="done"?"Completed":state==="skipped"?"Not needed":state==="error"?"Failed":state==="active"?"In progress":"Pending");
+    }
+    const note=step.querySelector("small");
+    if(note&&detail) note.textContent=detail;
+    const current=doc.getElementById("previewCurrent");
+    if(current&&state==="active") current.textContent=detail||"Working…";
+  }catch(_e){}
+}
+function finishPreviewLaunchProgress(win,message="The temporary dashboard is ready. Opening it now…"){
+  if(!win||win.closed) return;
+  try{
+    const doc=win.document;
+    const card=doc.getElementById("previewCard");
+    if(card) card.classList.add("complete");
+    const title=doc.getElementById("previewTitle");
+    if(title) title.textContent="Opening Dashboard Preview";
+    const body=doc.getElementById("previewMessage");
+    if(body) body.textContent="All preparation steps completed successfully.";
+    const current=doc.getElementById("previewCurrent");
+    if(current) current.textContent=message;
+  }catch(_e){}
+}
+
 async function openCurrentDashboardPreview(){
   if(!(State.conn.mode==="live"&&State.active&&currentDashboardUrl())){
     toast("Preview is available only for a hub-loaded dashboard.","err");
@@ -17734,7 +18952,7 @@ async function openCurrentDashboardPreview(){
   }
   const existingBusy=previewBusyActive();
   if(existingBusy){
-    toast("Preview is unavailable while another Preview window is open. Close that window first.","err");
+    toast("Preview is unavailable while another Preview is being prepared or remains open. Finish or close it first.","err");
     updateDashboardJumpState();
     return;
   }
@@ -17748,21 +18966,25 @@ async function openCurrentDashboardPreview(){
     updateDashboardJumpState();
     return;
   }
+
+  const previewId=`${DLS_WINDOW_ID}-preview-${Date.now().toString(36)}`;
+  const previewAccessToken=createPreviewAccessToken();
   let previewWindow=null;
   let suppressPreviewOpenWarning=false;
   try{ suppressPreviewOpenWarning=localStorage.getItem(PREVIEW_OPEN_WARNING_SUPPRESS_KEY)==="1"; }catch(_e){}
+
   if(tileDisplayMode()==="snapshot"&&!suppressPreviewOpenWarning){
     const windowCount=await activeDlsWindowCountAfterProbe();
     const warning=windowCount>1
       ? `There are ${windowCount} DLS windows open. While this Preview window remains open, Preview and temporary-dashboard Rendered View refreshes will not be available to the other DLS windows. Saved-dashboard partial refreshes may remain available.\n\nClose the Preview window or navigate it away from the temporary dashboard to release the temporary dashboard.`
       : "While this Preview window remains open, full Rendered View refreshes that need the temporary dashboard will not be possible. A saved-dashboard partial refresh may remain available.\n\nClose the Preview window or navigate it away from the temporary dashboard to release the temporary dashboard.";
     const decision=await askPreviewOpenWarningAsync(
-      "Open Preview window?",
+      "Open dashboard preview?",
       warning,
-      {okText:"Open Preview",cancelText:"Cancel",defaultButton:"cancel",checkboxText:"Don't show me this again"}
+      {okText:"Build Preview",cancelText:"Cancel",defaultButton:"ok",checkboxText:"Don't show me this warning again"}
     );
     if(!decision.confirmed){
-      status("Preview cancelled. No Preview window was opened.");
+      status("Preview cancelled before preparation began.");
       updateDashboardJumpState();
       return;
     }
@@ -17771,92 +18993,142 @@ async function openCurrentDashboardPreview(){
     }
     previewWindow=decision.previewWindow;
   }else{
+    // This call occurs directly in the Preview button's user gesture so the
+    // browser permits the working window without a second confirmation.
     previewWindow=window.open("about:blank","_blank");
   }
+
   if(!previewWindow){
     toast("The browser blocked the preview window.","err");
-    status("Preview could not open because the browser blocked the new window.");
+    status("Preview could not start because the browser blocked the new window.");
     updateDashboardJumpState();
     return;
   }
   try{ previewWindow.opener=null; }catch(_e){}
-  writePreviewLaunchPage(previewWindow,"Preparing Dashboard Preview","DLS is checking whether the shared temporary preview dashboard is available.");
-  const previewId=`${DLS_WINDOW_ID}-preview-${Date.now().toString(36)}`;
-  const previewAccessToken=createPreviewAccessToken();
+  writePreviewLaunchPage(
+    previewWindow,
+    "Building Dashboard Preview",
+    "DLS is preparing the temporary dashboard. The same progress sequence is shown here and in the DLS window. This window will open the preview automatically when it is ready."
+  );
+
   State.previewWindowAccessToken=previewAccessToken;
   State.previewWarningTileId=null;
   State.previewWindowAuthorized=false;
-  const claim=previewWindowRecord(previewId);
-  storePreviewBusyRecord(claim,{announce:true});
+  beginPreviewBuildReservation(previewId);
   await new Promise(resolve=>setTimeout(resolve,140));
-  const winner=readPreviewBusyRecord();
+  let winner=readPreviewBusyRecord();
   if(!winner||winner.previewId!==previewId){
-    if(previewWindow&&!previewWindow.closed) previewWindow.close();
+    stopOwnedPreviewTracking(previewId,{announce:true,clear:false});
     applyPreviewBusyRecord(winner,{announce:true});
-    toast("Another DLS window acquired the temporary Preview dashboard first. Close its Preview window before trying again.","err");
+    writePreviewLaunchPage(previewWindow,"Preview Unavailable","Another DLS window acquired the temporary Preview dashboard first. Finish or close its Preview before trying again.",true);
+    toast("Another DLS window acquired the temporary Preview dashboard first. Finish or close its Preview before trying again.","err");
     status("Preview unavailable because another DLS window is using the temporary dashboard.");
     updateDashboardJumpState();
     return;
   }
-  beginPreviewWindowTracking(previewWindow,previewId);
-  writePreviewLaunchPage(previewWindow,"Preparing Dashboard Preview","DLS is updating the temporary preview dashboard with the current working layout.");
+
+  let prepared=null;
   try{
-    const context=await runHubOperation(
-      "Open dashboard preview",
+    prepared=await runHubOperation(
+      "Build dashboard preview",
       [
         {id:"files",label:"Prepare preview support files"},
         {id:"devices",label:"Authorize preview devices"},
         {id:"save",label:"Save working layout to preview"},
-        {id:"open",label:"Open preview dashboard"}
+        {id:"ready",label:"Make preview ready to open"}
       ],
       async op=>{
         let payload=serializeLayout();
-        hubOperationStep(op,"files","active","Checking File Manager for dashboard JSON and Simple CSS Editor files…");
+        const filesActive="Checking File Manager for dashboard JSON and Simple CSS Editor files…";
+        hubOperationStep(op,"files","active",filesActive);
+        updatePreviewLaunchProgress(previewWindow,"files","active",filesActive);
         const preparedFiles=await prepareTemporaryPreviewFileCopies(payload);
         const previewWarning=addTemporaryPreviewAccessWarning(preparedFiles.payload);
         payload=previewWarning.payload;
         State.previewWarningTileId=previewWarning.tileId;
-        storePreviewBusyRecord(previewWindowRecord(previewId),{announce:false});
+        storePreviewBusyRecord(previewWindowRecord(previewId,"building"),{announce:false});
         checkHubOperationAbort(op);
+        if(previewWindow.closed) throw new Error("the Preview working window was closed while preparation was in progress");
         const copied=[];
         if(preparedFiles.info.jsonCopied) copied.push(TEMP_SIMPLE_CSS_JSON_FILENAME);
         if(preparedFiles.info.cssCopied) copied.push(TEMP_SIMPLE_CSS_CSS_FILENAME);
-        hubOperationStep(op,"files",copied.length?"done":"skipped",copied.length?`Created ${copied.join(" and ")} for preview only.`:"No matching preview support files were found.");
-        hubOperationStep(op,"devices","active","Checking device assignments and matching the preview dashboard device list…");
+        const filesDetail=copied.length?`Created ${copied.join(" and ")} for preview only.`:"No matching preview support files were found.";
+        const filesState=copied.length?"done":"skipped";
+        hubOperationStep(op,"files",filesState,filesDetail);
+        updatePreviewLaunchProgress(previewWindow,"files",filesState,filesDetail);
+
+        const devicesActive="Checking device assignments and matching the preview dashboard device list…";
+        hubOperationStep(op,"devices","active",devicesActive);
+        updatePreviewLaunchProgress(previewWindow,"devices","active",devicesActive);
         const invalidDevices=await sanitizeTemporaryPreviewInvalidDeviceAssignments(payload);
         const deviceCount=await synchronizeTemporaryDashboardDevices(payload,{force:true});
         checkHubOperationAbort(op);
+        if(previewWindow.closed) throw new Error("the Preview working window was closed while preparation was in progress");
         const invalidNote=invalidDevices.assignmentCount
           ? ` ${invalidDevices.assignmentCount} invalid tile device assignment${invalidDevices.assignmentCount===1?" was":"s were"} changed to device 0 in the preview copy.`
           : "";
-        hubOperationStep(op,"devices","done",`${deviceCount} device${deviceCount===1?"":"s"} authorized.${invalidNote}`);
-        hubOperationStep(op,"save","active","Saving the current working layout…");
+        const devicesDetail=`${deviceCount} device${deviceCount===1?"":"s"} authorized.${invalidNote}`;
+        hubOperationStep(op,"devices","done",devicesDetail);
+        updatePreviewLaunchProgress(previewWindow,"devices","done",devicesDetail);
+
+        const saveActive="Saving the current working layout…";
+        hubOperationStep(op,"save","active",saveActive);
+        updatePreviewLaunchProgress(previewWindow,"save","active",saveActive);
         const result=await postTemporaryPreviewLayout(payload);
         checkHubOperationAbort(op);
-        hubOperationStep(op,"save","done","Working layout saved only to the temporary preview dashboard.");
-        hubOperationStep(op,"open","active","Opening the temporary preview dashboard…");
+        if(previewWindow.closed) throw new Error("the Preview working window was closed while preparation was in progress");
+        const saveDetail="Working layout saved only to the temporary preview dashboard.";
+        hubOperationStep(op,"save","done",saveDetail);
+        updatePreviewLaunchProgress(previewWindow,"save","done",saveDetail);
+
+        const readyActive="Verifying the temporary preview dashboard URL…";
+        hubOperationStep(op,"ready","active",readyActive);
+        updatePreviewLaunchProgress(previewWindow,"ready","active",readyActive);
         const url=previewLaunchUrl(result.dashUrl||dashboardPageUrlForMeta(temporaryDashboardState().meta),previewId,previewAccessToken);
         if(!url) throw new Error("the temporary preview dashboard URL is unavailable");
-        writePreviewLaunchPage(previewWindow,"Opening Dashboard Preview","The preview is ready and is opening now.");
-        armPreviewWindowNavigation(previewId);
-        previewWindow.location.replace(url);
-        setTimeout(()=>installPreviewWindowHeartbeat(previewWindow,previewWindowRecord(previewId)),700);
-        showTemporarySimpleCssWarningInPreviewWindow(previewWindow,preparedFiles.info);
-        hubOperationStep(op,"open","done","Preview opened in a new window.");
-        return result;
+        setPreviewBuildReservationPhase(previewId,"ready");
+        const readyDetail="Preview is built and ready. Opening automatically…";
+        hubOperationStep(op,"ready","done",readyDetail);
+        updatePreviewLaunchProgress(previewWindow,"ready","done",readyDetail);
+        return {result,url,preparedFiles};
       },
-      {doneMessage:"Dashboard preview opened."}
+      {doneMessage:"Dashboard preview is ready. Opening it now.",delayMs:300}
     );
-    if(!context){
-      if(previewWindow&&!previewWindow.closed) previewWindow.close();
+    if(!prepared){
+      try{ if(!previewWindow.closed) previewWindow.close(); }catch(_e){}
       stopOwnedPreviewTracking(previewId,{announce:true,clear:true});
-    }else status("Opened a preview of the current working layout. The saved dashboard was not changed.");
+      return;
+    }
+
+    winner=readPreviewBusyRecord();
+    if(!winner||winner.previewId!==previewId){
+      stopOwnedPreviewTracking(previewId,{announce:true,clear:false});
+      applyPreviewBusyRecord(winner,{announce:true});
+      throw new Error("another DLS window acquired the temporary preview dashboard before it could be opened");
+    }
+    if(previewWindow.closed) throw new Error("the Preview working window was closed before the dashboard could open");
+
+    finishPreviewLaunchProgress(previewWindow);
+    await new Promise(resolve=>setTimeout(resolve,550));
+    if(previewWindow.closed) throw new Error("the Preview working window was closed before the dashboard could open");
+    beginPreviewWindowTracking(previewWindow,previewId);
+    armPreviewWindowNavigation(previewId);
+    previewWindow.location.replace(prepared.url);
+    setTimeout(()=>installPreviewWindowHeartbeat(previewWindow,previewWindowRecord(previewId,"open")),700);
+    showTemporarySimpleCssWarningInPreviewWindow(previewWindow,prepared.preparedFiles.info);
+    status("Opened a preview of the current working layout. The saved dashboard was not changed.");
   }catch(e){
     const msg=e&&e.message?e.message:String(e||"unknown preview error");
-    writePreviewLaunchPage(previewWindow,"Dashboard Preview Failed",msg,true);
+    if(e&&e.aborted){
+      try{ if(!previewWindow.closed) previewWindow.close(); }catch(_e){}
+    }else{
+      writePreviewLaunchPage(previewWindow,"Preview Could Not Be Opened",msg,true);
+    }
     stopOwnedPreviewTracking(previewId,{announce:true,clear:true});
-    toast(`Could not open dashboard preview: ${msg}`,"err");
-    status("Dashboard preview could not be opened.");
+    if(!(e&&e.aborted)){
+      toast(`Could not open dashboard preview: ${msg}`,"err");
+      status("Dashboard preview could not be opened.");
+    }
   }finally{
     updateDashboardJumpState();
     updateTileDisplayIndicator();
@@ -20754,6 +22026,36 @@ async function fetchUpdateManifest(){
   if(!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
+function stableDowngradeFeaturesText(stableVersion=""){
+  if(!STABLE_DOWNGRADE_FEATURES.length) return "";
+  const target=stableVersion ? ` stable ${stableVersion}` : " the stable release";
+  return [
+    `The following major beta features are not available in${target}:`,
+    ...STABLE_DOWNGRADE_FEATURES.map(feature=>`• ${feature}`),
+    "",
+    "Existing dashboard layout data is preserved, but these controls and workflows will be unavailable after installing Stable."
+  ].join("\n");
+}
+function updateStableDowngradeFeaturePanel(candidate){
+  const panel=document.getElementById("updateStableDowngradeFeatures");
+  if(!panel) return;
+  const show=!!(IS_BETA_BUILD && candidate && candidate.forceInstall && candidate.channel===UPDATE_RELEASE_MODE_STABLE && STABLE_DOWNGRADE_FEATURES.length);
+  panel.hidden=!show;
+  panel.style.display=show?"block":"none";
+  if(!show) return;
+  const title=document.getElementById("updateStableDowngradeTitle");
+  const list=document.getElementById("updateStableDowngradeList");
+  const note=document.getElementById("updateStableDowngradeNote");
+  if(title) title.textContent=`Major beta features unavailable in Stable ${candidate.version}`;
+  if(list){
+    list.replaceChildren(...STABLE_DOWNGRADE_FEATURES.map(feature=>{
+      const item=document.createElement("li");
+      item.textContent=feature;
+      return item;
+    }));
+  }
+  if(note) note.textContent=`Feature comparison reviewed for beta ${STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR}. Existing layout data is preserved, but these controls and workflows will be unavailable.`;
+}
 function resetUpdateProgress(){
   ["updateStep1","updateStep2","updateStep3","updateStep4"].forEach((id,i)=>{
     const s=document.getElementById(id); if(!s) return;
@@ -20788,6 +22090,7 @@ function showUpdateDialog(candidate,isMock=false){
   if(el("updateIntro")) el("updateIntro").textContent=candidate.forceInstall
     ? "You chose Stable only. DLS can replace the current installed version with the current stable release using the permanent dashboard-layout-studio.html filename and bookmark."
     : `DLS can install the latest ${candidate.channel===UPDATE_RELEASE_MODE_BETA?"beta":"stable"} release directly into Hubitat File Manager using the permanent dashboard-layout-studio.html filename.`;
+  updateStableDowngradeFeaturePanel(candidate);
   if(el("updateDownloadLink")) el("updateDownloadLink").href=manualUpdateDownloadUrl(candidate)||"#";
   if(el("updateSkipCheck")) el("updateSkipCheck").checked=false;
   const install=el("updateInstallBtn");
@@ -21014,6 +22317,7 @@ function wireUpdateModal(){
 
 async function wire(){
   initInterWindowTransfers();
+  wireAddTileFeature();
   initPreviewBusyCoordination();
   const savedConn=restoreConn();
   updateDashboardJumpState();
@@ -21200,6 +22504,8 @@ async function wire(){
         showConfirm(
           "Switch to stable-only updates?",
           `${relation}
+
+${stableDowngradeFeaturesText(stable.version)}
 
 Install the current stable release now, or keep the current installed version until a newer stable release is published?`,
           ()=>{
@@ -21687,6 +22993,7 @@ Install the current stable release now, or keep the current installed version un
   // context menu: grid (tile vs empty cell), and headers
   document.getElementById("gridmap").addEventListener("contextmenu",e=>{
     e.preventDefault();
+    if(State.addTileMode) return;
     const cell=cellFromEvent(e);
     const stack=tilesAtCell(cell.row,cell.col);
     if(stack.length){ const top=stackOrder(stack).reverse()[0]; showContextMenu(e,{kind:"tile",cell,tileId:State.tiles[top].id}); }
@@ -21738,7 +23045,25 @@ Install the current stable release now, or keep the current installed version un
     guardInfoDeviceEditDiscard("go to another tile",()=>showTileInfo(targetId));
   });
   initModalDragging();
-  document.getElementById("gridmap").addEventListener("dblclick",e=>{ const c=cellFromEvent(e); selectGroupAt(c.row,c.col); });
+  document.getElementById("gridmap").addEventListener("dblclick",e=>{
+    if(State.addTileMode) return;
+    if(State.gridDoubleClickHandledAt&&Date.now()-State.gridDoubleClickHandledAt<1000){
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    const c=cellFromEvent(e),key=`${c.row},${c.col}`,candidate=State.gridDoubleClickCandidate;
+    if(candidate&&candidate.key===key&&candidate.wasSelected&&Date.now()-candidate.at<900){
+      e.preventDefault();e.stopPropagation();
+      restoreGridSelectionForTileInfo(candidate,c);
+      return;
+    }
+    State.gridDoubleClickCandidate=null;
+    // Preserve existing behavior for a tile that was not already selected:
+    // the browser's two click events run normally, then the connected cluster
+    // at that cell becomes selected.
+    selectGroupAt(c.row,c.col);
+  });
 
   document.getElementById("zoom")?.addEventListener("input",e=>setGridZoom(e.target.value,{allowActualSnap:true}));
   // Shift key: temporarily switches eligible operations to push mode and
@@ -21817,6 +23142,7 @@ Install the current stable release now, or keep the current installed version un
       orphanModal:"orphanCancel",
       pinModal:"pinCancel",
       infoModal:"infoClose",
+      addTileModal:"addTileCancel",
       reportsModal:"reportsCancel",
       devicePickedModal:"devicePickedClose",
       cssReviewModal:"cssReviewCancel",
@@ -22089,6 +23415,9 @@ document.getElementById("brandVersion").title=`Version ${APP_VERSION}`;
 const brandChannel=document.getElementById("brandChannel");
 if(brandChannel){
   brandChannel.textContent=IS_BETA_BUILD ? "Beta" : "";
+  if(IS_BETA_BUILD && STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR!==APP_VERSION){
+    console.warn(`Stable downgrade feature list was reviewed for ${STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR}, not ${APP_VERSION}. Review it before release.`);
+  }
   brandChannel.classList.toggle("visible",IS_BETA_BUILD);
   brandChannel.hidden=!IS_BETA_BUILD;
 }

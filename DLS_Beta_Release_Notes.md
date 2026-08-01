@@ -1,9 +1,22 @@
 # Dashboard Layout Studio — Beta Release Notes
 
 ---
-## 1.5.510
+## 1.6.520
 
-**Changes since beta 1.5.504**
+- First 1.6 beta release.
+- Added: New Add Tile toolbar action allows tiles to be created.
+- Added: Tile Configuration supports Hubitat device, variable, system, and static-content templates and can also edit supported settings for existing tiles through Tile Information.
+- Added: Complete Hubitat template catalog, dashboard/all-hub device filtering, automatic dashboard device authorization, custom device attributes, and searchable Hubitat and Material icon selection.
+- Fixed: Preview opens a window after DLS finishes creating the preview dashboard.
+- Added: A deep-red **Preview Open** indicator appears in the upper status bar while the Preview is being prepared or remains open.
+- Added: Double-clicking a selected tile opens Tile Information while preserving the complete current selection. Double-clicking an unselected tile retains the normal two-click selection and overlap-layer cycling behavior.
+- Added: Beta-to-stable downgrade notices identify the major beta-only features that will no longer be available after installing the stable release.
+- Changed: Light-mode dialogs and Preview progress use the standard high-contrast DLS dialog styling.
+- Fixed: Help tabs missing new features.
+- Bug fixes and UX improvements.
+
+
+## 1.5.510
 
 - Changed: Temporary Preview dashboard can only be opened by DLS.
 - Changed: Temporary Preview dashboards have Hubitat navigation disabled.
@@ -14,27 +27,23 @@
 - Changed: Save-verification requests now have a finite network timeout, preventing DLS from remaining indefinitely stuck after a VPN, network, routing, or hub failure.
 - Bug fixes and UX improvements.
 
-## 1.5.504
 
-**Changes since beta 1.5.502**
+## 1.5.504
 
 - Fixed: Down arrows missing on light mode drop downs on edit actions toolbar
 
-## 1.5.502
 
-**Changes since beta 1.5.501**
+## 1.5.502
 
 - Fixed: Preview Dashboard lock releases when url changes in preview tab/window.  Lock restored on browser back.
 
-## 1.5.501
 
-**Changes since beta 1.5.499**
+## 1.5.501
 
 - Fixed: Copy To Other Window disabled UX when device was not valid in the destination dashboard.
 
-## 1.5.499
 
-**Changes since beta 1.4.479**
+## 1.5.499
 
 - First 1.5 beta release.
 - Added: Hierarchical List and Tree views in the Selection panel, with separate cluster groups, nested-container relationships, z-index ordering, cluster-specific controls, and clearer active-tile identification.
@@ -47,9 +56,8 @@
 - Fixed: Removing an external `@import` immediately clears stale imported-CSS conflicts and reruns validation.
 - Bug fixes and UX improvements.
 
-## 1.4.479
 
-**Changes since beta 1.4.476**
+## 1.4.479
 
 - Added: z-index can be edited Tile Information.
 - Added: Overlap z-index conflict detection and automatic conflict resolution.
@@ -57,9 +65,8 @@
 - Fixed: Tweaking the dashboard JSON file does not automatically become flagged as a full replacement / warning dialogs.
 - Bug fixes and UX improvements.
 
-## 1.4.476
 
-**Changes since beta 1.4.455**
+## 1.4.476
 
 - Fixed: Improved light-mode contrast on all panels and dialogs
 - Added: Shift key temporarily changes the Info button function to Reports
@@ -72,9 +79,8 @@
 - Fixed: report page boundaries, dashboard-loading failures, Help-tab highlighting, and other bugs.
 - Bug fixes and UX improvements.
 
-## 1.4.455
 
-**Changes since beta 1.4.448**
+## 1.4.455
 
 - Added: Generate preview dashboard support files for Simple CSS work around.
 - Fixed: Dashboard switching so the first dashboard ID is not reused for later dashboards.
@@ -82,9 +88,8 @@
 - Fixed: Preview reliability.
 - Bug fixes and UX improvements.
 
-## 1.4.448
 
-**Changes since beta 1.4.446**
+## 1.4.448
 
 - Added: Copy/Copy CSS to other windows actions now synchronize across all open DLS windows.
 - Added: New Copy To Other Window action allows copying tiles between DLS windows.
@@ -92,24 +97,21 @@
 - Fixed: Changed Copy CSS and Paste CSS alternate-action menus to vertical, full-width layouts.
 - Bug fixes and UX improvements.
 
-## 1.4.446
 
-**Changes since beta 1.4.445**
+## 1.4.446
 
 - Improved light-theme contrast.
 - General light-mode UX refinements.
 
-## 1.4.445
 
-**Changes since beta 1.4.442**
+## 1.4.445
 
 - Fixed: Light and dark themes were applied after interface load.
 - Fixed: Rendered View and temporary-dashboard preparation from hanging when a dashboard contains no tiles.
 - Bug fixes.
 
-## 1.4.442
 
-**Changes since beta 1.3.432**
+## 1.4.442
 
 - First 1.4 beta release
 - Added: Copy CSS action allows copying a tile's CSS to multiple tiles.  CSS is automatically re-targeted to the destination tile.
@@ -121,32 +123,27 @@
 
 ## 1.3.432
 
-**Changes since beta 1.3.430**
-
 - Added: CSS pasted into the CSS edit text box in tile information can be automatically re-targeted to the current tile.  Option checkbox is remembered. 
 - Fixed: Undo was not created for CSS edits in tile information.
 - Bug fixes.
 
-## 1.3.430
 
-**Changes since beta 1.3.426**
+## 1.3.430
 
 - Added: Dashboard previews make temporary copies of Simple CSS files if Simple CSS is detected.  
 - Added: Checks if Simple CSS Editor is in use in the current dashboard.
 - Added: Preview warnings that external-editor changes affect temporary files and may be overwritten.  Warning supression opt-out in dialog.
 - Bug fixes and UX improvements.
 
-## 1.3.426
 
-**Changes since beta 1.3.422**
+## 1.3.426
 
 - Added: vertical scrolling to beta dialogs and panels.
 - Fixed: Excluded system, variable, text, navigation, static, and clock-style tiles / templates from invalid-device validation.
 - Bug fixes and UX improvements.
 
-## 1.3.422
 
-**Changes since beta 1.2.412**
+## 1.3.422
 
 - First 1.3 beta release
 - Added: printable tile reports corresponding to CLI report types, with selectable scope, columns, and sorting.
@@ -159,12 +156,12 @@
 - Fixed: Disabled Tile Information when no tiles are selected.
 - Bug fixes and UX improvements.
 
-## 1.2.412
 
-**Changes since beta 1.2.410**
+## 1.2.412
 
 - Version correction only.  Reissued beta 1.2.410 under build 412.
 - No other changes.
+
 
 ## 1.2.410
 
