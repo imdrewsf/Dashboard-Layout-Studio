@@ -1,13 +1,28 @@
 # Dashboard Layout Studio — Beta Release Notes
 
 ---
+
+## 1.7.527
+
+- First 1.7 beta release
+- Added: crash/session recovery - DLS preserves unsaved working layouts locally and can restore them after an accidental window close, browser crash, system restart, or other interruption.
+- Changed: The same dashboard cannot be open in multiple browser windows
+- Added: A directly opened temporary Preview dashboard can be manually revealed by clicking the corners UL, UR, LR, LL
+- Added: Hub Variables can now be added to and removed from a dashboard alongside physical devices, with complete hub-variable discovery and Dashboard Variables / All Hub Variables filtering.
+- Added: Add Tile can select variables from either the dashboard or the entire hub, automatically authorize newly selected variables.
+- Fixed: DLS creates native Hubitat `global-variable` tiles incorrectly.
+- Added: Existing Hub Variable tiles can have their assigned variable changed through the Expert → Tile Devices interface.
+- Fixed: Temporary Preview dashboards did not carry the Hub Variable authorizations required by the working layout.
+- Fixed: Cancelling Tile Configuration after opening it from Tile Information no longer leaves subsequent dialog controls disabled.
+- Advanced the beta development line from 1.6 to 1.7.
+
 ## 1.6.520
 
 - First 1.6 beta release.
 - Added: New Add Tile toolbar action allows tiles to be created.
 - Added: Tile Configuration supports Hubitat device, variable, system, and static-content templates and can also edit supported settings for existing tiles through Tile Information.
 - Added: Complete Hubitat template catalog, dashboard/all-hub device filtering, automatic dashboard device authorization, custom device attributes, and searchable Hubitat and Material icon selection.
-- Fixed: Preview opens a window after DLS finishes creating the preview dashboard.
+- Fixed: Preview opens a window before DLS finishes creating the preview dashboard.
 - Added: A deep-red **Preview Open** indicator appears in the upper status bar while the Preview is being prepared or remains open.
 - Added: Double-clicking a selected tile opens Tile Information while preserving the complete current selection. Double-clicking an unselected tile retains the normal two-click selection and overlap-layer cycling behavior.
 - Added: Beta-to-stable downgrade notices identify the major beta-only features that will no longer be available after installing the stable release.
@@ -20,10 +35,10 @@
 
 - Changed: Temporary Preview dashboard can only be opened by DLS.
 - Changed: Temporary Preview dashboards have Hubitat navigation disabled.
-- Fixed: Preview window lock releases when navigating away in the Preview tab/window.
+- Fixed: Preview window lock fails to release when navigating away in the Preview tab/window.
 - Changed: DLS now warns when closing or navigating away while its Preview dashboard remains open and closes the owned Preview after the user leaves.
-- Fixed: Grid Columns and Grid Rows no longer appear manually editable while Auto-size dashboard bounds controls them. 
-- Fixed: Abort now cancels the complete Save to Hub verification process, including the Checking current hub layout stage, token refresh, response reading, and retries.
+- Fixed: Grid Columns and Grid Rows appear manually editable while Auto-size dashboard bounds controls them. 
+- Fixed: Abort does not cancel the complete Save to Hub verification process, including the Checking current hub layout stage, token refresh, response reading, and retries.
 - Changed: Save-verification requests now have a finite network timeout, preventing DLS from remaining indefinitely stuck after a VPN, network, routing, or hub failure.
 - Bug fixes and UX improvements.
 
