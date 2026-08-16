@@ -188,7 +188,7 @@
   .slabel::after{content:"";flex:1;}
   .slabel.collapsible{cursor:pointer;user-select:none;transition:color .1s,background .1s;}
   .slabel.collapsible:hover{color:var(--text);background:#162238;}
-  .slabel .chev{order:3;flex:none;font-size:.7rem;transition:transform .18s;color:var(--faint);}
+  .slabel .chev{order:3;flex:none;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;font-size:1rem;font-weight:900;line-height:1;transition:transform .18s;color:var(--faint);}
   .slabel::after{order:2;}
   .sect.collapsed .slabel .chev{transform:rotate(-90deg);}
   .sect.collapsed .slabel{margin-bottom:0;}
@@ -263,7 +263,7 @@
   .sel-group{border:1px solid var(--border);border-radius:8px;overflow:hidden;}
   .sel-group .sg-head{display:flex;align-items:center;gap:7px;padding:7px 9px;background:var(--panel-2);cursor:pointer;font-size:.74rem;}
   .sel-group .sg-head.static{cursor:default;}
-  .sel-group .sg-chev{font-size:.66rem;color:var(--faint);transition:transform .15s;}
+  .sel-group .sg-chev{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;flex:none;font-size:1rem;font-weight:900;line-height:1;color:var(--faint);transition:transform .15s;}
   .sel-group.collapsed .sg-chev{transform:rotate(-90deg);}
   .sel-group.collapsed .sg-body{display:none;}
   .sg-title{flex:1;color:var(--text);}
@@ -2492,7 +2492,7 @@
   html[data-theme="light"] #cssCleanupModal .css-zindex-conflict-row{border-color:#b45309;background:#fff7ed}
   html[data-theme="light"] #cssCleanupModal .css-zindex-plan code{background:#fff;color:#172033;border-color:#c48a28}
 
-  /* v527: Add Tile, Preview progress, and updated in-app Help */
+  /* v532: Add Tile, Preview progress, and updated in-app Help */
   #gridmap.add-tile-mode{cursor:crosshair!important;}
   .add-tile-group{flex:0 0 auto;}
   .add-tile-preview{position:absolute;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:2147483000;border:2px dashed #67e8f9;border-radius:6px;background:rgba(14,165,233,.24);box-shadow:0 0 0 2px rgba(2,6,23,.55),inset 0 0 18px rgba(103,232,249,.16);color:#ecfeff;font-weight:800;text-shadow:0 1px 2px #000;overflow:hidden;}
@@ -2575,7 +2575,7 @@
   html[data-theme="light"] #addTileModal .add-tile-icon-choice.selected{background:#d2e8ed;border-color:#036b7d;box-shadow:inset 0 0 0 1px rgba(3,107,125,.24);}
   @media(max-width:700px){.add-tile-form-grid,.add-tile-options{grid-template-columns:1fr}.add-tile-span-2,.add-tile-options .field.full{grid-column:1}.add-tile-icon-summary{grid-template-columns:48px minmax(0,1fr)}.add-tile-icon-actions{grid-column:1/-1;justify-content:flex-start}.add-tile-icon-toolbar{grid-template-columns:1fr}.add-tile-icon-filters{justify-content:flex-start}}
 
-  /* v527: authoritative high-contrast dialog chrome in Light mode */
+  /* v532: authoritative high-contrast dialog chrome in Light mode */
   html[data-theme="light"] .modal{
     background:#ffffff!important;
     color:#111827!important;
@@ -2598,6 +2598,24 @@
   html[data-theme="light"] .modal .modal-head button{color:#ffffff;}
   html[data-theme="light"] .modal .modal-head .icon-btn:hover,
   html[data-theme="light"] .modal .modal-head button:hover{background:rgba(255,255,255,.12);color:#ffffff;}
+  /* Tile Information paging buttons need a dark resting face in Light mode.
+     The generic modal-header rule makes header button text white, so the
+     normal white .info-nav face otherwise hides the chevrons until hover. */
+  html[data-theme="light"] #infoModal .modal-head .info-nav{
+    background:#263d63!important;
+    color:#ffffff!important;
+    border-color:#8190a3!important;
+    box-shadow:0 1px 2px rgba(0,0,0,.28)!important;
+  }
+  html[data-theme="light"] #infoModal .modal-head .info-nav:hover:not(:disabled){
+    background:#36527f!important;
+    color:#ffffff!important;
+    border-color:#cbd5e1!important;
+  }
+  html[data-theme="light"] #infoModal .modal-head .info-nav:focus-visible{
+    outline:2px solid #67e8f9!important;
+    outline-offset:2px!important;
+  }
   html[data-theme="light"] .modal .modal-body{background:#ffffff!important;color:#111827!important;}
   html[data-theme="light"] .modal .modal-foot{
     background:#e7edf4!important;
@@ -2611,7 +2629,7 @@
 </head>
 <body>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.7.527">1.7.527</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.7.532">1.7.532</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -2681,7 +2699,7 @@
     <div class="sect" id="selSection" style="display:none">
       <div class="slabel collapsible" data-target="bodySel">Selection<span class="chev">▾</span></div>
       <div class="sect-body" id="bodySel">
-        <div class="sel-card" id="selCard"><p class="hint">Selected tiles can be shown as a cluster list or as cluster groups containing hierarchical trees. Tree view keeps clusters separate and orders each container's contents from top to bottom by z-index. Ctrl-click adds tiles; Ctrl+Alt-click adds whole clusters. The active tile is identified in both the Selection pane and the grid.</p></div>
+        <div class="sel-card" id="selCard"><p class="hint">Selected tiles can be shown as a cluster list or as cluster groups containing hierarchical trees. Tree view keeps clusters separate and orders each container's contents from top to bottom by z-index. Ctrl-click toggles individual tiles; Alt-click toggles a whole cluster as the selection; Ctrl+Alt-click adds or removes whole clusters. On an overlap stack, a normal or Ctrl-click acts on the current layer and then advances to the next layer. Once any tile is selected, Shift-click on any overlap stack advances layers without changing selection, while Ctrl+Shift-click toggles the current layer and keeps that layer current. The active tile is identified in both the Selection pane and the grid.</p></div>
       </div>
     </div>
   </aside>
@@ -3067,10 +3085,12 @@
 </section>
 <section class="help-pane" id="helpSelect">
 <div class="help-pages"><article class="help-page active" data-help-title="How tile selection works"><div class="help-page-kicker">Selecting Tiles</div><h4>How tile selection works</h4><h5>Selecting individual tiles and stacks</h5><p>Like the Hubitat native editor, each tile location is defined by the row and column of the tile’s upper-left corner. Dashboard Layout Studio uses that same upper-left-corner location when deciding whether a tile belongs to a row, column, or rectangular selection.</p><p>A tile may extend beyond the selected area because its height and width span additional grid cells. The Selection mode controls whether a tile whose upper-left corner is outside the target—but whose span crosses into it—is included, excluded, or selected by itself as a partial tile.</p><div class="help-grid">
-<div class="k">Click a tile</div><div class="v">Selects the tile at that cell. Repeated clicks on the same overlapped cell cycle through the stack.</div>
-<div class="k">Ctrl/Cmd-click tile</div><div class="v">Adds or removes a tile from the current tile selection. On overlapped stacks, repeated Ctrl/Cmd-clicks cycle through layers.</div>
-<div class="k">Alt-click tile</div><div class="v">Selects the connected tile cluster at that cell.</div>
-<div class="k">Ctrl/Cmd+Alt-click tile</div><div class="v">Adds the connected tile cluster at that cell to the current tile selection.</div><div class="k">Selection pane List / Tree</div><div class="v">List groups selected tiles by cluster. Tree preserves those same separate cluster groups, but presents each cluster hierarchically with containers, nested containers, and tiles ordered by effective z-index from top to bottom. Each row displays its z-index; equal values follow dashboard source order. A partial cluster's Select cluster button appears inside that cluster group.</div><div class="k">Active tile in a multi-selection</div><div class="v">The active tile is outlined with a high-contrast amber marker drawn above all overlapping tiles. Clicking a selected tile in the Selection panel, Ctrl/Cmd-clicking a tile, or selecting a cluster makes that tile active without changing the dashboard z-order.</div>
+<div class="k">Click a tile</div><div class="v">Selects the current layer at that cell, then advances the overlap cursor to the next layer. Repeated clicks cycle through the stack.</div>
+<div class="k">Shift-click tile</div><div class="v">When any tile is already selected and the clicked cell is an overlap stack, advances to the next layer without changing selection. The stack may itself be completely unselected. If no tile is selected, or the clicked tile is not stacked, Shift has no special tile-selection effect and the click behaves normally.</div>
+<div class="k">Ctrl/Cmd-click tile</div><div class="v">Adds or removes the current tile layer from the selection, then advances the overlap cursor to the next layer.</div>
+<div class="k">Ctrl/Cmd+Shift-click tile</div><div class="v">When any tile is already selected and the clicked cell is an overlap stack, toggles the current layer but keeps the overlap cursor and focus on that same layer instead of advancing. If no tile is selected, or the tile is unstacked, Shift has no special effect and the gesture behaves like a normal Ctrl/Cmd-click.</div>
+<div class="k">Alt-click tile</div><div class="v">Toggles the connected tile cluster. If none of that cluster is selected, the cluster becomes the selection. If any tile in it is selected, every tile in that cluster is removed from the selection.</div>
+<div class="k">Ctrl/Cmd+Alt-click tile</div><div class="v">Adds or removes a whole connected cluster without disturbing selections in other clusters. If none of the target cluster is selected, all of it is added; if any tile is selected, all of it is removed.</div><div class="k">Selection pane List / Tree</div><div class="v">List groups selected tiles by cluster. Tree preserves those same separate cluster groups, but presents each cluster hierarchically with containers, nested containers, and tiles ordered by effective z-index from top to bottom. Each row displays its z-index; equal values follow dashboard source order. A partial cluster's Select cluster button appears inside that cluster group.</div><div class="k">Active tile in a multi-selection</div><div class="v">The active tile is outlined with a high-contrast amber marker drawn above all overlapping tiles. Clicking a selected tile in the Selection panel, Ctrl/Cmd-clicking a tile, or selecting a cluster makes that tile active without changing the dashboard z-order.</div>
 <div class="k">Double-click selected tile</div><div class="v">If the tile was already selected before the first click, keeps the complete current selection, makes that tile active, and opens Tile Information for it. A multi-tile selection is not reduced to the double-clicked tile.</div><div class="k">Double-click unselected tile</div><div class="v">Is intentionally processed as two ordinary clicks. It does not open Tile Information. On an overlap stack, the two clicks can advance through two normal selection/layer-cycle steps.</div>
 </div><h5>Selecting areas, rows, and columns</h5><div class="help-grid">
 <div class="k">Drag on grid</div><div class="v">Creates a rectangular selection. The Selection mode option determines which crossing tiles are included.</div>
@@ -3199,9 +3219,12 @@
 <div class="k"><span class="help-key">Shift</span> held</div><div class="v">Temporarily switches eligible Move to / Copy to / Paste actions into push mode and opens Resize with Preserve spacing between resized tiles + Push layout to make room enabled. Push-mode buttons glow while active. The Info button also glows yellow, changes its label to Reports, and opens Reports on a normal click. The Preview button changes to Launch; a short click launches the saved dashboard and Preview moves to the hold menu until Shift is released.</div>
 <div class="k"><span class="help-key">Enter</span></div><div class="v">Submits the PIN prompt when opening a PIN-protected dashboard.</div>
 </div></article><article class="help-page" data-help-title="Mouse combinations"><div class="help-page-kicker">Shortcuts</div><h4>Mouse combinations</h4><h5>Mouse combinations</h5><div class="help-grid">
-<div class="k">Click tile</div><div class="v">Select tile; repeated clicks on the same overlapped cell cycle layers.</div>
-<div class="k">Ctrl/Cmd-click tile</div><div class="v">Toggle tile in multi-selection; repeated clicks on overlapped cells cycle/toggle layers.</div>
-<div class="k">Alt-click tile</div><div class="v">Select the connected cluster.</div>
+<div class="k">Click tile</div><div class="v">Select the current overlap layer, then advance to the next layer; repeated clicks cycle through the stack.</div>
+<div class="k">Shift-click tile</div><div class="v">With any tile already selected, advance through any overlap stack without changing selection. With no selection or on an unstacked tile, Shift is ignored.</div>
+<div class="k">Ctrl/Cmd-click tile</div><div class="v">Toggle the current overlap layer, then advance to the next layer.</div>
+<div class="k">Ctrl/Cmd+Shift-click tile</div><div class="v">With any tile already selected, toggle the current layer of an overlap stack and keep that layer current; otherwise behave like a normal Ctrl/Cmd-click.</div>
+<div class="k">Alt-click tile</div><div class="v">Toggle the connected cluster as a whole; an untouched cluster becomes the selection, while any selected member causes the whole cluster to be removed.</div>
+<div class="k">Ctrl/Cmd+Alt-click tile</div><div class="v">Add an untouched cluster to the current selection or remove the whole cluster when any of its tiles is already selected.</div>
 <div class="k">Double-click selected tile</div><div class="v">Open Tile Information for that tile while preserving the complete existing selection and making the tile active.</div><div class="k">Double-click unselected tile</div><div class="v">Process the gesture as two ordinary tile clicks. Tile Information does not open; an overlap stack advances according to the normal click-cycle rules.</div><div class="k">Add mode: drag grid</div><div class="v">Define the new tile position and size. Click and release in one cell for a 1 × 1 tile. Releasing opens Tile Configuration; the Add/Cancel button or Esc cancels without creating a tile.</div>
 <div class="k">Drag selected tile</div><div class="v">Move the selected tile or selected group. Already-overlapped tiles can be dragged while temporarily allowing the existing overlap; the previous Overlaps setting returns after drop.</div>
 <div class="k">Drag resize handle</div><div class="v">Resize selected tiles from their lower-right edge.</div>
@@ -3217,7 +3240,7 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpAbout">
-<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.7.527 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
+<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.7.532 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
 <div class="help-page-nav"></div>
 </section>
 </div>
@@ -3991,8 +4014,8 @@ SOFTWARE.</pre></div>
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v527";
-const APP_VERSION = "1.7.527";
+const BUILD = "v532";
+const APP_VERSION = "1.7.532";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -4042,7 +4065,7 @@ const DLS_TEMPLATE_EXTRA_LABELS = Object.freeze({
 
 // BETA RELEASE MAINTENANCE: Review this list for every beta build. Include only
 // major features that the current stable build deliberately hides or blocks.
-const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.7.527";
+const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.7.532";
 const STABLE_DOWNGRADE_FEATURES = Object.freeze([
   "Crash recovery for unsaved working layouts",
   "Hub Variable authorization management in Dashboard Devices",
@@ -4218,6 +4241,7 @@ const State = {
   drag:null,                     // active drag: {mode:'col'|'row'|'rect', ...}
   stackInfo:null,                // {row,col} of last clicked cell
   stackCycle:{key:null, idx:0},  // for re-click layer cycling
+  gridShiftHeld:false,           // tracked Shift state so overlap navigation survives DOM replacement / click event quirks
   gridDoubleClickCandidate:null, // first-click snapshot used to open Info without changing an existing selection
   gridDoubleClickHandledAt:0,     // suppress the native dblclick that may follow manual same-cell detection
   pending:null,                  // {action:'move',kind,indices}
@@ -11007,7 +11031,7 @@ function targetFromLines(lines,kind){
 }
 
 /* ---------- interaction model (Excel-style, gesture-driven) ----------
-   - Tile tool: click selects a tile; re-click cycles layers; dbl-click = group.
+   - Tile tool: click selects a tile; re-click cycles layers; Shift holds the current layer; modified clicks never trigger the double-click action.
    - Col/Row tool: click a header selects one; drag across headers selects a
      contiguous range live; click then shift-click selects the span between.
    - Rect tool: drag across the grid body to select a rectangular cell range
@@ -11327,6 +11351,20 @@ function onGridMouseDown(e){
   }
   const rawCell=cellFromEvent(e);
   const cell=snapCellToDashboardStep(rawCell);
+
+  // Shift is a stack-navigation modifier only when there is already at least
+  // one selected tile and the clicked cell contains an overlap stack. In that
+  // state, do not arm a tile or rectangle drag: the click handler either moves
+  // the stack cursor (Shift-click) or toggles the current layer while holding
+  // the cursor there (Ctrl/Cmd+Shift-click). With no current tile selection, or
+  // on an unstacked tile, Shift is ignored and normal click behavior applies.
+  if(e.button===0 && !e.altKey && gridShiftIsHeld(e)
+      && currentSelectionTileIds().length>0
+      && tilesAtCell(rawCell.row,rawCell.col).length>1){
+    State.drag=null;
+    State.lastDragMoved=false;
+    return;
+  }
 
   // Check if pressing on a selected tile — arm a potential tile drag. Use the
   // unsnapped cell for hit testing so optional snap does not make selected tiles
@@ -13703,6 +13741,28 @@ function restoreGridSelectionForTileInfo(candidate,cell){
   render();
   showTileInfo(candidate.tileId);
 }
+function gridShiftIsHeld(e=null){
+  let eventHeld=!!(e&&e.shiftKey);
+  if(!eventHeld&&e&&typeof e.getModifierState==="function"){
+    try{ eventHeld=!!e.getModifierState("Shift"); }catch(_e){}
+  }
+  return eventHeld||!!State.gridShiftHeld;
+}
+function gridStackCurrentLayer(key,topDown){
+  if(!topDown.length) return 0;
+  if(State.stackCycle.key!==key){
+    State.stackCycle={key,idx:0};
+  }else{
+    State.stackCycle.idx=Math.max(0,Math.min(topDown.length-1,Number(State.stackCycle.idx)||0));
+  }
+  return State.stackCycle.idx;
+}
+function advanceGridStackLayer(key,topDown){
+  if(!topDown.length) return 0;
+  const current=gridStackCurrentLayer(key,topDown);
+  State.stackCycle.idx=(current+1)%topDown.length;
+  return State.stackCycle.idx;
+}
 function onGridClick(e){
   if(State.addTileMode) return;
   if(State.pending&&State.pending.action==="moveTiles"){ completeMoveTiles(snapCellToDashboardStep(cellFromEvent(e))); return; }
@@ -13720,16 +13780,23 @@ function onGridClick(e){
   if(!stack.length){ if(!(e.ctrlKey||e.metaKey)) { clearTileSel(); State.stackCycle={key:null,idx:0}; } render(); return; }
   const topDown=stackOrder(stack).reverse();
   const key=`${cell.row},${cell.col}`;
-  const plainClick=!e.altKey&&!e.ctrlKey&&!e.metaKey;
+  const shiftHeld=gridShiftIsHeld(e);
+  const ctrlHeld=!!(e.ctrlKey||e.metaKey);
+  const selectedBeforeClick=currentSelectionTileIds().map(Number);
+  // Shift only changes tile-click behavior when a tile selection already exists
+  // and the clicked cell is an overlap stack. Otherwise it is ignored here so
+  // Shift-click behaves exactly like the corresponding normal/Ctrl click.
+  const shiftStackMode=!!(shiftHeld&&!e.altKey&&selectedBeforeClick.length>0&&topDown.length>1);
+  const unmodifiedClick=!e.altKey&&!ctrlHeld&&!shiftStackMode;
   const now=Date.now();
-  const prior=plainClick?State.gridDoubleClickCandidate:null;
+  const prior=unmodifiedClick?State.gridDoubleClickCandidate:null;
   const sameCellSecondClick=!!(prior&&prior.key===key&&now-prior.at<=GRID_DOUBLE_CLICK_WINDOW_MS);
 
   // render() replaces the tile DOM after the first click, so browsers often do
   // not emit a native dblclick for the replacement element. Detect the second
-  // same-cell click ourselves. Only a tile that was already selected before the
-  // first click opens Tile Information; an initially unselected tile continues
-  // through the ordinary two-click selection/layer-cycling path.
+  // same-cell click ourselves. Only an unmodified click participates in the
+  // Tile Information double-click gesture; Shift-modified overlap gestures use
+  // their own navigation/toggle rules when a tile selection already exists.
   if(sameCellSecondClick){
     State.gridDoubleClickCandidate=null;
     if(prior.wasSelected){
@@ -13738,16 +13805,16 @@ function onGridClick(e){
       restoreGridSelectionForTileInfo(prior,cell);
       return;
     }
-  }else if(plainClick){
-    const nextIndex=State.stackCycle.key===key?(State.stackCycle.idx+1)%topDown.length:0;
-    const selectedBefore=currentSelectionTileIds().map(Number);
+  }else if(unmodifiedClick){
+    const currentIdx=State.stackCycle.key===key?Math.max(0,Math.min(topDown.length-1,Number(State.stackCycle.idx)||0)):0;
+    const selectedBefore=selectedBeforeClick;
     const selectedAtCell=topDown.map(i=>Number(State.tiles[i].id)).filter(id=>selectedBefore.includes(id));
     const focused=Number(State.focusTileId);
     const tileId=selectedAtCell.includes(focused)
       ? focused
       : selectedAtCell.length
         ? selectedAtCell[0]
-        : Number(State.tiles[topDown[nextIndex]].id);
+        : Number(State.tiles[topDown[currentIdx]].id);
     State.gridDoubleClickCandidate={
       key,tileId,wasSelected:selectedBefore.includes(tileId),at:now,
       sel:JSON.parse(JSON.stringify(State.sel||{type:null,ids:[],lines:[],rect:null})),
@@ -13757,28 +13824,65 @@ function onGridClick(e){
   }else{
     State.gridDoubleClickCandidate=null;
   }
-  // Alt-click selects the whole cluster. Ctrl/Cmd+Alt-click adds that
-  // cluster to the existing tile selection instead of replacing it.
-  if(e.altKey){ selectGroupAt(cell.row,cell.col,!!(e.ctrlKey||e.metaKey)); return; }
-  // Ctrl/Cmd-click: add/remove a tile from a multi-tile selection. On overlapping
-  // stacks, repeated ctrl-clicks on the same cell walk DOWN the layers (top→bottom)
-  // so you can reach and toggle buried tiles, mirroring plain-click cycling.
-  if(e.ctrlKey||e.metaKey){
-    const key=`${cell.row},${cell.col}`;
-    let layer;
-    if(State.ctrlCycle && State.ctrlCycle.key===key){ State.ctrlCycle.idx=(State.ctrlCycle.idx+1)%topDown.length; layer=State.ctrlCycle.idx; }
-    else { State.ctrlCycle={key, idx:0}; layer=0; }
-    const id=State.tiles[topDown[layer]].id;
-    let ids = (State.sel.type==="tile"||State.sel.type==="rect") ? [...State.sel.ids] : [];
-    const adding=!ids.includes(id);
-    if(!adding) ids=ids.filter(x=>x!==id); else ids.push(id);
-    if(ids.length) selectTileIds(ids,adding?id:null); else clearTileSel();
-    render(); return;
+
+  // With an existing tile selection, Shift becomes a stack-navigation tool on
+  // overlapped cells even when none of the tiles in that particular stack is
+  // selected. Shift-click advances one layer without processing the current
+  // tile. Ctrl/Cmd+Shift-click toggles the CURRENT layer but deliberately does
+  // not advance, allowing the user to hold position on a buried tile.
+  if(shiftStackMode){
+    if(ctrlHeld){
+      const layer=gridStackCurrentLayer(key,topDown);
+      const id=Number(State.tiles[topDown[layer]].id);
+      let ids=selectedBeforeClick.slice();
+      const adding=!ids.includes(id);
+      if(adding) ids.push(id); else ids=ids.filter(x=>x!==id);
+      if(ids.length) selectTileIds(ids,adding?id:null); else clearTileSel();
+      // Focus/cursor remain on the processed layer even if it was just removed
+      // from the selection. This makes the current buried layer visible and a
+      // subsequent Ctrl/Cmd+Shift-click can toggle that same layer again.
+      State.stackCycle={key,idx:layer};
+      State.focusTileId=id;
+      State.gridDoubleClickCandidate=null;
+      render();
+      status(`Overlap layer ${layer+1} of ${topDown.length}: tile #${id} ${adding?"selected":"deselected"}. Shift kept this layer current.`);
+      return;
+    }
+    const nextLayer=advanceGridStackLayer(key,topDown);
+    const nextId=Number(State.tiles[topDown[nextLayer]].id);
+    // Focus follows the stack cursor even when the destination layer is not
+    // selected, so Shift navigation through an untouched stack is visible.
+    State.focusTileId=nextId;
+    State.gridDoubleClickCandidate=null;
+    render();
+    status(`Overlap layer ${nextLayer+1} of ${topDown.length}: tile #${nextId}. Shift advanced without changing selection.`);
+    return;
   }
-  State.ctrlCycle=null;
-  if(State.stackCycle.key===key){ State.stackCycle.idx=(State.stackCycle.idx+1)%topDown.length; }
-  else{ State.stackCycle={key,idx:0}; }
-  selectTile(State.tiles[topDown[State.stackCycle.idx]].id);
+
+  // Alt-click is a cluster-level toggle. With Alt alone, a previously untouched
+  // cluster becomes the selection; if any tile in that cluster is already
+  // selected, the entire cluster is removed. Ctrl/Cmd+Alt uses the same remove
+  // rule but ADDS an untouched cluster to the existing selection.
+  if(e.altKey){
+    selectGroupAt(cell.row,cell.col,(e.ctrlKey||e.metaKey)?"toggle-additive":"toggle-replace");
+    return;
+  }
+
+  // Plain and Ctrl/Cmd tile clicks act on the CURRENT overlap layer and then
+  // advance the shared cursor to the next layer. A new stack starts at the top.
+  const layer=gridStackCurrentLayer(key,topDown);
+  const id=Number(State.tiles[topDown[layer]].id);
+  if(ctrlHeld){
+    let ids=currentSelectionTileIds().map(Number);
+    const adding=!ids.includes(id);
+    if(adding) ids.push(id); else ids=ids.filter(x=>x!==id);
+    if(ids.length) selectTileIds(ids,adding?id:null); else clearTileSel();
+    advanceGridStackLayer(key,topDown);
+    render();
+    return;
+  }
+  advanceGridStackLayer(key,topDown);
+  selectTile(id);
 }
 function selectTile(id){ clearConflictHighlight(); State.focusTileId=Number(id); State.sel={type:"tile",ids:[id],lines:[],rect:null}; updateActionButtons(); render(); }
 function selectTileIds(ids,activeId=null){
@@ -13799,19 +13903,30 @@ function selectAllTiles(){
     status(`Selected all ${State.tiles.length} tiles.`);
   }
 }
-function selectGroupAt(row,col,additive=false){
+function selectGroupAt(row,col,mode="replace"){
   clearConflictHighlight();
-  const ids=clusterIdsAt(row,col); if(!ids.length) return;
+  const ids=clusterIdsAt(row,col).map(Number); if(!ids.length) return;
   const stack=tilesAtCell(row,col);
   const topDown=stackOrder(stack).reverse();
-  const activeId=topDown.length?State.tiles[topDown[0]].id:ids[ids.length-1];
-  if(additive){
-    const existing=(State.sel.type==="tile"||State.sel.type==="rect")?[...State.sel.ids]:[];
-    selectTileIds([...new Set([...existing,...ids])],activeId);
+  const activeId=topDown.length?Number(State.tiles[topDown[0]].id):ids[ids.length-1];
+  if(mode==="replace"){
+    selectTileIds(ids,activeId);
     render();
     return;
   }
-  selectTileIds(ids,activeId);
+
+  const existing=currentSelectionTileIds().map(Number);
+  const clusterSet=new Set(ids);
+  const anySelected=existing.some(id=>clusterSet.has(id));
+  if(anySelected){
+    const remaining=existing.filter(id=>!clusterSet.has(id));
+    if(remaining.length) selectTileIds(remaining); else clearTileSel();
+  }else if(mode==="toggle-additive"){
+    selectTileIds([...new Set([...existing,...ids])],activeId);
+  }else{
+    // Alt without Ctrl/Cmd: an untouched cluster becomes the selection.
+    selectTileIds(ids,activeId);
+  }
   render();
 }
 function clearTileSel(){ clearConflictHighlight(); State.focusTileId=null; State.sel={type:null,ids:[],lines:[],rect:null}; updateActionButtons(); }
@@ -24139,6 +24254,15 @@ Install the current stable release now, or keep the current installed version un
   initModalDragging();
   document.getElementById("gridmap").addEventListener("dblclick",e=>{
     if(State.addTileMode) return;
+    // Modified tile clicks have their own selection semantics. In particular,
+    // Shift can navigate or hold an overlap layer when a selection already
+    // exists, so a native modified dblclick must not invoke Tile Information.
+    if(gridShiftIsHeld(e)||e.ctrlKey||e.metaKey||e.altKey){
+      State.gridDoubleClickCandidate=null;
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
     if(State.gridDoubleClickHandledAt&&Date.now()-State.gridDoubleClickHandledAt<1000){
       e.preventDefault();
       e.stopPropagation();
@@ -24154,7 +24278,7 @@ Install the current stable release now, or keep the current installed version un
     // Preserve existing behavior for a tile that was not already selected:
     // the browser's two click events run normally, then the connected cluster
     // at that cell becomes selected.
-    selectGroupAt(c.row,c.col);
+    selectGroupAt(c.row,c.col,"replace");
   });
 
   document.getElementById("zoom")?.addEventListener("input",e=>setGridZoom(e.target.value,{allowActualSnap:true}));
@@ -24180,15 +24304,19 @@ Install the current stable release now, or keep the current installed version un
     syncPushAvailability();
   }
   document.addEventListener("keydown",e=>{
-    if(e.key==="Shift"&&!e.repeat){
-      updatePushModeButtons(true);
-      updateInfoShiftReports(true);
-      updateLaunchShiftMode(true);
+    if(e.key==="Shift"){
+      State.gridShiftHeld=true;
+      if(!e.repeat){
+        updatePushModeButtons(true);
+        updateInfoShiftReports(true);
+        updateLaunchShiftMode(true);
+      }
     }
     syncInterWindowModifierButtons(e);
   });
   document.addEventListener("keyup",e=>{
     if(e.key==="Shift"){
+      State.gridShiftHeld=false;
       updatePushModeButtons(false);
       updateInfoShiftReports(false);
       updateLaunchShiftMode(false);
@@ -24197,6 +24325,7 @@ Install the current stable release now, or keep the current installed version un
   });
   window.addEventListener("blur",()=>{
     State.interWindowModifierHeld=false;
+    State.gridShiftHeld=false;
     updatePushModeButtons(false);
     updateInfoShiftReports(false);
     updateLaunchShiftMode(false);

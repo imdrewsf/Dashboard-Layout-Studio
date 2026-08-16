@@ -2,6 +2,16 @@
 
 ---
 
+## 1.7.532
+
+- Changed: Alt-click now toggles an entire overlap cluster. If no tiles in the cluster are selected, the cluster becomes the selection; if any tile in the cluster is selected, the complete cluster is removed from the selection.
+- Changed: Ctrl/Cmd+Alt-click now adds or removes an entire overlap cluster from the current multi-selection using the same toggle logic while preserving selections outside that cluster.
+- Added: Shift-assisted overlap-layer navigation allows buried tiles in an overlapping stack to be located without changing the current selection. Shift-click advances through the stack when a selection already exists, even when none of the tiles in that stack are selected.
+- Added: Ctrl/Cmd+Shift-click toggles only the currently focused tile layer in an overlap stack and keeps focus on that layer instead of advancing, allowing individual tiles within a stack to be added to or removed from a multi-selection.
+- Changed: Normal Click and Ctrl/Cmd-click act on the current overlap layer and then advance to the next layer; Shift has no special effect when no selection exists or when clicking a non-overlapping tile.
+- Bug fixes and UX improvements.
+
+
 ## 1.7.527
 
 - First 1.7 beta release
