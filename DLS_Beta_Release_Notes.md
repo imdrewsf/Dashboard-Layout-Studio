@@ -1,6 +1,18 @@
 # Dashboard Layout Studio — Beta Release Notes
 
 ---
+## 1.8.538
+
+- First 1.8 beta release.
+- Changed: Failed external `@import` stylesheets are now reported through the External CSS warning instead of silently being omitted from CSS analysis.
+- Changed: Imported CSS is checked separately for orphaned tile selectors, with a dedicated **External CSS Orphans** warning distinct from `customCSS` orphan warnings.
+- Added: External CSS rules can be imported into `customCSS` and their `@import` statements removed, creating a normal undo point and preserving information needed to restore the original imports.
+- Fixed: Refreshing the browser prompts to recover.
+- Fixed: Use Preview loses setting in preferences.
+- Fixed: Preview button showing when preview is disabled.
+- Added: Operations rejected because **Overlaps = Warn** visibly flash the Overlaps behavior setting.
+- Fixed: Dragging a tile that already overlapping another tile did not trigger warnings when moved to overlap other tiles.
+- Bug fixes and UX improvements.
 
 ## 1.7.532
 
