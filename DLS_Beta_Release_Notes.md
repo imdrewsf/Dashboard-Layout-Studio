@@ -1,6 +1,13 @@
 # Dashboard Layout Studio — Beta Release Notes
 
 ---
+
+## 1.8.543
+
+- Changed: Recovered layouts were not removed after session resumed and saved.
+- Changed: Imported CSS is checked separately for orphaned tile selectors, with a dedicated **External CSS Orphans** warning distinct from `customCSS` orphan warnings.
+- Bug fixes and UX improvements.
+
 ## 1.8.538
 
 - First 1.8 beta release.

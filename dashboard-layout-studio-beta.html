@@ -2504,7 +2504,7 @@
   html[data-theme="light"] #cssCleanupModal .css-zindex-conflict-row{border-color:#b45309;background:#fff7ed}
   html[data-theme="light"] #cssCleanupModal .css-zindex-plan code{background:#fff;color:#172033;border-color:#c48a28}
 
-  /* v538: recovery reload, External CSS import tools, startup overlay, and updated in-app Help */
+  /* v543: recovery reload, External CSS import tools, startup overlay, and updated in-app Help */
   #gridmap.add-tile-mode{cursor:crosshair!important;}
   .add-tile-group{flex:0 0 auto;}
   .add-tile-preview{position:absolute;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:2147483000;border:2px dashed #67e8f9;border-radius:6px;background:rgba(14,165,233,.24);box-shadow:0 0 0 2px rgba(2,6,23,.55),inset 0 0 18px rgba(103,232,249,.16);color:#ecfeff;font-weight:800;text-shadow:0 1px 2px #000;overflow:hidden;}
@@ -2587,7 +2587,7 @@
   html[data-theme="light"] #addTileModal .add-tile-icon-choice.selected{background:#d2e8ed;border-color:#036b7d;box-shadow:inset 0 0 0 1px rgba(3,107,125,.24);}
   @media(max-width:700px){.add-tile-form-grid,.add-tile-options{grid-template-columns:1fr}.add-tile-span-2,.add-tile-options .field.full{grid-column:1}.add-tile-icon-summary{grid-template-columns:48px minmax(0,1fr)}.add-tile-icon-actions{grid-column:1/-1;justify-content:flex-start}.add-tile-icon-toolbar{grid-template-columns:1fr}.add-tile-icon-filters{justify-content:flex-start}}
 
-  /* v538 startup readiness overlay */
+  /* v543 startup readiness overlay */
   .startup-overlay{position:fixed;inset:0;z-index:30000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(4,10,18,.58);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);transition:opacity .18s ease,visibility .18s ease;}
   .startup-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none;}
   .startup-card{width:min(430px,calc(100vw - 40px));display:flex;align-items:center;gap:16px;padding:18px 20px;border:1px solid var(--border-2);border-radius:12px;background:var(--panel);color:var(--text);box-shadow:0 22px 70px rgba(0,0,0,.42);}
@@ -2600,7 +2600,7 @@
   html[data-theme="light"] .startup-card{background:#fff;color:#172033;border-color:#8392a5;box-shadow:0 22px 70px rgba(30,41,59,.25);}
   html[data-theme="light"] .startup-detail{color:#526174;}
 
-  /* v538: authoritative high-contrast dialog chrome in Light mode */
+  /* v543: authoritative high-contrast dialog chrome in Light mode */
   html[data-theme="light"] .modal{
     background:#ffffff!important;
     color:#111827!important;
@@ -2663,7 +2663,7 @@
   </div>
 </div>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.8.538">1.8.538</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.8.543">1.8.543</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -3104,7 +3104,7 @@
 <div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual editor for Hubitat Dashboard v1 layouts. It can add original tiles, edit supported tile configuration, rearrange, resize, duplicate, remove, and reassign tiles, and change supported presentation details through custom CSS. Dashboard creation and advanced Hubitat-specific configuration remain in the native Hubitat interface.</p><p><b>Interface theme:</b> New installations start in Light mode. Preferences can switch Dashboard Layout Studio between Light and Dark themes, and the saved choice is restored before the interface is displayed. The Reset Settings button restores all saved preferences to their defaults, re-enables notifications dismissed with a don't-show-again option, and leaves hub credentials and the current dashboard layout unchanged.</p><div class="help-callout"><b>New tile workflow:</b> The Add button is its own toolbar group immediately before Info. Click Add, drag the tile rectangle, then complete Tile Configuration. The button changes to Cancel, all other toolbar controls are disabled, and overlap is temporarily allowed until the tile is added or cancelled. See <b>Add Tile</b> for the full workflow.</div><div class="help-callout"><b>Preview dashboards:</b> Preview opens a compact working window that mirrors the DLS preparation checklist and automatically changes to the temporary dashboard when ready. The deep-red <b>Preview Open</b> pill shows when that window owns the shared preview dashboard. See <b>Preview Dashboards</b> for the complete lifecycle and safeguards.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>Add Tile supports the native template catalog and the basic parameters exposed by DLS. Advanced or firmware-specific options not recognized by DLS may still require Hubitat's editor.</li><li>Changing a tile template preserves unknown properties when possible, but incompatible template-specific settings are replaced by the newly selected template configuration.</li></ul><h5>Template-property limits</h5><ul><li>Tile Configuration supports common properties such as device, template-specific values, a searchable Hubitat and Material icon chooser, background images, links, refresh intervals, and unit display. Advanced or firmware-specific properties that DLS does not recognize may still require Hubitat's editor.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
-<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><div class="help-callout"><b>Crash recovery:</b> DLS checkpoints unsaved working layouts in browser-local IndexedDB. After an accidental window close, browser crash, or machine restart, startup lists all recoverable sessions whose dashboards are not currently active in another DLS window. Select a recovery to resume it, load the current hub copy while keeping the recovery, remove it, or ignore the records for now. Reloading the current DLS tab with F5, Ctrl+R, or Cmd+R automatically resumes the exact recovery checkpoint that belonged to that tab, even when other recovery records exist, instead of showing the chooser. Hub-originated recovery reconnects and reloads the dashboard first so the normal save target and hub-change conflict checks are preserved. If a dashboard has a stored recovery when you open it normally, DLS asks whether to resume the unsaved copy, load the hub copy and discard the checkpoint, or load the hub copy while keeping the checkpoint available for later. Within the same browser and DLS origin, a dashboard that is already open in another DLS window remains visible in the dashboard list but is disabled to prevent overlapping recovery records. Preferences can disable recovery, omit undo history, or clear stored recovery data.</div><p><b>Preview / Launch button:</b> When the temporary preview dashboard is enabled, Preview is the normal short-click action for a hub-loaded dashboard; hold the corner-menu button for Launch Saved. When Preview is disabled in Preferences, this becomes a regular <b>Launch Saved</b> button with no hold menu or Preview action. Holding Shift temporarily makes Launch the default. Preview uses the DLS Temporary Dashboard to show the current working layout without saving over the dashboard being edited. The working window displays the same preparation checklist shown in DLS and opens the temporary dashboard automatically when ready. See <b>Preview Dashboards</b> for status indicators, multi-window locking, direct-open protection, navigation behavior, and cleanup.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices / variables</td><td>Can validate, add, remove, and update selected dashboard devices and Hub Variables.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Add Tile, move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Add Tile temporarily allows overlap while the new tile rectangle is drawn, then opens Tile Configuration.</td><td>Add Tile for static tiles and manually entered device IDs, plus move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Hub templates, variables, attributes, and device validation require an online layout.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
+<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><div class="help-callout"><b>Crash recovery:</b> DLS checkpoints unsaved working layouts in browser-local IndexedDB. After an accidental window close, browser crash, or machine restart, startup lists all recoverable sessions whose dashboards are not currently active in another DLS window. Select a recovery to resume it, load the current hub copy while keeping the recovery, remove it, or ignore the records for now. Reloading the current DLS tab with F5, Ctrl+R, or Cmd+R automatically resumes the exact recovery checkpoint that belonged to that tab, even when other recovery records exist, instead of showing the chooser. Hub-originated recovery reconnects and reloads the dashboard first so the normal save target and hub-change conflict checks are preserved. If a dashboard has more than one stored recovery when you open it from the dashboard list, DLS opens the same recovery manager used at startup but filters it to that dashboard. In this sidebar context, Ignore for Now continues loading the hub-saved dashboard while keeping the recovery records available; Remove Selected, Load Hub — Keep Recovery, and Resume Selected remain available as well. If only one recovery exists, DLS keeps the compact Cancel / Ignore Recovery / Discard Unsaved / Load Recovery dialog. If you choose Ignore Recovery and then edit the hub-saved copy, DLS checkpoints those new edits as a separate recovery branch; after an abnormal exit both the earlier recovery and the later hub-copy edits remain available independently. Once any version of that dashboard is successfully saved back to the hub, DLS treats that save as the new authoritative version and removes every recovery record for that dashboard, including retained and Hub edits branches. Within the same browser and DLS origin, a dashboard that is already open in another DLS window remains visible in the dashboard list but is disabled to prevent overlapping active editors. Preferences can disable recovery, omit undo history, or clear stored recovery data.</div><p><b>Preview / Launch button:</b> When the temporary preview dashboard is enabled, Preview is the normal short-click action for a hub-loaded dashboard; hold the corner-menu button for Launch Saved. When Preview is disabled in Preferences, this becomes a regular <b>Launch Saved</b> button with no hold menu or Preview action. Holding Shift temporarily makes Launch the default. Preview uses the DLS Temporary Dashboard to show the current working layout without saving over the dashboard being edited. The working window displays the same preparation checklist shown in DLS and opens the temporary dashboard automatically when ready. See <b>Preview Dashboards</b> for status indicators, multi-window locking, direct-open protection, navigation behavior, and cleanup.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices / variables</td><td>Can validate, add, remove, and update selected dashboard devices and Hub Variables.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Add Tile, move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Add Tile temporarily allows overlap while the new tile rectangle is drawn, then opens Tile Configuration.</td><td>Add Tile for static tiles and manually entered device IDs, plus move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Hub templates, variables, attributes, and device validation require an online layout.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
 <div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
 <div class="k">Hub Connection Settings (Gear Icon)</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
 <div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
@@ -3278,7 +3278,7 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpAbout">
-<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.8.538 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
+<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.8.543 (Beta channel)</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Beta channel:</b> This build includes features still undergoing broader testing. Use the Stable release notes to compare the currently supported stable feature set.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
 <div class="help-page-nav"></div>
 </section>
 </div>
@@ -3368,11 +3368,13 @@
     <div class="modal-head"><h3>Unsaved recovery found</h3><span class="title-sub">Choose dashboard source</span></div>
     <div class="modal-body" style="display:flex;flex-direction:column;gap:12px">
       <p id="dashboardRecoveryMsg" style="margin:0;line-height:1.6;white-space:pre-wrap"></p>
+      <div class="recovery-list hidden" id="dashboardRecoveryList" role="radiogroup" aria-label="Recovery versions for this dashboard"></div>
       <div class="help-grid" style="margin:0">
         <div class="k">Recovery checkpoint</div><div class="v" id="dashboardRecoveryWhen">—</div>
         <div class="k">Saved by</div><div class="v" id="dashboardRecoveryVersion">—</div>
+        <div class="k">Recovery type</div><div class="v" id="dashboardRecoveryType">—</div>
       </div>
-      <div class="help-callout"><b>Ignore Recovery</b> opens the current hub-saved dashboard while leaving the recovery record available for a later session. <b>Discard Unsaved</b> opens the current hub-saved dashboard and removes the recovery record after the hub load succeeds. <b>Load Recovery</b> resumes the unsaved recovered working layout.</div>
+      <div class="help-callout"><b>Ignore Recovery</b> opens the current hub-saved dashboard while leaving the selected recovery record available for a later session. <b>Discard Unsaved</b> opens the current hub-saved dashboard and removes only the selected recovery record after the hub load succeeds. <b>Load Recovery</b> resumes the selected unsaved recovered working layout. Other recovery versions for this dashboard remain available unless explicitly discarded.</div>
     </div>
     <div class="modal-foot" style="justify-content:flex-end;gap:8px;flex-wrap:wrap">
       <button class="btn ghost" id="dashboardRecoveryCancel" type="button">Cancel</button>
@@ -4072,8 +4074,8 @@ SOFTWARE.</pre></div>
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v538";
-const APP_VERSION = "1.8.538";
+const BUILD = "v543";
+const APP_VERSION = "1.8.543";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -4124,7 +4126,7 @@ const DLS_TEMPLATE_EXTRA_LABELS = Object.freeze({
 
 // BETA RELEASE MAINTENANCE: Review this list for every beta build. Include only
 // major features that the current stable build deliberately hides or blocks.
-const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.8.538";
+const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.8.543";
 const STABLE_DOWNGRADE_FEATURES = Object.freeze([
   "Crash recovery for unsaved working layouts",
   "Hub Variable authorization management in Dashboard Devices",
@@ -4323,8 +4325,11 @@ const State = {
   recoveryKey:"",               // active recovery slot key for the current workspace
   recoveryLastSavedAt:0,         // timestamp of the last completed recovery write
   recoveryRestoring:false,       // suppress writes while a stored session is being reconstructed
-  recoveryProtectedKey:"",       // retained checkpoint while the hub-saved copy is opened for comparison
-  recoveryProtectedNoticeShown:false, // avoid repeating the retained-checkpoint write-suppression notice
+  recoveryProtectedKey:"",       // retained checkpoint while the hub-saved copy is opened; new edits use a separate recovery branch
+  recoveryProtectedNoticeShown:false, // avoid repeating the retained-checkpoint branch notice
+  recoveryBranchKey:"",          // storage key reserved for edits made after Ignore Recovery opens the hub copy
+  recoveryBranchKind:"",         // branch classification preserved when a branch recovery is resumed
+  recoveryBranchParentKey:"",    // retained/original recovery associated with the active recovery branch
   recoveryReloadInProgress:false, // keyboard reload is checkpointed and automatically resumed
   recoveryReloadProceed:false,    // suppress native dirty-warning only for DLS-controlled reload
   initialLoadCleanToken:0,       // increments per loaded layout so delayed load-time layout normalization can keep the loaded layout clean
@@ -6799,13 +6804,31 @@ const Hub = {
       if(!claimHeld) return false;
     }
     if(!sameActive&&!pin&&!options.skipRecoveryPrompt&&State.recoveryEnabled){
-      const recovery=await recoveryRecordForDashboard(meta);
-      if(recovery){
-        const choice=await showDashboardRecoveryChoice(meta,recovery);
-        if(choice==="cancel"){ if(claimHeld) releaseDashboardClaim(hubDashboardWorkspaceKey(meta)); return false; }
-        if(choice==="recovery") options={...options,recoveryRecord:recovery,skipRecoveryPrompt:true,claimHeld:true};
-        else if(choice==="hub-keep") options={...options,keepRecoveryRecord:recovery,skipRecoveryPrompt:true,claimHeld:true};
-        else options={...options,discardRecoveryRecord:recovery,skipRecoveryPrompt:true,claimHeld:true};
+      const recoveries=await recoveryRecordsForDashboard(meta);
+      if(recoveries.length){
+        if(recoveries.length>1){
+          // When several recoveries exist for one dashboard, use the same full
+          // recovery manager shown at startup, filtered to this dashboard only.
+          // Remove Selected can be used repeatedly before the user resumes one
+          // checkpoint or opens the hub copy while retaining the recoveries.
+          const recoveryChoice=await showRecoveryStartupPrompt(recoveries,{dashboardMeta:meta});
+          const action=recoveryChoice&&recoveryChoice.action||"ignore";
+          const recovery=recoveryChoice&&recoveryChoice.record||null;
+          if(action==="ignore"||(!recovery&&action!=="hub")){ if(claimHeld) releaseDashboardClaim(hubDashboardWorkspaceKey(meta)); return false; }
+          if(action==="resume") options={...options,recoveryRecord:recovery,skipRecoveryPrompt:true,claimHeld:true};
+          else if(action==="hub-keep") options={...options,keepRecoveryRecord:recovery,skipRecoveryPrompt:true,claimHeld:true};
+          else if(action==="hub") options={...options,skipRecoveryPrompt:true,claimHeld:true};
+          else { if(claimHeld) releaseDashboardClaim(hubDashboardWorkspaceKey(meta)); return false; }
+        }else{
+          // A single recovery keeps the compact dashboard-source dialog.
+          const recoveryChoice=await showDashboardRecoveryChoice(meta,recoveries);
+          const choice=recoveryChoice&&recoveryChoice.choice||"cancel";
+          const recovery=recoveryChoice&&recoveryChoice.record||recoveries[0];
+          if(choice==="cancel"){ if(claimHeld) releaseDashboardClaim(hubDashboardWorkspaceKey(meta)); return false; }
+          if(choice==="recovery") options={...options,recoveryRecord:recovery,skipRecoveryPrompt:true,claimHeld:true};
+          else if(choice==="hub-keep") options={...options,keepRecoveryRecord:recovery,skipRecoveryPrompt:true,claimHeld:true};
+          else options={...options,discardRecoveryRecord:recovery,skipRecoveryPrompt:true,claimHeld:true};
+        }
       }
     }
     const restoringRecovery=!!options.recoveryRecord;
@@ -6905,18 +6928,24 @@ const Hub = {
       checkHubOperationAbort(op);
       const currentHubBaseline=cloneLayoutDoc(loaded);
       State.hubSaveBaseline=currentHubBaseline;
-      const protectedRecovery=options.keepRecoveryRecord||options.discardRecoveryRecord||null;
-      if(protectedRecovery&&protectedRecovery.key){
-        State.recoveryProtectedKey=protectedRecovery.key;
-        State.recoveryProtectedNoticeShown=false;
-        State.recoveryKey="";
-      }
       if(options.recoveryRecord){
         hubOperationStep(op,"recovery","active",`Reapplying checkpoint from ${recoveryTimeLabel(options.recoveryRecord.updatedAt)}.`);
         status(`Restoring "${meta.label||"dashboard"}" — current hub layout loaded; reapplying unsaved DLS changes…`,true);
         recoveryApplyWorkingState(options.recoveryRecord,meta,currentHubBaseline);
         hubOperationStep(op,"recovery","done","Unsaved working layout and recovery history reapplied.");
       }else adoptLayout(meta,loaded);
+      if(options.keepRecoveryRecord&&options.keepRecoveryRecord.key&&!options.recoveryRecord){
+        State.recoveryProtectedKey=options.keepRecoveryRecord.key;
+        State.recoveryProtectedNoticeShown=false;
+        // Reserve a distinct recovery key for edits to the freshly loaded hub
+        // copy. It is not written until that copy becomes dirty, so simply
+        // viewing the hub version does not create a second recovery record.
+        State.recoveryBranchKey=recoveryMakeBranchKey(hubDashboardWorkspaceKey(meta));
+        State.recoveryBranchKind="hub-copy-after-ignore";
+        State.recoveryBranchParentKey=options.keepRecoveryRecord.key;
+        State.recoveryKey="";
+        State.recoveryLastSavedAt=0;
+      }
       adopted=true;
       const reviewLayout=options.recoveryRecord&&options.recoveryRecord.layout?options.recoveryRecord.layout:loaded;
       const deviceReview=loadedDashboardDeviceAssignmentReview(reviewLayout,pickedAudit);
@@ -7112,8 +7141,17 @@ const Hub = {
       const renderRefreshNeeded=shouldRefreshRenderedViewAfterHubSave(payload);
       const renderRefreshSkipReason=renderRefreshNeeded?"":renderedViewSaveSkipReason(payload);
       State.hubSaveBaseline=cloneLayoutDoc(payload);
+      let recoveryCleanupError=null;
+      try{
+        const dashboardRecoveryKey=hubDashboardWorkspaceKey(State.active);
+        const removed=await recoveryDeleteDashboardRecords(dashboardRecoveryKey);
+        if(removed) trace(`save → removed ${removed} recovery checkpoint${removed===1?"":"s"} for saved dashboard`,dashboardRecoveryKey,"ok");
+      }catch(e){
+        recoveryCleanupError=e;
+        console.warn("DLS could not clear saved-dashboard recovery checkpoints:",e);
+      }
       markLayoutClean();
-      toast("Layout saved to hub.","ok");
+      toast(recoveryCleanupError?"Layout saved, but DLS could not clear all recovery checkpoints for this dashboard.":"Layout saved to hub.",recoveryCleanupError?"err":"ok");
       hubOperationStep(op,"save","done");
       let finishMessage="Layout saved.";
       if(renderRefreshNeeded){
@@ -7324,6 +7362,19 @@ function setCurrentGridCfg(cfg){
 
 /* ---------- adopt layout (real data model) ---------- */
 function adoptLayout(meta,layout){
+  if(!State.recoveryRestoring){
+    // A newly adopted non-recovery workspace must not inherit recovery-branch
+    // ownership from the dashboard/file that was previously open. Hub loads
+    // that intentionally retain a recovery establish their branch context after
+    // adoptLayout() completes.
+    State.recoveryProtectedKey="";
+    State.recoveryProtectedNoticeShown=false;
+    State.recoveryBranchKey="";
+    State.recoveryBranchKind="";
+    State.recoveryBranchParentKey="";
+    State.recoveryKey="";
+    State.recoveryLastSavedAt=0;
+  }
   const doc = Array.isArray(layout) ? {tiles:layout} : layout;
   // Keep a pristine deep copy of the ENTIRE source document for backups.
   // baseDoc is the editable full-document base used by serializeLayout(); JSON
@@ -22807,7 +22858,7 @@ async function recoveryPut(record){
     const remove=[];
     let retained=0;
     for(const item of all){
-      const protectedByActiveWindow=!!recoveryKeyOpenElsewhere(item&&item.key);
+      const protectedByActiveWindow=!!recoveryRecordOpenElsewhere(item);
       if(retained<RECOVERY_MAX_SLOTS || protectedByActiveWindow || item&&item.key===record.key) retained++;
       else remove.push(item);
     }
@@ -22837,6 +22888,33 @@ async function recoveryDeleteKey(key){
     if(State.recoveryProtectedKey===key){ State.recoveryProtectedKey=""; State.recoveryProtectedNoticeShown=false; }
   }catch(_e){}
 }
+async function recoveryDeleteDashboardRecords(dashboardKey){
+  dashboardKey=String(dashboardKey||"");
+  if(!dashboardKey) return 0;
+  const all=await recoveryGetAll();
+  const keys=all.filter(record=>record&&recoveryRecordDashboardKey(record)===dashboardKey).map(record=>String(record.key||"")).filter(Boolean);
+  if(keys.length){
+    const db=await recoveryDbOpen();
+    await new Promise((resolve,reject)=>{
+      const tx=db.transaction(RECOVERY_STORE_NAME,"readwrite");
+      const store=tx.objectStore(RECOVERY_STORE_NAME);
+      keys.forEach(key=>store.delete(key));
+      tx.oncomplete=resolve;
+      tx.onerror=()=>reject(tx.error||new Error("Could not clear dashboard recovery checkpoints."));
+    });
+  }
+  // A successful hub save establishes one authoritative saved version. Any
+  // retained/branched recovery state for this dashboard is now obsolete.
+  State.recoveryKey="";
+  State.recoveryLastSavedAt=0;
+  State.recoveryProtectedKey="";
+  State.recoveryProtectedNoticeShown=false;
+  State.recoveryBranchKey="";
+  State.recoveryBranchKind="";
+  State.recoveryBranchParentKey="";
+  updateRecoveryIndicator();
+  return keys.length;
+}
 async function recoveryClearAll(){
   const db=await recoveryDbOpen();
   await new Promise((resolve,reject)=>{
@@ -22849,6 +22927,9 @@ async function recoveryClearAll(){
   State.recoveryLastSavedAt=0;
   State.recoveryProtectedKey="";
   State.recoveryProtectedNoticeShown=false;
+  State.recoveryBranchKey="";
+  State.recoveryBranchKind="";
+  State.recoveryBranchParentKey="";
   updateRecoveryIndicator();
 }
 function recoverySourceKind(){
@@ -22860,22 +22941,44 @@ function recoveryWorkspaceKey(active=State.active,kind=recoverySourceKind()){
   if(kind==="hub") return `hub:${String(State.conn.appId||"")}:${id}`;
   return `offline:${id}`;
 }
+function recoveryMakeBranchKey(dashboardKey=recoveryWorkspaceKey()){
+  if(!dashboardKey) return "";
+  const nonce=Math.random().toString(36).slice(2,9);
+  return `${dashboardKey}::branch:${Date.now().toString(36)}-${nonce}`;
+}
+function recoveryRecordDashboardKey(record){
+  if(!record) return "";
+  const source=record.source||{};
+  if(source.dashboardKey) return String(source.dashboardKey);
+  if(source.kind==="hub" && source.appId!=null && record.active&&record.active.id!=null) return `hub:${String(source.appId||"")}:${String(record.active.id)}`;
+  if(source.kind==="offline" && record.active) return `offline:${String(record.active.id||record.active.label||"workspace")}`;
+  const key=String(record.dashboardKey||record.key||"");
+  const branchAt=key.indexOf("::branch:");
+  return branchAt>=0?key.slice(0,branchAt):key;
+}
+function recoveryRecordOpenElsewhere(record,{ignoreWindowIds=[]}={}){
+  const dashboardKey=recoveryRecordDashboardKey(record);
+  return dashboardKey?otherDashboardPresenceForKey(dashboardKey,{includeClaims:true,ignoreWindowIds})[0]||null:null;
+}
 function recoveryRecordFromState(){
   if(!State.recoveryEnabled||State.recoveryRestoring||!State.active||!hasUnsavedChanges()) return null;
   const kind=recoverySourceKind();
-  const key=recoveryWorkspaceKey(State.active,kind);
-  if(!key) return null;
+  const dashboardKey=recoveryWorkspaceKey(State.active,kind);
+  if(!dashboardKey) return null;
+  const key=State.recoveryKey||State.recoveryBranchKey||dashboardKey;
   const keepUndo=!!State.recoveryKeepUndo;
   const history=keepUndo?(State.history||[]).slice(-RECOVERY_UNDO_LIMIT):[];
   const future=keepUndo?(State.future||[]).slice(-RECOVERY_UNDO_LIMIT):[];
   return {
     key,
+    dashboardKey,
     schema:RECOVERY_SCHEMA_VERSION,
     appVersion:APP_VERSION,
     updatedAt:Date.now(),
     dirty:true,
     owner:{windowId:DLS_WINDOW_ID,heartbeatAt:Date.now()},
-    source:{kind,appId:kind==="hub"?String(State.conn.appId||""):""},
+    source:{kind,appId:kind==="hub"?String(State.conn.appId||""):"",dashboardId:String(State.active.id||""),dashboardKey},
+    branch:State.recoveryBranchKind?{kind:State.recoveryBranchKind,parentKey:State.recoveryBranchParentKey||State.recoveryProtectedKey||""}:null,
     active:{id:State.active.id,label:State.active.label||"Recovered dashboard"},
     layout:recoveryClone(serializeLayout()),
     original:recoveryClone(State.original),
@@ -22903,17 +23006,17 @@ function updateRecoveryIndicator(){
 async function recoveryWriteCurrentNow(){
   clearTimeout(RecoverySaveTimer); RecoverySaveTimer=null;
   if(!State.recoveryEnabled||State.recoveryRestoring||!State.active) return false;
-  const workspaceKey=recoveryWorkspaceKey();
-  if(State.recoveryProtectedKey && workspaceKey===State.recoveryProtectedKey){
-    if(hasUnsavedChanges()&&!State.recoveryProtectedNoticeShown){
-      State.recoveryProtectedNoticeShown=true;
-      status("The earlier recovery checkpoint is being kept unchanged while the hub-saved copy is open. New edits to this comparison copy are not written over that retained recovery.");
-    }
-    return false;
+  const dirty=hasUnsavedChanges();
+  if(State.recoveryProtectedKey && dirty && !State.recoveryProtectedNoticeShown){
+    State.recoveryProtectedNoticeShown=true;
+    status("The earlier recovery checkpoint is being kept unchanged. New edits to the hub-saved copy are being checkpointed separately so either version can be recovered later.");
   }
-  if(!hasUnsavedChanges()){
-    const key=State.recoveryKey||recoveryWorkspaceKey();
-    if(key) await recoveryDeleteKey(key);
+  if(!dirty){
+    // Delete only the recovery record owned by this active working session. Never
+    // infer a dashboard-wide key here: an ignored recovery for the same dashboard
+    // may intentionally be retained alongside this clean hub copy.
+    const key=State.recoveryKey;
+    if(key && key!==State.recoveryProtectedKey) await recoveryDeleteKey(key);
     State.recoveryKey=""; State.recoveryLastSavedAt=0; updateRecoveryIndicator();
     return false;
   }
@@ -22937,7 +23040,7 @@ function scheduleRecoverySnapshot(delay=RECOVERY_SAVE_DELAY_MS){
 }
 function recoveryDiscardCurrent(opts={}){
   clearTimeout(RecoverySaveTimer); RecoverySaveTimer=null;
-  const key=State.recoveryKey||recoveryWorkspaceKey();
+  const key=State.recoveryKey;
   const protectedKey=State.recoveryProtectedKey&&key===State.recoveryProtectedKey;
   if(key&&(!protectedKey||opts.force)) recoveryDeleteKey(key);
   State.recoveryKey=""; State.recoveryLastSavedAt=0; updateRecoveryIndicator();
@@ -22954,7 +23057,7 @@ function writeRecoveryReloadHint(key){
 }
 function rememberRecoveryReloadHint(){
   if(!State.recoveryEnabled||!State.active||!hasUnsavedChanges()) return "";
-  return writeRecoveryReloadHint(State.recoveryKey||recoveryWorkspaceKey());
+  return writeRecoveryReloadHint(State.recoveryKey||State.recoveryBranchKey||recoveryWorkspaceKey());
 }
 function readRecoveryReloadHint({consume=false}={}){
   if(!recoveryNavigationIsReload()) return null;
@@ -22977,7 +23080,7 @@ async function recoveryRecordForReloadHint(hint){
     const record=await recoveryGetKey(hint.key);
     if(!record||!record.dirty||!record.layout||record.schema!==RECOVERY_SCHEMA_VERSION) return null;
     const ignored=hint.ownerWindowId?[hint.ownerWindowId]:[];
-    if(recoveryKeyOpenElsewhere(record.key,{ignoreWindowIds:ignored})) return null;
+    if(recoveryRecordOpenElsewhere(record,{ignoreWindowIds:ignored})) return null;
     return record;
   }catch(_e){ return null; }
 }
@@ -22985,7 +23088,7 @@ async function beginRecoveryReload(){
   if(State.recoveryReloadInProgress) return;
   if(!State.recoveryEnabled||!State.active||!hasUnsavedChanges()){ window.location.reload(); return; }
   State.recoveryReloadInProgress=true;
-  const key=State.recoveryKey||recoveryWorkspaceKey();
+  const key=State.recoveryKey||State.recoveryBranchKey||recoveryWorkspaceKey();
   status("Saving a recovery checkpoint before reloading DLS…",true);
   let saved=false;
   for(let attempt=0;attempt<3&&!saved;attempt++){
@@ -23000,12 +23103,9 @@ async function beginRecoveryReload(){
     }catch(_e){}
   }
   if(!saved){
-    // A retained recovery deliberately suppresses writes from a comparison copy.
-    // Do not pretend the current comparison edits were checkpointed.
     State.recoveryReloadInProgress=false;
     try{ sessionStorage.removeItem(RECOVERY_RELOAD_HINT_KEY); }catch(_e){}
-    const retained=!!(State.recoveryProtectedKey&&State.recoveryProtectedKey===key);
-    toast(retained?"Reload cancelled because this hub-copy comparison is preserving an earlier recovery checkpoint. Save or discard the comparison edits before reloading.":"Reload cancelled because DLS could not verify the latest recovery checkpoint after three attempts.","err");
+    toast("Reload cancelled because DLS could not verify the latest recovery checkpoint after three attempts.","err");
     return;
   }
   writeRecoveryReloadHint(key);
@@ -23018,40 +23118,51 @@ async function recoveryAvailableDirtyRecords(){
   try{
     await probeDlsPresence();
     const all=await recoveryGetAll();
-    return all.filter(r=>r&&r.dirty&&r.layout&&r.schema===RECOVERY_SCHEMA_VERSION&&!recoveryKeyOpenElsewhere(r.key))
+    return all.filter(r=>r&&r.dirty&&r.layout&&r.schema===RECOVERY_SCHEMA_VERSION&&!recoveryRecordOpenElsewhere(r))
       .sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0));
   }catch(e){
     console.warn("DLS recovery storage unavailable:",e);
     return [];
   }
 }
-async function recoveryRecordForDashboard(meta){
-  if(!State.recoveryEnabled||!meta) return null;
-  const key=hubDashboardWorkspaceKey(meta);
+async function recoveryRecordsForDashboard(meta){
+  if(!State.recoveryEnabled||!meta) return [];
+  const dashboardKey=hubDashboardWorkspaceKey(meta);
   try{
-    const record=await recoveryGetKey(key);
-    if(!record||!record.dirty||!record.layout||record.schema!==RECOVERY_SCHEMA_VERSION) return null;
-    if(recoveryKeyOpenElsewhere(key)) return null;
-    return record;
-  }catch(e){ console.warn("Could not check dashboard recovery:",e); return null; }
+    const records=(await recoveryGetAll()).filter(record=>record&&record.dirty&&record.layout&&record.schema===RECOVERY_SCHEMA_VERSION&&recoveryRecordDashboardKey(record)===dashboardKey&&!recoveryRecordOpenElsewhere(record));
+    records.sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0));
+    return records;
+  }catch(e){ console.warn("Could not check dashboard recovery:",e); return []; }
+}
+async function recoveryRecordForDashboard(meta){
+  const records=await recoveryRecordsForDashboard(meta);
+  return records[0]||null;
 }
 function recoveryRecordLabel(record){ return String(record&&record.active&&record.active.label||record&&record.layout&&record.layout.name||"Recovered dashboard"); }
 function recoveryRecordHubIdentity(record){
-  const key=String(record&&record.key||"");
-  const m=key.match(/^hub:([^:]*):(.+)$/);
+  const dashboardKey=recoveryRecordDashboardKey(record);
+  const m=dashboardKey.match(/^hub:([^:]*):(.+)$/);
   const sourceHub=record&&record.source&&record.source.kind==="hub";
   return {
     isHub:!!(sourceHub||m),
     appId:String(record&&record.source&&record.source.appId||m&&m[1]||""),
-    dashboardId:String(record&&record.active&&record.active.id||m&&m[2]||"")
+    dashboardId:String(record&&record.source&&record.source.dashboardId||record&&record.active&&record.active.id||m&&m[2]||"")
   };
+}
+function recoveryRecordTypeLabel(record){
+  if(record&&record.branch&&record.branch.kind==="hub-copy-after-ignore") return "Hub edits";
+  return recoveryRecordHubIdentity(record).isHub?"Hub":"Offline";
+}
+function recoveryRecordBranchSummary(record){
+  return record&&record.branch&&record.branch.kind==="hub-copy-after-ignore"?"Edits made after Ignore Recovery opened the hub-saved copy":"";
 }
 function recoveryRecordUndoSummary(record){
   const undo=(record&&record.history||[]).length,redo=(record&&record.future||[]).length;
   return undo||redo?`${undo} undo / ${redo} redo checkpoint${undo+redo===1?"":"s"}`:"Layout only";
 }
-function showRecoveryStartupPrompt(records){
+function showRecoveryStartupPrompt(records,opts={}){
   records=(Array.isArray(records)?records:[]).filter(Boolean);
+  const dashboardMeta=opts&&opts.dashboardMeta||null;
   return new Promise(resolve=>{
     const modal=document.getElementById("recoveryModal"),list=document.getElementById("recoveryList"),intro=document.getElementById("recoveryIntro"),summary=document.getElementById("recoverySelectionSummary");
     const resume=document.getElementById("recoveryResume"),ignore=document.getElementById("recoveryIgnore"),remove=document.getElementById("recoveryRemove"),openHub=document.getElementById("recoveryOpenHub");
@@ -23068,7 +23179,7 @@ function showRecoveryStartupPrompt(records){
         const title=document.createElement("span"); title.className="recovery-row-title"; title.textContent=recoveryRecordLabel(record);
         const meta=document.createElement("span"); meta.className="recovery-row-meta"; meta.textContent=`${recoveryTimeLabel(record.updatedAt)} · DLS ${record.appVersion||"unknown"} · ${recoveryRecordUndoSummary(record)}`;
         main.append(title,meta);
-        const source=document.createElement("span"); source.className="recovery-source-pill"; source.textContent=recoveryRecordHubIdentity(record).isHub?"Hub":"Offline";
+        const source=document.createElement("span"); source.className="recovery-source-pill"; source.textContent=recoveryRecordTypeLabel(record);
         row.append(radio,main,source);
         const choose=()=>{ selectedKey=record.key; render(); };
         radio.addEventListener("change",choose);
@@ -23076,9 +23187,24 @@ function showRecoveryStartupPrompt(records){
         list.appendChild(row);
       });
       const record=selected();
-      if(intro) intro.textContent=`Dashboard Layout Studio found ${records.length} unsaved working session${records.length===1?"":"s"} from earlier DLS windows. Select one to resume, open its current hub-saved copy while keeping the recovery, remove it, or ignore the records for now.`;
-      if(summary&&record) summary.innerHTML=`<b>${esc(recoveryRecordLabel(record))}</b><br>Checkpoint: ${esc(recoveryTimeLabel(record.updatedAt))}<br>${esc(recoveryRecordUndoSummary(record))}. Recovery records belonging to dashboards that are currently open in another DLS window are automatically hidden.`;
+      if(intro){
+        if(dashboardMeta){
+          const label=dashboardMeta.label||recoveryRecordLabel(record);
+          intro.textContent=`${records.length} unsaved recovery session${records.length===1?"":"s"} exist for “${label}”. Select one to resume, remove selected recoveries, or ignore recovery and continue loading the current hub-saved dashboard while keeping the recovery records.`;
+        }else{
+          intro.textContent=`Dashboard Layout Studio found ${records.length} unsaved working session${records.length===1?"":"s"} from earlier DLS windows. Select one to resume, open its current hub-saved copy while keeping the recovery, remove it, or ignore the records for now.`;
+        }
+      }
+      if(summary&&record){
+        const branchNote=recoveryRecordBranchSummary(record);
+        const scopeNote=dashboardMeta?"Only recoveries for this dashboard are shown here; active-session records are hidden.":"Recovery records belonging to dashboards that are currently open in another DLS window are automatically hidden.";
+        summary.innerHTML=`<b>${esc(recoveryRecordLabel(record))}</b><br>Checkpoint: ${esc(recoveryTimeLabel(record.updatedAt))}<br>${esc(recoveryRecordUndoSummary(record))}${branchNote?`<br>${esc(branchNote)}.`:""} ${esc(scopeNote)}`;
+      }
       resume.disabled=!record; remove.disabled=!record;
+      if(ignore){
+        ignore.textContent=dashboardMeta?"Ignore for Now":"Ignore for Now";
+        ignore.title=dashboardMeta?"Ignore the recovery for this load, continue to the current hub-saved dashboard, and keep all recovery records available for later.":"Close this dialog and leave all recovery records available for later.";
+      }
       if(openHub){
         const hubRecord=!!(record&&recoveryRecordHubIdentity(record).isHub);
         openHub.disabled=!hubRecord;
@@ -23088,12 +23214,12 @@ function showRecoveryStartupPrompt(records){
     const finish=(action,record=null)=>{ if(done) return; done=true; modal.classList.add("hidden"); resolve({action,record}); };
     resume.onclick=()=>finish("resume",selected());
     if(openHub) openHub.onclick=()=>finish("hub-keep",selected());
-    ignore.onclick=()=>finish("ignore",null);
+    ignore.onclick=()=>dashboardMeta?finish("hub-keep",selected()):finish("ignore",null);
     remove.onclick=async()=>{
       const record=selected(); if(!record) return;
       await recoveryDeleteKey(record.key);
       records=records.filter(r=>r.key!==record.key);
-      if(!records.length){ finish("ignore",null); return; }
+      if(!records.length){ finish(dashboardMeta?"hub":"ignore",null); return; }
       selectedKey=records[0].key; render();
     };
     render();
@@ -23102,18 +23228,55 @@ function showRecoveryStartupPrompt(records){
     setTimeout(()=>resume.focus(),0);
   });
 }
-function showDashboardRecoveryChoice(meta,record){
+function showDashboardRecoveryChoice(meta,records){
+  records=(Array.isArray(records)?records:[records]).filter(Boolean)
+    .sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0));
   return new Promise(resolve=>{
-    const modal=document.getElementById("dashboardRecoveryModal"),msg=document.getElementById("dashboardRecoveryMsg");
-    const when=document.getElementById("dashboardRecoveryWhen"),ver=document.getElementById("dashboardRecoveryVersion");
+    const modal=document.getElementById("dashboardRecoveryModal"),msg=document.getElementById("dashboardRecoveryMsg"),list=document.getElementById("dashboardRecoveryList");
+    const when=document.getElementById("dashboardRecoveryWhen"),ver=document.getElementById("dashboardRecoveryVersion"),kind=document.getElementById("dashboardRecoveryType");
     const cancel=document.getElementById("dashboardRecoveryCancel"),hub=document.getElementById("dashboardRecoveryHub"),hubKeep=document.getElementById("dashboardRecoveryHubKeep"),restore=document.getElementById("dashboardRecoveryRestore");
-    if(!modal||!cancel||!hub||!restore){ resolve("hub"); return; }
-    if(msg) msg.textContent=`An unsaved recovery checkpoint exists for “${meta&&meta.label||recoveryRecordLabel(record)}”. Choose whether to load the recovery, ignore it for this session, or discard the unsaved recovery and load the hub-saved dashboard.`;
-    if(when) when.textContent=recoveryTimeLabel(record.updatedAt);
-    if(ver) ver.textContent=`DLS ${record.appVersion||"unknown"}`;
-    let done=false;
-    const finish=choice=>{ if(done) return; done=true; modal.classList.add("hidden"); resolve(choice); };
+    if(!modal||!cancel||!hub||!restore||!records.length){ resolve({choice:"hub",record:null}); return; }
+    let selectedKey=records[0].key,done=false;
+    const selected=()=>records.find(record=>record.key===selectedKey)||records[0]||null;
+    const render=()=>{
+      const record=selected();
+      if(msg){
+        msg.textContent=records.length>1
+          ? `${records.length} unsaved recovery records exist for “${meta&&meta.label||recoveryRecordLabel(record)}”. Select the recovery version you want this action to apply to.`
+          : `An unsaved recovery checkpoint exists for “${meta&&meta.label||recoveryRecordLabel(record)}”. Choose whether to load the recovery, ignore it for this session, or discard the unsaved recovery and load the hub-saved dashboard.`;
+      }
+      if(list){
+        list.innerHTML="";
+        list.classList.toggle("hidden",records.length<2);
+        if(records.length>1){
+          records.forEach(item=>{
+            const row=document.createElement("label");
+            row.className="recovery-row"+(item.key===selectedKey?" selected":"");
+            const radio=document.createElement("input"); radio.type="radio"; radio.name="dashboardRecoveryChoice"; radio.value=item.key; radio.checked=item.key===selectedKey;
+            const main=document.createElement("span"); main.className="recovery-row-main";
+            const title=document.createElement("span"); title.className="recovery-row-title"; title.textContent=recoveryRecordTypeLabel(item);
+            const branchNote=recoveryRecordBranchSummary(item);
+            const metaLine=document.createElement("span"); metaLine.className="recovery-row-meta"; metaLine.textContent=`${recoveryTimeLabel(item.updatedAt)} · DLS ${item.appVersion||"unknown"} · ${recoveryRecordUndoSummary(item)}${branchNote?` · ${branchNote}`:""}`;
+            main.append(title,metaLine);
+            const source=document.createElement("span"); source.className="recovery-source-pill"; source.textContent=item===records[0]?"Newest":"Older";
+            row.append(radio,main,source);
+            const choose=()=>{ selectedKey=item.key; render(); };
+            radio.addEventListener("change",choose);
+            row.addEventListener("click",()=>{ if(selectedKey!==item.key) choose(); });
+            list.appendChild(row);
+          });
+        }
+      }
+      if(when) when.textContent=recoveryTimeLabel(record.updatedAt);
+      if(ver) ver.textContent=`DLS ${record.appVersion||"unknown"}`;
+      if(kind){
+        const branchNote=recoveryRecordBranchSummary(record);
+        kind.textContent=branchNote?`${recoveryRecordTypeLabel(record)} — ${branchNote}`:recoveryRecordTypeLabel(record);
+      }
+    };
+    const finish=choice=>{ if(done) return; done=true; modal.classList.add("hidden"); resolve({choice,record:selected()}); };
     cancel.onclick=()=>finish("cancel"); hub.onclick=()=>finish("hub"); if(hubKeep) hubKeep.onclick=()=>finish("hub-keep"); restore.onclick=()=>finish("recovery");
+    render();
     resetModalPosition("dashboardRecoveryModal"); modal.classList.remove("hidden"); setTimeout(()=>restore.focus(),0);
   });
 }
@@ -23121,6 +23284,9 @@ function showDashboardRecoveryChoice(meta,record){
 function recoveryApplyWorkingState(record,meta,currentHubBaseline=null){
   State.recoveryProtectedKey="";
   State.recoveryProtectedNoticeShown=false;
+  State.recoveryBranchKey=record&&record.branch?String(record.key||""):"";
+  State.recoveryBranchKind=String(record&&record.branch&&record.branch.kind||"");
+  State.recoveryBranchParentKey=String(record&&record.branch&&record.branch.parentKey||"");
   State.recoveryRestoring=true;
   try{
     adoptLayout(meta,record.layout);
@@ -23155,7 +23321,7 @@ async function openHubCopyPreservingRecovery(record){
   const hubIdentity=recoveryRecordHubIdentity(record);
   if(!record||!record.layout||!hubIdentity.isHub) return false;
   await probeDlsPresence();
-  const occupied=recoveryKeyOpenElsewhere(record.key);
+  const occupied=recoveryRecordOpenElsewhere(record);
   if(occupied){ await showDashboardAlreadyOpenDialog(recoveryRecordLabel(record),occupied); return false; }
   if(!State.hubAvailable){
     toast("The hub-saved copy can be opened from recovery only when DLS is running from the hub and can reconnect locally.","err");
@@ -23188,7 +23354,7 @@ async function restoreRecoveryRecord(record,opts={}){
   if(!record||!record.layout) return false;
   await probeDlsPresence();
   const ignoredReloadWindows=Array.isArray(opts.ignorePresenceWindowIds)?opts.ignorePresenceWindowIds:[];
-  const occupied=recoveryKeyOpenElsewhere(record.key,{ignoreWindowIds:ignoredReloadWindows});
+  const occupied=recoveryRecordOpenElsewhere(record,{ignoreWindowIds:ignoredReloadWindows});
   if(occupied){ await showDashboardAlreadyOpenDialog(recoveryRecordLabel(record),occupied); return false; }
   const hubIdentity=recoveryRecordHubIdentity(record);
   const sourceKind=hubIdentity.isHub?"hub":"offline";
@@ -23210,7 +23376,7 @@ async function restoreRecoveryRecord(record,opts={}){
         }
         if(result==="pin") return true;
         await probeDlsPresence();
-        if(recoveryKeyOpenElsewhere(record.key,{ignoreWindowIds:ignoredReloadWindows})) return false;
+        if(recoveryRecordOpenElsewhere(record,{ignoreWindowIds:ignoredReloadWindows})) return false;
       }
     }
   }
