@@ -2,6 +2,24 @@
 
 ---
 
+## 1.9.572
+
+- First 1.9 beta release.
+- Added: Recovery available indicator to dashboard list
+- Added: Detailed **Modified** edit history shows unsaved changes chronologically and allows restoring an earlier edit as a normal undoable action.
+- Fixed: Beta preferences were reset or overwritten by stable preferences
+- Added: Changes made in the Preview Dashboard can be pulled into the DLS
+- Added: Dashboard background can be viewed in DLS.  Two-tone grid remains visible.
+- Changed: External CSS uses shared `@import` parsing and validation with checks for duplicate/conflicting/consolidatable rules across both tile-scoped and global selectors.
+- Added: External stylesheets can be imported into `customCSS` using **Preserve customCSS rules**, **Overwrite customCSS rules**, or **Add to customCSS rules** conflict handling.
+- Fixed: CSS Cleanup did not perform final consolidation check.
+- Fixed: Delete Rows/Columns did not check for overlap conflicts created by unselected tiles (include partial was unselected).  Behavior did not match CLI logic.  
+- Changed: Insert Rows/Columns supports only **Default** and **Include Partial** selection behavior, matching CLI logic.
+- Fixed: Paste with Push now works for cut tiles; Shift-click Paste and Ctrl/Cmd+Shift+V invoke Paste with Push directly.
+- Fixed: Resize no longer changes the Push/Pull layout option when Shift is pressed after the Resize dialog is open.
+- Fixed: Grid-resize CSS checks flagged font-size: 0 as becoming too small.
+- Added: Dashboard loading progress allows Device Validation and initial Render Tiles steps to be skipped.
+- Bug fixes and UX improvements.
 ## 1.8.543
 
 - Changed: Recovered layouts were not removed after session resumed and saved.

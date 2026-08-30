@@ -2,6 +2,19 @@
 
 ---
 
+## 1.7.554
+
+* First 1.7 stable release.
+* Added: Add Tile / Tile Configuration Editor allows creation of new tiles within DLS.
+* Added: Preview Dashboard allows unsaved changes to be previewed in a temporary dashboard.
+* Added: Copy To Other Window and Copy CSS To Other Window allows copying tiles or tile CSS to dashboards opened in other browser windows.
+* Added: Left-bar Selection Tree view shows selected tiles that are overlapping or nested in a tree.
+* Added: Z-Index conflict detection identifies issues where overlapping tiles share the same z-index or would after copied or moved.  
+* Added: Hub variable support added to hub device selection and tile assignment.
+* Added: Expanded support and validation of @import style sheets.  External CSS is now checked for conflicts with customCSS rules. 
+* Bug fixes and UX improvements.
+
+
 ## 1.4.498
 
 - First 1.4 stable release.
