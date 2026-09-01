@@ -303,7 +303,10 @@
   .sel-view-btn{border:0;border-radius:5px;background:transparent;color:var(--faint);font-family:var(--mono);font-size:.56rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:4px 7px;cursor:pointer;}
   .sel-view-btn:hover{color:var(--text);background:var(--panel-2);}
   .sel-view-btn.active{background:var(--accent);color:#06222b;}
-  .sel-tree-note{margin:-1px 0 7px;color:var(--faint);font-size:.62rem;line-height:1.35;}
+  .sel-tree-note{margin:-1px 0 7px;color:var(--faint);font-size:.62rem;line-height:1.35;display:flex;align-items:center;gap:5px;min-width:0;}
+  .sel-tree-note-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sel-tree-help-btn{flex:0 0 auto;width:18px;height:18px;padding:0;border:1px solid var(--border);border-radius:50%;background:var(--panel-2);color:var(--accent);font:800 .62rem/1 var(--mono);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+  .sel-tree-help-btn:hover{border-color:var(--accent);background:rgba(103,232,249,.10);}
   .sel-tree{display:flex;flex-direction:column;gap:7px;}
   .sel-tree-node{position:relative;min-width:0;}
   .sel-tree-node>.sel-row{position:relative;z-index:1;}
@@ -312,6 +315,12 @@
   .sel-tree-child:before{content:"";position:absolute;left:-13px;top:17px;width:11px;border-top:2px solid rgba(148,163,184,.42);}
   .sel-tree-z{display:inline-flex;align-items:center;gap:4px;margin-left:5px;padding:1px 5px;border:1px solid var(--border);border-radius:999px;background:var(--bg);color:var(--accent);font-family:var(--mono);font-size:.54rem;font-weight:800;}
   .sel-tree-root-container>.sel-row{box-shadow:inset 3px 0 0 var(--ok);}
+  .sel-tree-flat-node{transition:opacity .12s,transform .12s;}
+  .sel-tree-flat-node.z-draggable>.sel-row{cursor:grab;}
+  .sel-tree-flat-node.z-dragging{opacity:.45;}
+  .sel-tree-flat-node.z-drop-before>.sel-row{box-shadow:inset 0 3px 0 var(--accent);}
+  .sel-tree-flat-node.z-drop-after>.sel-row{box-shadow:inset 0 -3px 0 var(--accent);}
+  .sel-tree-flat-node.z-draggable>.sel-row:active{cursor:grabbing;}
   .sel-tree-cluster-actions{display:flex;flex-direction:column;gap:7px;margin-top:9px;padding-top:8px;border-top:1px solid var(--border);}
   .sel-tree-cluster-action{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;}
   .sel-tree-cluster-label{min-width:0;color:var(--faint);font-size:.6rem;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -321,6 +330,8 @@
   html[data-theme="light"] .sel-view-btn:hover{background:#d7e1ec;color:#172033;}
   html[data-theme="light"] .sel-view-btn.active{background:#275f99;color:#fff;}
   html[data-theme="light"] .sel-tree-note{color:#526174;}
+  html[data-theme="light"] .sel-tree-help-btn{background:#f5f8fb;border-color:#8997a8;color:#174f86;}
+  html[data-theme="light"] .sel-tree-help-btn:hover{background:#e8f1f7;border-color:#174f86;}
   html[data-theme="light"] .sel-tree-children,html[data-theme="light"] .sel-tree-child:before{border-color:#8c9aab;}
   html[data-theme="light"] .sel-tree-z{background:#f5f8fb;border-color:#8997a8;color:#174f86;}
 
@@ -983,6 +994,10 @@
   .json-modebar .btn{width:auto;padding:7px 11px;margin:0 0 -1px;border-radius:7px 7px 0 0;border-bottom-color:var(--border);}
   .json-modebar .btn.active{border-color:var(--accent);border-bottom-color:var(--panel);color:var(--accent);background:var(--panel);box-shadow:inset 0 1px 0 rgba(103,232,249,.18);}
   .json-modebar .json-mode-hint{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--faint);white-space:nowrap;}
+  .json-format-pref-stack{margin-left:auto;align-self:center;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:0 4px 5px 10px;white-space:nowrap;}
+  .json-auto-format-wrap{display:flex;align-items:center;gap:6px;padding:0;white-space:nowrap;font-size:.72rem;color:var(--muted);user-select:none;}
+  .json-auto-format-wrap input{margin:0;}
+  .json-auto-format-wrap.disabled{opacity:.48;cursor:default;}
   .json-tab-content{min-height:300px;}
   #jsonModal .json-tab-panel.hidden,#jsonModal .hidden{display:none!important;}
 
@@ -1453,6 +1468,8 @@
   html[data-theme="light"] .device-picked-item{background:rgba(15,23,42,.025);}
   html[data-theme="light"] .json-dashboard-device-row.selected{background:rgba(5,117,138,.08);}
   html[data-theme="light"] .json-modebar .btn.active{background:#fff;border-bottom-color:#fff;}
+  html[data-theme="light"] #jsonModal .json-auto-format-wrap{color:#334155;}
+  html[data-theme="light"] #jsonModal .json-auto-format-wrap.disabled{color:#7b8794;}
   html[data-theme="light"] .help-tabs{background:#f3f6fa;}
   html[data-theme="light"] .help-tab:hover{background:#e8eef6;}
   html[data-theme="light"] .help-tab.active{background:rgba(5,117,138,.09);border-color:rgba(5,117,138,.32);}
@@ -1482,6 +1499,9 @@
   /* v568: Grid Settings light mode aligned to the Expert panel contrast system. */
   /* v569: Preview layout change watcher/import; undoable merge and new-tile rendered capture. */
   /* v570: bottom-bar Background view toggle; preference now controls the per-load default only. */
+  /* v576: Expert customCSS formatting uses one remembered Compact/Normal preference for auto-format and Validate / Format. */
+  /* v577: Selection Tree rows are z-index ordered and complete overlap/hierarchy stacks can be reordered by drag. */
+  /* v578: compact Tree z-index help and startup-overlay suppression while dialogs are visible. */
   html[data-theme="light"] #gridModal .grid-static-top,
   html[data-theme="light"] #gridModal .grid-dialog-section{
     background:#f8fafc;
@@ -2727,6 +2747,7 @@
   /* v545: strict @import/external stylesheet validation, global merged CSS analysis, and three import-specific customCSS conflict modes */
   /* v548-v550: Preview focus retained; unreliable peer-dashboard focus replaced by Locate Window title flashing. */
   /* v547: keep External CSS import-mode actions on one footer row */
+  /* v581 beta 1.10: About copyright/license line; beta line advanced for Tree z-index drag/reorder */
   #gridmap.add-tile-mode{cursor:crosshair!important;}
   .add-tile-group{flex:0 0 auto;}
   .add-tile-preview{position:absolute;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:2147483000;border:2px dashed #67e8f9;border-radius:6px;background:rgba(14,165,233,.24);box-shadow:0 0 0 2px rgba(2,6,23,.55),inset 0 0 18px rgba(103,232,249,.16);color:#ecfeff;font-weight:800;text-shadow:0 1px 2px #000;overflow:hidden;}
@@ -2812,6 +2833,8 @@
   /* v543 startup readiness overlay */
   .startup-overlay{position:fixed;inset:0;z-index:30000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(4,10,18,.58);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);transition:opacity .18s ease,visibility .18s ease;}
   .startup-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  /* Keep startup blocking state, but never let its blur cover an active dialog. */
+  body:has(.modal-back:not(.hidden)) #startupOverlay:not(.hidden){opacity:0;visibility:hidden;pointer-events:none;}
   .startup-card{width:min(430px,calc(100vw - 40px));display:flex;align-items:center;gap:16px;padding:18px 20px;border:1px solid var(--border-2);border-radius:12px;background:var(--panel);color:var(--text);box-shadow:0 22px 70px rgba(0,0,0,.42);}
   .startup-spinner{width:30px;height:30px;flex:none;border:3px solid rgba(148,163,184,.28);border-top-color:var(--accent);border-radius:50%;animation:dlsStartupSpin .8s linear infinite;}
   .startup-copy{min-width:0;display:flex;flex-direction:column;gap:4px;}
@@ -2885,7 +2908,7 @@
   </div>
 </div>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.9.572">1.9.572</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.10.581">1.10.581</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -2959,7 +2982,7 @@
     <div class="sect" id="selSection" style="display:none">
       <div class="slabel collapsible" data-target="bodySel">Selection<span class="chev">▾</span></div>
       <div class="sect-body" id="bodySel">
-        <div class="sel-card" id="selCard"><p class="hint">Selected tiles can be shown as a cluster list or as cluster groups containing hierarchical trees. Tree view keeps clusters separate and orders each container's contents from top to bottom by z-index. Ctrl-click toggles individual tiles; Alt-click toggles a whole cluster as the selection; Ctrl+Alt-click adds or removes whole clusters. On an overlap stack, a normal or Ctrl-click acts on the current layer and then advances to the next layer. Once any tile is selected, Shift-click on any overlap stack advances layers without changing selection, while Ctrl+Shift-click toggles the current layer and keeps that layer current. The active tile is identified in both the Selection pane and the grid.</p><div class="help-callout"><b>Overlap warning feedback:</b> When an action is rejected because Overlaps is set to <b>warn</b>, the Overlaps control flashes red to show why the action was blocked. During tile dragging, the dragged ghost and conflicting destination tiles also turn red before drop. A tile that was already overlapped may keep overlapping the same original tile(s), but dragging it over any additional tile is treated as a new Warn conflict.</div></div>
+        <div class="sel-card" id="selCard"><p class="hint">Selected tiles can be shown as a cluster list or as cluster groups containing hierarchical trees. Tree view keeps clusters separate, orders tile rows from top to bottom by z-index, and uses indentation to show hierarchy. Complete overlap/hierarchy stacks can be reordered by dragging tile rows within the same stack. Ctrl-click toggles individual tiles; Alt-click toggles a whole cluster as the selection; Ctrl+Alt-click adds or removes whole clusters. On an overlap stack, a normal or Ctrl-click acts on the current layer and then advances to the next layer. Once any tile is selected, Shift-click on any overlap stack advances layers without changing selection, while Ctrl+Shift-click toggles the current layer and keeps that layer current. The active tile is identified in both the Selection pane and the grid.</p><div class="help-callout"><b>Overlap warning feedback:</b> When an action is rejected because Overlaps is set to <b>warn</b>, the Overlaps control flashes red to show why the action was blocked. During tile dragging, the dragged ghost and conflicting destination tiles also turn red before drop. A tile that was already overlapped may keep overlapping the same original tile(s), but dragging it over any additional tile is treated as a new Warn conflict.</div></div>
       </div>
     </div>
   </aside>
@@ -3167,7 +3190,7 @@
         <label class="pp-row"><span>Don't show grid gap</span>
           <input type="checkbox" id="prefHideGridGap" /></label>
         <label class="pp-row"><span>Always show background</span>
-          <input type="checkbox" id="prefShowDashboardBackground" title="Show the dashboard's configured background color or image by default whenever a layout is loaded. The bottom-bar Background toggle can still change the current view." /></label>
+          <input type="checkbox" id="prefShowDashboardBackground" title="Show the dashboard's configured background color or image by default in Rendered View whenever a layout is loaded. Simple View always hides dashboard backgrounds." /></label>
         <label class="pp-row"><span>Auto-size dashboard bounds</span>
           <input type="checkbox" id="prefAutoResizeDashboard" checked /></label>
         <label class="pp-row pp-dependent" id="prefAutoResizePaddingRow"><span>Bounds buffer</span>
@@ -3269,7 +3292,7 @@
         <button type="button" class="grid-view-btn" id="gridFitBtn" title="Fit the used layout into the editor viewport without making displayed row/column cells smaller than 3 px.">Fit</button>
         <span class="grid-view-divider" aria-hidden="true"></span>
       </span>
-      <button type="button" class="grid-view-btn background-toggle-btn" id="dashboardBackgroundToggle" aria-pressed="false" title="Show or hide the dashboard's configured background color/image behind the editing grid">Background</button>
+      <button type="button" class="grid-view-btn background-toggle-btn" id="dashboardBackgroundToggle" aria-pressed="false" title="Show or hide the dashboard's configured background color/image behind the editing grid in Rendered View">Background</button>
       <span class="view-refresh-status hidden" id="viewRefreshStatus"></span>
       <div class="legend" id="tileLegend">
         <span class="lg"><span class="sw" style="background:rgba(103,232,249,.45)"></span>Switch</span>
@@ -3326,10 +3349,10 @@
 </div>
 <div class="help-content">
 <section class="help-pane active" id="helpOverview">
-<div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual editor for Hubitat Dashboard v1 layouts. It can add original tiles, edit supported tile configuration, rearrange, resize, duplicate, remove, and reassign tiles, and change supported presentation details through custom CSS. Dashboard creation and advanced Hubitat-specific configuration remain in the native Hubitat interface.</p><p><b>Interface theme:</b> New installations start in Light mode. Preferences can switch Dashboard Layout Studio between Light and Dark themes, and the saved choice is restored before the interface is displayed. The Reset Settings button restores all saved preferences to their defaults, re-enables notifications dismissed with a don't-show-again option, and leaves hub credentials and the current dashboard layout unchanged.</p><div class="help-callout"><b>Beta 1.9 / Stable 1.7:</b> This is Beta 1.9.572. The supported Stable baseline is 1.7.554. See <b>About</b> for the authoritative list of major Beta features that are not available in Stable.</div><div class="help-callout"><b>New tile workflow:</b> The Add button is its own toolbar group immediately before Info. Click Add, drag the tile rectangle, then complete Tile Configuration. The button changes to Cancel, all other toolbar controls are disabled, and overlap is temporarily allowed until the tile is added or cancelled. See <b>Add Tile</b> for the full workflow.</div><div class="help-callout"><b>Preview dashboards:</b> Preview opens a compact working window that mirrors the DLS preparation checklist and automatically changes to the temporary dashboard when ready. The deep-red <b>Preview Open</b> pill shows when that window owns the shared preview dashboard; click the pill to switch focus to the open Preview window. If the browser blocks the focus request, DLS reports that limitation rather than claiming the switch succeeded. See <b>Preview Dashboards</b> for the complete lifecycle and safeguards.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>Add Tile supports the native template catalog and the basic parameters exposed by DLS. Advanced or firmware-specific options not recognized by DLS may still require Hubitat's editor.</li><li>Changing a tile template preserves unknown properties when possible, but incompatible template-specific settings are replaced by the newly selected template configuration.</li></ul><h5>Template-property limits</h5><ul><li>Tile Configuration supports common properties such as device, template-specific values, a searchable Hubitat and Material icon chooser, background images, links, refresh intervals, and unit display. Advanced or firmware-specific properties that DLS does not recognize may still require Hubitat's editor.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
+<div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual editor for Hubitat Dashboard v1 layouts. It can add original tiles, edit supported tile configuration, rearrange, resize, duplicate, remove, and reassign tiles, and change supported presentation details through custom CSS. Dashboard creation and advanced Hubitat-specific configuration remain in the native Hubitat interface.</p><p><b>Interface theme:</b> New installations start in Light mode. Preferences can switch Dashboard Layout Studio between Light and Dark themes, and the saved choice is restored before the interface is displayed. The Reset Settings button restores all saved preferences to their defaults, re-enables notifications dismissed with a don't-show-again option, and leaves hub credentials and the current dashboard layout unchanged.</p><div class="help-callout"><b>Beta 1.10 / Stable 1.7:</b> This is Beta 1.10.581. The supported Stable baseline is 1.7.580. See <b>About</b> for the authoritative list of major Beta features that are not available in Stable.</div><div class="help-callout"><b>New tile workflow:</b> The Add button is its own toolbar group immediately before Info. Click Add, drag the tile rectangle, then complete Tile Configuration. The button changes to Cancel, all other toolbar controls are disabled, and overlap is temporarily allowed until the tile is added or cancelled. See <b>Add Tile</b> for the full workflow.</div><div class="help-callout"><b>Preview dashboards:</b> Preview opens a compact working window that mirrors the DLS preparation checklist and automatically changes to the temporary dashboard when ready. The deep-red <b>Preview Open</b> pill shows when that window owns the shared preview dashboard; click the pill to switch focus to the open Preview window. If the browser blocks the focus request, DLS reports that limitation rather than claiming the switch succeeded. See <b>Preview Dashboards</b> for the complete lifecycle and safeguards.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>Add Tile supports the native template catalog and the basic parameters exposed by DLS. Advanced or firmware-specific options not recognized by DLS may still require Hubitat's editor.</li><li>Changing a tile template preserves unknown properties when possible, but incompatible template-specific settings are replaced by the newly selected template configuration.</li></ul><h5>Template-property limits</h5><ul><li>Tile Configuration supports common properties such as device, template-specific values, a searchable Hubitat and Material icon chooser, background images, links, refresh intervals, and unit display. Advanced or firmware-specific properties that DLS does not recognize may still require Hubitat's editor.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
-<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><div class="help-callout"><b>Beta 1.9 — load checklist shortcuts:</b> During a hub dashboard load, the <b>Validating selected dashboard devices</b> and <b>Rendering tiles</b> checklist rows include small <b>Skip</b> buttons. A pending skip is remembered until that step is reached. Skipping validation bypasses the load-time selected-device audit; skipping rendering cancels the initial Rendered View capture and completes the load in Simple View. Both checks can be performed later.</div><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><div class="help-callout"><b>Beta 1.9 — crash recovery:</b> DLS checkpoints unsaved working layouts in browser-local IndexedDB. After an accidental window close, browser crash, or machine restart, startup lists all recoverable sessions whose dashboards are not currently active in another DLS window. Select a recovery to resume it, load the current hub copy while keeping the recovery, remove it, or ignore the records for now. Reloading the current DLS tab with F5, Ctrl+R, or Cmd+R automatically resumes the exact recovery checkpoint that belonged to that tab, even when other recovery records exist, instead of showing the chooser. Hub-originated recovery reconnects and reloads the dashboard first so the normal save target and hub-change conflict checks are preserved. If a dashboard has more than one stored recovery when you open it from the dashboard list, DLS opens the same recovery manager used at startup but filters it to that dashboard. In this sidebar context, Ignore for Now continues loading the hub-saved dashboard while keeping the recovery records available; Remove Selected, Load Hub — Keep Recovery, and Resume Selected remain available as well. If only one recovery exists, DLS keeps the compact Cancel / Ignore Recovery / Discard Unsaved / Load Recovery dialog. If you choose Ignore Recovery and then edit the hub-saved copy, DLS checkpoints those new edits as a separate recovery branch; after an abnormal exit both the earlier recovery and the later hub-copy edits remain available independently. When several recovery records for the same dashboard descend from the same saved/load baseline, DLS presents them as Branch 1, Branch 2, and so on in creation order and shows the shared origin separately; a lone record is simply Recovery. Once any version of that dashboard is successfully saved back to the hub, DLS treats that save as the new authoritative version and removes every recovery record and branch for that dashboard. Within the same browser and DLS origin, dashboards with stored recovery records display a REC badge in the dashboard list (with a count when more than one record exists), and a dashboard that is already open in another DLS window remains visible with an OPEN badge. Clicking it does not attempt an unreliable cross-tab switch; instead DLS flashes the owning tab/window title so it can be located without creating a duplicate editor. Preferences can disable recovery, omit undo history, or clear stored recovery data. Beta Recovery preferences are stored separately from Stable preferences, so switching to Stable 1.7.554 cannot silently disable Recovery when Beta is opened again.</div><p><b>Preview / Launch button:</b> When the temporary preview dashboard is enabled, Preview is the normal short-click action for a hub-loaded dashboard; hold the corner-menu button for Launch Saved. When Preview is disabled in Preferences, this becomes a regular <b>Launch Saved</b> button with no hold menu or Preview action. Holding Shift temporarily makes Launch the default. Preview uses the DLS Temporary Dashboard to show the current working layout without saving over the dashboard being edited. The working window displays the same preparation checklist shown in DLS and opens the temporary dashboard automatically when ready. See <b>Preview Dashboards</b> for status indicators, multi-window locking, direct-open protection, navigation behavior, and cleanup.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices / variables</td><td>Can validate, add, remove, and update selected dashboard devices and Hub Variables.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Add Tile, move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Add Tile temporarily allows overlap while the new tile rectangle is drawn, then opens Tile Configuration.</td><td>Add Tile for static tiles and manually entered device IDs, plus move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Hub templates, variables, attributes, and device validation require an online layout.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
+<div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><div class="help-callout"><b>Beta 1.10 — load checklist shortcuts:</b> During a normal hub dashboard load, the <b>Validating selected dashboard devices</b> and <b>Rendering tiles</b> checklist rows include small <b>Skip</b> buttons. A pending skip is remembered until that step is reached. Skipping validation bypasses the load-time selected-device audit; skipping rendering cancels the initial Rendered View capture and completes the load in Simple View. When resuming a recovery, DLS does not repeat selected-device validation because it was already completed in the original session; it still reloads the hub device-name context and rebuilds Rendered View as needed.</div><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><div class="help-callout"><b>Beta 1.10 — crash recovery:</b> DLS checkpoints unsaved working layouts in browser-local IndexedDB. After an accidental window close, browser crash, or machine restart, startup lists all recoverable sessions whose dashboards are not currently active in another DLS window. Select a recovery to resume it, load the current hub copy while keeping the recovery, remove it, or ignore the records for now. Reloading the current DLS tab with F5, Ctrl+R, or Cmd+R automatically resumes the exact recovery checkpoint that belonged to that tab, even when other recovery records exist, instead of showing the chooser. Hub-originated recovery reconnects and reloads the dashboard first so the normal save target and hub-change conflict checks are preserved. The recovery record retains the Hub layout baseline from the original editing session; the current Hub layout fetched during resume does not replace that baseline. Older recovery records that lack the dedicated Hub-baseline field fall back to their stored original clean layout before using the freshly fetched Hub copy. If the dashboard was changed externally after the original session began, the normal pre-save verification therefore still detects the mismatch and warns before overwrite. Selected-dashboard-device validation is not repeated during recovery resume because it was already completed when the original session was established. If a dashboard has more than one stored recovery when you open it from the dashboard list, DLS opens the same recovery manager used at startup but filters it to that dashboard. In this sidebar context, Ignore for Now continues loading the hub-saved dashboard while keeping the recovery records available; Remove Selected, Load Hub — Keep Recovery, and Resume Selected remain available as well. If only one recovery exists, DLS keeps the compact Cancel / Ignore Recovery / Discard Unsaved / Load Recovery dialog. If you choose Ignore Recovery and then edit the hub-saved copy, DLS checkpoints those new edits as a separate recovery branch; after an abnormal exit both the earlier recovery and the later hub-copy edits remain available independently. When several recovery records for the same dashboard descend from the same saved/load baseline, DLS presents them as Branch 1, Branch 2, and so on in creation order and shows the shared origin separately; a lone record is simply Recovery. Once any version of that dashboard is successfully saved back to the hub, DLS treats that save as the new authoritative version and removes every recovery record and branch for that dashboard. Within the same browser and DLS origin, dashboards with stored recovery records display a REC badge in the dashboard list (with a count when more than one record exists), and a dashboard that is already open in another DLS window remains visible with an OPEN badge. Clicking it does not attempt an unreliable cross-tab switch; instead DLS flashes the owning tab/window title so it can be located without creating a duplicate editor. Preferences can disable recovery, omit undo history, or clear stored recovery data. Beta Recovery preferences are stored separately from Stable preferences, so switching to Stable 1.7.580 cannot silently disable Recovery when Beta is opened again.</div><p><b>Preview / Launch button:</b> When the temporary preview dashboard is enabled, Preview is the normal short-click action for a hub-loaded dashboard; hold the corner-menu button for Launch Saved. When Preview is disabled in Preferences, this becomes a regular <b>Launch Saved</b> button with no hold menu or Preview action. Holding Shift temporarily makes Launch the default. Preview uses the DLS Temporary Dashboard to show the current working layout without saving over the dashboard being edited. The working window displays the same preparation checklist shown in DLS and opens the temporary dashboard automatically when ready. See <b>Preview Dashboards</b> for status indicators, multi-window locking, direct-open protection, navigation behavior, and cleanup.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices / variables</td><td>Can validate, add, remove, and update selected dashboard devices and Hub Variables.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Add Tile, move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Add Tile temporarily allows overlap while the new tile rectangle is drawn, then opens Tile Configuration.</td><td>Add Tile for static tiles and manually entered device IDs, plus move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Hub templates, variables, attributes, and device validation require an online layout.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
 <div class="k">Connect To Hub</div><div class="v">Discovers dashboards from the configured Hubitat hub. Layouts loaded this way keep their hub save target, so Save to hub remains available.</div>
 <div class="k">Hub Connection Settings (Gear Icon)</div><div class="v">Shows hub connection settings: hub IP address, dashboard app number, and access token. When the page is hosted from the hub and those fields are blank, Dashboard Layout Studio tries to fill the dashboard app number and token from /hub2/hubData.</div>
 <div class="k">Auto Discover App &amp; Token</div><div class="v">Reads the current hub's /hub2/hubData information and fills the Dashboard app number and access token. Existing values are replaced only after a Dashboard app with both values is found.</div>
@@ -3353,7 +3376,7 @@
 <div class="k">Ctrl/Cmd-click tile</div><div class="v">Adds or removes the current tile layer from the selection, then advances the overlap cursor to the next layer.</div>
 <div class="k">Ctrl/Cmd+Shift-click tile</div><div class="v">When any tile is already selected and the clicked cell is an overlap stack, toggles the current layer but keeps the overlap cursor and focus on that same layer instead of advancing. If no tile is selected, or the tile is unstacked, Shift has no special effect and the gesture behaves like a normal Ctrl/Cmd-click.</div>
 <div class="k">Alt-click tile</div><div class="v">Toggles the connected tile cluster. If none of that cluster is selected, the cluster becomes the selection. If any tile in it is selected, every tile in that cluster is removed from the selection.</div>
-<div class="k">Ctrl/Cmd+Alt-click tile</div><div class="v">Adds or removes a whole connected cluster without disturbing selections in other clusters. If none of the target cluster is selected, all of it is added; if any tile is selected, all of it is removed.</div><div class="k">Selection pane List / Tree</div><div class="v">List groups selected tiles by cluster. Tree preserves those same separate cluster groups, but presents each cluster hierarchically with containers, nested containers, and tiles ordered by effective z-index from top to bottom. Each row displays its z-index; equal values follow dashboard source order. A partial cluster's Select cluster button appears inside that cluster group.</div><div class="k">Active tile in a multi-selection</div><div class="v">The active tile is outlined with a high-contrast amber marker drawn above all overlapping tiles. Clicking a selected tile in the Selection panel, Ctrl/Cmd-clicking a tile, or selecting a cluster makes that tile active without changing the dashboard z-order.</div>
+<div class="k">Ctrl/Cmd+Alt-click tile</div><div class="v">Adds or removes a whole connected cluster without disturbing selections in other clusters. If none of the target cluster is selected, all of it is added; if any tile is selected, all of it is removed.</div><div class="k">Selection pane List / Tree</div><div class="v">List groups selected tiles by cluster. Tree preserves those same separate cluster groups, orders rows by effective z-index from top to bottom, and uses indentation to show container/nested hierarchy. Each row displays its z-index; equal values follow dashboard source order. When the complete overlapping/hierarchical stack is selected, drag a tile summary row within that same stack to change z-index; the action is undoable. The compact ? control beside the Tree note opens the full drag/z-index explanation. Merely touching tiles cannot be reordered by z-index dragging. A partial cluster's Select cluster button appears inside that cluster group.</div><div class="k">Active tile in a multi-selection</div><div class="v">The active tile is outlined with a high-contrast amber marker drawn above all overlapping tiles. Clicking a selected tile in the Selection panel, Ctrl/Cmd-clicking a tile, or selecting a cluster makes that tile active without changing tile z-index or stacking.</div>
 <div class="k">Double-click selected tile</div><div class="v">If the tile was already selected before the first click, keeps the complete current selection, makes that tile active, and opens Tile Information for it. A multi-tile selection is not reduced to the double-clicked tile.</div><div class="k">Double-click unselected tile</div><div class="v">Is intentionally processed as two ordinary clicks. It does not open Tile Information. On an overlap stack, the two clicks can advance through two normal selection/layer-cycle steps.</div>
 </div><h5>Selecting areas, rows, and columns</h5><div class="help-grid">
 <div class="k">Drag on grid</div><div class="v">Creates a rectangular selection. The Selection mode option determines which crossing tiles are included.</div>
@@ -3438,13 +3461,13 @@
 <section class="help-pane" id="helpJsonCss">
 <div class="help-pages"><article class="help-page active" data-help-title="Expert tools and applying changes"><div class="help-page-kicker">Expert &amp; CSS</div><h4>Expert tools and applying changes</h4><h5>JSON editor and field views</h5><div class="help-grid">
 <div class="k">Expert button</div><div class="v">Opens the Layout JSON Editor, which allows direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
-<div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply.</div>
+<div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply. The <b>Automatically Format</b> checkbox at the right of the tabs is remembered separately for Full JSON, customCSS, customHTML, and customJS; it is disabled for the device-manager tabs. On customCSS, <b>Use Compact Format</b> appears directly beneath it and is remembered separately; that setting controls both automatic formatting and Validate / Format.</div>
 <div class="k">Tile Devices</div><div class="v">Lists every tile by ID, its grid location and size, any tile-scoped CSS content that may supply an alternate title, and its assigned device or Hub Variable. Online layouts allow both physical-device and native Hub Variable assignments to be changed from the corresponding dropdown; each picker contains only assignments currently selected for the dashboard, plus Unassigned. Native Hub Variable tiles show their variable name instead of being reported as Unassigned. Location and size are shown as row/column followed by size in parentheses. The first choice is Unassigned for blank assignments. Device dropdowns are sorted by device name with the device number shown in parentheses. Offline layouts allow numeric or blank physical device IDs. In online mode, tiles with a nonblank, nonzero device ID that has no matching hub device are treated as unknown-device tiles and highlighted in red, except system, the native <code>global-variable</code> Hub Variable template, navigation, and static templates such as HSM, Mode, Text Tile, Dashboard, Link, Image, HTML, Frame, Blank, Clock, and Date because those device fields are not regular hub-device assignments. The <code>variable-*</code> templates are device-backed and are validated like other physical or virtual devices. Tile-device rows for valid hub devices that are not selected for the dashboard are highlighted in yellow and remain unselected until you explicitly add them in Dashboard Devices. A Preferences option can skip this save-time device validation while leaving the editor review tools available. Show Invalid and Unassign Invalid are online-only tools. Unassign Invalid clears every non-exempt tile device assignment whose device ID does not exist on the hub after confirmation.</div>
 <div class="k">Dashboard Devices</div><div class="v">Online only. Manages both physical devices and Hub Variables authorized for the Hubitat dashboard. In-use selected assignments are locked; in-use assignments that are not currently selected are highlighted yellow and remain unchecked until explicitly selected. Assign all, Remove all unused, filters, and Apply All Changes operate on both devices and Hub Variables.</div>
 </div><h5>Applying editor changes</h5><p><b>Apply changes</b> validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced.</p><div class="help-card-grid">
 <div class="help-card"><b>Custom field-only edits</b><p>If only a customCSS, customHTML, or customJS field view is committed, existing Rendered View captures are kept but marked as not reflecting those manual changes until refreshed.</p></div>
 <div class="help-card"><b>Full JSON edits</b><p>Replacing the entire Full JSON document still triggers the hub-target warning and broad Rendered View invalidation. Ordinary manual JSON edits do not use that replacement warning; when the temporary preview dashboard is available, existing Rendered View captures remain available but are marked for refresh.</p></div>
-</div><p>If the layout was loaded from the hub, the hub save target is preserved.</p><div class="help-callout">Use the Expert button to open the Layout JSON Editor when you want to replace the layout while preserving hub context. Use side panel Load file/Paste JSON when you want to open an offline layout.</div></article><article class="help-page" data-help-title="CSS validation and cleanup"><div class="help-page-kicker">Expert &amp; CSS</div><h4>CSS validation and cleanup</h4><h5>Validate / Format</h5><p>Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customHTML and customJS use very basic formatting and limited sanity checks. In customCSS view, the button opens choices for Validate / Reg Fmt or Validate / Comp Fmt.</p><p>In customCSS view, the format step opens a review dialog when it finds:</p><div class="help-card-grid">
+</div><p>If the layout was loaded from the hub, the hub save target is preserved.</p><div class="help-callout">Use the Expert button to open the Layout JSON Editor when you want to replace the layout while preserving hub context. Use side panel Load file/Paste JSON when you want to open an offline layout.</div></article><article class="help-page" data-help-title="CSS validation and cleanup"><div class="help-page-kicker">Expert &amp; CSS</div><h4>CSS validation and cleanup</h4><h5>Validate / Format</h5><p>Validates and formats the currently visible editor view. Full JSON is JSON-formatted; customHTML and customJS use very basic formatting and limited sanity checks. In customCSS view, Validate / Format uses the remembered <b>Use Compact Format</b> checkbox on the tab: unchecked uses normal formatting and checked uses compact formatting.</p><div class="help-callout"><b>Automatically Format:</b> Full JSON, customCSS, customHTML, and customJS each remember their own Automatically Format setting. When enabled, that tab is formatted automatically when displayed. On customCSS, the remembered <b>Use Compact Format</b> checkbox determines whether automatic formatting and Validate / Format use Compact or Normal CSS formatting. Automatic formatting by itself is presentation-only and does not mark the JSON dialog or layout as changed. If you actually edit that editor box, the displayed formatted text becomes the tab's pending content, so the formatting is then preserved when the edit is applied. Switching away from an untouched auto-formatted tab does not save the formatting.</div><p>In customCSS view, the format step opens a review dialog when it finds:</p><div class="help-card-grid">
 <div class="help-card"><b>Duplicates</b><p>Duplicate selector/property declarations.</p></div>
 <div class="help-card"><b>Conflicts</b><p>Conflicting declarations for the same selector/property.</p></div>
 <div class="help-card"><b>Orphans</b><p>Tile rules that reference tiles no longer present.</p></div>
@@ -3456,7 +3479,7 @@
 <li>Duplicates and consolidation choices are listed with preselected checkboxes so you can accept or skip each cleanup.</li>
 <li>Applying selected cleanup to the current working layout creates a normal Undo checkpoint.</li>
 <li>The cleanup dialog applies only the selected fixes unless Reformat after applying fixes is checked.</li>
-<li>Validate / Comp Fmt first runs the regular CSS formatter and then applies the same compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting as the customCSS tab compact formatter.</li>
+<li>When <b>Use Compact Format</b> is checked, Validate / Format first runs the regular CSS formatter and then applies compact one-rule-per-line output, split selector lists, condensed rule bodies, and CLI-like sorting.</li>
 <li>When any selector consolidation is applied, all preserved duplicate comments are removed because every duplicate is already represented by a surviving active declaration. This includes comments inside selectors that were already in a single rule and comments preserved by an earlier cleanup run.</li>
 </ul><h5>CSS status and tile scope</h5><div class="help-grid">
 <div class="k">CSS status indicator</div><div class="v">Appears when customCSS validation finds conflicts, overlapping explicit z-index conflicts, duplicate declarations, orphaned tile rules, or selector consolidations. Green indicates optional cleanup suggestions, yellow indicates non-critical cleanup items such as orphans or duplicates, and red indicates CSS conflicts that should be reviewed. The cleanup dialog can remove selected items or preserve removed duplicate, conflict, and orphan CSS in inactive form; orphan preservation uses one Removed Orphaned Rules and comments block, and orphaned tile-scoped comments are removed or preserved with the related orphan cleanup. CSS cleanup checks use the merged effective stylesheet, including imported @import rules plus editable customCSS, for conflicts, duplicates, and selector consolidation. Imported conflicts, duplicates, and consolidation candidates are separated from editable customCSS items because imported rules are read-only. Malformed @import statements are reported by Expert customCSS validation before any fetch is attempted. Each fetched external stylesheet is also validated independently; a source that fails CSS syntax validation is excluded and reported by the External CSS indicator. Imported tile-selector orphans use a separate External CSS Orphans warning so they are not confused with editable customCSS orphans. The External CSS review can copy successfully loaded external rules into editable customCSS and remove the active @import statement. Before inlining, choose Preserve customCSS rules, Overwrite customCSS rules, or Add to customCSS rules. Preserve keeps existing customCSS values for overlapping selector/property declarations; Overwrite uses the imported values for those overlaps; Add imports the complete stylesheet and leaves any resulting duplicates/conflicts for the DLS cleanup tool. If Simple CSS Editor is detected, DLS warns that the inlined rules will no longer be visible or managed through Simple CSS until the external @import arrangement is restored. Consolidated selector originals are not preserved. Consolidation is blocked whenever related conflicts are found. When the Consolidation category is selected, Cleanup re-analyzes at the end and automatically consolidates newly exposed or newly unblocked editable selectors, while respecting consolidation rows the user explicitly skipped.</div>
@@ -3502,7 +3525,7 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpAbout">
-<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.9.572 (Beta channel)</div><div class="k">Current Stable baseline</div><div class="v">1.7.554</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><div class="help-callout"><b>Stable 1.7.554 already includes:</b> Add Tile and Tile Configuration, Hub Variable authorization, Working Layout Preview through the DLS Temporary Dashboard, Copy/Copy CSS to Other Window, Selection Tree, z-index editing/report/conflict tools, strict external CSS validation, and merged global/tile CSS analysis.</div><h5>Major Beta 1.9 features not in Stable 1.7.554</h5><ul><li><b>Crash Recovery:</b> unsaved-session recovery, same-origin recovery branches, dashboard REC indicators, and optional retained undo checkpoints.</li><li><b>Detailed Modified history:</b> click the Modified pill to review edits in chronological order and restore to the state immediately after any recorded action; the restore itself is undoable.</li><li><b>External CSS import into customCSS:</b> Preserve customCSS rules, Overwrite customCSS rules, or Add to customCSS rules.</li><li><b>Load-step Skip controls:</b> skip selected-device validation or initial tile rendering during a hub dashboard load.</li><li><b>Final CSS Cleanup consolidation sweep:</b> when Consolidation remains selected, Cleanup re-analyzes after other fixes and consolidates newly exposed/unblocked selectors.</li><li><b>Dashboard background preview:</b> bottom-bar Background toggle, Preferences → Always show background, and adaptive grid contrast over colors/images.</li><li><b>Preview-side edit import:</b> DLS monitors the temporary Preview layout JSON and can merge user changes made in Preview back into the working layout as one reversible action, with targeted rendered capture when new/render-affecting tiles require it.</li></ul><div class="help-callout"><b>Beta channel:</b> These features are still undergoing broader testing. Stable remains 1.7.554 until a later promotion is explicitly released.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
+<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.10.581 (Beta channel)</div><div class="k">Current Stable baseline</div><div class="v">1.7.580</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><p class="hint" style="margin:14px 0 0"><b>Copyright © 2026 Andrew Peck.</b> Licensed under the MIT License.</p><div class="help-callout"><b>Stable 1.7.580 already includes:</b> Add Tile and Tile Configuration, Hub Variable authorization, Working Layout Preview through the DLS Temporary Dashboard, Copy/Copy CSS to Other Window, Selection Tree, z-index editing/report/conflict tools, strict external CSS validation, and merged global/tile CSS analysis.</div><h5>Major Beta 1.10 features not in Stable 1.7.580</h5><ul><li><b>Crash Recovery:</b> unsaved-session recovery, same-origin recovery branches, dashboard REC indicators, and optional retained undo checkpoints.</li><li><b>Detailed Modified history:</b> click the Modified pill to review edits in chronological order and restore to the state immediately after any recorded action; the restore itself is undoable.</li><li><b>Selection Tree z-index drag/reorder:</b> complete overlapping or hierarchical stacks can be reordered directly in Tree view by dragging tile summaries; DLS rewrites the necessary z-index values as one undoable action.</li><li><b>External CSS import into customCSS:</b> Preserve customCSS rules, Overwrite customCSS rules, or Add to customCSS rules.</li><li><b>Load-step Skip controls:</b> skip selected-device validation or initial tile rendering during a hub dashboard load.</li><li><b>Final CSS Cleanup consolidation sweep:</b> when Consolidation remains selected, Cleanup re-analyzes after other fixes and consolidates newly exposed/unblocked selectors.</li><li><b>Dashboard background preview:</b> in Rendered View, the bottom-bar Background toggle and Preferences → Always show background can display the dashboard color/image with adaptive grid contrast. Simple View always hides dashboard backgrounds.</li><li><b>Preview-side edit import:</b> DLS monitors the temporary Preview layout JSON and can merge user changes made in Preview back into the working layout as one reversible action, with targeted rendered capture when new/render-affecting tiles require it.</li></ul><div class="help-callout"><b>Beta channel:</b> These features are still undergoing broader testing. Stable remains 1.7.580 until a later promotion is explicitly released.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
 <div class="help-page-nav"></div>
 </section>
 </div>
@@ -4007,6 +4030,10 @@
         <button class="btn ghost json-mode-btn" data-json-mode="customJS" type="button" role="tab" aria-controls="jsonEditor" aria-selected="false">customJS</button>
         <button class="btn ghost json-mode-btn" data-json-mode="tileDevices" type="button" role="tab" aria-controls="jsonTileDevicesPane" aria-selected="false">Tile Devices</button>
         <button class="btn ghost json-mode-btn" id="jsonDashboardDevicesTab" data-json-mode="dashboardDevices" type="button" role="tab" aria-controls="jsonDashboardDevicesPane" aria-selected="false">Dashboard Devices</button>
+        <div class="json-format-pref-stack" id="jsonFormatPrefStack">
+          <label class="json-auto-format-wrap" id="jsonAutoFormatWrap" title="Automatically format this editor view when the tab is opened. Formatting alone is not treated as an edit."><input type="checkbox" id="jsonAutoFormat" /> Automatically Format</label>
+          <label class="json-auto-format-wrap hidden" id="jsonCompactFormatWrap" title="Use compact formatting for customCSS automatic formatting and Validate / Format."><input type="checkbox" id="jsonCompactFormat" /> Use Compact Format</label>
+        </div>
       </div>
       <div class="json-tab-content">
       <textarea id="jsonEditor" class="input json-tab-panel" role="tabpanel" aria-hidden="false" spellcheck="false" wrap="off" style="width:100%;height:52vh;resize:vertical;font-family:var(--mono);font-size:.7rem;line-height:1.45;white-space:pre;overflow:auto" placeholder='{ "tiles": [ ... ] }'></textarea>
@@ -4052,12 +4079,8 @@
         <button class="btn ghost" id="jsonDownload">Download</button>
       </div>
       <div id="jsonEditorApplyActions" style="display:flex;gap:6px;flex-wrap:nowrap">
-        <div class="holdwrap" id="jsonFormatWrap">
+        <div id="jsonFormatWrap">
           <button class="btn ghost" id="jsonFormat" type="button">Validate / Format</button>
-          <div class="holdmenu hidden" id="jsonFormatMenu">
-            <button class="hm-item" id="jsonFormatRegular" type="button">Validate / Reg Fmt</button>
-            <button class="hm-item" id="jsonFormatCompact" type="button">Validate / Comp Fmt</button>
-          </div>
         </div>
         <button class="btn primary" id="jsonApply" disabled>Apply changes</button>
         <button class="btn" id="jsonClose">Close</button>
@@ -4335,8 +4358,8 @@ SOFTWARE.</pre></div>
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v572";
-const APP_VERSION = "1.9.572";
+const BUILD = "v581";
+const APP_VERSION = "1.10.581";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -4426,14 +4449,15 @@ const DLS_TEMPLATE_EXTRA_LABELS = Object.freeze({
 
 // BETA RELEASE MAINTENANCE: Review this list for every beta build. Include only
 // major features that are unavailable in the current supported stable release.
-// Stable 1.7.554 already includes Add Tile/Tile Configuration, Hub Variable
+// Stable 1.7.580 already includes Add Tile/Tile Configuration, Hub Variable
 // authorization, Working Layout Preview, multi-window Copy/Copy CSS, Selection
 // Tree, z-index tools, strict external CSS validation, and merged CSS analysis.
-const STABLE_BASELINE_VERSION = "1.7.554";
-const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.9.572";
+const STABLE_BASELINE_VERSION = "1.7.580";
+const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.10.581";
 const STABLE_DOWNGRADE_FEATURES = Object.freeze([
   "Crash recovery for unsaved working layouts, including recovery branches and REC dashboard indicators",
   "Detailed Modified edit history and restore-to-edit",
+  "Selection Tree drag-to-reorder by z-index within complete overlapping or hierarchical stacks",
   "Import External CSS into customCSS with Preserve / Overwrite / Add conflict handling",
   "Skip controls for load-time device validation and tile rendering",
   "Final automatic CSS consolidation sweep after Cleanup",
@@ -7493,7 +7517,7 @@ const Hub = {
       {id:"open",label:restoringRecovery?"Reconnect to saved dashboard":"Opening dashboard page"},
       {id:"layout",label:restoringRecovery?"Load current hub layout":"Retrieving layout JSON"},
       {id:"devices",label:"Loading hub device list"},
-      {id:"validate",label:"Validating selected dashboard devices",skippable:true},
+      ...(!restoringRecovery?[{id:"validate",label:"Validating selected dashboard devices",skippable:true}]:[]),
       ...(restoringRecovery?[{id:"recovery",label:"Reapply unsaved recovery changes"}]:[]),
       {id:"render",label:restoringRecovery?"Rendering recovered tiles":"Rendering tiles",skippable:true}
     ],{message:restoringRecovery?"DLS first reloads the current dashboard from the hub to restore its save context, then reapplies the unsaved recovery checkpoint before rendering.":"Dashboard loading is in progress. Other hub actions are blocked until the layout, device checks, and Rendered View refresh finish."});
@@ -7577,11 +7601,11 @@ const Hub = {
       await loadHubDeviceNames();
       checkHubOperationAbort(op);
       hubOperationStep(op,"devices","done",`${State.hubDevices.length||0} hub device${State.hubDevices.length===1?"":"s"} loaded.`);
-      let pickedAudit={ok:false,skipped:true,ids:new Set(),names:new Map(),error:"validation skipped by user"};
-      let validationSkipped=hubOperationStepSkipRequested(op,"validate");
-      if(validationSkipped){
+      let pickedAudit={ok:false,skipped:true,ids:new Set(),names:new Map(),error:restoringRecovery?"validation not repeated for recovery resume":"validation skipped by user"};
+      let validationSkipped=restoringRecovery||hubOperationStepSkipRequested(op,"validate");
+      if(!restoringRecovery && validationSkipped){
         hubOperationSkip(op,"validate","Selected-device validation skipped by user.");
-      }else{
+      }else if(!restoringRecovery){
         hubOperationStep(op,"validate","active");
         status(`Loading "${meta.label||"dashboard"}" — checking selected dashboard devices…`, true);
         pickedAudit=await loadDashboardDevicesPicked(meta,{shouldSkip:()=>hubOperationStepSkipRequested(op,"validate")});
@@ -7621,14 +7645,14 @@ const Hub = {
       adopted=true;
       const reviewLayout=options.recoveryRecord&&options.recoveryRecord.layout?options.recoveryRecord.layout:loaded;
       const deviceReview=validationSkipped
-        ? {ok:true,note:"Selected-device validation skipped by user.",run:null}
+        ? {ok:true,note:restoringRecovery?"Selected-device validation was already completed in the original session and was not repeated.":"Selected-device validation skipped by user.",run:null}
         : loadedDashboardDeviceAssignmentReview(reviewLayout,pickedAudit);
       if(!validationSkipped) hubOperationStep(op,"validate","done",deviceReview.note||"Selected-device check completed.");
       await captureRenderedSnapshotsForLoadOperation(op);
       checkHubOperationAbort(op);
       const renderSummary=State.tileSnapshotLastSummary||"";
       const loadSkipNotes=[
-        validationSkipped?"Device validation skipped.":"",
+        (!restoringRecovery&&validationSkipped)?"Device validation skipped.":"",
         hubOperationStepSkipRequested(op,"render")?"Rendering skipped; using Simple View.":""
       ].filter(Boolean).join(" ");
       let loadedMsg=options.recoveryRecord
@@ -8096,14 +8120,18 @@ function updateDashboardBackgroundToggle(){
   const btn=document.getElementById("dashboardBackgroundToggle");
   if(!btn) return;
   const active=!!State.active;
-  btn.disabled=!active;
-  btn.classList.toggle("active",active&&State.showDashboardBackground===true);
-  btn.setAttribute("aria-pressed",String(active&&State.showDashboardBackground===true));
+  const simple=active && tileDisplayMode()==="simple";
+  const visible=active && !simple && State.showDashboardBackground===true;
+  btn.disabled=!active||simple;
+  btn.classList.toggle("active",visible);
+  btn.setAttribute("aria-pressed",String(visible));
   btn.title=!active
     ? "Load a dashboard to show or hide its background."
-    : State.showDashboardBackground
-      ? "Hide the dashboard's configured background color/image for this view."
-      : "Show the dashboard's configured background color/image for this view.";
+    : simple
+      ? "Dashboard backgrounds are hidden in Simple View. Switch to Rendered View to show the dashboard background."
+      : State.showDashboardBackground
+        ? "Hide the dashboard's configured background color/image for this Rendered View."
+        : "Show the dashboard's configured background color/image for this Rendered View.";
 }
 function setDashboardBackgroundView(show,{announce=false}={}){
   State.showDashboardBackground=!!show;
@@ -8165,7 +8193,9 @@ function dashboardBackgroundGridLayers(spec,M){
 }
 function applyDashboardBackgroundPreview(grid,M){
   if(!grid||!M) return;
-  const enabled=State.showDashboardBackground===true;
+  // Dashboard backgrounds are a Rendered View aid only. Simple View always
+  // uses the normal DLS editing canvas regardless of the remembered toggle.
+  const enabled=State.showDashboardBackground===true && tileDisplayMode()!=="simple";
   const spec=dashboardBackgroundPreviewSpec();
   if(!enabled){
     grid.classList.remove("dashboard-background-preview");
@@ -8343,6 +8373,7 @@ function updateTileDisplayIndicator(){
   updateRenderedViewPreferenceAvailability();
   const enabled=renderedViewEnabled();
   const mode=tileDisplayMode();
+  updateDashboardBackgroundToggle();
   const a=renderedSnapshotAvailability();
   const offlineLayout=State.conn.mode==="offline" && !temporaryDashboardPreviewUsable();
   if(legend) legend.classList.toggle("hidden", mode!=="simple");
@@ -15405,14 +15436,16 @@ function selectionPaneHeaderHtml(count,effectiveIds){
   const view=normalizeSelectionPaneView(State.selectionPaneView);
   return `<div class="sc-head sel-pane-head"><span><b>${count}</b> tile(s) selected${effectiveIds?" (via row/col)":""}</span><span class="sel-view-toggle" role="group" aria-label="Selection pane view"><button class="sel-view-btn ${view==="list"?"active":""}" type="button" data-selection-view="list" aria-pressed="${view==="list"}">List</button><button class="sel-view-btn ${view==="tree"?"active":""}" type="button" data-selection-view="tree" aria-pressed="${view==="tree"}">Tree</button></span></div>`;
 }
-function selectionPaneTreeModel(displayIds){
+function selectionPaneTreeModel(displayIds,fullClusterIds=null,scopePrefix="tree"){
   const selected=new Set((displayIds||[]).map(Number));
-  const records=dlsReportRecords(State.tiles.filter(t=>selected.has(Number(t.id))));
-  const byId=new Map(records.map(r=>[Number(r.tile_id),r]));
-  const parent=new Map(),children=new Map(records.map(r=>[Number(r.tile_id),[]]));
+  const fullIds=new Set(((fullClusterIds&&fullClusterIds.length)?fullClusterIds:displayIds||[]).map(Number));
+  const fullRecords=dlsReportRecords(State.tiles.filter(t=>fullIds.has(Number(t.id))));
+  const records=fullRecords.filter(r=>selected.has(Number(r.tile_id)));
+  const byId=new Map(fullRecords.map(r=>[Number(r.tile_id),r]));
+  const parent=new Map(),children=new Map(fullRecords.map(r=>[Number(r.tile_id),[]]));
   const area=r=>r.rect.width*r.rect.height;
-  for(const r of records){
-    const candidates=records.filter(p=>p.tile_id!==r.tile_id&&dlsReportRectContains(p.rect,r.rect)&&!dlsReportRectSame(p.rect,r.rect));
+  for(const r of fullRecords){
+    const candidates=fullRecords.filter(p=>p.tile_id!==r.tile_id&&dlsReportRectContains(p.rect,r.rect)&&!dlsReportRectSame(p.rect,r.rect));
     if(candidates.length){
       candidates.sort((a,b)=>area(a)-area(b)||Number(b.z_index)-Number(a.z_index)||Number(b._array_index)-Number(a._array_index));
       const p=candidates[0]; parent.set(Number(r.tile_id),Number(p.tile_id)); children.get(Number(p.tile_id)).push(r);
@@ -15420,31 +15453,116 @@ function selectionPaneTreeModel(displayIds){
   }
   const stackCompare=(a,b)=>Number(b.z_index)-Number(a.z_index)||Number(b._array_index)-Number(a._array_index)||Number(b.tile_id)-Number(a.tile_id);
   for(const list of children.values()) list.sort(stackCompare);
-  const roots=records.filter(r=>!parent.has(Number(r.tile_id)));
-  roots.sort((a,b)=>{
-    const ac=(children.get(Number(a.tile_id))||[]).length?1:0;
-    const bc=(children.get(Number(b.tile_id))||[]).length?1:0;
-    return bc-ac||stackCompare(a,b);
-  });
-  return {records,byId,parent,children,roots,stackCompare};
+  const depth=new Map();
+  const getDepth=id=>{
+    id=Number(id); if(depth.has(id)) return depth.get(id);
+    let d=0,cur=id,seen=new Set([id]);
+    while(parent.has(cur)&&!seen.has(parent.get(cur))){ cur=parent.get(cur); seen.add(cur); d++; if(d>50) break; }
+    depth.set(id,d); return d;
+  };
+  fullRecords.forEach(r=>getDepth(r.tile_id));
+
+  // A z-index drag scope is a connected component of tiles that actually overlap.
+  // Containment/hierarchy is therefore included, while merely touching cluster
+  // neighbors are deliberately excluded from the draggable stack.
+  const adj=new Map(fullRecords.map(r=>[Number(r.tile_id),new Set()]));
+  for(let i=0;i<fullRecords.length;i++) for(let j=i+1;j<fullRecords.length;j++){
+    const a=fullRecords[i],b=fullRecords[j];
+    if(!overlaps(a.tile,b.tile)) continue;
+    adj.get(Number(a.tile_id)).add(Number(b.tile_id));
+    adj.get(Number(b.tile_id)).add(Number(a.tile_id));
+  }
+  const stackById=new Map(),stackMembers=new Map(); let stackSeq=0; const seen=new Set();
+  for(const r of fullRecords){
+    const start=Number(r.tile_id); if(seen.has(start)) continue;
+    const q=[start],ids=[]; seen.add(start);
+    while(q.length){ const id=q.shift(); ids.push(id); for(const n of adj.get(id)||[]) if(!seen.has(n)){ seen.add(n); q.push(n); } }
+    if(ids.length<2) continue;
+    const key=`${scopePrefix}:z${stackSeq++}`;
+    stackMembers.set(key,ids);
+    ids.forEach(id=>stackById.set(id,key));
+  }
+  const stackComplete=new Map();
+  for(const [key,ids] of stackMembers) stackComplete.set(key,ids.every(id=>selected.has(Number(id))));
+  const ordered=[...records].sort(stackCompare);
+  return {records,fullRecords,byId,parent,children,depth,ordered,stackCompare,stackById,stackMembers,stackComplete};
 }
-function selectionPaneTreeNodeHtml(record,model,depth=0){
+function selectionPaneTreeNodeHtml(record,model){
   const t=record.tile;
-  const kids=model.children.get(Number(record.tile_id))||[];
+  const id=Number(record.tile_id),depth=model.depth.get(id)||0;
+  const kids=model.children.get(id)||[];
   const pl=record.placement||"independent";
-  const rootContainer=depth===0&&kids.length;
+  const rootContainer=!model.parent.has(id)&&kids.length;
   const main=tileDisplayLabel(t);
   const meta=`Tile #${t.id} · Device ${tileDeviceIdForSelection(t)} · ${tileTemplateForSelection(t)}`;
-  const pos=`r${t.row},c${t.col} · ${t.colSpan}×${t.rowSpan} · ${dlsReportPlacementLabel(pl)}`;
-  const row=`<button class="sel-row sel-fam-${esc(fam(t.template))} ${Number(t.id)===Number(State.focusTileId)?"info-focus":""}" data-tile="${esc(t.id)}"><span class="pl pl-${esc(pl)}">${esc(pl==="nested-container"?"NC":pl[0]||"·")}</span><span class="sr-lines"><span class="sr-t">${esc(main)}<span class="sel-tree-z">z ${esc(record.z_index)}</span></span><span class="sr-m">${esc(meta)}</span><span class="sr-p">${esc(pos)}</span></span></button>`;
-  const childHtml=kids.length?`<div class="sel-tree-children">${kids.map(ch=>`<div class="sel-tree-child">${selectionPaneTreeNodeHtml(ch,model,depth+1)}</div>`).join("")}</div>`:"";
-  return `<div class="sel-tree-node ${rootContainer?"sel-tree-root-container":""}" data-depth="${depth}">${row}${childHtml}</div>`;
+  const parentId=model.parent.get(id);
+  const pos=`r${t.row},c${t.col} · ${t.colSpan}×${t.rowSpan} · ${dlsReportPlacementLabel(pl)}${parentId?` · inside #${parentId}`:""}`;
+  const stackKey=model.stackById.get(id)||"";
+  const stackIds=stackKey?(model.stackMembers.get(stackKey)||[]):[];
+  const draggable=!!(stackKey&&stackIds.length>1&&model.stackComplete.get(stackKey));
+  const dragTitle=draggable?"Drag within this overlap/hierarchy stack to change z-index":"";
+  const partialTitle=stackKey&&!draggable?"Select the complete overlap/hierarchy stack to change z-index by dragging":"";
+  const row=`<button class="sel-row sel-fam-${esc(fam(t.template))} ${Number(t.id)===Number(State.focusTileId)?"info-focus":""}" data-tile="${esc(t.id)}"${stackKey?` data-z-stack="${esc(stackKey)}"`:""} data-z-draggable="${draggable?"1":"0"}" draggable="${draggable?"true":"false"}" title="${esc(dragTitle||partialTitle)}"><span class="pl pl-${esc(pl)}">${esc(pl==="nested-container"?"NC":pl[0]||"·")}</span><span class="sr-lines"><span class="sr-t">${esc(main)}<span class="sel-tree-z">z ${esc(record.z_index)}</span></span><span class="sr-m">${esc(meta)}</span><span class="sr-p">${esc(pos)}</span></span></button>`;
+  return `<div class="sel-tree-node sel-tree-flat-node ${rootContainer?"sel-tree-root-container":""} ${draggable?"z-draggable":""}" data-depth="${depth}" style="margin-left:${depth*16}px"${stackKey?` data-z-stack-node="${esc(stackKey)}"`:""}>${row}</div>`;
 }
+function selectionTreeZIndexPlan(ids){
+  const byId=new Map((State.tiles||[]).map((t,i)=>[Number(t.id),{t,i}]));
+  const ordered=(ids||[]).map(Number).filter(id=>byId.has(id)).sort((a,b)=>{
+    const aa=byId.get(a),bb=byId.get(b),za=effZ(aa.t),zb=effZ(bb.t);
+    return zb-za||bb.i-aa.i||b-a;
+  });
+  const raw=ordered.map(id=>effZ(byId.get(id).t)).sort((a,b)=>b-a);
+  const slots=[];
+  raw.forEach((z,i)=>slots.push(i===0?z:Math.min(z,slots[i-1]-1)));
+  return {ordered,slots};
+}
+function applySelectionTreeZIndexReorder(stackIds,draggedId,targetId,after=false){
+  const plan=selectionTreeZIndexPlan(stackIds);
+  const desired=[...plan.ordered];
+  const from=desired.indexOf(Number(draggedId)),target=desired.indexOf(Number(targetId));
+  if(from<0||target<0||from===target) return false;
+  const [moved]=desired.splice(from,1);
+  let insertAt=desired.indexOf(Number(targetId));
+  if(after) insertAt++;
+  desired.splice(insertAt,0,moved);
+  if(desired.every((id,i)=>id===plan.ordered[i])) return false;
+  const before=snapshot();
+  let css=String(State.customCSS||"");
+  const changed=[];
+  desired.forEach((id,i)=>{
+    const t=State.tiles.find(x=>Number(x.id)===Number(id)); if(!t) return;
+    const z=plan.slots[i];
+    if(effZ(t)!==z){ css=setTileScopedZIndexInCss(css,id,z); changed.push(id); }
+  });
+  // Equal effective z-index values may have relied on source order. If the
+  // desired order cannot be encoded by swapping existing values, split those
+  // ties into unique integer z-index levels using the computed slots.
+  if(!changed.length){
+    desired.forEach((id,i)=>{ css=setTileScopedZIndexInCss(css,id,plan.slots[i]); changed.push(id); });
+  }
+  State.customCSS=css;
+  if(State.baseDoc) State.baseDoc.customCSS=State.customCSS;
+  if(State.active&&State.active._layout) State.active._layout.customCSS=State.customCSS;
+  State.zMap=parseCssZ(currentCssForCascade());
+  pushHistorySnapshot(before,`Reordered ${desired.length} tile z-index stack`,{tileIds:desired});
+  State.tileSnapshotBlockedUntilReload=false;
+  markRenderedSnapshotsStale("Selection Tree z-index changed",{message:false});
+  updateSaveHubState(); updateOrphanIndicator(); render();
+  status(`Changed z-index order for ${desired.length} tiles in the selected overlap/hierarchy stack. Undo restores the previous z-index values.`);
+  toast("Tile z-index order updated.","ok");
+  return true;
+}
+
 function wireSelectionPaneInteractions(card,displayIds,clusters){
   card.querySelectorAll("[data-selection-view]").forEach(b=>b.addEventListener("click",()=>setSelectionPaneView(b.dataset.selectionView)));
+  card.querySelectorAll("[data-tree-zhelp]").forEach(b=>b.addEventListener("click",e=>{
+    e.preventDefault(); e.stopPropagation();
+    showConfirm("Tree z-index ordering", "Tree view orders selected tile rows from top to bottom by effective z-index while indentation shows containment hierarchy. Dragging is available only when the complete overlapping or hierarchical stack is selected, and a tile can be dropped only within that same stack. The drop rewrites the necessary tile z-index values as one undoable action. Tiles that merely touch are not a draggable z-index stack.", null, null, {okText:"Close",hideCancel:true});
+  }));
   card.querySelectorAll(".sg-head[data-cluster]").forEach(h=>h.addEventListener("click",()=>h.parentElement.classList.toggle("collapsed")));
   card.querySelectorAll("[data-tile]").forEach(b=>{
     b.addEventListener("click",e=>{
+      if(Date.now()<(State.selectionTreeSuppressClickUntil||0)){ e.preventDefault(); e.stopPropagation(); return; }
       const tid=+b.dataset.tile;
       if(e.ctrlKey||e.metaKey){
         if(b._selectionClickTimer) clearTimeout(b._selectionClickTimer);
@@ -15469,6 +15587,35 @@ function wireSelectionPaneInteractions(card,displayIds,clusters){
       showContextMenu(e,{kind:"selectionTile",tileId:+b.dataset.tile,selectionIds:[...displayIds]});
     });
   });
+  let zDrag=null;
+  const clearZDropMarkers=()=>card.querySelectorAll(".z-drop-before,.z-drop-after,.z-dragging").forEach(el=>el.classList.remove("z-drop-before","z-drop-after","z-dragging"));
+  card.querySelectorAll('.sel-row[data-z-stack]').forEach(row=>{
+    row.addEventListener("dragstart",e=>{
+      if(row.dataset.zDraggable!=="1"){ e.preventDefault(); return; }
+      zDrag={tileId:Number(row.dataset.tile),stackKey:row.dataset.zStack};
+      State.selectionTreeSuppressClickUntil=Date.now()+700;
+      try{ e.dataTransfer.effectAllowed="move"; e.dataTransfer.setData("text/plain",String(row.dataset.tile)); }catch(_e){}
+      requestAnimationFrame(()=>row.closest(".sel-tree-flat-node")?.classList.add("z-dragging"));
+    });
+    row.addEventListener("dragover",e=>{
+      if(!zDrag||row.dataset.zStack!==zDrag.stackKey||Number(row.dataset.tile)===zDrag.tileId) return;
+      e.preventDefault();
+      try{ e.dataTransfer.dropEffect="move"; }catch(_e){}
+      card.querySelectorAll(".z-drop-before,.z-drop-after").forEach(el=>el.classList.remove("z-drop-before","z-drop-after"));
+      const box=row.getBoundingClientRect(),after=e.clientY>(box.top+box.height/2);
+      row.closest(".sel-tree-flat-node")?.classList.add(after?"z-drop-after":"z-drop-before");
+    });
+    row.addEventListener("drop",e=>{
+      if(!zDrag||row.dataset.zStack!==zDrag.stackKey||Number(row.dataset.tile)===zDrag.tileId) return;
+      e.preventDefault();
+      const box=row.getBoundingClientRect(),after=e.clientY>(box.top+box.height/2);
+      const stackIds=[...card.querySelectorAll('.sel-row[data-z-stack]')].filter(r=>r.dataset.zStack===zDrag.stackKey).map(r=>Number(r.dataset.tile));
+      const drag=zDrag; zDrag=null; State.selectionTreeSuppressClickUntil=Date.now()+700;
+      clearZDropMarkers();
+      applySelectionTreeZIndexReorder(stackIds,drag.tileId,Number(row.dataset.tile),after);
+    });
+    row.addEventListener("dragend",()=>{ zDrag=null; State.selectionTreeSuppressClickUntil=Date.now()+500; clearZDropMarkers(); });
+  });
   card.querySelectorAll("[data-cluster-sel]").forEach(b=>b.addEventListener("click",()=>{
     const comp=clusters[+b.dataset.clusterSel]; if(!comp) return;
     const clusterIds=comp.map(i=>State.tiles[i].id);
@@ -15485,7 +15632,7 @@ function renderSelCard(){
   const isTileSel=(State.sel.type==="tile"||State.sel.type==="rect")&&State.sel.ids.length;
   if(!isTileSel&&!effectiveIds){
     if(sec) sec.style.display=State.active?"block":"none";
-    card.innerHTML=`<p class="hint">Selected tiles can be shown as a cluster list or as separate cluster trees. Tree view preserves the List view cluster groups and orders each group hierarchically by z-index.</p>`;
+    card.innerHTML=`<p class="hint">Selected tiles can be shown as a cluster list or as separate cluster trees. Tree view preserves the List view cluster groups, orders tile rows by effective z-index, and uses indentation to show hierarchy.</p>`;
     return;
   }
   if(sec) sec.style.display="block";
@@ -15503,23 +15650,23 @@ function renderSelCard(){
       if(comp.length===1) singles.push(comp[0]);
       else byCluster.set(cid,{indices:selMembers,size:comp.length});
     });
-    html+=`<div class="sel-tree-note">Selected tiles remain grouped by overlap/touch cluster. Within each group, containers and nested contents are shown hierarchically and ordered top → bottom by effective z-index; equal values follow dashboard source order.</div>`;
+    html+=`<div class="sel-tree-note"><span class="sel-tree-note-text">Tree is ordered by z-index; drag a complete stack to reorder.</span><button type="button" class="sel-tree-help-btn" data-tree-zhelp title="More information about Tree z-index ordering" aria-label="More information about Tree z-index ordering">?</button></div>`;
     html+=`<div class="sel-list sel-tree-cluster-list">`;
     for(const [cid,info] of byCluster){
       const comp=clusters[cid];
       const kinds=new Set(comp.map(i=>placeMap.get(i)?.placement));
       const label=kinds.has("nested-container")?"nested containers":kinds.has("container")?"container+nested":kinds.has("overlapping")?"overlapping":"cluster";
-      const model=selectionPaneTreeModel(info.indices.map(i=>State.tiles[i].id));
+      const model=selectionPaneTreeModel(info.indices.map(i=>State.tiles[i].id),comp.map(i=>State.tiles[i].id),`c${cid}`);
       const allSelected=info.indices.length===info.size;
       html+=`<div class="sel-group"><div class="sg-head" data-cluster="${cid}"><span class="sg-chev">▾</span><span class="sg-title">Cluster · ${info.size} tiles · ${label}</span><span class="sg-badge">${info.indices.length} sel</span></div><div class="sg-body">`;
-      html+=model.roots.length?`<div class="sel-tree">${model.roots.map(r=>selectionPaneTreeNodeHtml(r,model,0)).join("")}</div>`:`<p class="hint">No selected tiles are available in this cluster.</p>`;
+      html+=model.ordered.length?`<div class="sel-tree">${model.ordered.map(r=>selectionPaneTreeNodeHtml(r,model)).join("")}</div>`:`<p class="hint">No selected tiles are available in this cluster.</p>`;
       if(!allSelected) html+=`<button class="btn ghost sg-selall" data-cluster-sel="${cid}">Select cluster (${info.size} tiles)</button>`;
       html+=`</div></div>`;
     }
     if(singles.length){
-      const model=selectionPaneTreeModel(singles.map(i=>State.tiles[i].id));
+      const model=selectionPaneTreeModel(singles.map(i=>State.tiles[i].id),singles.map(i=>State.tiles[i].id),"independent");
       html+=`<div class="sel-group"><div class="sg-head static"><span class="sg-title">Independent</span><span class="sg-badge">${singles.length}</span></div><div class="sg-body">`;
-      html+=model.roots.length?`<div class="sel-tree">${model.roots.map(r=>selectionPaneTreeNodeHtml(r,model,0)).join("")}</div>`:`<p class="hint">No independent selected tiles are available.</p>`;
+      html+=model.ordered.length?`<div class="sel-tree">${model.ordered.map(r=>selectionPaneTreeNodeHtml(r,model)).join("")}</div>`:`<p class="hint">No independent selected tiles are available.</p>`;
       html+=`</div></div>`;
     }
     html+=`</div>`;
@@ -19971,7 +20118,7 @@ function updateGridCssTab(candidate){
         }).join("");
         const more=g.items.length>12?`<li>${g.items.length-12} more matching declaration${g.items.length-12===1?"":"s"}.</li>`:"";
         return `<label class="grid-css-issue-card${checked?"":" unchecked"}"><input class="grid-css-group-check" type="checkbox" value="${esc(g.key)}"${checked}>`+
-          `<span><span class="grid-css-issue-title">${esc(g.title)}</span>`+
+          `<span><span class="grid-css-issue-title">${esc(g.title)}</span> `+
           `<span class="grid-css-issue-msg">${esc(g.summary)}</span>`+
           `<span class="grid-css-issue-fix">Fix? ${esc(g.fixLabel)}</span>`+
           `<ul class="grid-css-change-list">${items}${more}</ul></span></label>`;
@@ -21849,12 +21996,122 @@ function loadPasted(){
 /* ---------- JSON editor ---------- */
 const JSON_EDITOR_FIELD_MODES=new Set(["customCSS","customHTML","customJS"]);
 const JSON_EDITOR_MANAGER_MODES=new Set(["tileDevices","dashboardDevices"]);
+const JSON_EDITOR_AUTO_FORMAT_MODES=new Set(["json","customCSS","customHTML","customJS"]);
+const JSON_EDITOR_AUTO_FORMAT_PREF_KEY="dls.expert.autoFormat.v1";
+const JSON_EDITOR_CSS_COMPACT_PREF_KEY="dls.expert.customCssCompact.v1";
+function jsonEditorDefaultAutoFormatPrefs(){ return {json:false,customCSS:false,customHTML:false,customJS:false}; }
+function loadJsonEditorAutoFormatPrefs(){
+  const prefs=jsonEditorDefaultAutoFormatPrefs();
+  try{
+    const saved=JSON.parse(localStorage.getItem(JSON_EDITOR_AUTO_FORMAT_PREF_KEY)||"null");
+    if(saved&&typeof saved==="object") for(const mode of JSON_EDITOR_AUTO_FORMAT_MODES) if(Object.prototype.hasOwnProperty.call(saved,mode)) prefs[mode]=!!saved[mode];
+  }catch(_e){}
+  return prefs;
+}
+function saveJsonEditorAutoFormatPrefs(){
+  try{ localStorage.setItem(JSON_EDITOR_AUTO_FORMAT_PREF_KEY,JSON.stringify(JsonEditorState.autoFormatPrefs||jsonEditorDefaultAutoFormatPrefs())); }catch(_e){}
+}
+function loadJsonEditorCssCompactPref(){
+  try{ return localStorage.getItem(JSON_EDITOR_CSS_COMPACT_PREF_KEY)==="1"; }catch(_e){ return false; }
+}
+function saveJsonEditorCssCompactPref(){
+  try{ localStorage.setItem(JSON_EDITOR_CSS_COMPACT_PREF_KEY,JsonEditorState.cssCompact?"1":"0"); }catch(_e){}
+}
+function jsonEditorFreshTabEditedState(){ return {json:false,customCSS:false,customHTML:false,customJS:false}; }
 const JsonEditorState={
   mode:"json",doc:null,initialDoc:null,initialText:"",initialComparable:null,dirty:false,fullJsonTextDirty:false,
   fullJsonReplacementLikely:false,fullJsonReplacementReason:"",
+  autoFormatPrefs:loadJsonEditorAutoFormatPrefs(),cssCompact:loadJsonEditorCssCompactPref(),tabUserEdited:jsonEditorFreshTabEditedState(),autoFormatDisplay:null,
   tileDevices:{view:"all",sortBy:"id",sortDir:"asc"},
   dashboardDevices:{loaded:false,busy:false,draft:new Set(),initial:new Set(),variables:[],variableDraft:new Set(),variableInitial:new Set(),variableChoicesAvailable:false,error:"",filter:"all",sortBy:"id",sortDir:"asc"}
 };
+function jsonEditorAutoFormatPresentationOnly(mode=JsonEditorState.mode){
+  return !!(JsonEditorState.autoFormatDisplay&&JsonEditorState.autoFormatDisplay.mode===mode&&!JsonEditorState.tabUserEdited?.[mode]);
+}
+function clearJsonEditorAutoFormatDisplay(){ JsonEditorState.autoFormatDisplay=null; }
+function jsonEditorAutoFormatText(mode,text){
+  text=String(text==null?"":text);
+  try{
+    if(mode==="json") return {ok:true,text:JSON.stringify(JSON.parse(text.trim()||"{}"),null,2)};
+    if(JSON_EDITOR_FIELD_MODES.has(mode)){
+      const issues=validateCustomField(mode,text);
+      if(issues.length) return {ok:false,text};
+      return {ok:true,text:formatCustomField(mode,text,{compact:mode==="customCSS"&&!!JsonEditorState.cssCompact})};
+    }
+  }catch(_e){}
+  return {ok:false,text};
+}
+function jsonEditorPreparedText(mode,text){
+  text=String(text==null?"":text);
+  clearJsonEditorAutoFormatDisplay();
+  if(!JSON_EDITOR_AUTO_FORMAT_MODES.has(mode)||!JsonEditorState.autoFormatPrefs?.[mode]) return text;
+  const result=jsonEditorAutoFormatText(mode,text);
+  if(!result.ok) return text;
+  JsonEditorState.autoFormatDisplay={mode,sourceText:text,formattedText:result.text};
+  return result.text;
+}
+function updateJsonAutoFormatControl(){
+  const mode=JsonEditorState.mode;
+  const eligible=JSON_EDITOR_AUTO_FORMAT_MODES.has(mode);
+  const cb=document.getElementById("jsonAutoFormat"),wrap=document.getElementById("jsonAutoFormatWrap");
+  const compactCb=document.getElementById("jsonCompactFormat"),compactWrap=document.getElementById("jsonCompactFormatWrap");
+  if(cb){ cb.disabled=!eligible; cb.checked=eligible?!!JsonEditorState.autoFormatPrefs?.[mode]:false; }
+  if(wrap){
+    wrap.classList.toggle("disabled",!eligible);
+    wrap.title=eligible
+      ? `Automatically format ${mode==="json"?"Full JSON":mode} when this tab is opened. Formatting alone is not treated as an edit; the formatted text is committed only after this editor is actually edited.`
+      : "Automatically Format is available for Full JSON, customCSS, customHTML, and customJS.";
+  }
+  const cssMode=mode==="customCSS";
+  if(compactCb){ compactCb.disabled=!cssMode; compactCb.checked=!!JsonEditorState.cssCompact; }
+  if(compactWrap){
+    compactWrap.classList.toggle("hidden",!cssMode);
+    compactWrap.classList.toggle("disabled",!cssMode);
+    compactWrap.title="Use compact formatting for customCSS Automatically Format and Validate / Format. This preference is remembered.";
+  }
+}
+function setJsonAutoFormatForCurrent(enabled){
+  const mode=JsonEditorState.mode,ed=document.getElementById("jsonEditor");
+  if(!JSON_EDITOR_AUTO_FORMAT_MODES.has(mode)||!ed) return;
+  JsonEditorState.autoFormatPrefs[mode]=!!enabled;
+  saveJsonEditorAutoFormatPrefs();
+  if(enabled){
+    const source=ed.value||"";
+    const result=jsonEditorAutoFormatText(mode,source);
+    if(result.ok){
+      JsonEditorState.autoFormatDisplay={mode,sourceText:source,formattedText:result.text};
+      ed.value=result.text;
+      placeJsonEditorCaret("start");
+      setJsonEditorError("");
+      updateJsonEditorDirtyState();
+    }
+  }else{
+    const presentationOnly=jsonEditorAutoFormatPresentationOnly(mode);
+    const source=presentationOnly?String(JsonEditorState.autoFormatDisplay?.sourceText||""):null;
+    clearJsonEditorAutoFormatDisplay();
+    if(presentationOnly){ ed.value=source; placeJsonEditorCaret("start"); updateJsonEditorDirtyState(); }
+  }
+  updateJsonAutoFormatControl();
+}
+function setJsonCssCompactFormat(enabled){
+  JsonEditorState.cssCompact=!!enabled;
+  saveJsonEditorCssCompactPref();
+  if(JsonEditorState.mode==="customCSS" && JsonEditorState.autoFormatPrefs?.customCSS && !JsonEditorState.tabUserEdited?.customCSS){
+    const ed=document.getElementById("jsonEditor");
+    if(ed){
+      const source=jsonEditorAutoFormatPresentationOnly("customCSS") ? String(JsonEditorState.autoFormatDisplay?.sourceText||"") : String(ed.value||"");
+      const result=jsonEditorAutoFormatText("customCSS",source);
+      if(result.ok){
+        JsonEditorState.autoFormatDisplay={mode:"customCSS",sourceText:source,formattedText:result.text};
+        ed.value=result.text;
+        placeJsonEditorCaret("start");
+        updateJsonEditorDirtyState();
+      }
+    }
+  }
+  updateJsonAutoFormatControl();
+  updateJsonEditorModeButtons();
+}
 function markFullJsonReplacementLikely(reason="full-document replacement"){
   JsonEditorState.fullJsonReplacementLikely=true;
   JsonEditorState.fullJsonReplacementReason=String(reason||"full-document replacement");
@@ -21896,10 +22153,11 @@ function setJsonEditorDirtyState(){
 function updateJsonEditorDirtyState(){
   const ed=document.getElementById("jsonEditor");
   if(!ed){ setJsonEditorDirtyState(); return false; }
-  if(JSON_EDITOR_FIELD_MODES.has(JsonEditorState.mode) && JsonEditorState.doc){
+  const presentationOnly=jsonEditorAutoFormatPresentationOnly(JsonEditorState.mode);
+  if(!presentationOnly && JSON_EDITOR_FIELD_MODES.has(JsonEditorState.mode) && JsonEditorState.doc){
     JsonEditorState.doc[JsonEditorState.mode]=ed.value;
   }
-  if(JsonEditorState.mode==="json"){
+  if(!presentationOnly && JsonEditorState.mode==="json"){
     const raw=ed.value||"";
     try{
       const parsed=normalizeLoadedJson(JSON.parse(raw.trim()||"{}"));
@@ -22388,12 +22646,12 @@ function updateJsonEditorModeButtons(){
   const formatBtn=document.getElementById("jsonFormat");
   if(formatBtn){
     const cssMode=JsonEditorState.mode==="customCSS";
-    formatBtn.textContent=cssMode?"Validate / Format ▾":"Validate / Format";
-    formatBtn.title=cssMode?"Choose regular or compact customCSS validation/formatting":"Validate and format the current editor view";
-    formatBtn.setAttribute("aria-haspopup",cssMode?"menu":"false");
+    formatBtn.textContent="Validate / Format";
+    formatBtn.title=cssMode ? `Validate and format customCSS using ${JsonEditorState.cssCompact?"Compact":"Normal"} format` : "Validate and format the current editor view";
+    formatBtn.setAttribute("aria-haspopup","false");
     formatBtn.setAttribute("aria-expanded","false");
   }
-  document.getElementById("jsonFormatMenu")?.classList.add("hidden");
+  updateJsonAutoFormatControl();
   updateJsonEditorActionVisibility();
   updateJsonExternalCssPane();
 }
@@ -22407,10 +22665,11 @@ function showJsonEditorMode(mode, caret="start"){
   if(tilePane){ const visible=mode==="tileDevices"; tilePane.classList.toggle("hidden",!visible); tilePane.hidden=!visible; tilePane.setAttribute("aria-hidden",visible?"false":"true"); }
   if(dashPane){ const visible=mode==="dashboardDevices"; dashPane.classList.toggle("hidden",!visible); dashPane.hidden=!visible; dashPane.setAttribute("aria-hidden",visible?"false":"true"); }
   updateJsonEditorModeButtons();
-  if(mode==="json") setJsonEditorText(JSON.stringify(JsonEditorState.doc||{},null,2),caret);
-  else if(JSON_EDITOR_FIELD_MODES.has(mode)) setJsonEditorText((JsonEditorState.doc&&JsonEditorState.doc[mode]!=null)?String(JsonEditorState.doc[mode]):"",caret);
-  else if(mode==="tileDevices"){ setJsonEditorError(""); renderJsonTileDevicesPane(); updateJsonEditorDirtyState(); }
+  if(mode==="json") setJsonEditorText(jsonEditorPreparedText(mode,JSON.stringify(JsonEditorState.doc||{},null,2)),caret);
+  else if(JSON_EDITOR_FIELD_MODES.has(mode)) setJsonEditorText(jsonEditorPreparedText(mode,(JsonEditorState.doc&&JsonEditorState.doc[mode]!=null)?String(JsonEditorState.doc[mode]):""),caret);
+  else if(mode==="tileDevices"){ clearJsonEditorAutoFormatDisplay(); setJsonEditorError(""); renderJsonTileDevicesPane(); updateJsonEditorDirtyState(); }
   else if(mode==="dashboardDevices"){
+    clearJsonEditorAutoFormatDisplay();
     setJsonEditorError("");
     if(jsonDashboardDeviceManagerOnline()&&!JsonEditorState.dashboardDevices.loaded&&!JsonEditorState.dashboardDevices.busy){
       JsonEditorState.dashboardDevices.busy=true;
@@ -22430,6 +22689,8 @@ function restoreJsonEditorOriginal(){
     resetJsonTileDeviceManager();
     resetJsonDashboardDeviceManager();
     JsonEditorState.fullJsonTextDirty=false;
+    JsonEditorState.tabUserEdited=jsonEditorFreshTabEditedState();
+    clearJsonEditorAutoFormatDisplay();
     clearFullJsonReplacementLikely();
     showJsonEditorMode("json","start");
     setJsonEditorDirtyState();
@@ -22467,12 +22728,16 @@ function undoJsonEditorTabChanges(){
   const undoNow=()=>{
     if(mode==="json"){
       JsonEditorState.doc=cloneJsonDoc(JsonEditorState.initialDoc);
+      JsonEditorState.tabUserEdited=jsonEditorFreshTabEditedState();
+      clearJsonEditorAutoFormatDisplay();
       resetJsonTileDeviceManager();
       clearFullJsonReplacementLikely();
       showJsonEditorMode("json","start");
       toast("Full JSON tab changes undone.","ok");
     }else if(JSON_EDITOR_FIELD_MODES.has(mode)){
       JsonEditorState.doc[mode]=String(JsonEditorState.initialDoc[mode]||"");
+      JsonEditorState.tabUserEdited[mode]=false;
+      clearJsonEditorAutoFormatDisplay();
       showJsonEditorMode(mode,"start");
       toast(`${mode} tab changes undone.`,"ok");
     }else if(mode==="tileDevices"){
@@ -22516,6 +22781,7 @@ function promptJsonEditorFixOrDiscard(msg){
 function syncJsonEditorView(opts={}){
   const ed=document.getElementById("jsonEditor");
   if(!ed) return false;
+  if(jsonEditorAutoFormatPresentationOnly(JsonEditorState.mode)){ setJsonEditorError(""); return true; }
   if(JsonEditorState.mode==="json"){
     try{
       const doc=normalizeLoadedJson(JSON.parse(ed.value.trim()||"{}"));
@@ -22605,6 +22871,8 @@ function openJsonEditor(initialMode="json"){
     resetJsonTileDeviceManager();
     resetJsonDashboardDeviceManager();
     JsonEditorState.fullJsonTextDirty=false;
+    JsonEditorState.tabUserEdited=jsonEditorFreshTabEditedState();
+    clearJsonEditorAutoFormatDisplay();
     clearFullJsonReplacementLikely();
     setJsonEditorDirtyState();
     resetModalPosition("jsonModal");
@@ -23888,15 +24156,17 @@ function showCustomCssCleanupDialog(text, analysis, done, options={}){
   resetModalPosition("cssCleanupModal");
   const defaultReformat=options&&Object.prototype.hasOwnProperty.call(options,"reformat") ? !!options.reformat : false;
   const defaultCompact=!!(options&&options.compact);
+  const lockCompact=!!(options&&options.lockCompact);
   reformatAfter.checked=defaultReformat;
   compactFormat.checked=defaultReformat&&defaultCompact;
-  compactFormat.disabled=!defaultReformat;
-  compactWrap.classList.toggle("disabled",!defaultReformat);
+  compactFormat.disabled=lockCompact||!defaultReformat;
+  compactWrap.classList.toggle("hidden",lockCompact);
+  compactWrap.classList.toggle("disabled",lockCompact||!defaultReformat);
   reformatAfter.onchange=()=>{
     const enabled=!!reformatAfter.checked;
-    compactFormat.disabled=!enabled;
-    compactWrap.classList.toggle("disabled",!enabled);
-    if(!enabled) compactFormat.checked=false;
+    compactFormat.disabled=lockCompact||!enabled;
+    compactWrap.classList.toggle("disabled",lockCompact||!enabled);
+    if(!enabled&&!lockCompact) compactFormat.checked=false;
   };
   modal.classList.remove("hidden");
   requestAnimationFrame(()=>{ body.scrollTop=0; if(modalBody) modalBody.scrollTop=0; });
@@ -23955,7 +24225,7 @@ function showCustomCssCleanupDialog(text, analysis, done, options={}){
       if(finalSweep.applied) cleanedText=cssStripAllRemovedDuplicateComments(cleanedText);
     }
     const shouldReformat=!!reformatAfter.checked;
-    const useCompact=shouldReformat&&!!compactFormat.checked;
+    const useCompact=shouldReformat&&(lockCompact?defaultCompact:!!compactFormat.checked);
     const resultText=shouldReformat ? (useCompact?formatCssCompact(cleanedText):formatCssBasic(cleanedText)) : cleanedText;
     done(resultText, resultText!==(text||""), null, {formatHandled:true,reformatted:shouldReformat,compact:useCompact,fixesChanged:cleanedText!==(text||"")});
   };
@@ -24005,7 +24275,8 @@ function formatCustomField(mode, text, options={}){
   return text;
 }
 function formatJsonEditor(options={}){
-  const cssCompact=JsonEditorState.mode==="customCSS" && !!(options&&options.cssCompact);
+  if(JSON_EDITOR_AUTO_FORMAT_MODES.has(JsonEditorState.mode)){ JsonEditorState.tabUserEdited[JsonEditorState.mode]=true; clearJsonEditorAutoFormatDisplay(); }
+  const cssCompact=JsonEditorState.mode==="customCSS" && (Object.prototype.hasOwnProperty.call(options||{},"cssCompact")?!!options.cssCompact:!!JsonEditorState.cssCompact);
   if(JsonEditorState.mode!=="json"){
     const ed=document.getElementById("jsonEditor");
     const text=ed?ed.value:"";
@@ -24029,7 +24300,7 @@ function formatJsonEditor(options={}){
       toast(`${JsonEditorState.mode} ${actionText}${cleaned?"; CSS cleanup applied":""}${liveUndo?"; Undo available":""}.`,"ok");
     };
     if(JsonEditorState.mode==="customCSS"){
-      formatCustomCssAfterReview(text, finishFormat, {reformat:true,compact:cssCompact});
+      formatCustomCssAfterReview(text, finishFormat, {reformat:true,compact:cssCompact,lockCompact:true});
       return;
     }
     finishFormat(text);
@@ -24049,6 +24320,8 @@ function loadJsonFileIntoEditor(file){
     try{
       const data=normalizeLoadedJson(JSON.parse(e.target.result));
       JsonEditorState.doc=cloneJsonDoc(data);
+      JsonEditorState.tabUserEdited.json=true;
+      clearJsonEditorAutoFormatDisplay();
       markFullJsonReplacementLikely(`loaded ${file.name}`);
       showJsonEditorMode("json","start");
       updateJsonEditorDirtyState();
@@ -24622,7 +24895,7 @@ function recoveryApplyWorkingState(record,meta,currentHubBaseline=null){
     adoptLayout(meta,record.layout);
     State.original=recoveryClone(record.original||record.layout);
     State.baseDoc=recoveryClone(record.baseDoc||record.layout);
-    if(record.source&&record.source.kind==="hub") State.hubSaveBaseline=recoveryClone(record.hubSaveBaseline||currentHubBaseline||record.original||record.layout);
+    if(record.source&&record.source.kind==="hub") State.hubSaveBaseline=recoveryClone(record.hubSaveBaseline||record.original||currentHubBaseline||record.layout);
     else State.hubSaveBaseline=null;
     State.savedSnapshot=record.savedSnapshot||JSON.stringify(record.hubSaveBaseline||record.original||{});
     if(State.recoveryKeepUndo){
@@ -25001,6 +25274,13 @@ async function resetSettingsToDefaults(){
   setSelectionPaneView("list",{persist:false,renderNow:true});
   try{ localStorage.removeItem(SELECTION_PANE_VIEW_KEY); }catch(_e){}
   try{ localStorage.removeItem(TILE_CSS_AUTO_RETARGET_KEY); }catch(_e){}
+  try{ localStorage.removeItem(JSON_EDITOR_AUTO_FORMAT_PREF_KEY); }catch(_e){}
+  try{ localStorage.removeItem(JSON_EDITOR_CSS_COMPACT_PREF_KEY); }catch(_e){}
+  JsonEditorState.autoFormatPrefs=jsonEditorDefaultAutoFormatPrefs();
+  JsonEditorState.cssCompact=false;
+  JsonEditorState.tabUserEdited=jsonEditorFreshTabEditedState();
+  clearJsonEditorAutoFormatDisplay();
+  updateJsonAutoFormatControl();
   const autoRetarget=document.getElementById("infoCssAutoRetarget");
   if(autoRetarget) autoRetarget.checked=false;
 
@@ -25705,11 +25985,11 @@ async function wire(){
     setDashboardBackgroundView(State.alwaysShowDashboardBackground,{announce:false});
     saveConn();
     status(State.alwaysShowDashboardBackground
-      ? "Dashboard backgrounds will be shown by default when layouts are loaded."
-      : "Dashboard backgrounds will be hidden by default when layouts are loaded; use the bottom-bar Background toggle to show one temporarily.");
+      ? "Dashboard backgrounds will be shown by default in Rendered View when layouts are loaded; Simple View always hides them."
+      : "Dashboard backgrounds will be hidden by default; in Rendered View, use the bottom-bar Background toggle to show one temporarily. Simple View always hides backgrounds.");
   });
   document.getElementById("dashboardBackgroundToggle")?.addEventListener("click",()=>{
-    if(!State.active) return;
+    if(!State.active || tileDisplayMode()==="simple") return;
     setDashboardBackgroundView(!State.showDashboardBackground,{announce:true});
   });
   document.getElementById("prefAutoResizeDashboard")?.addEventListener("change",e=>{
@@ -26529,21 +26809,10 @@ Install the current stable release now, or keep the current installed version un
   document.getElementById("btnJson").addEventListener("click",openJsonEditor);
   document.getElementById("jsonClose").addEventListener("click",closeOrCancelJsonEditor);
   document.querySelectorAll(".json-mode-btn").forEach(btn=>btn.addEventListener("click",()=>switchJsonEditorMode(btn.dataset.jsonMode)));
+  document.getElementById("jsonAutoFormat")?.addEventListener("change",e=>setJsonAutoFormatForCurrent(!!e.currentTarget.checked));
+  document.getElementById("jsonCompactFormat")?.addEventListener("change",e=>setJsonCssCompactFormat(!!e.currentTarget.checked));
   document.getElementById("jsonRestore").addEventListener("click",undoJsonEditorTabChanges);
-  document.getElementById("jsonFormat").addEventListener("click",e=>{
-    if(JsonEditorState.mode==="customCSS"){
-      e.preventDefault();
-      const menu=document.getElementById("jsonFormatMenu");
-      const btn=e.currentTarget;
-      if(!menu) return;
-      if(menu.classList.contains("hidden")){ showHoldMenu(btn,menu,"left"); btn.setAttribute("aria-expanded","true"); }
-      else{ menu.classList.add("hidden"); btn.setAttribute("aria-expanded","false"); }
-      return;
-    }
-    formatJsonEditor();
-  });
-  document.getElementById("jsonFormatRegular")?.addEventListener("click",()=>{ document.getElementById("jsonFormatMenu")?.classList.add("hidden"); document.getElementById("jsonFormat")?.setAttribute("aria-expanded","false"); formatJsonEditor({cssCompact:false}); });
-  document.getElementById("jsonFormatCompact")?.addEventListener("click",()=>{ document.getElementById("jsonFormatMenu")?.classList.add("hidden"); document.getElementById("jsonFormat")?.setAttribute("aria-expanded","false"); formatJsonEditor({cssCompact:true}); });
+  document.getElementById("jsonFormat").addEventListener("click",()=>formatJsonEditor());
   document.getElementById("jsonLoadFile").addEventListener("click",()=>document.getElementById("jsonEditorFileInput").click());
   document.getElementById("jsonEditorFileInput").addEventListener("change",e=>{ if(e.target.files[0]) loadJsonFileIntoEditor(e.target.files[0]); e.target.value=""; });
   document.getElementById("jsonEditor").addEventListener("beforeinput",e=>{
@@ -26551,7 +26820,11 @@ Install the current stable release now, or keep the current installed version un
     const type=String(e.inputType||"");
     if(jsonEditorSelectionReplacesDocument(e.currentTarget) && (/^insert/.test(type)||/^delete/.test(type))) markFullJsonReplacementLikely(type||"full-document replacement");
   });
-  document.getElementById("jsonEditor").addEventListener("input",()=>{ setJsonEditorError(""); updateJsonEditorDirtyState(); });
+  document.getElementById("jsonEditor").addEventListener("input",()=>{
+    if(JSON_EDITOR_AUTO_FORMAT_MODES.has(JsonEditorState.mode)) JsonEditorState.tabUserEdited[JsonEditorState.mode]=true;
+    setJsonEditorError("");
+    updateJsonEditorDirtyState();
+  });
   document.getElementById("jsonDashboardAssignAll")?.addEventListener("click",assignAllJsonDashboardDevices);
   document.getElementById("jsonDashboardRemoveUnused")?.addEventListener("click",removeUnusedJsonDashboardDevices);
   document.getElementById("jsonDashboardUpdate")?.addEventListener("click",applyJsonEditorAllChanges);

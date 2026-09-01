@@ -2,6 +2,19 @@
 
 ---
 
+## 1.10.581
+
+- First 1.10 beta release.
+- Added: Z-index ordering of overlapping tiles can be changed by dragging tiles within its cluster's stack in the left pane selection tree view.
+- Added: Expert **Automatically Format** settings for Full JSON, `customCSS`, `customHTML`, and `customJS`. 
+- Added: `customCSS` **Use Compact Format** setting controls both automatic formatting and Validate / Format behavior and is remembered across sessions.
+- Changed: Recovery resume no longer repeats device validation.
+- Changed: Recovery preserves the original Hub layout baseline so external dashboard changes made after a crash are still detected before saving.
+- Changed: Dashboard background color/images are displayed only in Rendered View; Simple View always uses the normal DLS editing canvas.
+- Changed: Validate / Format in customCSS tab no longer offers choice of format.  Replaced by checkbox.
+- Fixed: Startup blur could cover dialogs such as **Dashboard already open**, preventing the dialog from being viewed or used.
+- Bug fixes and UX improvements.
+
 ## 1.9.572
 
 - First 1.9 beta release.
@@ -20,6 +33,7 @@
 - Fixed: Grid-resize CSS checks flagged font-size: 0 as becoming too small.
 - Added: Dashboard loading progress allows Device Validation and initial Render Tiles steps to be skipped.
 - Bug fixes and UX improvements.
+
 ## 1.8.543
 
 - Changed: Recovered layouts were not removed after session resumed and saved.
