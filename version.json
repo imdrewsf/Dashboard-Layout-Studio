@@ -1,13 +1,13 @@
 {
-    "version":  "v1.4.498",
+    "version":  "v1.7.554",
     "releaseUrl":  "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio.html",
-    "sha256":  "7e2e7bb82f1aacc93aa2e4e8e9b6829e7d0bec27ab6a7f06ae41d15db7a304a3",
-    "size":  1334644,
+    "sha256":  "366fcc4e7615c0aea627cc092db99507d31c2ce845570ab358a1c75e450ccb30",
+    "size":  1632784,
     "stable":  {
-                   "version":  "v1.4.498",
+                   "version":  "v1.7.554",
                    "releaseUrl":  "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio.html",
-                   "sha256":  "7e2e7bb82f1aacc93aa2e4e8e9b6829e7d0bec27ab6a7f06ae41d15db7a304a3",
-                   "size":  1334644
+                   "sha256":  "366fcc4e7615c0aea627cc092db99507d31c2ce845570ab358a1c75e450ccb30",
+                   "size":  1632784
                },
     "beta":  {
                  "version":  "v1.9.572",
