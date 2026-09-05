@@ -1,6 +1,18 @@
 # Dashboard Layout Studio — Stable Release Notes
 
 ---
+
+## 1.8.605
+
+- First 1.8 stable release.
+- Added: Enhanced Modified indicator with change count.
+- Added: Modifications list panel with "restore to here."
+- Added: Overlapped / Clustered tiles listed in the left pane Selection Tree view can be dragged to reorder and modify z-index.
+- Added: External CSS import into `customCSS` and load-time Device Validation / Render Tiles Skip controls.
+- Added: Dashboard Background editing and preview with Hub File Manager, URL, image/CSS, and embedded-background support.
+- Changed: Stable interface updated to match Beta
+- Bug fixes and UX improvements.
+
 ## 1.7.580
 
 - Minor UX fix

@@ -1,6 +1,15 @@
 # Dashboard Layout Studio — Beta Release Notes
 
 ---
+## 1.12.604
+
+- First 1.12 beta release.
+- Added: Live Linked Previews - one and two way real-time synchronization
+- Added: Pref setting for linked preview synchronization - disabled / one way / two way modes
+- Fixed: Tile edits in DLS triggered preview dashboard windows to refresh
+- Changed: Reloading the active dashboard from the hub fully resynchronizes an open Preview.
+- Fixed: Preview Dashboard became disconnected and out of sync after Shift-Undo-All layout refresh/reload/restore.
+- Bug fixes and UX improvements.
 
 ## 1.10.581
 
@@ -12,7 +21,7 @@
 - Changed: Recovery preserves the original Hub layout baseline so external dashboard changes made after a crash are still detected before saving.
 - Changed: Dashboard background color/images are displayed only in Rendered View; Simple View always uses the normal DLS editing canvas.
 - Changed: Validate / Format in customCSS tab no longer offers choice of format.  Replaced by checkbox.
-- Fixed: Startup blur could cover dialogs such as **Dashboard already open**, preventing the dialog from being viewed or used.
+- Fixed: Startup blur could cover dialogs such as dashboard open dialog, preventing the dialog from being viewed or used.
 - Bug fixes and UX improvements.
 
 ## 1.9.572
