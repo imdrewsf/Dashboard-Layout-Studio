@@ -1513,6 +1513,24 @@
   /* v601: Tile drag array-order changes are patched into the open Preview DOM/Vue state and no longer force a refresh when membership and tile configuration are unchanged. */
   /* v601: Reloading the active hub dashboard now hard-resynchronizes an owned Preview to the freshly loaded hub state and fully reloads the Preview page; if resynchronization fails, the stale Preview is closed. */
   /* v603: Live Linked Previews preference adds Disabled / One Way / Two Way modes plus per-open-Preview remembered Apply/Ignore handling for Preview-side edits. */
+  /* v606: DLS-added/removed tiles verify actual live Preview DOM membership after Vue patching and fall back to a full Preview reload when Hubitat does not instantiate/destroy the component in place. */
+  /* v607: Structural DLS-to-Preview changes no longer mutate Hubitat's live Vue model. After the temporary dashboard is saved/verified they start a fresh dashboard runtime with a cache-busted navigation, preventing SET_LAYOUT/SET_DEVICES runtime corruption and allowing new device authorization to settle before the new page starts. */
+  /* v609: Structural Live Preview synchronization now patches the actual Hubitat Vuex store tile array when it can be identified confidently, allowing authorized-device tile additions/removals to instantiate live without a page refresh; refresh is retained only as a verified fallback. */
+  /* v610: Two Way Live Linked Preview sessions pre-authorize all currently discoverable hub devices and Hub Variables on the temporary dashboard; Disabled/One Way keep layout-scoped authorization unless One Way temporarily remembers Apply. */
+  /* v611: Live Preview learns Hubitat's actual Vuex layout mutation/payload contract during Preview startup and replays that native mutation for DLS-side tile membership changes before using heuristic reactive-array fallbacks. */
+  /* v612: Fixed structural Live Preview success detection so a verified native Hubitat layout mutation is not immediately overridden by the unused fallback-store result and forced into an unnecessary refresh. */
+  /* v613: Structural Live Preview now targets the component-local reactive tile array that actually owns the rendered tile v-for before trying Vuex fallbacks; failed live additions no longer force a reload that cannot materialize the tile. */
+  /* v614: Live Preview now treats each DLS edit as one mirror transaction: authoritative Hubitat layout state is updated before DOM presentation, failed/partial structural adds retain the prior outbound baseline and retry automatically, and live sessions preserve a superset of authorized devices instead of refreshing when tiles are deleted. */
+  /* v615: Geometry-only live sync now patches only the affected authoritative Hubitat tile records instead of replaying the complete SET_LAYOUT payload; structural membership changes are applied as one batch and copied tiles reuse enriched runtime donor records when available. */
+  /* v616: Diagnostic native-tile tracing captures Hubitat Vuex action/mutation sequences around real Preview tile membership changes; speculative DLS-side live tile insertion is disabled to prevent corrupting Hubitat's internal SET_LAYOUT indexing while the native add contract is identified. */
+  /* v617: Learns Hubitat's native full-layout Vuex action from a real Advanced JSON apply and reuses that verified action for whole-layout live synchronization instead of automating Hubitat's visible interface. */
+  /* v618: Uses Hubitat's actual ADD_TILE/DELETE_TILE mutations and authoritative layout state for live tile membership and geometry; Preview-only bounds are expanded when needed to keep Hubitat's native grid builder safe. */
+  /* v619: Native Preview membership changes are batched into one Hubitat save and no longer race a simultaneous DLS layout POST; structural readback waits for the native save to contain the complete transaction. */
+  /* v620: Structural Live Preview changes now use Hubitat's proven Advanced-JSON SET_LAYOUT + saveLayout transaction; Undo All explicitly resynchronizes Preview, and DLS-controlled reloads suppress the temporary-dashboard protection overlay. */
+  /* v621: Structural full-layout verification now waits for Vue DOM convergence and treats an already-correct Hubitat authoritative layout as render-pending instead of forcing a refresh; this prevents stale structural baselines from cascading into later moves. */
+  /* v622: Full-layout structural sync now recreates the complete layout object inside the Preview window realm before SET_LAYOUT, matching Hubitat Advanced JSON's native JSON.parse -> SET_LAYOUT -> saveLayout path and avoiding cross-window Vue 2 reactivity gaps. */
+  /* v623: Live Preview pins structural synchronization to the exact Vuex store on which Hubitat itself emitted native SET_LAYOUT, eliminating heuristic store switching/loss after structural updates. */
+  /* v624: Structural sync targets the Vuex store attached to Hubitat's visible Grid component and explicitly invalidates/forces that component after SET_LAYOUT so accepted membership changes materialize without refresh. */
   .background-control{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
   .background-settings-btn{appearance:none;border:0;background:transparent;color:rgba(103,232,249,.72);font-family:var(--mono);font-size:.66rem;line-height:1;padding:3px 1px;cursor:pointer;border-radius:4px;}
   .background-settings-btn:hover:not(:disabled){color:#cffafe;text-decoration:underline;text-underline-offset:2px;}
@@ -3770,7 +3788,7 @@
 </div>
 <div class="help-content">
 <section class="help-pane active" id="helpOverview">
-<div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual editor for Hubitat Dashboard v1 layouts. It can add original tiles, edit supported tile configuration, rearrange, resize, duplicate, remove, and reassign tiles, and change supported presentation details through custom CSS. Dashboard creation and advanced Hubitat-specific configuration remain in the native Hubitat interface.</p><p><b>Interface theme:</b> New installations start in Light mode. Preferences can switch Dashboard Layout Studio between Light and Dark themes, and the saved choice is restored before the interface is displayed. The Reset Settings button restores all saved preferences to their defaults, re-enables notifications dismissed with a don't-show-again option, and leaves hub credentials and the current dashboard layout unchanged.</p><div class="help-callout"><b>Beta 1.11 / Stable 1.7:</b> This is Beta 1.11.603. The supported Stable baseline is 1.7.580. See <b>About</b> for the authoritative list of major Beta features that are not available in Stable.</div><div class="help-callout"><b>New tile workflow:</b> The Add button is its own toolbar group immediately before Info. Click Add, drag the tile rectangle, then complete Tile Configuration. The button changes to Cancel, all other toolbar controls are disabled, and overlap is temporarily allowed until the tile is added or cancelled. See <b>Add Tile</b> for the full workflow.</div><div class="help-callout"><b>Preview dashboards:</b> Preview opens a compact working window that mirrors the DLS preparation checklist and automatically changes to the temporary dashboard when ready. The deep-red <b>Preview Open</b> pill shows when that window owns the shared preview dashboard; click the pill to switch focus to the open Preview window. If the browser blocks the focus request, DLS reports that limitation rather than claiming the switch succeeded. See <b>Preview Dashboards</b> for the complete lifecycle and safeguards.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>Add Tile supports the native template catalog and the basic parameters exposed by DLS. Advanced or firmware-specific options not recognized by DLS may still require Hubitat's editor.</li><li>Changing a tile template preserves unknown properties when possible, but incompatible template-specific settings are replaced by the newly selected template configuration.</li></ul><h5>Template-property limits</h5><ul><li>Tile Configuration supports common properties such as device, template-specific values, a searchable Hubitat and Material icon chooser, background images, links, refresh intervals, and unit display. Advanced or firmware-specific properties that DLS does not recognize may still require Hubitat's editor.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
+<div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual editor for Hubitat Dashboard v1 layouts. It can add original tiles, edit supported tile configuration, rearrange, resize, duplicate, remove, and reassign tiles, and change supported presentation details through custom CSS. Dashboard creation and advanced Hubitat-specific configuration remain in the native Hubitat interface.</p><p><b>Interface theme:</b> New installations start in Light mode. Preferences can switch Dashboard Layout Studio between Light and Dark themes, and the saved choice is restored before the interface is displayed. The Reset Settings button restores all saved preferences to their defaults, re-enables notifications dismissed with a don't-show-again option, and leaves hub credentials and the current dashboard layout unchanged.</p><div class="help-callout"><b>Beta 1.12 / Stable 1.8:</b> This is Beta 1.12.624. The supported Stable baseline is 1.8.605. See <b>About</b> for the authoritative list of major Beta features that are not available in Stable.</div><div class="help-callout"><b>New tile workflow:</b> The Add button is its own toolbar group immediately before Info. Click Add, drag the tile rectangle, then complete Tile Configuration. The button changes to Cancel, all other toolbar controls are disabled, and overlap is temporarily allowed until the tile is added or cancelled. See <b>Add Tile</b> for the full workflow.</div><div class="help-callout"><b>Preview dashboards:</b> Preview opens a compact working window that mirrors the DLS preparation checklist and automatically changes to the temporary dashboard when ready. The deep-red <b>Preview Open</b> pill shows when that window owns the shared preview dashboard; click the pill to switch focus to the open Preview window. If the browser blocks the focus request, DLS reports that limitation rather than claiming the switch succeeded. See <b>Preview Dashboards</b> for the complete lifecycle and safeguards.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>Add Tile supports the native template catalog and the basic parameters exposed by DLS. Advanced or firmware-specific options not recognized by DLS may still require Hubitat's editor.</li><li>Changing a tile template preserves unknown properties when possible, but incompatible template-specific settings are replaced by the newly selected template configuration.</li></ul><h5>Template-property limits</h5><ul><li>Tile Configuration supports common properties such as device, template-specific values, a searchable Hubitat and Material icon chooser, background images, links, refresh intervals, and unit display. Advanced or firmware-specific properties that DLS does not recognize may still require Hubitat's editor.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
 <div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><div class="help-callout"><b>Beta 1.11 — load checklist shortcuts:</b> During a normal hub dashboard load, the <b>Validating selected dashboard devices</b> and <b>Rendering tiles</b> checklist rows include small <b>Skip</b> buttons. A pending skip is remembered until that step is reached. Skipping validation bypasses the load-time selected-device audit; skipping rendering cancels the initial Rendered View capture and completes the load in Simple View. When resuming a recovery, DLS does not repeat selected-device validation because it was already completed in the original session; it still reloads the hub device-name context and rebuilds Rendered View as needed.</div><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><div class="help-callout"><b>Beta 1.11 — crash recovery:</b> DLS checkpoints unsaved working layouts in browser-local IndexedDB. After an accidental window close, browser crash, or machine restart, startup lists all recoverable sessions whose dashboards are not currently active in another DLS window. Select a recovery to resume it, load the current hub copy while keeping the recovery, remove it, or ignore the records for now. Reloading the current DLS tab with F5, Ctrl+R, or Cmd+R automatically resumes the exact recovery checkpoint that belonged to that tab, even when other recovery records exist, instead of showing the chooser. Hub-originated recovery reconnects and reloads the dashboard first so the normal save target and hub-change conflict checks are preserved. The recovery record retains the Hub layout baseline from the original editing session; the current Hub layout fetched during resume does not replace that baseline. Older recovery records that lack the dedicated Hub-baseline field fall back to their stored original clean layout before using the freshly fetched Hub copy. If the dashboard was changed externally after the original session began, the normal pre-save verification therefore still detects the mismatch and warns before overwrite. Selected-dashboard-device validation is not repeated during recovery resume because it was already completed when the original session was established. If a dashboard has more than one stored recovery when you open it from the dashboard list, DLS opens the same recovery manager used at startup but filters it to that dashboard. In this sidebar context, Ignore for Now continues loading the hub-saved dashboard while keeping the recovery records available; Remove Selected, Load Hub — Keep Recovery, and Resume Selected remain available as well. If only one recovery exists, DLS keeps the compact Cancel / Ignore Recovery / Discard Unsaved / Load Recovery dialog. If you choose Ignore Recovery and then edit the hub-saved copy, DLS checkpoints those new edits as a separate recovery branch; after an abnormal exit both the earlier recovery and the later hub-copy edits remain available independently. When several recovery records for the same dashboard descend from the same saved/load baseline, DLS presents them as Branch 1, Branch 2, and so on in creation order and shows the shared origin separately; a lone record is simply Recovery. Once any version of that dashboard is successfully saved back to the hub, DLS treats that save as the new authoritative version and removes every recovery record and branch for that dashboard. Within the same browser and DLS origin, dashboards with stored recovery records display a REC badge in the dashboard list (with a count when more than one record exists), and a dashboard that is already open in another DLS window remains visible with an OPEN badge. Clicking it does not attempt an unreliable cross-tab switch; instead DLS flashes the owning tab/window title so it can be located without creating a duplicate editor. Preferences can disable recovery, omit undo history, or clear stored recovery data. Beta Recovery preferences are stored separately from Stable preferences, so switching to Stable 1.7.580 cannot silently disable Recovery when Beta is opened again.</div><p><b>Preview / Launch button:</b> When the temporary preview dashboard is enabled, Preview is the normal short-click action for a hub-loaded dashboard; hold the corner-menu button for Launch Saved. When Preview is disabled in Preferences, this becomes a regular <b>Launch Saved</b> button with no hold menu or Preview action. Holding Shift temporarily makes Launch the default. Preview uses the DLS Temporary Dashboard to show the current working layout without saving over the dashboard being edited. The working window displays the same preparation checklist shown in DLS and opens the temporary dashboard automatically when ready. See <b>Preview Dashboards</b> for status indicators, multi-window locking, direct-open protection, navigation behavior, and cleanup.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices / variables</td><td>Can validate, add, remove, and update selected dashboard devices and Hub Variables.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Add Tile, move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Add Tile temporarily allows overlap while the new tile rectangle is drawn, then opens Tile Configuration.</td><td>Add Tile for static tiles and manually entered device IDs, plus move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Hub templates, variables, attributes, and device validation require an online layout.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
@@ -3787,7 +3805,7 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpPreview">
-<div class="help-pages"><article class="help-page active" data-help-title="Preview versus Launch Saved"><div class="help-page-kicker">Preview Dashboards</div><h4>Preview versus Launch Saved</h4><div class="help-grid"><div class="k">Preview</div><div class="v">Builds the current DLS working layout on the reusable DLS Temporary Dashboard. Unsaved tile, device, CSS, HTML, and supported configuration changes can be shown without overwriting the dashboard being edited.</div><div class="k">Launch Saved</div><div class="v">Opens the dashboard version currently saved on the hub. It does not upload the unsaved working layout.</div><div class="k">Normal click</div><div class="v">When Preview is enabled, Preview is the normal short-click action for a hub-loaded dashboard. When Preview is disabled in Preferences, the control is a regular Launch Saved button.</div><div class="k">Hold menu</div><div class="v">When Preview is enabled, use the corner-menu indicator to choose Launch Saved. When Preview is disabled, there is no hold menu.</div><div class="k">Shift held</div><div class="v">When Preview is enabled, temporarily changes the button label and normal action to Launch; Preview becomes the alternate menu choice until Shift is released. When Preview is disabled, Shift does not change the Launch Saved button.</div></div><p>The Preview / Launch button is disabled while incompatible placement or CSS-transfer modes are active. The temporary preview dashboard is local to the hub; DLS does not use a cloud preview service.</p></article><article class="help-page" data-help-title="Preview preparation and progress"><div class="help-page-kicker">Preview Dashboards</div><h4>Preview preparation and progress</h4><p>Preview opens a compact working window immediately so the browser recognizes it as user-requested. The window uses the same dark-title loading-dialog style and mirrors the preparation checklist shown in DLS.</p><ol><li>Prepare preview support files.</li><li>Authorize the devices needed by the working layout.</li><li>Save the adjusted working layout to the temporary dashboard.</li><li>Verify the temporary dashboard URL and open it.</li></ol><p>Pending steps become active and then completed, skipped, or failed as DLS progresses. An animated working indicator confirms that the window is still active. There is no final Open Preview prompt: the working window automatically changes to the prepared temporary dashboard when the checklist completes.</p><p>If preparation fails, the working window changes to a clear error page. Cancelling or aborting preparation closes the working window. When the optional preview-sharing warning is enabled, that warning appears before the working window is created.</p><div class="help-callout"><b>Preview Open indicator:</b> From the time the working window begins preparation until it closes or leaves the temporary dashboard, a deep-red <b>Preview Open</b> pill appears at the end of the upper status indicators in every same-origin DLS window.</div></article><article class="help-page" data-help-title="Temporary dashboard safeguards"><div class="help-page-kicker">Preview Dashboards</div><h4>Temporary dashboard safeguards</h4><ul><li>The temporary dashboard is hidden from the normal DLS dashboard list and is reused for later previews.</li><li>Preview updates only the temporary dashboard; the active dashboard and its normal Save target are unchanged.</li><li>Invalid non-exempt device IDs are changed to numeric 0 only in the temporary preview copy so one invalid device does not stop the preview.</li><li>Valid devices used by the working layout are authorized for the temporary dashboard.</li><li>Matching external dashboard JSON and Simple CSS Editor files can be copied to temporary preview-only files. Changes made through the preview copies are not written back to the original files.</li><li>Hubitat navigation is disabled on the temporary dashboard. A full-screen warning blocks direct opening; DLS-authorized Preview windows bypass the warning automatically. A hidden manual recovery gesture is also available if a Preview must be revealed without rebuilding it.</li></ul><h5>One shared Preview at a time</h5><p>While a Preview is preparing or open, the temporary dashboard is reserved across same-origin DLS windows. Other DLS windows make Launch the default and show Preview as unavailable. Full temporary-dashboard Rendered View refreshes are blocked; a saved-dashboard partial refresh may remain available for unchanged tiles.</p><h5>Closing and navigation</h5><ul><li><b>Live Linked Previews</b> in Preferences controls synchronization while Preview is open. <b>Disabled</b> performs no DLS-to-Preview live mirroring and does not poll/check the Preview dashboard for changes. If linkage is later re-enabled while that Preview remains open, DLS immediately reconciles changes accumulated on either side from their last common checkpoint rather than silently rebasing them. <b>One Way</b> mirrors committed DLS edits to Preview and prompts before importing changes detected in Preview; rejecting a Preview change restores Preview from DLS so the linked views remain mirrors. That prompt includes <b>Remember this choice until the Preview window is closed</b>: remembering Apply temporarily behaves like Two Way synchronization, while remembering Ignore automatically rejects further Preview-side changes and restores Preview from DLS while continuing DLS-to-Preview mirroring. <b>Two Way</b> mirrors DLS edits to Preview and automatically imports Preview-side changes into DLS as they are detected. The remembered per-window choice is cleared when Preview closes and does not alter the saved preference. When inbound checking is enabled, DLS performs a lightweight background check of only the temporary dashboard layout JSON approximately every 750 ms and also checks when focus returns or Preview closes. Imported Preview changes remain one undoable edit, skip device validation, remove an obsolete managed background @import when Preview's native background controls take ownership, and retain/capture rendered tiles when possible.</li><li>Closing the Preview window or navigating it away releases the reservation.</li><li>Using browser Back to return to that temporary dashboard reacquires the reservation when no newer Preview owns it.</li><li>Loading a different dashboard in DLS closes the owned Preview because it no longer represents the active layout. Reloading the active dashboard from the hub instead rebuilds the temporary Preview from the newly loaded hub state and fully reloads the open Preview window; if that rebuild fails, DLS closes the stale Preview.</li><li>Closing or navigating away from DLS while its Preview remains open triggers the browser's leave warning; leaving closes the owned Preview window.</li></ul></article></div>
+<div class="help-pages"><article class="help-page active" data-help-title="Preview versus Launch Saved"><div class="help-page-kicker">Preview Dashboards</div><h4>Preview versus Launch Saved</h4><div class="help-grid"><div class="k">Preview</div><div class="v">Builds the current DLS working layout on the reusable DLS Temporary Dashboard. Unsaved tile, device, CSS, HTML, and supported configuration changes can be shown without overwriting the dashboard being edited.</div><div class="k">Launch Saved</div><div class="v">Opens the dashboard version currently saved on the hub. It does not upload the unsaved working layout.</div><div class="k">Normal click</div><div class="v">When Preview is enabled, Preview is the normal short-click action for a hub-loaded dashboard. When Preview is disabled in Preferences, the control is a regular Launch Saved button.</div><div class="k">Hold menu</div><div class="v">When Preview is enabled, use the corner-menu indicator to choose Launch Saved. When Preview is disabled, there is no hold menu.</div><div class="k">Shift held</div><div class="v">When Preview is enabled, temporarily changes the button label and normal action to Launch; Preview becomes the alternate menu choice until Shift is released. When Preview is disabled, Shift does not change the Launch Saved button.</div></div><p>The Preview / Launch button is disabled while incompatible placement or CSS-transfer modes are active. The temporary preview dashboard is local to the hub; DLS does not use a cloud preview service.</p></article><article class="help-page" data-help-title="Preview preparation and progress"><div class="help-page-kicker">Preview Dashboards</div><h4>Preview preparation and progress</h4><p>Preview opens a compact working window immediately so the browser recognizes it as user-requested. The window uses the same dark-title loading-dialog style and mirrors the preparation checklist shown in DLS.</p><ol><li>Prepare preview support files.</li><li>Authorize the devices needed by the working layout; Two Way Live Linked Preview sessions authorize all currently discoverable hub devices and Hub Variables.</li><li>Save the adjusted working layout to the temporary dashboard.</li><li>Verify the temporary dashboard URL and open it.</li></ol><p>Pending steps become active and then completed, skipped, or failed as DLS progresses. An animated working indicator confirms that the window is still active. There is no final Open Preview prompt: the working window automatically changes to the prepared temporary dashboard when the checklist completes.</p><p>If preparation fails, the working window changes to a clear error page. Cancelling or aborting preparation closes the working window. When the optional preview-sharing warning is enabled, that warning appears before the working window is created.</p><div class="help-callout"><b>Preview Open indicator:</b> From the time the working window begins preparation until it closes or leaves the temporary dashboard, a deep-red <b>Preview Open</b> pill appears at the end of the upper status indicators in every same-origin DLS window.</div></article><article class="help-page" data-help-title="Temporary dashboard safeguards"><div class="help-page-kicker">Preview Dashboards</div><h4>Temporary dashboard safeguards</h4><ul><li>The temporary dashboard is hidden from the normal DLS dashboard list and is reused for later previews.</li><li>Preview updates only the temporary dashboard; the active dashboard and its normal Save target are unchanged.</li><li>Invalid non-exempt device IDs are changed to numeric 0 only in the temporary preview copy so one invalid device does not stop the preview.</li><li>Valid devices used by the working layout are authorized for the temporary dashboard. When Two Way Live Linked Preview synchronization is active (including a remembered Apply choice for the current Preview), DLS instead authorizes all currently discoverable hub devices and Hub Variables when the Preview session is prepared so later tile/device additions can remain live.</li><li>Matching external dashboard JSON and Simple CSS Editor files can be copied to temporary preview-only files. Changes made through the preview copies are not written back to the original files.</li><li>Hubitat navigation is disabled on the temporary dashboard. A full-screen warning blocks direct opening; DLS-authorized Preview windows bypass the warning automatically. A hidden manual recovery gesture is also available if a Preview must be revealed without rebuilding it.</li></ul><h5>One shared Preview at a time</h5><p>While a Preview is preparing or open, the temporary dashboard is reserved across same-origin DLS windows. Other DLS windows make Launch the default and show Preview as unavailable. Full temporary-dashboard Rendered View refreshes are blocked; a saved-dashboard partial refresh may remain available for unchanged tiles.</p><h5>Closing and navigation</h5><ul><li><b>Live Linked Previews</b> in Preferences controls synchronization while Preview is open. <b>Disabled</b> performs no DLS-to-Preview live mirroring and does not poll/check the Preview dashboard for changes. If linkage is later re-enabled while that Preview remains open, DLS immediately reconciles changes accumulated on either side from their last common checkpoint rather than silently rebasing them. <b>One Way</b> mirrors committed DLS edits to Preview and prompts before importing changes detected in Preview; rejecting a Preview change restores Preview from DLS so the linked views remain mirrors. That prompt includes <b>Remember this choice until the Preview window is closed</b>: remembering Apply temporarily behaves like Two Way synchronization, while remembering Ignore automatically rejects further Preview-side changes and restores Preview from DLS while continuing DLS-to-Preview mirroring. <b>Two Way</b> mirrors DLS edits to Preview and automatically imports Preview-side changes into DLS as they are detected. At Preview preparation, Two Way also authorizes all currently discoverable hub devices and Hub Variables on the temporary dashboard so adding or reassigning tiles on either side does not normally require another authorization cycle. Remembering Apply in One Way uses the same full-authorization behavior for that Preview session. The remembered per-window choice is cleared when Preview closes and does not alter the saved preference. When inbound checking is enabled, DLS performs a lightweight background check of only the temporary dashboard layout JSON approximately every 750 ms and also checks when focus returns or Preview closes. Imported Preview changes remain one undoable edit, skip device validation, remove an obsolete managed background @import when Preview's native background controls take ownership, and retain/capture rendered tiles when possible.</li><li>Closing the Preview window or navigating it away releases the reservation.</li><li>Using browser Back to return to that temporary dashboard reacquires the reservation when no newer Preview owns it.</li><li>Loading a different dashboard in DLS closes the owned Preview because it no longer represents the active layout. Reloading the active dashboard from the hub instead rebuilds the temporary Preview from the newly loaded hub state and fully reloads the open Preview window; if that rebuild fails, DLS closes the stale Preview.</li><li>Closing or navigating away from DLS while its Preview remains open triggers the browser's leave warning; leaving closes the owned Preview window.</li></ul></article></div>
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpSelect">
@@ -3948,7 +3966,7 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpAbout">
-<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.12.604 (Beta channel)</div><div class="k">Current Stable baseline</div><div class="v">1.8.605</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><p class="hint" style="margin:14px 0 0"><b>Copyright © 2026 Andrew Peck.</b> Licensed under the MIT License.</p><div class="help-callout"><b>Stable 1.8.605 includes:</b> the mature 1.11-era Recovery, detailed Modified history, Selection Tree z-index reordering, External CSS import, load-step Skip controls, CSS cleanup improvements, Dashboard Background tools, and the current DLS interface/UX.</div><h5>Major Beta 1.12 features not in Stable 1.8.605</h5><ul><li><b>Live Linked Previews:</b> live DLS-to-Preview mirroring with Disabled, One Way, and Two Way modes, optional automatic Preview-to-DLS synchronization, and per-Preview remembered Apply/Ignore behavior.</li></ul><div class="help-callout"><b>Beta channel:</b> Live Linked Previews remains under broader testing and is disabled in Stable 1.8.605.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
+<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.12.624 (Beta channel)</div><div class="k">Current Stable baseline</div><div class="v">1.8.605</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><p class="hint" style="margin:14px 0 0"><b>Copyright © 2026 Andrew Peck.</b> Licensed under the MIT License.</p><div class="help-callout"><b>Stable 1.8.605 includes:</b> the mature 1.11-era Recovery, detailed Modified history, Selection Tree z-index reordering, External CSS import, load-step Skip controls, CSS cleanup improvements, Dashboard Background tools, and the current DLS interface/UX.</div><h5>Major Beta 1.12 features not in Stable 1.8.605</h5><ul><li><b>Live Linked Previews:</b> live DLS-to-Preview mirroring with Disabled, One Way, and Two Way modes, optional automatic Preview-to-DLS synchronization, and per-Preview remembered Apply/Ignore behavior.</li></ul><div class="help-callout"><b>Beta channel:</b> Live Linked Previews remains under broader testing and is disabled in Stable 1.8.605.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
 <div class="help-page-nav"></div>
 </section>
 </div>
@@ -4782,8 +4800,8 @@ SOFTWARE.</pre></div>
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v604";
-const APP_VERSION = "1.12.604";
+const BUILD = "v626";
+const APP_VERSION = "1.12.626";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -4877,7 +4895,7 @@ const DLS_TEMPLATE_EXTRA_LABELS = Object.freeze({
 // authorization, Working Layout Preview, multi-window Copy/Copy CSS, Selection
 // Tree, z-index tools, strict external CSS validation, and merged CSS analysis.
 const STABLE_BASELINE_VERSION = "1.8.605";
-const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.12.604";
+const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.12.624";
 const STABLE_DOWNGRADE_FEATURES = Object.freeze([
   "Live Linked Previews with live DLS-to-Preview mirroring and optional automatic Preview-to-DLS synchronization"
 ]);
@@ -5037,6 +5055,7 @@ const State = {
   useTemporaryDashboard:true,    // create/reuse DLS Temporary Dashboard for unsaved Rendered View previews
   liveLinkedPreviewMode:"one-way", // disabled|one-way|two-way; controls DLS<->open Preview synchronization
   previewInboundSessionChoice:"", // "apply"|"ignore" remembered only until the owned Preview window closes
+  previewFullAuthorizationActive:false, // true only for this open Preview session when Two Way (or remembered Apply) authorized all discoverable devices/variables
   updateReleaseMode:defaultUpdateReleaseModeForBuild(), // stable builds default to stable updates; beta builds remain on the beta update channel
   temporaryDashboard:{
     name:TEMP_DASHBOARD_NAME,status:"unknown",ready:false,meta:null,parentId:null,
@@ -5138,6 +5157,21 @@ const State = {
   previewLiveSyncQueued:false,   // another edit arrived while an outbound sync was running
   previewLiveSyncSeq:0,          // monotonically increasing outbound live-preview request generation
   previewLiveSyncLastMode:"",    // vue|dom|refresh diagnostic for the most recent outbound sync
+  previewLiveRetryTimer:null,   // retry timer for partial live-runtime synchronization (especially multi-tile additions)
+  previewLiveRetryCount:0,        // bounded retry count while the Preview runtime has not yet matched the DLS transaction
+  previewVuexSnifferTimer:null,  // rapid startup probe used to attach before Hubitat's initial layout mutation
+  previewVuexSniffedStores:[],   // Vuex stores already instrumented for this Preview runtime
+  previewVuexUnsubscribers:[],   // store.subscribe cleanup callbacks
+  previewVuexLayoutRecipe:null,  // learned native layout mutation {store,type,payloadTemplate,tilePath,...}
+  previewNativeSetLayoutStore:null, // exact Vuex store observed emitting Hubitat's native SET_LAYOUT in this Preview runtime
+  previewVuexReplayDepth:0,      // suppresses learning from DLS's own mutation replay
+  previewVuexTrace:[],           // rolling native Vuex action/mutation trace for Preview diagnostics
+  previewVuexStoreSnapshots:new Map(), // store -> last observed authoritative tile-id snapshot
+  previewNativeMembershipTrace:null, // most recent native Preview add/delete trace
+  previewNativeFullLayoutTrace:null, // most recent native full-layout transaction trace
+  previewNativeFullLayoutRecipe:null, // learned native full-layout action {store,type,payloadTemplate,layoutPath,mode,...}
+  previewNativeFullCandidates:[], // rolling raw action/mutation candidates containing a complete layout payload
+  previewNativeTraceReadyAt:0,   // suppress startup membership churn before the dashboard settles
   dlsWindowPresence:new Map(),    // recently seen DLS windows on this origin
   dlsDashboardPresence:new Map(), // window id -> active/claim dashboard presence record
   dashboardClaim:null,            // temporary same-origin claim while a dashboard is opening
@@ -5595,12 +5629,32 @@ function retirePreviewForDashboardChange(){
   if(showingPreview) status("Closed the previous Preview because a different hub dashboard is loading.");
   return showingPreview;
 }
+function installOwnedPreviewGuardSuppression(win,record=null){
+  if(!win||win.closed) return false;
+  try{
+    const doc=win.document;
+    if(!doc||!doc.documentElement) return false;
+    const rec=record||previewWindowRecord(State.previewWindowId,"open");
+    const ids=[rec&&rec.warningTileId,...((rec&&Array.isArray(rec.recoveryTileIds))?rec.recoveryTileIds:(State.previewRecoveryTileIds||[]))]
+      .map(Number).filter(Number.isFinite);
+    if(!ids.length) return false;
+    let style=doc.getElementById("dlsOwnedPreviewGuardSuppression");
+    if(!style){
+      style=doc.createElement("style");
+      style.id="dlsOwnedPreviewGuardSuppression";
+      (doc.head||doc.documentElement).appendChild(style);
+    }
+    style.textContent=ids.map(id=>`#tile-${id}`).join(",")+"{display:none!important;visibility:hidden!important;pointer-events:none!important}";
+    return true;
+  }catch(_e){ return false; }
+}
 function authorizeTrackedPreviewWindow(win,record){
   if(!win||win.closed||!record||!previewWindowIsExpectedDashboard(win,record.previewId)) return false;
   try{
     const doc=win.document;
     if(!doc||!doc.documentElement) return false;
     State.previewWindowAuthorized=true;
+    installOwnedPreviewGuardSuppression(win,record);
     const tileId=Number(record.warningTileId==null?State.previewWarningTileId:record.warningTileId);
     const recoveryTileIds=(Array.isArray(record.recoveryTileIds)?record.recoveryTileIds:State.previewRecoveryTileIds||[]).map(Number).filter(Number.isFinite);
     const removeWarning=()=>{
@@ -5642,8 +5696,18 @@ function previewOutboundSyncEnabled(){ return liveLinkedPreviewMode()!==LIVE_LIN
 function previewInboundChecksEnabled(){ return liveLinkedPreviewMode()!==LIVE_LINKED_PREVIEW_DISABLED; }
 function previewInboundAutoApply(){ return liveLinkedPreviewMode()===LIVE_LINKED_PREVIEW_TWO_WAY || (liveLinkedPreviewMode()===LIVE_LINKED_PREVIEW_ONE_WAY&&State.previewInboundSessionChoice==="apply"); }
 function previewInboundAutoIgnore(){ return liveLinkedPreviewMode()===LIVE_LINKED_PREVIEW_ONE_WAY&&State.previewInboundSessionChoice==="ignore"; }
+function previewFullAuthorizationDesired(){ return previewInboundAutoApply(); }
 function previewInternalTileIds(){
   return new Set([State.previewWarningTileId,...(State.previewRecoveryTileIds||[])].map(Number).filter(Number.isFinite));
+}
+function previewReservedTileIdsForAllocation(){
+  // The temporary Preview keeps five internal access-guard tiles in the stored
+  // layout even though the owned Preview removes them from the visible DOM.
+  // Reserve those ids while the Preview session is active so a newly created
+  // real DLS tile can never inherit an id that the Preview guard observer is
+  // still responsible for removing.
+  if(!State.previewWindowId&&!State.previewWindowRef) return new Set();
+  return previewInternalTileIds();
 }
 async function fetchTemporaryPreviewLayoutDoc(context=null){
   const td=temporaryDashboardState();
@@ -5847,7 +5911,10 @@ function promptForPreviewLayoutChanges(){
     State.previewLayoutPromptActive=false;
     if(choice&&choice.checked) State.previewInboundSessionChoice="apply";
     const reconcileBaseline=p&&p.reenableReconcile&&p.dlsChangedWhileDisabled?p.outboundBaseline:null;
-    applyDetectedPreviewChanges(p).then(()=>{
+    const prepareSession=choice&&choice.checked
+      ? ensurePreviewFullAuthorizationForLinkedSession({reloadRuntime:true}).catch(e=>{ trace(`Could not expand remembered Two Way Preview authorization: ${e&&e.message?e.message:e}`,null,"err"); })
+      : Promise.resolve();
+    prepareSession.then(()=>applyDetectedPreviewChanges(p)).then(()=>{
       if(reconcileBaseline){
         State.previewDlsBaseline=livePreviewClone(reconcileBaseline);
         scheduleLivePreviewSync("Reconciled DLS and Preview changes made while linkage was disabled",60);
@@ -5934,11 +6001,24 @@ function livePreviewChangeInfo(before,current){
   const gridChanged=topChanged.some(k=>gridTop.has(k));
   const orderChanged=!previewJsonEqual(beforeIds,currentIds);
   const membershipChanged=!!(addedIds.length||removedIds.length);
+  const cssChanged=topChanged.includes("customCSS");
+  // DLS-managed CSS backgrounds can change while layout.background/bgColor remain
+  // empty (for example CSS import -> Remove). Treat changes to the managed import
+  // or DLS background-display block as background changes too so the live <html>
+  // background is explicitly normalized/cleared in the same transaction.
+  let managedBackgroundCssChanged=false;
+  if(cssChanged){
+    try{
+      const a={importUrl:dlsManagedBackgroundImportUrl(before.customCSS||""),settings:parseDlsBackgroundSettings(before.customCSS||""),legacy:(dlsEmbeddedBackgroundBlockRange(before.customCSS||"")||{}).text||""};
+      const b={importUrl:dlsManagedBackgroundImportUrl(current.customCSS||""),settings:parseDlsBackgroundSettings(current.customCSS||""),legacy:(dlsEmbeddedBackgroundBlockRange(current.customCSS||"")||{}).text||""};
+      managedBackgroundCssChanged=!previewJsonEqual(a,b);
+    }catch(_e){}
+  }
   return {
     changed:membershipChanged||geometryIds.length||contentIds.length||topChanged.length||orderChanged,
     addedIds,removedIds,geometryIds,contentIds,topChanged,otherTop,gridChanged,
-    cssChanged:topChanged.includes("customCSS"),
-    backgroundChanged:topChanged.includes("background")||topChanged.includes("bgColor"),
+    cssChanged,
+    backgroundChanged:topChanged.includes("background")||topChanged.includes("bgColor")||managedBackgroundCssChanged,
     orderChanged,membershipChanged,
     // Reordering existing tiles is not a structural runtime change. DLS moves a
     // dragged tile to the end of State.tiles so default stacking follows the
@@ -5967,6 +6047,657 @@ function livePreviewObjectIsTraversable(win,value){
   try{ if(value===win||value===win.document) return false; if(win.Node&&value instanceof win.Node) return false; }catch(_e){}
   return true;
 }
+function livePreviewVuexStores(win){
+  const stores=[],seen=new Set();
+  for(const vm of livePreviewDomVueInstances(win)){
+    let store=null;
+    try{ store=vm&&vm.$store; }catch(_e){}
+    if(!store||typeof store!=="object"||!store.state||typeof store.state!=="object"||seen.has(store)) continue;
+    seen.add(store); stores.push(store);
+  }
+  return stores;
+}
+function livePreviewPayloadTileArrayProbe(root,expectedDoc=null){
+  if(root==null) return null;
+  const expectedIds=new Set((expectedDoc&&Array.isArray(expectedDoc.tiles)?expectedDoc.tiles:[]).map(t=>String(t&&t.id)));
+  const queue=[{value:root,path:[],depth:0}],seen=new WeakSet();
+  let best=null,visited=0;
+  while(queue.length&&visited<1600){
+    const item=queue.shift(),obj=item.value;
+    if(!obj||typeof obj!=="object") continue;
+    try{ if(seen.has(obj)) continue; seen.add(obj); }catch(_e){}
+    visited++;
+    if(Array.isArray(obj)){
+      let idObjects=0,geometry=0,matches=0;
+      for(const v of obj.slice(0,600)){
+        if(v&&typeof v==="object"&&v.id!=null){
+          idObjects++;
+          if(v.row!=null&&v.col!=null&&v.rowSpan!=null&&v.colSpan!=null) geometry++;
+          if(expectedIds.has(String(v.id))) matches++;
+        }
+      }
+      if(idObjects&&geometry){
+        const ratio=expectedIds.size?matches/expectedIds.size:0;
+        const score=geometry*5+matches*20+Math.round(ratio*100)-Math.max(0,idObjects-matches);
+        if((!expectedIds.size||matches>=Math.min(2,expectedIds.size)||ratio>=0.55)&&(!best||score>best.score)) best={path:item.path.slice(),score,idObjects,geometry,matches,ratio};
+      }
+    }
+    if(item.depth>=5) continue;
+    let entries=[];
+    try{ entries=Array.isArray(obj)?obj.slice(0,80).map((v,i)=>[i,v]):Object.keys(obj).slice(0,120).map(k=>[k,obj[k]]); }catch(_e){}
+    for(const [key,val] of entries){
+      if(!val||typeof val!=="object") continue;
+      queue.push({value:val,path:[...item.path,key],depth:item.depth+1});
+    }
+  }
+  return best;
+}
+function livePreviewPathGet(root,path){
+  let cur=root;
+  for(const key of path||[]){ if(cur==null) return undefined; cur=cur[key]; }
+  return cur;
+}
+function livePreviewPathSet(root,path,value){
+  if(!Array.isArray(path)||!path.length) return {root:value,ok:true};
+  let cur=root;
+  for(let i=0;i<path.length-1;i++){ if(cur==null||typeof cur!=="object") return {root,ok:false}; cur=cur[path[i]]; }
+  if(cur==null||typeof cur!=="object") return {root,ok:false};
+  cur[path[path.length-1]]=value;
+  return {root,ok:true};
+}
+
+function livePreviewTracePayload(value){
+  let cloned=null;
+  try{ cloned=livePreviewClone(value); }catch(_e){ cloned=null; }
+  if(cloned==null) return cloned;
+  try{
+    const raw=JSON.stringify(cloned);
+    if(raw.length<=90000) return cloned;
+    const probe=livePreviewPayloadTileArrayProbe(cloned,State.previewLayoutLastSeen||State.previewLayoutBaseline||null);
+    return {__dlsTraceTruncated:true,jsonLength:raw.length,tilePath:probe&&probe.path||[],tileCount:probe?((livePreviewPathGet(cloned,probe.path)||[]).length):null,keys:(!Array.isArray(cloned)&&cloned&&typeof cloned==="object")?Object.keys(cloned).slice(0,80):[]};
+  }catch(_e){ return {__dlsTraceUnserializable:true}; }
+}
+function livePreviewFullLayoutShapeScore(obj){
+  if(!obj||typeof obj!=="object"||Array.isArray(obj)||!Array.isArray(obj.tiles)) return 0;
+  let score=120+Math.min(400,obj.tiles.length*3);
+  for(const key of ["cols","rows","colWidth","rowHeight","gridGap","customCSS","customHTML","customJS","bgColor","name"]){
+    if(Object.prototype.hasOwnProperty.call(obj,key)) score+=18;
+  }
+  let geometry=0;
+  for(const t of obj.tiles.slice(0,80)) if(t&&typeof t==="object"&&t.id!=null&&t.row!=null&&t.col!=null&&t.rowSpan!=null&&t.colSpan!=null) geometry++;
+  score+=geometry*6;
+  return score;
+}
+function livePreviewFullLayoutPayloadProbe(root){
+  const queue=[{value:root,path:[],depth:0,mode:"object"}],seen=new WeakSet();
+  let best=null,visited=0;
+  while(queue.length&&visited<900){
+    const item=queue.shift(),value=item.value; visited++;
+    if(typeof value==="string"){
+      const text=value.trim();
+      if(text.length>20&&(text[0]==="{"||text[0]==="[")){
+        try{
+          const parsed=JSON.parse(text),score=livePreviewFullLayoutShapeScore(parsed);
+          if(score&&(!best||score>best.score)) best={mode:"json-string",layoutPath:item.path.slice(),score,tileCount:parsed.tiles.length};
+        }catch(_e){}
+      }
+      continue;
+    }
+    if(!value||typeof value!=="object") continue;
+    try{ if(seen.has(value)) continue; seen.add(value); }catch(_e){}
+    const score=livePreviewFullLayoutShapeScore(value);
+    if(score&&(!best||score>best.score)) best={mode:"object",layoutPath:item.path.slice(),score,tileCount:value.tiles.length};
+    if(item.depth>=4) continue;
+    let entries=[];
+    try{ entries=Array.isArray(value)?value.slice(0,60).map((v,i)=>[i,v]):Object.keys(value).slice(0,100).map(k=>[k,value[k]]); }catch(_e){}
+    for(const [key,child] of entries){
+      if(child==null) continue;
+      if(typeof child==="object"||typeof child==="string") queue.push({value:child,path:[...item.path,key],depth:item.depth+1});
+    }
+  }
+  return best;
+}
+function livePreviewRecordNativeFullCandidate(store,kind,phase,type,payload){
+  if(State.previewVuexReplayDepth>0||Date.now()<State.previewNativeTraceReadyAt||!store||!type) return;
+  // Only root action dispatches or completed mutations are useful recipes.
+  if(kind==="action"&&phase!=="before") return;
+  if(kind==="mutation"&&phase!=="after") return;
+  let probe=null; try{ probe=livePreviewFullLayoutPayloadProbe(payload); }catch(_e){}
+  if(!probe) return;
+  let payloadTemplate=null; try{ payloadTemplate=livePreviewClone(payload); }catch(_e){}
+  if(payloadTemplate==null) return;
+  State.previewNativeFullCandidates.push({ts:Date.now(),store,kind,phase,type:String(type),payloadTemplate,probe});
+  if(State.previewNativeFullCandidates.length>24) State.previewNativeFullCandidates.splice(0,State.previewNativeFullCandidates.length-24);
+}
+function livePreviewChooseNativeFullLayoutRecipe(store,snap,trigger){
+  if(!snap||!Array.isArray(snap.tiles)) return null;
+  const now=Date.now();
+  let best=null;
+  for(const c of State.previewNativeFullCandidates){
+    if(c.store!==store||now-c.ts>2600) continue;
+    const base=(c.kind==="action"?1600:500)+c.probe.score;
+    const countDelta=Math.abs((c.probe.tileCount||0)-snap.tiles.length);
+    const score=base-Math.min(600,countDelta*60)+(/layout|json|dashboard/i.test(c.type)?180:0)-(/set_layout/i.test(c.type)&&c.kind==="mutation"?250:0);
+    if(!best||score>best.score) best={...c,score};
+  }
+  if(!best||best.kind!=="action") return null;
+  return best;
+}
+function livePreviewReplaceNativeFullLayoutPayload(recipe,layoutDoc){
+  if(!recipe||!layoutDoc) return null;
+  let payload=livePreviewClone(recipe.payloadTemplate);
+  if(payload==null) return null;
+  const path=recipe.probe&&Array.isArray(recipe.probe.layoutPath)?recipe.probe.layoutPath:[];
+  if(recipe.probe&&recipe.probe.mode==="json-string"){
+    const text=JSON.stringify(layoutDoc);
+    if(!path.length) return text;
+    const set=livePreviewPathSet(payload,path,text); return set.ok?set.root:null;
+  }
+  let replacement=livePreviewClone(layoutDoc);
+  if(!path.length){
+    // If the action payload itself is the layout, preserve action-specific fields
+    // that are not part of the dashboard document while replacing known layout state.
+    if(payload&&typeof payload==="object"&&!Array.isArray(payload)) replacement=Object.assign({},payload,replacement);
+    return replacement;
+  }
+  let old=null; try{old=livePreviewPathGet(payload,path);}catch(_e){}
+  if(old&&typeof old==="object"&&!Array.isArray(old)) replacement=Object.assign({},old,replacement);
+  const set=livePreviewPathSet(payload,path,replacement); return set.ok?set.root:null;
+}
+function livePreviewVerifyAuthoritativeTileState(win,current,ids){
+  const wanted=[...new Set((ids||[]).map(String))];
+  if(!wanted.length) return {applied:true,matched:0,missing:[],mismatched:[]};
+  let probe=null; try{ probe=livePreviewFindVuexTileArray(win,current); }catch(_e){}
+  const c=probe&&probe.candidate;
+  if(!c||!Array.isArray(c.array)) return {applied:false,matched:0,missing:wanted,mismatched:[],reason:"Hubitat authoritative tile array could not be identified."};
+  const cm=livePreviewTileMaps(current),rm=new Map(c.array.filter(v=>v&&v.id!=null).map(v=>[String(v.id),v]));
+  let matched=0; const missing=[],mismatched=[];
+  for(const id of wanted){
+    const a=rm.get(id),b=cm.get(id); if(!a||!b){missing.push(id);continue;}
+    if(Number(a.row)!==Number(b.row)||Number(a.col)!==Number(b.col)||Number(a.rowSpan)!==Number(b.rowSpan)||Number(a.colSpan)!==Number(b.colSpan)) mismatched.push(id); else matched++;
+  }
+  return {applied:!missing.length&&!mismatched.length,matched,missing,mismatched,path:c.path||"",score:c.score||0};
+}
+async function livePreviewReplayNativeFullLayoutAction(win,current,storedPayload,info){
+  const recipe=State.previewNativeFullLayoutRecipe;
+  if(!recipe||recipe.kind!=="action"||!recipe.store||typeof recipe.store.dispatch!=="function") return {applied:false,dispatched:false,reason:"A native Hubitat full-layout action has not been learned yet."};
+  if(!State.previewVuexSniffedStores.includes(recipe.store)) return {applied:false,dispatched:false,reason:"The learned full-layout action belongs to an earlier Preview runtime."};
+  const payload=livePreviewReplaceNativeFullLayoutPayload(recipe,storedPayload||current);
+  if(payload==null) return {applied:false,dispatched:false,reason:"The learned native full-layout payload could not be rebuilt."};
+  let result;
+  try{
+    State.previewVuexReplayDepth++;
+    result=recipe.store.dispatch(recipe.type,payload);
+    if(result&&typeof result.then==="function") await result;
+  }catch(e){ return {applied:false,dispatched:true,reason:e&&e.message?e.message:String(e)}; }
+  finally{ State.previewVuexReplayDepth=Math.max(0,State.previewVuexReplayDepth-1); }
+  await new Promise(resolve=>setTimeout(resolve,120));
+  const membership=await livePreviewVerifyTileMembership(win,current,info,{delayMs:120});
+  const changedIds=[...(info.addedIds||[]),...(info.geometryIds||[]),...(info.contentIds||[])];
+  const authoritative=livePreviewVerifyAuthoritativeTileState(win,current,changedIds);
+  const applied=!!(membership.applied&&authoritative.applied);
+  return {applied,dispatched:true,type:recipe.type,membership,authoritative,reason:applied?"":`Native action ran but verification failed${!membership.applied?" (tile membership)":""}${!authoritative.applied?" (authoritative geometry/state)":""}.`};
+}
+
+function livePreviewStoreTileSnapshot(store){
+  if(!store||!store.state) return null;
+  const expected=State.previewLayoutLastSeen||State.previewLayoutBaseline||null;
+  let probe=null,arr=null;
+  try{ probe=livePreviewPayloadTileArrayProbe(store.state,expected); arr=probe?livePreviewPathGet(store.state,probe.path):null; }catch(_e){}
+  if(!probe||!Array.isArray(arr)) return null;
+  const ids=[],tiles=[];
+  for(const t of arr){
+    if(!t||t.id==null) continue;
+    ids.push(String(t.id));
+    tiles.push({id:t.id,row:t.row,col:t.col,rowSpan:t.rowSpan,colSpan:t.colSpan,template:t.template,device:t.device,templateExtra:t.templateExtra,buttonCommand:t.buttonCommand,customIcon:t.customIcon,bgImage:t.bgImage});
+  }
+  let signature=""; try{ signature=JSON.stringify(tiles); }catch(_e){}
+  return {ids,tiles,signature,path:probe.path.slice(),score:probe.score,count:ids.length};
+}
+function livePreviewCompactTraceEntry(entry){
+  return {ts:entry.ts,kind:entry.kind,phase:entry.phase,type:entry.type,payload:entry.payload};
+}
+function livePreviewDetectNativeMembershipChange(store,trigger){
+  if(!store||State.previewVuexReplayDepth>0||Date.now()<State.previewNativeTraceReadyAt) return;
+  const snap=livePreviewStoreTileSnapshot(store);
+  if(!snap) return;
+  const prior=State.previewVuexStoreSnapshots.get(store);
+  State.previewVuexStoreSnapshots.set(store,snap);
+  if(!prior) return;
+  const before=new Set(prior.ids),after=new Set(snap.ids);
+  const added=[...after].filter(id=>!before.has(id));
+  const removed=[...before].filter(id=>!after.has(id));
+  const layoutChanged=prior.signature!==snap.signature;
+  if(!layoutChanged) return;
+  const now=Date.now();
+  const entries=State.previewVuexTrace.filter(e=>now-e.ts<=2500).map(livePreviewCompactTraceEntry);
+  const sequence=entries.map(e=>`${e.kind}${e.phase?`(${e.phase})`:""}:${e.type}`).join(" -> ");
+  const recipeCandidate=livePreviewChooseNativeFullLayoutRecipe(store,snap,trigger);
+  if(recipeCandidate){
+    const priorRecipe=State.previewNativeFullLayoutRecipe;
+    if(!priorRecipe||recipeCandidate.score>=priorRecipe.score){
+      State.previewNativeFullLayoutRecipe=recipeCandidate;
+      try{ console.info(`[DLS Live Preview] Learned native full-layout action ${recipeCandidate.type} (${recipeCandidate.probe.mode} payload at ${recipeCandidate.probe.layoutPath.length?recipeCandidate.probe.layoutPath.join("."):"<payload>"}, ${recipeCandidate.probe.tileCount} tiles).`); }catch(_e){}
+    }
+  }
+  const fullTrace={capturedAt:new Date(now).toISOString(),addedIds:added,removedIds:removed,layoutChanged:true,storeTilePath:snap.path,storeTileCountBefore:prior.count,storeTileCountAfter:snap.count,trigger:trigger?{kind:trigger.kind,phase:trigger.phase,type:trigger.type}:null,sequence,entries,learnedAction:recipeCandidate?{type:recipeCandidate.type,mode:recipeCandidate.probe.mode,layoutPath:recipeCandidate.probe.layoutPath,tileCount:recipeCandidate.probe.tileCount,score:recipeCandidate.score}:null};
+  State.previewNativeFullLayoutTrace=fullTrace;
+  try{ window.__DLS_NATIVE_LAYOUT_TRACE__=fullTrace; }catch(_e){}
+  if(added.length||removed.length){
+    const trace={...fullTrace};
+    State.previewNativeMembershipTrace=trace;
+    try{ window.__DLS_NATIVE_TILE_TRACE__=trace; }catch(_e){}
+    try{ console.info(`[DLS Native Tile Trace] Membership ${added.length?`+${added.join(",")}`:""}${removed.length?` -${removed.join(",")}`:""}. Sequence: ${sequence}`,trace); }catch(_e){}
+  }
+}
+function livePreviewRecordVuexTrace(store,kind,phase,type,payload){
+  if(State.previewVuexReplayDepth>0) return;
+  try{ livePreviewRecordNativeFullCandidate(store,String(kind||""),String(phase||""),String(type||""),payload); }catch(_e){}
+  const entry={ts:Date.now(),kind:String(kind||""),phase:String(phase||""),type:String(type||""),payload:livePreviewTracePayload(payload)};
+  State.previewVuexTrace.push(entry);
+  if(State.previewVuexTrace.length>160) State.previewVuexTrace.splice(0,State.previewVuexTrace.length-160);
+  if(kind==="mutation") setTimeout(()=>{ try{ livePreviewDetectNativeMembershipChange(store,entry); }catch(_e){} },20);
+}
+function livePreviewRecordNativeVuexMutation(store,mutation){
+  if(State.previewVuexReplayDepth>0||!mutation||!store) return;
+  const type=String(mutation.type||"");
+  if(!type) return;
+  const payloadTemplate=livePreviewClone(mutation.payload);
+  if(payloadTemplate==null) return;
+  const expected=(State.previewLayoutBaseline&&typeof State.previewLayoutBaseline==="object")?State.previewLayoutBaseline:null;
+  const probe=livePreviewPayloadTileArrayProbe(payloadTemplate,expected);
+  if(!probe) return;
+  const score=probe.score+(/layout|tile/i.test(type)?80:0);
+  if(type==="SET_LAYOUT"){
+    State.previewNativeSetLayoutStore=store;
+  }
+  const prior=State.previewVuexLayoutRecipe;
+  if(prior&&prior.score>score) return;
+  State.previewVuexLayoutRecipe={store,type,payloadTemplate,tilePath:probe.path.slice(),score,learnedAt:Date.now(),matches:probe.matches,ratio:probe.ratio};
+  try{ console.info(`[DLS Live Preview] Learned Hubitat layout mutation ${type} (tiles at ${probe.path.length?probe.path.join("."):"<payload>"}, score ${score}).`); }catch(_e){}
+}
+function livePreviewAttachVuexSnifferStore(store){
+  if(!store||State.previewVuexSniffedStores.includes(store)) return false;
+  State.previewVuexSniffedStores.push(store);
+  try{ const snap=livePreviewStoreTileSnapshot(store); if(snap) State.previewVuexStoreSnapshots.set(store,snap); }catch(_e){}
+  try{
+    if(typeof store.subscribe==="function"){
+      const unsub=store.subscribe((mutation)=>{
+        try{ livePreviewRecordVuexTrace(store,"mutation","after",mutation&&mutation.type,mutation&&mutation.payload); }catch(_e){}
+        try{ livePreviewRecordNativeVuexMutation(store,mutation); }catch(_e){}
+      });
+      if(typeof unsub==="function") State.previewVuexUnsubscribers.push(unsub);
+    }
+  }catch(_e){}
+  try{
+    if(typeof store.subscribeAction==="function"){
+      const unsub=store.subscribeAction({
+        before:(action)=>{ try{ livePreviewRecordVuexTrace(store,"action","before",action&&action.type,action&&action.payload); }catch(_e){} },
+        after:(action)=>{ try{ livePreviewRecordVuexTrace(store,"action","after",action&&action.type,action&&action.payload); }catch(_e){} },
+        error:(action,_state,error)=>{ try{ livePreviewRecordVuexTrace(store,"action","error",action&&action.type,{payload:action&&action.payload,error:error&&error.message?error.message:String(error||"")}); }catch(_e){} }
+      });
+      if(typeof unsub==="function") State.previewVuexUnsubscribers.push(unsub);
+    }
+  }catch(_e){}
+  return true;
+}
+function livePreviewProbeAndAttachVuexSniffer(win){
+  if(!win||win.closed) return 0;
+  let stores=[];
+  try{ stores=livePreviewVuexStores(win); }catch(_e){}
+  let added=0;
+  for(const store of stores) if(livePreviewAttachVuexSnifferStore(store)) added++;
+  return added;
+}
+function startPreviewVuexSniffer(win,{durationMs=9000}={}){
+  if(State.previewVuexSnifferTimer){ clearInterval(State.previewVuexSnifferTimer); State.previewVuexSnifferTimer=null; }
+  State.previewVuexTrace=[];
+  State.previewVuexStoreSnapshots=new Map();
+  State.previewNativeSetLayoutStore=null;
+  State.previewNativeMembershipTrace=null;
+  State.previewNativeFullLayoutTrace=null;
+  State.previewNativeFullLayoutRecipe=null;
+  State.previewNativeFullCandidates=[];
+  State.previewNativeTraceReadyAt=Date.now()+1800;
+  try{ window.__DLS_NATIVE_TILE_TRACE__=null; window.__DLS_NATIVE_LAYOUT_TRACE__=null; }catch(_e){}
+  const started=Date.now();
+  const tick=()=>{
+    if(!win||win.closed||State.previewWindowRef!==win){ if(State.previewVuexSnifferTimer) clearInterval(State.previewVuexSnifferTimer); State.previewVuexSnifferTimer=null; return; }
+    livePreviewProbeAndAttachVuexSniffer(win);
+    if(Date.now()-started>=durationMs&&State.previewVuexSnifferTimer){ clearInterval(State.previewVuexSnifferTimer); State.previewVuexSnifferTimer=null; }
+  };
+  tick();
+  State.previewVuexSnifferTimer=setInterval(tick,20);
+  return true;
+}
+function stopPreviewVuexSniffer(){
+  if(State.previewVuexSnifferTimer){ clearInterval(State.previewVuexSnifferTimer); State.previewVuexSnifferTimer=null; }
+  for(const unsub of State.previewVuexUnsubscribers.splice(0)){ try{ unsub(); }catch(_e){} }
+  State.previewVuexSniffedStores=[];
+  State.previewVuexLayoutRecipe=null;
+  State.previewNativeSetLayoutStore=null;
+  State.previewVuexReplayDepth=0;
+  State.previewVuexTrace=[];
+  State.previewVuexStoreSnapshots=new Map();
+  State.previewNativeMembershipTrace=null;
+  State.previewNativeFullLayoutTrace=null;
+  State.previewNativeFullLayoutRecipe=null;
+  State.previewNativeFullCandidates=[];
+  State.previewNativeTraceReadyAt=0;
+  try{ window.__DLS_NATIVE_TILE_TRACE__=null; window.__DLS_NATIVE_LAYOUT_TRACE__=null; }catch(_e){}
+}
+function livePreviewOverlayLayoutFields(target,storedPayload){
+  if(!target||typeof target!=="object"||Array.isArray(target)||!storedPayload||typeof storedPayload!=="object") return;
+  const keys=["cols","rows","colWidth","rowHeight","gridGap","customCSS","customHTML","customJS","background","bgColor","name","hideLabels","hideIconText","hide3dot","fontSize","iconSize","roundedCorners","noColors","hideTextShadow"];
+  for(const key of keys){
+    if(Object.prototype.hasOwnProperty.call(target,key)&&Object.prototype.hasOwnProperty.call(storedPayload,key)) target[key]=livePreviewClone(storedPayload[key]);
+  }
+}
+async function livePreviewReplayNativeLayoutMutation(win,current,storedPayload,info,{verifyMembership=true}={}){
+  const recipe=State.previewVuexLayoutRecipe;
+  if(!recipe||!recipe.store||typeof recipe.store.commit!=="function") return {applied:false,committed:false,reason:"Hubitat native layout mutation has not been learned yet."};
+  if(!State.previewVuexSniffedStores.includes(recipe.store)) return {applied:false,committed:false,reason:"The learned Hubitat Vuex store belongs to an earlier Preview runtime."};
+  let payload=livePreviewClone(recipe.payloadTemplate);
+  if(payload==null) return {applied:false,committed:false,reason:"The learned Hubitat layout payload could not be cloned."};
+  // Use only DLS-owned tiles in the live runtime. The stored temporary-dashboard
+  // payload also contains DLS access-warning/recovery tiles that belong to the
+  // backing dashboard but should not be reintroduced into an already-authorized
+  // Preview runtime. Preserve preview-specific normalization for matching DLS ids.
+  const storedMap=livePreviewTileMaps(storedPayload||{});
+  const sourceTiles=(current&&Array.isArray(current.tiles)?current.tiles:[]).map(t=>livePreviewClone(storedMap.get(String(t&&t.id))||t));
+  const set=livePreviewPathSet(payload,recipe.tilePath,sourceTiles);
+  if(!set.ok) return {applied:false,committed:false,reason:"The learned Hubitat tile path is no longer valid."};
+  payload=set.root;
+  let layoutContainer=payload;
+  if(recipe.tilePath.length){
+    const parent=livePreviewPathGet(payload,recipe.tilePath.slice(0,-1));
+    if(parent&&typeof parent==="object"&&!Array.isArray(parent)) layoutContainer=parent;
+  }
+  livePreviewOverlayLayoutFields(layoutContainer,storedPayload||current);
+  try{
+    State.previewVuexReplayDepth++;
+    recipe.store.commit(recipe.type,payload);
+  }catch(e){
+    return {applied:false,committed:false,reason:e&&e.message?e.message:String(e),type:recipe.type,path:recipe.tilePath.join(".")};
+  }finally{ State.previewVuexReplayDepth=Math.max(0,State.previewVuexReplayDepth-1); }
+  if(!verifyMembership) return {applied:true,committed:true,type:recipe.type,path:recipe.tilePath.join("."),reason:""};
+  const membership=await livePreviewVerifyTileMembership(win,current,info,{delayMs:180});
+  return {applied:!!membership.applied,committed:true,membership,type:recipe.type,path:recipe.tilePath.join("."),reason:membership.applied?"":`native ${recipe.type} updated authoritative layout state but rendered tile membership did not update`};
+}
+
+function livePreviewTileArrayScore(array,expectedIds,{componentDistance=20,reactiveBonus=true}={}){
+  if(!Array.isArray(array)||!expectedIds||!expectedIds.size) return null;
+  let matches=0,geometry=0,idObjects=0;
+  const seenIds=new Set();
+  for(const v of array.slice(0,700)){
+    if(!v||typeof v!=="object"||v.id==null) continue;
+    idObjects++;
+    const id=String(v.id); seenIds.add(id);
+    if(expectedIds.has(id)) matches++;
+    if(v.row!=null&&v.col!=null&&v.rowSpan!=null&&v.colSpan!=null) geometry++;
+  }
+  const ratio=expectedIds.size?matches/expectedIds.size:0;
+  const minimum=Math.min(3,Math.max(1,expectedIds.size));
+  if(matches<minimum||ratio<0.70||geometry<minimum) return null;
+  const extra=Math.max(0,idObjects-matches);
+  let score=matches*30+Math.round(ratio*160)+geometry*3-Math.min(extra,30)+Math.max(0,componentDistance);
+  try{ if(reactiveBonus&&array.__ob__) score+=90; }catch(_e){}
+  return {score,matches,ratio,geometry,idObjects,seenIds};
+}
+function livePreviewFindRenderedTileArray(win,before){
+  const expectedIds=new Set((before&&Array.isArray(before.tiles)?before.tiles:[]).map(t=>String(t&&t.id)));
+  if(!expectedIds.size) return {candidate:null,instances:0,arrays:0};
+  const instances=[],seenVm=new Set();
+  const addVm=(vm,distance)=>{
+    if(!vm||typeof vm!=="object"||seenVm.has(vm)) return;
+    seenVm.add(vm); instances.push({vm,distance});
+  };
+  try{
+    const doc=win.document;
+    // Start with the Vue instances attached to actual rendered tiles, then walk
+    // upward. The component that owns the v-for is normally only a few parents
+    // above the individual tile component.
+    for(const id of [...expectedIds].slice(0,28)){
+      const el=doc.getElementById(`tile-${id}`); if(!el) continue;
+      let node=el,domDepth=0;
+      while(node&&domDepth++<4){
+        let vm=null; try{vm=node.__vue__;}catch(_e){}
+        let p=vm,vd=0;
+        while(p&&vd<8){ addVm(p,120-vd*10-domDepth*2); p=p.$parent; vd++; }
+        node=node.parentElement;
+      }
+    }
+    for(const vm of livePreviewDomVueInstances(win)){
+      let p=vm,vd=0; while(p&&vd<6){ addVm(p,70-vd*8); p=p.$parent; vd++; }
+    }
+  }catch(_e){}
+  let best=null,arrays=0;
+  const tested=new WeakSet();
+  const consider=(array,meta)=>{
+    if(!Array.isArray(array)) return;
+    try{ if(tested.has(array)) return; tested.add(array); }catch(_e){}
+    arrays++;
+    const scored=livePreviewTileArrayScore(array,expectedIds,{componentDistance:meta.distance});
+    if(!scored) return;
+    // Strongly prefer arrays owned by a component whose DOM encloses the tile
+    // grid. This distinguishes the renderer's source list from incidental copies.
+    let domBonus=0;
+    try{
+      const el=meta.vm&&meta.vm.$el;
+      if(el&&el.querySelector){
+        let count=0; for(const id of [...expectedIds].slice(0,12)) if(el.querySelector(`#tile-${id}`)) count++;
+        domBonus=count*18;
+      }
+    }catch(_e){}
+    const candidate={array,vm:meta.vm,path:meta.path,source:meta.source,score:scored.score+domBonus,matches:scored.matches,ratio:scored.ratio,geometry:scored.geometry,idObjects:scored.idObjects,domBonus};
+    if(!best||candidate.score>best.score) best=candidate;
+  };
+  for(const item of instances){
+    const vm=item.vm;
+    const roots=[];
+    try{ if(vm.$data) roots.push({value:vm.$data,path:"$data",source:"data"}); }catch(_e){}
+    try{ if(vm.$props) roots.push({value:vm.$props,path:"$props",source:"props"}); }catch(_e){}
+    // Vue proxies data/computed values onto the component instance. Include
+    // computed keys explicitly because the rendered list is often a computed
+    // reference derived from Vuex rather than a direct store.state array.
+    try{
+      const computed=vm.$options&&vm.$options.computed?Object.keys(vm.$options.computed):[];
+      for(const key of computed){ let value; try{value=vm[key];}catch(_e){continue;} roots.push({value,path:key,source:"computed"}); }
+    }catch(_e){}
+    try{
+      for(const key of Object.getOwnPropertyNames(vm).slice(0,240)){
+        if(!key||key[0]==="$"||key[0]==="_") continue;
+        let value; try{value=vm[key];}catch(_e){continue;}
+        if(Array.isArray(value)) roots.push({value,path:key,source:"proxy"});
+      }
+    }catch(_e){}
+    const seenObj=new WeakSet();
+    const queue=roots.map(r=>({...r,depth:0}));
+    let visited=0;
+    while(queue.length&&visited<600){
+      const r=queue.shift(),value=r.value; visited++;
+      if(Array.isArray(value)){ consider(value,{vm,path:r.path,source:r.source,distance:item.distance}); continue; }
+      if(!value||typeof value!=="object"||r.depth>=3) continue;
+      try{ if(seenObj.has(value)) continue; seenObj.add(value); }catch(_e){}
+      let keys=[]; try{keys=Object.keys(value).slice(0,100);}catch(_e){}
+      for(const key of keys){
+        if(String(key).startsWith("_")||String(key).startsWith("$")) continue;
+        let child; try{child=value[key];}catch(_e){continue;}
+        if(child&&typeof child==="object") queue.push({value:child,path:`${r.path}.${key}`,source:r.source,depth:r.depth+1});
+      }
+    }
+  }
+  return {candidate:best,instances:instances.length,arrays};
+}
+
+function livePreviewTileCopyComparable(tile){
+  const out=livePreviewClone(tile)||{};
+  for(const k of ["id","row","col","rowSpan","colSpan"] ) delete out[k];
+  return out;
+}
+function livePreviewFindCopyDonorId(before,newTile){
+  if(!before||!Array.isArray(before.tiles)||!newTile) return null;
+  const wanted=livePreviewTileCopyComparable(newTile);
+  for(const t of before.tiles){
+    if(!t||t.id==null) continue;
+    if(previewJsonEqual(livePreviewTileCopyComparable(t),wanted)) return String(t.id);
+  }
+  // Copy/paste can legitimately alter a small number of presentation fields.
+  // Prefer a donor with the same template/device/templateExtra before falling
+  // back to a raw DLS tile record.
+  let best=null,bestScore=-1;
+  for(const t of before.tiles){
+    if(!t||t.id==null) continue;
+    let score=0;
+    for(const k of ["template","device","templateExtra","buttonCommand","customIcon","linkName","hideUnit"]){
+      if(String(t[k]??"")===String(newTile[k]??"")) score++;
+    }
+    if(score>bestScore){ bestScore=score; best=String(t.id); }
+  }
+  return bestScore>=3?best:null;
+}
+function livePreviewBuildRuntimeTileRecord(runtimeArray,before,currentTile){
+  const raw=livePreviewClone(currentTile)||{};
+  if(!Array.isArray(runtimeArray)||!before) return raw;
+  const donorId=livePreviewFindCopyDonorId(before,currentTile);
+  if(donorId==null) return raw;
+  const donor=runtimeArray.find(v=>v&&v.id!=null&&String(v.id)===String(donorId));
+  if(!donor||typeof donor!=="object") return raw;
+  // Keep Hubitat-added/runtime fields from the donor while overlaying the exact
+  // DLS tile definition, including the new id and geometry.
+  try{ return Object.assign({},donor,raw); }catch(_e){ return raw; }
+}
+function livePreviewPatchAuthoritativeTileGeometry(win,before,current,ids){
+  const wanted=[...new Set((ids||[]).map(String))];
+  if(!wanted.length) return {applied:true,patched:0,missing:[],path:"",score:0};
+  const probe=livePreviewFindVuexTileArray(win,before||current);
+  const c=probe&&probe.candidate;
+  if(!c||!Array.isArray(c.array)) return {applied:false,patched:0,missing:wanted,path:"",score:0,reason:"Hubitat authoritative Vuex tile array was not identified confidently."};
+  const cm=livePreviewTileMaps(current);
+  let patched=0; const missing=[];
+  const mutate=()=>{
+    const rm=new Map(c.array.filter(v=>v&&v.id!=null).map(v=>[String(v.id),v]));
+    for(const id of wanted){
+      const target=rm.get(id),src=cm.get(id);
+      if(!target||!src){ missing.push(id); continue; }
+      target.row=src.row; target.col=src.col; target.rowSpan=src.rowSpan; target.colSpan=src.colSpan;
+      patched++;
+    }
+  };
+  try{
+    if(c.store&&typeof c.store._withCommit==="function") c.store._withCommit(mutate); else mutate();
+  }catch(e){ return {applied:false,patched,missing:wanted,path:c.path||"",score:c.score||0,reason:e&&e.message?e.message:String(e)}; }
+  // Also update a distinct component-local copy when Hubitat does not share the
+  // Vuex tile objects by reference. This changes only the affected records and
+  // therefore does not reapply/reset the complete dashboard layout.
+  try{
+    const rp=livePreviewFindRenderedTileArray(win,before||current),rc=rp&&rp.candidate;
+    if(rc&&Array.isArray(rc.array)&&rc.array!==c.array){
+      const rm=new Map(rc.array.filter(v=>v&&v.id!=null).map(v=>[String(v.id),v]));
+      for(const id of wanted){ const target=rm.get(id),src=cm.get(id); if(!target||!src) continue; target.row=src.row;target.col=src.col;target.rowSpan=src.rowSpan;target.colSpan=src.colSpan; }
+      try{ rc.vm&&typeof rc.vm.$forceUpdate==="function"&&rc.vm.$forceUpdate(); }catch(_e){}
+    }
+  }catch(_e){}
+  return {applied:missing.length===0,patched,missing,path:c.path||"",score:c.score||0,reason:missing.length?`Authoritative tile record missing: ${missing.join(", ")}`:""};
+}
+async function livePreviewPatchRenderedTileMembership(win,before,current,info){
+  const probe=livePreviewFindRenderedTileArray(win,before);
+  const c=probe.candidate;
+  if(!c||!c.array) return {applied:false,probe,added:0,removed:0,reason:"The Vue component-local rendered tile array was not identified confidently."};
+  const currentMap=livePreviewTileMaps(current);
+  let added=0,removed=0;
+  try{
+    // Apply the complete membership delta in one Vue-observed splice transaction.
+    // This avoids leaving a copied cluster half-applied while Vue renders between
+    // repeated single-tile pushes.
+    for(const id of (info.removedIds||[]).map(String)){
+      for(let i=c.array.length-1;i>=0;i--){ const t=c.array[i]; if(t&&String(t.id)===id){ c.array.splice(i,1); removed++; } }
+    }
+    const existing=new Set(c.array.filter(v=>v&&v.id!=null).map(v=>String(v.id)));
+    const additions=[];
+    for(const id of (info.addedIds||[]).map(String)){
+      if(existing.has(id)) continue;
+      const src=currentMap.get(id); if(!src) continue;
+      additions.push(livePreviewBuildRuntimeTileRecord(c.array,before,src)); existing.add(id);
+    }
+    if(additions.length){ c.array.splice(c.array.length,0,...additions); added=additions.length; }
+    try{ if(c.vm&&typeof c.vm.$forceUpdate==="function") c.vm.$forceUpdate(); }catch(_e){}
+    try{ if(c.vm&&typeof c.vm.$nextTick==="function") await new Promise(resolve=>c.vm.$nextTick(resolve)); }catch(_e){}
+    const membership=await livePreviewVerifyTileMembership(win,current,info,{delayMs:340});
+    return {applied:!!membership.applied,membership,probe,added,removed,path:c.path,source:c.source,score:c.score,reason:membership.applied?"":"The component tile array changed but Hubitat did not instantiate every rendered tile."};
+  }catch(e){
+    return {applied:false,probe,added,removed,path:c.path,source:c.source,score:c.score,reason:e&&e.message?e.message:String(e)};
+  }
+}
+
+function livePreviewFindVuexTileArray(win,before){
+  const expectedIds=new Set((before&&Array.isArray(before.tiles)?before.tiles:[]).map(t=>String(t&&t.id)));
+  if(!expectedIds.size) return {candidate:null,storeCount:0,visited:0};
+  const stores=livePreviewVuexStores(win);
+  let best=null,visited=0;
+  for(let si=0;si<stores.length;si++){
+    const store=stores[si],queue=[{value:store.state,path:"state",depth:0,parent:null,key:null}],seen=new WeakSet();
+    while(queue.length&&visited<5000){
+      const item=queue.shift(),obj=item.value;
+      if(!livePreviewObjectIsTraversable(win,obj)) continue;
+      try{ if(seen.has(obj)) continue; seen.add(obj); }catch(_e){}
+      visited++;
+      if(Array.isArray(obj)){
+        let matches=0,geometry=0,idObjects=0;
+        for(const v of obj.slice(0,500)){
+          if(v&&typeof v==="object"&&v.id!=null){
+            idObjects++;
+            if(expectedIds.has(String(v.id))) matches++;
+            if(v.row!=null&&v.col!=null&&v.rowSpan!=null&&v.colSpan!=null) geometry++;
+          }
+        }
+        const ratio=expectedIds.size?matches/expectedIds.size:0;
+        const minimum=Math.min(3,Math.max(1,expectedIds.size));
+        if(matches>=minimum&&ratio>=0.70&&geometry>=minimum&&idObjects>=minimum){
+          const extra=Math.max(0,idObjects-matches);
+          const score=matches*20+Math.round(ratio*100)+geometry*2-Math.min(extra,20);
+          if(!best||score>best.score) best={store,array:obj,parent:item.parent,key:item.key,path:`store[${si}].${item.path}`,score,matches,ratio,geometry,idObjects};
+        }
+      }
+      if(item.depth>=6) continue;
+      let entries=[];
+      try{ entries=Array.isArray(obj)?obj.slice(0,80).map((v,i)=>[String(i),v]):Object.keys(obj).slice(0,120).map(k=>[k,obj[k]]); }catch(_e){}
+      for(const [key,val] of entries){
+        if(!livePreviewObjectIsTraversable(win,val)) continue;
+        if(String(key).startsWith("_")||key==="$el"||key==="$parent"||key==="$root"||key==="$children") continue;
+        queue.push({value:val,path:`${item.path}.${key}`,depth:item.depth+1,parent:obj,key});
+      }
+    }
+  }
+  return {candidate:best,storeCount:stores.length,visited};
+}
+function livePreviewPatchVuexMembership(win,before,current,info){
+  const probe=livePreviewFindVuexTileArray(win,before);
+  const c=probe.candidate;
+  if(!c||!c.array) return {applied:false,probe,added:0,removed:0,reason:"Hubitat Vuex tile array was not identified confidently."};
+  const currentMap=livePreviewTileMaps(current);
+  let added=0,removed=0;
+  const mutate=()=>{
+    for(const id of (info.removedIds||[]).map(String)){
+      for(let i=c.array.length-1;i>=0;i--){ const t=c.array[i]; if(t&&String(t.id)===id){ c.array.splice(i,1); removed++; } }
+    }
+    const existing=new Set(c.array.filter(v=>v&&v.id!=null).map(v=>String(v.id)));
+    const additions=[];
+    for(const id of (info.addedIds||[]).map(String)){
+      if(existing.has(id)) continue;
+      const src=currentMap.get(id); if(!src) continue;
+      additions.push(livePreviewBuildRuntimeTileRecord(c.array,before,src)); existing.add(id);
+    }
+    if(additions.length){ c.array.splice(c.array.length,0,...additions); added=additions.length; }
+  };
+  try{
+    if(c.store&&typeof c.store._withCommit==="function") c.store._withCommit(mutate); else mutate();
+    return {applied:true,probe,added,removed,path:c.path,score:c.score};
+  }catch(e){
+    return {applied:false,probe,added,removed,path:c.path,score:c.score,reason:e&&e.message?e.message:String(e)};
+  }
+}
+
 function livePreviewFindLayoutModel(win,expected){
   const expectedIds=new Set((expected&&Array.isArray(expected.tiles)?expected.tiles:[]).map(t=>String(t&&t.id)));
   const instances=livePreviewDomVueInstances(win);
@@ -6079,29 +6810,564 @@ function livePreviewFindDashboardCssStyle(win){
 function livePreviewPatchDashboardCss(win,storedPayload){
   const style=livePreviewFindDashboardCssStyle(win);
   if(!style) return false;
-  try{ style.textContent=String(storedPayload&&storedPayload.customCSS||""); return true; }catch(_e){ return false; }
+  try{
+    // Hubitat's native Save CSS appends a new <style> element. For Live Preview,
+    // accumulating styles is unsafe: removing a managed background @import from a
+    // newer style does not neutralize an older style that still imports it. Replace
+    // the active dashboard customCSS node so stale imported background sheets are
+    // detached from the document instead of remaining in the cascade.
+    const replacement=win.document.createElement("style");
+    replacement.setAttribute("data-dls-live-customcss","1");
+    replacement.textContent=String(storedPayload&&storedPayload.customCSS||"");
+    style.replaceWith(replacement);
+    return true;
+  }catch(_e){ return false; }
 }
 function livePreviewPatchBackground(win,current){
   try{
+    if(!win||win.closed||!win.document) return false;
     const doc=win.document;
-    const target=doc.querySelector("#grid-wrapper")||doc.querySelector(".dashboard")||doc.body;
-    if(!target) return false;
-    const bg=String(current&&current.background||"").trim(),color=String(current&&current.bgColor||"").trim();
-    target.style.backgroundColor=color||"";
-    target.style.backgroundImage=bg?`url(${JSON.stringify(bg)})`:"";
+    const html=doc.documentElement;
+    if(!html) return false;
+    const bg=String(current&&current.background||"").trim();
+    const color=String(current&&current.bgColor||"").trim();
+
+    // Hubitat 2.4.3.119 applies dashboard backgrounds to <html>, not to the Grid.
+    // Its native SET_BACKGROUND / SET_BGCOLOR mutations both dispatch fixBG(),
+    // whose job is to rebuild the live <html> background. DLS already persists the
+    // temporary-dashboard JSON before this runtime patch, so update the authoritative
+    // live fields and invoke fixBG without dispatching a second competing saveLayout.
+    let nativeApplied=false;
+    try{
+      const gridTarget=livePreviewFindGridVue(win);
+      const probe=gridTarget&&gridTarget.store?{store:gridTarget.store}:livePreviewHubitatStore(win,current);
+      const store=probe&&probe.store;
+      if(store&&store.state&&store.state.layout&&typeof store.dispatch==="function"){
+        store.state.layout.background=bg;
+        store.state.layout.bgColor=color;
+        State.previewVuexReplayDepth++;
+        try{ store.dispatch("fixBG"); nativeApplied=true; }
+        finally{ State.previewVuexReplayDepth=Math.max(0,State.previewVuexReplayDepth-1); }
+      }
+    }catch(_e){}
+
+    // Enforce removal synchronously as well. This is important when switching from
+    // a JSON image to color/none: the old Hubitat <html> inline background otherwise
+    // remains visible even though DLS has already cleared layout.background.
+    html.style.backgroundColor=color||"";
+    html.style.backgroundRepeat="no-repeat";
+    html.style.backgroundSize="cover";
+    html.style.backgroundPosition="center";
+    if(!bg){
+      html.style.backgroundImage="";
+    }else if(!nativeApplied){
+      // Fallback only when the native store/action cannot be reached. Native fixBG
+      // handles Hubitat's remote /local/ access-token rewriting when available.
+      html.style.backgroundImage=`url(${JSON.stringify(bg)})`;
+    }
     return true;
   }catch(_e){ return false; }
 }
 function livePreviewInstallDiagnostics(win,data){
   try{ win.__DLS_LIVE_PREVIEW_BRIDGE__={version:1,updatedAt:Date.now(),...data}; }catch(_e){}
 }
-function livePreviewRuntimePatch(before,current,storedPayload,info,{devicesChanged=false}={}){
+async function livePreviewVerifyTileMembership(win,current,info,{delayMs=180,timeoutMs=0,pollMs=40}={}){
+  const result={applied:true,missingAdded:[],lingeringRemoved:[],expectedCount:0,actualCount:0};
+  if(!info||!info.structural||!win||win.closed) return result;
+  // Vue membership changes trail the authoritative SET_LAYOUT commit. A single
+  // fixed-delay check was too early on real dashboards and caused DLS to call a
+  // successful full-layout transaction a failure, retain the old baseline, and
+  // then misclassify later ordinary moves as structural edits. Poll only the DOM
+  // membership until it converges or the bounded timeout expires.
+  if(delayMs>0) await new Promise(resolve=>setTimeout(resolve,delayMs));
+  const deadline=Date.now()+Math.max(0,Number(timeoutMs)||0);
+  do{
+    try{
+      const doc=win.document;
+      const expectedIds=new Set((current&&Array.isArray(current.tiles)?current.tiles:[]).map(t=>String(t&&t.id)));
+      const actualIds=new Set([...doc.querySelectorAll('[id^="tile-"]')].map(el=>String(el.id||"").replace(/^tile-/,"")));
+      result.expectedCount=expectedIds.size; result.actualCount=actualIds.size;
+      result.missingAdded=(info.addedIds||[]).map(String).filter(id=>!actualIds.has(id));
+      result.lingeringRemoved=(info.removedIds||[]).map(String).filter(id=>actualIds.has(id));
+      result.applied=!result.missingAdded.length&&!result.lingeringRemoved.length;
+    }catch(_e){ result.applied=false; }
+    if(result.applied||Date.now()>=deadline) break;
+    await new Promise(resolve=>setTimeout(resolve,Math.max(20,Number(pollMs)||40)));
+  }while(true);
+  return result;
+}
+
+function livePreviewExpandLayoutBounds(doc){
+  if(!doc||typeof doc!=="object") return doc;
+  const tiles=Array.isArray(doc.tiles)?doc.tiles:[];
+  let rows=Math.max(1,parseInt(doc.rows)||1),cols=Math.max(1,parseInt(doc.cols)||1);
+  for(const t of tiles){
+    if(!t||typeof t!=="object") continue;
+    const row=Math.max(1,parseInt(t.row)||1),col=Math.max(1,parseInt(t.col)||1);
+    const rowSpan=Math.max(1,parseInt(t.rowSpan)||1),colSpan=Math.max(1,parseInt(t.colSpan)||1);
+    rows=Math.max(rows,row+rowSpan-1);
+    cols=Math.max(cols,col+colSpan-1);
+  }
+  doc.rows=rows; doc.cols=cols;
+  return doc;
+}
+function livePreviewHubitatStore(win,expected){
+  const expectedIds=new Set((expected&&Array.isArray(expected.tiles)?expected.tiles:[]).map(t=>String(t&&t.id)));
+  const seen=new Set(),candidates=[];
+  const add=(store,source,bonus=0)=>{
+    if(!store||typeof store!=="object"||seen.has(store)) return;
+    seen.add(store);
+    let layout=null; try{ layout=store&&store.state&&store.state.layout; }catch(_e){}
+    if(!layout||!Array.isArray(layout.tiles)||typeof store.commit!=="function"||typeof store.dispatch!=="function") return;
+    let matches=0,geometry=0;
+    for(const t of layout.tiles){
+      if(!t||t.id==null) continue;
+      if(expectedIds.has(String(t.id))) matches++;
+      if(t.row!=null&&t.col!=null&&t.rowSpan!=null&&t.colSpan!=null) geometry++;
+    }
+    const ratio=expectedIds.size?matches/expectedIds.size:1;
+    const score=bonus+matches*25+Math.round(ratio*120)+Math.min(geometry,80)+(store.state.grid?40:0)+(store.state.devices?20:0);
+    candidates.push({store,layout,score,matches,ratio,source});
+  };
+
+  // v623: The store that emitted Hubitat's own native SET_LAYOUT is the one that
+  // Advanced JSON actually uses. Pin structural synchronization to that exact
+  // store for this Preview runtime instead of rediscovering a look-alike store
+  // from whichever Vue components happen to be reachable after an update.
+  const pinned=State.previewNativeSetLayoutStore;
+  if(pinned&&State.previewVuexSniffedStores.includes(pinned)) add(pinned,"native-set-layout",100000);
+  const recipeStore=State.previewVuexLayoutRecipe&&State.previewVuexLayoutRecipe.type==="SET_LAYOUT"?State.previewVuexLayoutRecipe.store:null;
+  if(recipeStore&&State.previewVuexSniffedStores.includes(recipeStore)) add(recipeStore,"learned-set-layout",90000);
+
+  // Keep every already-sniffed store as a stable fallback even if the current DOM
+  // no longer exposes the component that originally led DLS to it.
+  for(const store of State.previewVuexSniffedStores||[]) add(store,"sniffed",5000);
+  let domStores=[]; try{ domStores=livePreviewVuexStores(win); }catch(_e){}
+  for(const store of domStores) add(store,"dom",0);
+
+  if(!candidates.length) return null;
+  candidates.sort((a,b)=>b.score-a.score);
+  const best=candidates[0];
+  // Heuristic stores still need reasonable overlap. A native SET_LAYOUT store is
+  // accepted regardless of overlap because structural edits may substantially
+  // change membership before the next comparison.
+  if(best.source!=="native-set-layout"&&best.source!=="learned-set-layout"&&expectedIds.size&&best.ratio<0.70) return null;
+  return best;
+}
+function livePreviewFindGridVue(win){
+  try{
+    if(!win||win.closed||!win.document) return null;
+    const seeds=[];
+    const pushVm=vm=>{ if(vm&&typeof vm==="object"&&!seeds.includes(vm)) seeds.push(vm); };
+    const gridEl=win.document.getElementById("grid-wrapper");
+    const dashEl=win.document.querySelector(".dashboard");
+    for(const el of [gridEl,gridEl&&gridEl.parentElement,dashEl,win.document.body]){
+      try{ if(el&&el.__vue__) pushVm(el.__vue__); }catch(_e){}
+    }
+    const queue=seeds.slice(),seen=new Set(); let fallback=null,visited=0;
+    while(queue.length&&visited<500){
+      const vm=queue.shift(); visited++;
+      if(!vm||seen.has(vm)) continue; seen.add(vm);
+      let name=""; try{ name=String(vm.$options&&vm.$options.name||""); }catch(_e){}
+      let hasLayout=false,hasStore=false;
+      try{ hasStore=!!vm.$store; hasLayout=!!(vm.$store&&vm.$store.state&&vm.$store.state.layout&&Array.isArray(vm.$store.state.layout.tiles)); }catch(_e){}
+      if(name==="Grid"&&hasStore&&hasLayout) return {vm,store:vm.$store,source:"visible-grid",visited};
+      if(!fallback&&hasStore&&hasLayout&&vm.$el&&gridEl){
+        try{ if(vm.$el===gridEl||vm.$el.contains&&vm.$el.contains(gridEl)||gridEl.contains&&gridEl.contains(vm.$el)) fallback={vm,store:vm.$store,source:"grid-tree",visited}; }catch(_e){}
+      }
+      try{ if(vm.$parent) queue.push(vm.$parent); }catch(_e){}
+      try{ for(const child of vm.$children||[]) queue.push(child); }catch(_e){}
+    }
+    return fallback;
+  }catch(_e){ return null; }
+}
+async function livePreviewForceGridRender(win,gridVm){
+  if(!gridVm) return {forced:false,reason:"Grid Vue component not found."};
+  const touched=[];
+  try{
+    // Vue 2 computed properties can remain cached when a mutation originates from
+    // the owning DLS window rather than from a Preview component method. Explicitly
+    // invalidate layout on the visible Grid/Dashboard chain before forcing render.
+    let vm=gridVm,depth=0;
+    while(vm&&depth<6){
+      try{
+        if(vm._computedWatchers&&vm._computedWatchers.layout){ vm._computedWatchers.layout.dirty=true; touched.push(String(vm.$options&&vm.$options.name||"anonymous")); }
+        if(typeof vm.$forceUpdate==="function") vm.$forceUpdate();
+      }catch(_e){}
+      vm=vm.$parent; depth++;
+    }
+    await new Promise(resolve=>{
+      try{ if(typeof gridVm.$nextTick==="function") gridVm.$nextTick(resolve); else (win.setTimeout||setTimeout)(resolve,0); }
+      catch(_e){ setTimeout(resolve,0); }
+    });
+    // One second pass lets TransitionGroup consume the newly generated VNodes.
+    try{
+      if(gridVm._computedWatchers&&gridVm._computedWatchers.layout) gridVm._computedWatchers.layout.dirty=true;
+      if(typeof gridVm.$forceUpdate==="function") gridVm.$forceUpdate();
+    }catch(_e){}
+    await new Promise(resolve=>{
+      try{ if(typeof gridVm.$nextTick==="function") gridVm.$nextTick(resolve); else (win.setTimeout||setTimeout)(resolve,0); }
+      catch(_e){ setTimeout(resolve,0); }
+    });
+    return {forced:true,touched};
+  }catch(e){ return {forced:false,reason:e&&e.message?e.message:String(e),touched}; }
+}
+function livePreviewRuntimeNormalizeTile(tile){
+  const out=livePreviewClone(tile)||{};
+  if(out.template==="button") out.template="buttons";
+  else if(out.template==="image") out.template="images";
+  else if(out.template==="link") out.template="links";
+  else if(out.template==="switch") out.template="switches";
+  else if(String(out.template)==="[object object]") out.template="generic";
+  for(const k of ["row","col","rowSpan","colSpan"]) if(out[k]!=null&&out[k]!=="") out[k]=parseInt(out[k]);
+  return out;
+}
+function livePreviewAuthoritativeStateMatches(store,current,ids){
+  const wanted=[...new Set((ids||[]).map(String))];
+  if(!wanted.length) return {applied:true,matched:0,missing:[],mismatched:[]};
+  const cm=livePreviewTileMaps(current);
+  const rm=new Map(((store&&store.state&&store.state.layout&&store.state.layout.tiles)||[]).filter(v=>v&&v.id!=null).map(v=>[String(v.id),v]));
+  const missing=[],mismatched=[]; let matched=0;
+  for(const id of wanted){
+    const a=rm.get(id),b=cm.get(id);
+    if(!a||!b){ missing.push(id); continue; }
+    if(Number(a.row)!==Number(b.row)||Number(a.col)!==Number(b.col)||Number(a.rowSpan)!==Number(b.rowSpan)||Number(a.colSpan)!==Number(b.colSpan)) mismatched.push(id);
+    else matched++;
+  }
+  return {applied:!missing.length&&!mismatched.length,matched,missing,mismatched};
+}
+async function livePreviewApplyHubitatFullLayout(win,current,storedPayload,info){
+  const gridTarget=livePreviewFindGridVue(win);
+  const probe=gridTarget&&gridTarget.store
+    ? {store:gridTarget.store,layout:gridTarget.store.state&&gridTarget.store.state.layout,score:200000,source:gridTarget.source||"visible-grid"}
+    : livePreviewHubitatStore(win,current);
+  if(!probe) return {applied:false,reason:"Hubitat dashboard Vuex store was not identified.",membership:{applied:false,missingAdded:(info.addedIds||[]).map(String),lingeringRemoved:(info.removedIds||[]).map(String)},authoritative:{applied:false}};
+  const store=probe.store;
+  try{
+    if(gridTarget&&gridTarget.store) console.debug(`[DLS Live Preview] Using visible Grid component Vuex store (${probe.source}, score ${probe.score}).`);
+    else if(probe.source&&probe.source.indexOf("set-layout")>=0) console.debug(`[DLS Live Preview] Using pinned Hubitat SET_LAYOUT store (${probe.source}, score ${probe.score}).`);
+  }catch(_e){}
+  // Hubitat Advanced does JSON.parse(importText) inside the dashboard window before
+  // SET_LAYOUT. Recreate that exact realm boundary here. Passing an object created
+  // in the DLS window directly into a Vue 2 store can replace authoritative state
+  // without making the dashboard renderer observe the new array membership.
+  let payload=null;
+  try{
+    const serialized=JSON.stringify(storedPayload||current||{});
+    payload=(win.JSON&&typeof win.JSON.parse==="function")?win.JSON.parse(serialized):JSON.parse(serialized);
+  }catch(_e){ payload=livePreviewClone(storedPayload||current)||{}; }
+  livePreviewExpandLayoutBounds(payload);
+  try{
+    // Rebind the guard remover *before* SET_LAYOUT. If the guard id block had to
+    // move because a real tile now owns an old guard id, leaving the previous
+    // MutationObserver active even for one render turn can delete that real tile
+    // as soon as Vue creates it. authorizeTrackedPreviewWindow() disconnects the
+    // old observer, installs suppression for the current guard ids, and removes
+    // only those current internal tiles.
+    authorizeTrackedPreviewWindow(win,previewWindowRecord(State.previewWindowId,"open"));
+    State.previewVuexReplayDepth++;
+    // This is the native Advanced -> Save JSON Layout state flow captured from
+    // Hubitat 2.4.3.119: JSON.parse(...) -> commit("SET_LAYOUT", layout) ->
+    // dispatch("saveLayout"). Let Hubitat rebuild every private grid/index
+    // structure instead of trying to synthesize membership deltas ourselves.
+    store.commit("SET_LAYOUT",payload);
+    // Hubitat Advanced performs this commit from a component in the same Vue tree.
+    // DLS invokes the same store externally, so explicitly make the visible Grid
+    // consume the new layout before verification instead of waiting for a page reload.
+    const gridRender=await livePreviewForceGridRender(win,gridTarget&&gridTarget.vm);
+    const p=store.dispatch("saveLayout");
+    if(p&&typeof p.then==="function") await p;
+    if(gridRender&&gridRender.forced){
+      try{ console.debug(`[DLS Live Preview] Forced visible Hubitat Grid render after SET_LAYOUT.`,gridRender); }catch(_e){}
+    }
+  }catch(e){
+    return {applied:false,reason:e&&e.message?e.message:String(e),storeScore:probe.score,membership:{applied:false,missingAdded:(info.addedIds||[]).map(String),lingeringRemoved:(info.removedIds||[]).map(String)},authoritative:{applied:false}};
+  }finally{
+    State.previewVuexReplayDepth=Math.max(0,State.previewVuexReplayDepth-1);
+  }
+  try{ authorizeTrackedPreviewWindow(win,previewWindowRecord(State.previewWindowId,"open")); }catch(_e){}
+  const membership=await livePreviewVerifyTileMembership(win,current,info,{delayMs:35,timeoutMs:2200,pollMs:35});
+  const currentIds=new Set((current&&Array.isArray(current.tiles)?current.tiles:[]).filter(t=>t&&t.id!=null).map(t=>String(t.id)));
+  const stateIds=new Set((((store.state||{}).layout||{}).tiles||[]).filter(t=>t&&t.id!=null).map(t=>String(t.id)));
+  const missingState=[...currentIds].filter(id=>!stateIds.has(id));
+  const lingeringState=(info.removedIds||[]).map(String).filter(id=>stateIds.has(id));
+  const verifyIds=[...(info.addedIds||[]),...(info.geometryIds||[]),...(info.contentIds||[])];
+  const authoritative=livePreviewAuthoritativeStateMatches(store,current,verifyIds);
+  const applied=!!(membership.applied&&authoritative.applied&&!missingState.length&&!lingeringState.length);
+  return {
+    applied,storeScore:probe.score,storeSource:probe.source||"",membership,authoritative,missingState,lingeringState,
+    reason:applied?"":`Hubitat full-layout transaction did not fully verify${!membership.applied?" (rendered membership)":""}${!authoritative.applied||missingState.length||lingeringState.length?" (authoritative layout state)":""}.`
+  };
+}
+
+async function livePreviewApplyHubitatNativeDelta(win,before,current,info){
+  const probe=livePreviewHubitatStore(win,before||current);
+  if(!probe) return {applied:false,reason:"Hubitat dashboard Vuex store was not identified.",membership:{applied:!info.structural,missingAdded:[],lingeringRemoved:[]},authoritative:{applied:false}};
+  const store=probe.store,layout=probe.layout;
+  const currentMap=livePreviewTileMaps(current);
+  const beforeMap=livePreviewTileMaps(before);
+  let added=0,removed=0,geometryTouched=0,contentTouched=0;
+  let saveNeeded=false;
+  const membershipChanged=!!((info.addedIds||[]).length||(info.removedIds||[]).length);
+  try{
+    State.previewVuexReplayDepth++;
+    // ADD_TILE / DELETE_TILE each dispatch saveLayout. Hubitat throttles saves for
+    // roughly two seconds after the first save, so a multi-tile copy can otherwise
+    // persist an intermediate one-tile layout. Force all mutation-triggered saves
+    // into the throttle window, then cancel that timer and issue one final save of
+    // the complete transaction below.
+    if(membershipChanged){
+      try{
+        if(store._mutations&&store._mutations.SET_LASTLAYOUTSAVE) store.commit("SET_LASTLAYOUTSAVE",Date.now());
+        else if(store.state) store.state.lastLayoutSave=Date.now();
+      }catch(_e){}
+    }
+    // Hubitat's native grid builder T(layout, grid) assumes the complete span of
+    // every tile fits inside rows/cols. Keep the running Preview's private bounds
+    // safely large enough without changing the DLS working layout.
+    const safetyDoc={rows:layout.rows,cols:layout.cols,tiles:[...(layout.tiles||[]),...((current&&current.tiles)||[])]};
+    livePreviewExpandLayoutBounds(safetyDoc);
+    const expand=()=>{
+      if(Number(layout.rows)!==Number(safetyDoc.rows)){ layout.rows=safetyDoc.rows; saveNeeded=true; }
+      if(Number(layout.cols)!==Number(safetyDoc.cols)){ layout.cols=safetyDoc.cols; saveNeeded=true; }
+    };
+    if(typeof store._withCommit==="function") store._withCommit(expand); else expand();
+
+    // Use the exact native Hubitat membership mutations observed in app.js.
+    for(const id of (info.removedIds||[]).map(String)){
+      const exists=(layout.tiles||[]).some(t=>t&&String(t.id)===id);
+      if(!exists) continue;
+      store.commit("DELETE_TILE",Number.isNaN(Number(id))?id:Number(id));
+      removed++;
+    }
+    for(const id of (info.addedIds||[]).map(String)){
+      if((layout.tiles||[]).some(t=>t&&String(t.id)===id)) continue;
+      const src=currentMap.get(id); if(!src) continue;
+      store.commit("ADD_TILE",livePreviewRuntimeNormalizeTile(src));
+      added++;
+    }
+
+    // Existing tile records are already the authoritative reactive objects used
+    // by Hubitat. Patch those objects in-place rather than replaying SET_LAYOUT,
+    // which replaces the whole layout and visibly reapplies every tile.
+    const changedIds=[...new Set([...(info.geometryIds||[]),...(info.contentIds||[])].map(String))];
+    if(changedIds.length){
+      const mutate=()=>{
+        for(const id of changedIds){
+          const target=(layout.tiles||[]).find(t=>t&&String(t.id)===id);
+          const src=currentMap.get(id);
+          if(!target||!src) continue;
+          if((info.geometryIds||[]).map(String).includes(id)){
+            for(const k of ["row","col","rowSpan","colSpan"]) if(src[k]!=null) target[k]=parseInt(src[k]);
+            geometryTouched++;
+          }
+          if((info.contentIds||[]).map(String).includes(id)){
+            for(const [k,v] of Object.entries(src)){
+              if(k==="id"||["row","col","rowSpan","colSpan"].includes(k)) continue;
+              target[k]=livePreviewClone(v);
+            }
+            contentTouched++;
+          }
+        }
+      };
+      if(typeof store._withCommit==="function") store._withCommit(mutate); else mutate();
+      saveNeeded=true;
+    }
+
+    // Keep grid-size fields authoritative without replacing the layout object.
+    if(info.gridChanged){
+      const mutateGrid=()=>{
+        for(const k of ["rows","cols","colWidth","rowHeight","gridGap"]){
+          if(Object.prototype.hasOwnProperty.call(current,k)){
+            const v=livePreviewClone(current[k]);
+            layout[k]=(k==="rows"||k==="cols"||k==="gridGap")&&v!==""?parseInt(v):v;
+          }
+        }
+        livePreviewExpandLayoutBounds(layout);
+      };
+      if(typeof store._withCommit==="function") store._withCommit(mutateGrid); else mutateGrid();
+      saveNeeded=true;
+    }
+    // Commit the complete DLS transaction exactly once. Native membership
+    // mutations have already scheduled throttled saves; cancel the pending timer
+    // and reset Hubitat's last-save gate so this dispatch posts the final complete
+    // layout immediately instead of an intermediate cluster state.
+    if(membershipChanged||saveNeeded) {
+      try{ if(store.timer){ clearTimeout(store.timer); store.timer=null; } }catch(_e){}
+      try{
+        if(store._mutations&&store._mutations.SET_LASTLAYOUTSAVE) store.commit("SET_LASTLAYOUTSAVE","");
+        else if(store.state) store.state.lastLayoutSave="";
+      }catch(_e){}
+      const p=store.dispatch("saveLayout");
+      if(p&&typeof p.then==="function") await p;
+    }
+  }catch(e){
+    return {applied:false,reason:e&&e.message?e.message:String(e),storeScore:probe.score,membership:{applied:false,missingAdded:(info.addedIds||[]).map(String),lingeringRemoved:[]},authoritative:{applied:false}};
+  }finally{
+    State.previewVuexReplayDepth=Math.max(0,State.previewVuexReplayDepth-1);
+  }
+  await new Promise(resolve=>setTimeout(resolve,120));
+  const membership=await livePreviewVerifyTileMembership(win,current,info,{delayMs:120});
+  const authoritative=livePreviewAuthoritativeStateMatches(store,current,[...(info.addedIds||[]),...(info.geometryIds||[]),...(info.contentIds||[])]);
+  return {
+    applied:!!(membership.applied&&authoritative.applied),
+    storeScore:probe.score,added,removed,geometryTouched,contentTouched,
+    membership,authoritative,
+    reason:(membership.applied&&authoritative.applied)?"":`Hubitat native delta did not fully verify${!membership.applied?" (rendered membership)":""}${!authoritative.applied?" (authoritative tile state)":""}.`
+  };
+}
+
+async function livePreviewRuntimePatch(before,current,storedPayload,info,{devicesChanged=false}={}){
   const win=State.previewWindowRef;
   if(!win||win.closed||!previewWindowIsExpectedDashboard(win,State.previewWindowId)) return {mode:"none",requiresRefresh:false,reason:"Preview window is not on the temporary dashboard."};
+
+  // v620: Structural changes use the exact no-reload flow Hubitat's Advanced
+  // JSON editor uses: SET_LAYOUT followed by saveLayout. This proved reliable in
+  // the native UI for arbitrary complete-layout replacement, including clusters.
+  // Keep targeted authoritative geometry updates for ordinary move/resize so a
+  // simple drag does not needlessly reapply the complete layout.
+  if(!devicesChanged&&!info.hardRefresh&&info.structural){
+    const fullLayout=await livePreviewApplyHubitatFullLayout(win,current,storedPayload,info);
+    if(fullLayout.applied){
+      let cssApplied=true,backgroundApplied=true;
+      if(info.cssChanged) cssApplied=livePreviewPatchDashboardCss(win,storedPayload);
+      if(info.backgroundChanged) backgroundApplied=livePreviewPatchBackground(win,current);
+      const geometry=livePreviewPatchTileGeometry(win,current,[...(info.addedIds||[]),...(info.geometryIds||[])]);
+      const order=info.orderChanged?livePreviewPatchTileOrder(win,current):{applied:true,moved:0,missing:0};
+      livePreviewInstallDiagnostics(win,{mode:"hubitat-full-layout",requiresRefresh:false,devicesChanged:false,authoritativeLayoutApplied:true,structuralMembershipApplied:fullLayout.membership&&fullLayout.membership.applied,missingAdded:fullLayout.membership&&fullLayout.membership.missingAdded||[],lingeringRemoved:fullLayout.membership&&fullLayout.membership.lingeringRemoved||[],nativeStoreScore:fullLayout.storeScore||0,geometryPatched:geometry.patched,geometryMissing:geometry.missing,orderPatched:order.applied,cssApplied,backgroundApplied,changeInfo:livePreviewClone(info)});
+      try{ console.info(`[DLS Live Preview] Full layout transaction applied: +${(info.addedIds||[]).length} -${(info.removedIds||[]).length}.`); }catch(_e){}
+      return {mode:"hubitat-full-layout",requiresRefresh:false,vueApplied:true,authoritativeApplied:true,geometry,order,membership:fullLayout.membership||{applied:true,missingAdded:[],lingeringRemoved:[]},cssApplied,backgroundApplied,vueProbe:{candidate:null,instanceCount:1,visited:0},fullLayout};
+    }
+    const authoritativeAccepted=!!(fullLayout.authoritative&&fullLayout.authoritative.applied&&!(fullLayout.missingState||[]).length&&!(fullLayout.lingeringState||[]).length);
+    if(authoritativeAccepted){
+      // Hubitat has accepted the complete layout. Do not reload the dashboard just
+      // because its Vue component tree is still catching up. Advancing the live
+      // baseline here is safe because Hubitat's own authoritative layout is already
+      // the DLS layout; a passive catch-up check below will patch geometry/order as
+      // soon as the new components appear.
+      try{
+        trace(`Hubitat accepted the full layout; rendered tile membership is still catching up.`,null,"ok");
+        console.info(`[DLS Live Preview] Full layout accepted; render membership pending.`,fullLayout);
+      }catch(_e){}
+      return {mode:"hubitat-full-layout-render-pending",requiresRefresh:false,renderPending:true,vueApplied:true,authoritativeApplied:true,geometry:{patched:0,missing:(info.addedIds||[]).length},order:{applied:true,moved:0,missing:0},membership:fullLayout.membership||{applied:false,missingAdded:(info.addedIds||[]).map(String),lingeringRemoved:(info.removedIds||[]).map(String)},cssApplied:true,backgroundApplied:true,vueProbe:{candidate:null,instanceCount:1,visited:0},fullLayout};
+    }
+    try{
+      trace(`Hubitat full-layout transaction did not verify: ${fullLayout.reason||"unknown reason"}. DLS will retry without reloading Preview.`,null,"err");
+      console.warn(`[DLS Live Preview] Full layout transaction failed verification: ${fullLayout.reason||"unknown reason"}`,fullLayout);
+    }catch(_e){}
+    // A failed structural live apply must not automatically reload Preview. Reloads
+    // were masking the real failure, flashing the protection UI, and causing later
+    // edits to cascade. Keep the pre-change baseline so the bounded retry mechanism
+    // can try the same structural transaction again in place.
+    return {mode:"hubitat-full-layout-pending",requiresRefresh:false,vueApplied:false,authoritativeApplied:false,geometry:{patched:0,missing:(info.addedIds||[]).length},order:{applied:false,moved:0,missing:0},membership:fullLayout.membership||{applied:false,missingAdded:(info.addedIds||[]).map(String),lingeringRemoved:(info.removedIds||[]).map(String)},cssApplied:true,backgroundApplied:true,vueProbe:{candidate:null,instanceCount:0,visited:0},fullLayout,structuralFreshRuntime:false};
+  }
+
+  // Existing-tile changes can use Hubitat's native reactive records without
+  // replacing the entire layout.
+  if(!devicesChanged&&!info.hardRefresh&&!info.structural){
+    const nativeDelta=await livePreviewApplyHubitatNativeDelta(win,before,current,info);
+    if(nativeDelta.applied){
+      try{ console.info(`[DLS Live Preview] Native transaction applied: +${nativeDelta.added||0} -${nativeDelta.removed||0}, geometry ${nativeDelta.geometryTouched||0}, content ${nativeDelta.contentTouched||0}.`); }catch(_e){}
+      let cssApplied=true,backgroundApplied=true;
+      if(info.cssChanged) cssApplied=livePreviewPatchDashboardCss(win,storedPayload);
+      if(info.backgroundChanged) backgroundApplied=livePreviewPatchBackground(win,current);
+      const geometry=livePreviewPatchTileGeometry(win,current,info.geometryIds||[]);
+      const order=info.orderChanged?livePreviewPatchTileOrder(win,current):{applied:true,moved:0,missing:0};
+      livePreviewInstallDiagnostics(win,{mode:"hubitat-native-delta",requiresRefresh:false,devicesChanged:false,authoritativeLayoutApplied:true,structuralMembershipApplied:nativeDelta.membership&&nativeDelta.membership.applied,missingAdded:nativeDelta.membership&&nativeDelta.membership.missingAdded||[],lingeringRemoved:nativeDelta.membership&&nativeDelta.membership.lingeringRemoved||[],nativeAdded:nativeDelta.added||0,nativeRemoved:nativeDelta.removed||0,nativeGeometryTouched:nativeDelta.geometryTouched||0,nativeContentTouched:nativeDelta.contentTouched||0,nativeStoreScore:nativeDelta.storeScore||0,geometryPatched:geometry.patched,geometryMissing:geometry.missing,orderPatched:order.applied,cssApplied,backgroundApplied,changeInfo:livePreviewClone(info)});
+      return {mode:"hubitat-native-delta",requiresRefresh:false,vueApplied:true,authoritativeApplied:true,geometry,order,membership:nativeDelta.membership||{applied:true,missingAdded:[],lingeringRemoved:[]},cssApplied,backgroundApplied,vueProbe:{candidate:null,instanceCount:1,visited:0},nativeDelta};
+    }
+    try{
+      trace(`Hubitat native live delta did not verify: ${nativeDelta.reason||"unknown reason"}.`,null,"err");
+      console.warn(`[DLS Live Preview] Native transaction failed verification: ${nativeDelta.reason||"unknown reason"}`,nativeDelta);
+    }catch(_e){}
+  }
+
+  // v618: If Hubitat's own Advanced JSON editor has revealed a native full-layout
+  // action for this Preview runtime, use that verified action before any inferred
+  // per-tile path. This is the closest available equivalent to Hubitat applying a
+  // complete replacement layout without reloading the dashboard page.
+  if(!devicesChanged&&!info.hardRefresh&&State.previewNativeFullLayoutRecipe){
+    const fullNative=await livePreviewReplayNativeFullLayoutAction(win,current,storedPayload,info);
+    if(fullNative.applied){
+      let cssApplied=true,backgroundApplied=true;
+      if(info.cssChanged) cssApplied=livePreviewPatchDashboardCss(win,storedPayload);
+      if(info.backgroundChanged) backgroundApplied=livePreviewPatchBackground(win,current);
+      const geometry=livePreviewPatchTileGeometry(win,current,info.geometryIds||[]);
+      const order=info.orderChanged?livePreviewPatchTileOrder(win,current):{applied:true,moved:0,missing:0};
+      livePreviewInstallDiagnostics(win,{mode:"native-full-layout",requiresRefresh:false,devicesChanged:false,nativeFullLayoutAction:fullNative.type,authoritativeLayoutApplied:true,structuralMembershipApplied:fullNative.membership&&fullNative.membership.applied,missingAdded:fullNative.membership&&fullNative.membership.missingAdded||[],lingeringRemoved:fullNative.membership&&fullNative.membership.lingeringRemoved||[],geometryPatched:geometry.patched,geometryMissing:geometry.missing,orderPatched:order.applied,cssApplied,backgroundApplied,changeInfo:livePreviewClone(info)});
+      return {mode:"native-full-layout",requiresRefresh:false,vueApplied:true,authoritativeApplied:true,geometry,order,membership:fullNative.membership||{applied:true,missingAdded:[],lingeringRemoved:[]},cssApplied,backgroundApplied,vueProbe:{candidate:null,instanceCount:0,visited:0},nativeFullLayout:fullNative};
+    }
+    try{ trace(`Learned native full-layout action ${State.previewNativeFullLayoutRecipe.type} did not verify: ${fullNative.reason||"unknown reason"}.`,null,"err"); }catch(_e){}
+  }
+
+  // Structural membership changes use the real Vuex store, not the earlier
+  // heuristic layout-object mutation. If the currently running dashboard already
+  // has the necessary device/variable authorization, push/splice the tile record
+  // in the reactive store and let Hubitat instantiate/destroy its own component.
+  // Verify the DOM afterward; refresh remains only a safety fallback.
+  if(info&&info.structural){
+    const hasAdds=!!((info.addedIds||[]).length);
+    // v616 diagnostic safety: do not insert new tile objects into Hubitat's live
+    // component/Vuex arrays. That speculative path can leave Hubitat's private
+    // SET_LAYOUT indexing structures inconsistent. Capture a real native Preview
+    // Add Tile transaction first, then implement against the observed contract.
+    if(hasAdds){
+      const membership=await livePreviewVerifyTileMembership(win,current,info,{delayMs:0});
+      const geometry={patched:0,missing:(info.addedIds||[]).length};
+      const order={applied:true,moved:0,missing:0};
+      const componentPatch={applied:false,reason:"v616 diagnostic safety: speculative live tile insertion disabled until Hubitat native Add Tile sequence is captured."};
+      const storePatch={applied:false,reason:componentPatch.reason,probe:{candidate:null,storeCount:0,visited:0}};
+      const nativePatch={applied:false,committed:false,reason:componentPatch.reason};
+      livePreviewInstallDiagnostics(win,{mode:"native-add-learning",requiresRefresh:false,devicesChanged,authoritativeLayoutApplied:false,structuralMembershipApplied:membership.applied,missingAdded:membership.missingAdded||[],lingeringRemoved:membership.lingeringRemoved||[],componentReason:componentPatch.reason,storeReason:storePatch.reason,nativeLayoutReason:nativePatch.reason,changeInfo:livePreviewClone(info)});
+      return {mode:"native-add-learning",requiresRefresh:false,vueApplied:false,authoritativeApplied:false,geometry,order,membership,cssApplied:true,backgroundApplied:true,vueProbe:{candidate:null,instanceCount:0,visited:0},structuralFreshRuntime:false,componentPatch,storePatch,nativePatch,nativeAddLearning:true};
+    }
+    const geometry={patched:0,missing:0};
+    let order={applied:true,moved:0,missing:0};
+    // Membership changes must not replay the complete SET_LAYOUT payload: doing
+    // so can reapply/reset every existing tile. Apply the membership delta as one
+    // transaction to the renderer-owned array and the authoritative Vuex array.
+    let nativePatch={applied:false,committed:false,reason:devicesChanged?"device/variable authorization changed":"full SET_LAYOUT intentionally avoided for structural live sync"};
+    let componentPatch={applied:false,probe:{candidate:null,instances:0,arrays:0},added:0,removed:0,reason:devicesChanged?"device/variable authorization changed":"component tile array not attempted"};
+    if(!devicesChanged) componentPatch=await livePreviewPatchRenderedTileMembership(win,before,current,info);
+
+    let storePatch={applied:false,probe:{candidate:null,storeCount:0,visited:0},added:0,removed:0,reason:componentPatch.reason||"authoritative Vuex membership update did not apply"};
+    if(!devicesChanged) storePatch=livePreviewPatchVuexMembership(win,before,current,info);
+
+    const membership=await livePreviewVerifyTileMembership(win,current,info,{delayMs:(componentPatch.applied||storePatch.applied)?220:0});
+
+    if(membership.applied){
+      const geomIds=[...(info.addedIds||[]),...(info.geometryIds||[])];
+      if(geomIds.length){ const g=livePreviewPatchTileGeometry(win,current,geomIds); geometry.patched=g.patched;geometry.missing=g.missing; }
+      if(info.orderChanged) order=livePreviewPatchTileOrder(win,current);
+    }
+    const anyLiveApplied=!!(componentPatch.applied||storePatch.applied);
+    const failedAddedMembership=!!((info.addedIds||[]).length&&!membership.applied&&!devicesChanged);
+    const requiresRefresh=!!(devicesChanged||(!failedAddedMembership&&(!anyLiveApplied||!membership.applied||(info.orderChanged&&!order.applied))));
+    const vueProbe={candidate:storePatch.probe&&storePatch.probe.candidate||null,instanceCount:storePatch.probe&&storePatch.probe.storeCount||0,visited:storePatch.probe&&storePatch.probe.visited||0};
+    const structuralMode=requiresRefresh?"refresh":(membership.applied?"live-structural":"live-add-pending");
+    livePreviewInstallDiagnostics(win,{mode:structuralMode,requiresRefresh,devicesChanged,structuralFreshRuntime:requiresRefresh,authoritativeLayoutApplied:!!storePatch.applied,componentTileArrayApplied:!!componentPatch.applied,componentTileArrayPath:componentPatch.path||"",componentTileArraySource:componentPatch.source||"",componentTileArrayScore:componentPatch.score||0,componentTileArraysScanned:componentPatch.probe&&componentPatch.probe.arrays||0,componentVueInstances:componentPatch.probe&&componentPatch.probe.instances||0,componentReason:componentPatch.reason||"",nativeLayoutMutationApplied:!!nativePatch.committed,nativeLayoutMutationType:nativePatch.type||(State.previewVuexLayoutRecipe&&State.previewVuexLayoutRecipe.type)||"",nativeLayoutTilePath:nativePatch.path||(State.previewVuexLayoutRecipe&&State.previewVuexLayoutRecipe.tilePath||[]).join("."),nativeLayoutReason:nativePatch.reason||"",vueFound:!!vueProbe.candidate,vuePath:storePatch.path||"",vueScore:storePatch.score||0,vueInstances:vueProbe.instanceCount,objectsVisited:vueProbe.visited,geometryPatched:geometry.patched,geometryMissing:geometry.missing,orderPatched:order.applied,orderMoved:order.moved,orderMissing:order.missing,structuralMembershipApplied:membership.applied,missingAdded:membership.missingAdded||[],lingeringRemoved:membership.lingeringRemoved||[],storeAdded:storePatch.added||0,storeRemoved:storePatch.removed||0,storeReason:storePatch.reason||"",cssApplied:true,backgroundApplied:true,changeInfo:livePreviewClone(info)});
+    return {mode:structuralMode,requiresRefresh,vueApplied:anyLiveApplied,authoritativeApplied:!!storePatch.applied,geometry,order,membership,cssApplied:true,backgroundApplied:true,vueProbe,structuralFreshRuntime:requiresRefresh,componentPatch,storePatch,nativePatch};
+  }
+
   let vueProbe={candidate:null,instanceCount:0,visited:0},vueApplied=false;
-  try{ vueProbe=livePreviewFindLayoutModel(win,before||current); }catch(_e){}
-  const runtimeNeedsModel=!!(info.structural||info.contentIds.length||info.gridChanged);
-  if(vueProbe.candidate&&!devicesChanged&&!info.hardRefresh){ vueApplied=livePreviewApplyLayoutModel(win,vueProbe.candidate,current,info); }
+  let nativePatch={applied:false,committed:false,reason:"Hubitat native layout mutation was not required."};
+  let geometryAuthoritative={applied:true,patched:0,missing:[],path:"",score:0};
+  const geometryOnly=!!(info.geometryIds.length&&!info.contentIds.length&&!info.gridChanged&&!info.hardRefresh);
+  if(!devicesChanged&&!info.hardRefresh&&geometryOnly){
+    geometryAuthoritative=livePreviewPatchAuthoritativeTileGeometry(win,before,current,info.geometryIds);
+  }else if(!devicesChanged&&!info.hardRefresh){
+    nativePatch=await livePreviewReplayNativeLayoutMutation(win,current,storedPayload,info,{verifyMembership:false});
+  }
+  // For a pure move/resize, never replay the complete layout just because a
+  // targeted authoritative record could not be found; that caused every tile to
+  // reset on the first move. For broader content/grid changes retain the existing
+  // layout-model fallback.
+  if(!geometryOnly&&!nativePatch.committed){
+    try{ vueProbe=livePreviewFindLayoutModel(win,before||current); }catch(_e){}
+    if(vueProbe.candidate&&!devicesChanged&&!info.hardRefresh) vueApplied=livePreviewApplyLayoutModel(win,vueProbe.candidate,current,info);
+  }
+  const authoritativeApplied=geometryOnly?!!geometryAuthoritative.applied:!!(nativePatch.committed||vueApplied);
+  const runtimeNeedsModel=!!(info.geometryIds.length||info.contentIds.length||info.gridChanged);
   const geometry=livePreviewPatchTileGeometry(win,current,info.geometryIds);
   const order=info.orderChanged?livePreviewPatchTileOrder(win,current):{applied:true,moved:0,missing:0};
   const orderApplied=!info.orderChanged||vueApplied||order.applied;
@@ -6109,23 +7375,124 @@ function livePreviewRuntimePatch(before,current,storedPayload,info,{devicesChang
   if(info.cssChanged) cssApplied=livePreviewPatchDashboardCss(win,storedPayload);
   let backgroundApplied=true;
   if(info.backgroundChanged) backgroundApplied=livePreviewPatchBackground(win,current);
-  let requiresRefresh=!!(info.hardRefresh||devicesChanged||(runtimeNeedsModel&&!vueApplied)||(info.orderChanged&&!orderApplied)||(info.cssChanged&&!cssApplied)||(info.backgroundChanged&&!backgroundApplied));
-  const mode=requiresRefresh?"refresh":(vueApplied?"vue":"dom");
-  livePreviewInstallDiagnostics(win,{mode,requiresRefresh,devicesChanged,vueFound:!!vueProbe.candidate,vuePath:vueProbe.candidate&&vueProbe.candidate.path||"",vueScore:vueProbe.candidate&&vueProbe.candidate.score||0,vueInstances:vueProbe.instanceCount,objectsVisited:vueProbe.visited,geometryPatched:geometry.patched,geometryMissing:geometry.missing,orderPatched:order.applied,orderMoved:order.moved,orderMissing:order.missing,cssApplied,backgroundApplied,changeInfo:livePreviewClone(info)});
-  return {mode,requiresRefresh,vueApplied,geometry,order,cssApplied,backgroundApplied,vueProbe};
+  const membership={applied:true,missingAdded:[],lingeringRemoved:[],expectedCount:(current&&Array.isArray(current.tiles)?current.tiles.length:0),actualCount:0};
+  let requiresRefresh=!!(info.hardRefresh||devicesChanged||(runtimeNeedsModel&&!authoritativeApplied)||(info.orderChanged&&!orderApplied)||(info.cssChanged&&!cssApplied)||(info.backgroundChanged&&!backgroundApplied));
+  const mode=requiresRefresh?"refresh":(geometryOnly&&geometryAuthoritative.applied?"targeted-vuex":(nativePatch.committed?"native-vuex":(vueApplied?"vue":"dom")));
+  livePreviewInstallDiagnostics(win,{mode,requiresRefresh,devicesChanged,authoritativeLayoutApplied:authoritativeApplied,targetedGeometryApplied:!!geometryAuthoritative.applied,targetedGeometryPatched:geometryAuthoritative.patched||0,targetedGeometryMissing:geometryAuthoritative.missing||[],targetedGeometryPath:geometryAuthoritative.path||"",nativeLayoutMutationApplied:!!nativePatch.committed,nativeLayoutMutationType:nativePatch.type||(State.previewVuexLayoutRecipe&&State.previewVuexLayoutRecipe.type)||"",nativeLayoutReason:nativePatch.reason||"",vueFound:!!vueProbe.candidate,vuePath:vueProbe.candidate&&vueProbe.candidate.path||"",vueScore:vueProbe.candidate&&vueProbe.candidate.score||0,vueInstances:vueProbe.instanceCount,objectsVisited:vueProbe.visited,geometryPatched:geometry.patched,geometryMissing:geometry.missing,orderPatched:order.applied,orderMoved:order.moved,orderMissing:order.missing,structuralMembershipApplied:true,missingAdded:[],lingeringRemoved:[],cssApplied,backgroundApplied,changeInfo:livePreviewClone(info)});
+  return {mode,requiresRefresh,vueApplied:authoritativeApplied,authoritativeApplied,geometry,order,membership,cssApplied,backgroundApplied,vueProbe,nativePatch};
+}
+function livePreviewFreshNavigationUrl(baseOverride=""){
+  const td=temporaryDashboardState();
+  // Prefer the exact dashboard URL returned by Hubitat while resolving the fresh
+  // request-token/layout context. This mirrors openCurrentDashboardPreview(),
+  // which launches result.dashUrl instead of reconstructing a URL from metadata.
+  const base=String(baseOverride||td.lastDashUrl||dashboardPageUrlForMeta(td.meta)||"");
+  if(!base) return "";
+  let url=previewLaunchUrl(base,State.previewWindowId,State.previewWindowAccessToken,State.previewRevealTileId);
+  try{ const u=new URL(url,window.location.href); u.searchParams.set("dlsLiveRuntime",String(Date.now())); return u.toString(); }
+  catch(_e){ return url+(url.includes("?")?"&":"?")+"dlsLiveRuntime="+encodeURIComponent(String(Date.now())); }
+}
+async function livePreviewFreshNavigateWindow(reason="",{devicesChanged=false,dashUrl=""}={}){
+  const win=State.previewWindowRef;
+  if(!win||win.closed||!previewWindowIsExpectedDashboard(win,State.previewWindowId)) return false;
+  // Hubitat's dashboard child/device update is verified synchronously by DLS, but
+  // the dashboard runtime endpoints can lag the admin update very briefly. Give a
+  // device-authorization change a larger settling window before starting a new app
+  // runtime. Even without a device change, allow the just-POSTed layout to become
+  // the page-load source before navigating.
+  await new Promise(resolve=>setTimeout(resolve,devicesChanged?700:220));
+  let resolvedDashUrl=String(dashUrl||"");
+  try{
+    // Resolve ANOTHER fresh requestToken/layout context after the structural POST.
+    // A normal Preview open resolves the page context immediately before saving and
+    // then launches the exact Hubitat-resolved dashboard URL. Repeating the resolve
+    // here proves that a newly initialized dashboard page can see the new membership
+    // rather than only the requestToken endpoint used by the POST.
+    const freshContext=await resolveDashboardLayoutContext(temporaryDashboardState().meta);
+    const stored=await fetchTemporaryPreviewLayoutDoc(freshContext);
+    const expected=livePreviewTileMaps(normalizeLoadedJson(serializeLayout()));
+    const actual=livePreviewTileMaps(stored);
+    const missing=[...expected.keys()].filter(id=>!actual.has(id));
+    const extra=[...actual.keys()].filter(id=>!expected.has(id)&&!String(id).match(/^$/));
+    if(missing.length) throw new Error(`temporary dashboard fresh-context readback is still missing tile${missing.length===1?"":"s"} ${missing.join(", ")}`);
+    resolvedDashUrl=freshContext.dashUrl||resolvedDashUrl;
+  }catch(e){
+    trace(`Fresh Preview runtime readiness check failed; navigation will still be attempted: ${e&&e.message?e.message:e}`,null,"err");
+    if(devicesChanged) await new Promise(resolve=>setTimeout(resolve,500));
+  }
+  const url=livePreviewFreshNavigationUrl(resolvedDashUrl);
+  if(!url) return false;
+  try{
+    try{ win.__DLS_CONTROLLED_PREVIEW_RELOAD__=true; }catch(_e){}
+    try{ storePreviewBusyRecord(previewWindowRecord(State.previewWindowId,"open"),{announce:false}); }catch(_e){}
+    // A direct dashboard->dashboard replace can leave Hubitat's current Vue/Vuex
+    // runtime alive long enough to interfere with the next app initialization. A
+    // manual close/reopen succeeds because that runtime is destroyed first. Do the
+    // same transparently: replace the current document with DLS's neutral working
+    // page, give the old runtime a turn to tear down, then navigate to the freshly
+    // resolved temporary-dashboard URL in the SAME browser window.
+    writePreviewLaunchPage(win,"Refreshing Dashboard Preview","DLS updated the temporary dashboard. Starting a fresh Hubitat dashboard runtime…");
+    await new Promise(resolve=>setTimeout(resolve,180));
+    if(win.closed) return false;
+    win.location.replace(url);
+    startPreviewVuexSniffer(win,{durationMs:10000});
+    const rec=previewWindowRecord(State.previewWindowId,"open");
+    for(const delay of [60,100,180,300,500,650,900,1100,1600]) setTimeout(()=>{ try{
+      if(State.previewWindowId) storePreviewBusyRecord(previewWindowRecord(State.previewWindowId,"open"),{announce:false});
+      installOwnedPreviewGuardSuppression(State.previewWindowRef,rec);
+      authorizeTrackedPreviewWindow(State.previewWindowRef,rec);
+    }catch(_e){} },delay);
+    setTimeout(()=>{ try{ if(State.previewWindowRef&&!State.previewWindowRef.closed) installPreviewWindowHeartbeat(State.previewWindowRef,previewWindowRecord(State.previewWindowId,"open")); }catch(_e){} },1500);
+    trace(`Live Preview started a fresh dashboard runtime${reason?`: ${reason}`:""}.`,url,"ok");
+    return true;
+  }catch(_e){ return false; }
 }
 function livePreviewReloadWindow(reason=""){
   const win=State.previewWindowRef;
   if(!win||win.closed||!previewWindowIsExpectedDashboard(win,State.previewWindowId)) return false;
   try{
+    const currentUrl=win.location.href;
+    let reloadUrl=currentUrl;
+    try{
+      const u=new URL(currentUrl);
+      u.searchParams.set("dlsControlledRefresh",String(Date.now()));
+      reloadUrl=u.toString();
+    }catch(_e){}
     try{ win.__DLS_CONTROLLED_PREVIEW_RELOAD__=true; }catch(_e){}
     try{ storePreviewBusyRecord(previewWindowRecord(State.previewWindowId,"open"),{announce:false}); }catch(_e){}
-    win.location.reload();
-    for(const delay of [80,220,500]) setTimeout(()=>{ try{ if(State.previewWindowId) storePreviewBusyRecord(previewWindowRecord(State.previewWindowId,"open"),{announce:false}); }catch(_e){} },delay);
-    setTimeout(()=>{ try{ if(State.previewWindowRef&&!State.previewWindowRef.closed) installPreviewWindowHeartbeat(State.previewWindowRef,previewWindowRecord(State.previewWindowId,"open")); }catch(_e){} },850);
-    trace(`Live Preview used a dashboard refresh${reason?`: ${reason}`:""}.`,null,"ok");
+    // Mask the dashboard during an unavoidable DLS-controlled reload. This both
+    // destroys the old Hubitat runtime cleanly and prevents the temporary-dashboard
+    // direct-open protection overlay from flashing while the new runtime starts.
+    writePreviewLaunchPage(win,"Refreshing Dashboard Preview","DLS is refreshing the live Preview. The dashboard will return automatically…");
+    setTimeout(()=>{
+      try{ if(!win.closed) win.location.replace(reloadUrl); }catch(_e){}
+    },60);
+    startPreviewVuexSniffer(win,{durationMs:10000});
+    const rec=previewWindowRecord(State.previewWindowId,"open");
+    for(const delay of [90,140,220,320,500,750,1050,1450]) setTimeout(()=>{
+      try{
+        if(State.previewWindowId) storePreviewBusyRecord(previewWindowRecord(State.previewWindowId,"open"),{announce:false});
+        installOwnedPreviewGuardSuppression(State.previewWindowRef,rec);
+        authorizeTrackedPreviewWindow(State.previewWindowRef,rec);
+      }catch(_e){}
+    },delay);
+    trace(`Live Preview used a masked dashboard refresh${reason?`: ${reason}`:""}.`,null,"ok");
     return true;
   }catch(_e){ return false; }
+}
+
+async function ensurePreviewFullAuthorizationForLinkedSession({reloadRuntime=false}={}){
+  if(!previewFullAuthorizationDesired()||!ownedPreviewDashboardIsOpen()||!temporaryDashboardPreviewUsable()) return {changed:false,count:0};
+  let payload;
+  try{ payload=normalizeLoadedJson(livePreviewClone(serializeLayout())); }catch(_e){ payload=livePreviewClone(State.previewLayoutBaseline)||{}; }
+  const td=temporaryDashboardState();
+  const desired=await temporaryDashboardAuthorizationRequirements(payload,{authorizeAll:true,refreshVariableInventory:true});
+  const changed=td.deviceSignature!==desired.signature || !State.previewFullAuthorizationActive;
+  const count=await synchronizeTemporaryDashboardDevices(payload,{force:changed,authorizeAll:true,previewSession:true,refreshVariableInventory:true});
+  if(changed&&reloadRuntime){
+    if(!livePreviewReloadWindow("Two Way Preview authorization expanded to all hub devices and Hub Variables")) throw new Error("the Preview window could not reload after Two Way authorization was expanded");
+  }
+  return {changed,count};
 }
 async function hardResyncOwnedPreviewAfterHubReload(reason="Hub dashboard reload"){
   if(!ownedPreviewDashboardIsOpen()) return {attempted:false,refreshed:false,closed:false};
@@ -6144,7 +7511,7 @@ async function hardResyncOwnedPreviewAfterHubReload(reason="Hub dashboard reload
     const files=await prepareTemporaryPreviewFileCopies(livePreviewClone(current));
     let payload=files.payload;
     await sanitizeTemporaryPreviewInvalidDeviceAssignments(payload);
-    await synchronizeTemporaryDashboardDevices(payload,{force:true});
+    await synchronizeTemporaryDashboardDevices(payload,{force:true,authorizeAll:previewFullAuthorizationDesired(),previewSession:true,refreshVariableInventory:previewFullAuthorizationDesired()});
     const guarded=addTemporaryPreviewAccessWarning(payload);
     payload=guarded.payload;
     State.previewWarningTileId=guarded.tileId;
@@ -6192,21 +7559,25 @@ function livePreviewPreparePayloadForExistingWindow(raw,info){
       }catch(_e){}
     }
     await sanitizeTemporaryPreviewInvalidDeviceAssignments(payload);
+    // v618: Hubitat's grid builder requires every tile span to fit inside rows/cols.
+    // Expand only the temporary Preview copy; never alter the DLS working layout.
+    livePreviewExpandLayoutBounds(payload);
     const td=temporaryDashboardState();
-    const ids=temporaryDashboardDeviceIds(payload),variables=[...layoutHubVariableNames(payload)];
-    const signature=temporaryDashboardDeviceSignature(ids,variables);
-    // Compare authorization requirements with the Preview layout that is actually
-    // on the hub, not only the transient temporary-dashboard cache. The cache can
-    // be cleared by dashboard-list/meta refreshes even though the authorized
-    // device set has not changed; treating that as a real device change caused the
-    // first geometry-only live edit to unnecessarily reload Preview.
-    const baselineDoc=State.previewLayoutBaseline&&typeof State.previewLayoutBaseline==="object"?State.previewLayoutBaseline:null;
-    const baselineSignature=baselineDoc
-      ? temporaryDashboardDeviceSignature(temporaryDashboardDeviceIds(baselineDoc),[...layoutHubVariableNames(baselineDoc)])
-      : null;
-    const devicesChanged=baselineSignature!=null ? baselineSignature!==signature : (td.deviceSignature!=null&&td.deviceSignature!==signature);
-    if(devicesChanged) await synchronizeTemporaryDashboardDevices(payload,{force:false});
-    else td.deviceSignature=signature;
+    const fullPreviewAuthorization=previewFullAuthorizationDesired()&&State.previewFullAuthorizationActive;
+    const preserveSignature=fullPreviewAuthorization?null:td.deviceSignature;
+    const desired=await temporaryDashboardAuthorizationRequirements(payload,{authorizeAll:fullPreviewAuthorization,preserveSignature});
+    const signature=desired.signature;
+    // In a Two Way (or remembered Apply) Preview session, the temporary dashboard
+    // is pre-authorized for every device/Hub Variable DLS could discover when the
+    // session was prepared. A tile using any of those already-authorized sources
+    // therefore does not count as an authorization change and stays on the live
+    // Vuex structural path. Disabled/One Way retain layout-scoped authorization.
+    let devicesChanged=td.deviceSignature!=null ? td.deviceSignature!==signature : false;
+    if(devicesChanged){
+      await synchronizeTemporaryDashboardDevices(payload,{force:true,authorizeAll:fullPreviewAuthorization,preserveSignature,previewSession:true});
+    }else if(!td.deviceSignature){
+      td.deviceSignature=signature;
+    }
     const guarded=addTemporaryPreviewAccessWarning(payload);
     State.previewWarningTileId=guarded.tileId;
     State.previewRevealTileId=guarded.revealTileId;
@@ -6214,6 +7585,30 @@ function livePreviewPreparePayloadForExistingWindow(raw,info){
     return {payload:guarded.payload,devicesChanged};
   })();
 }
+function livePreviewStoredLayoutMatchesTransaction(stored,current,info){
+  try{
+    const sm=livePreviewTileMaps(stored),cm=livePreviewTileMaps(current);
+    for(const [id,t] of cm){
+      const a=sm.get(id);
+      if(!a) return false;
+      if(Number(a.row)!==Number(t.row)||Number(a.col)!==Number(t.col)||Number(a.rowSpan)!==Number(t.rowSpan)||Number(a.colSpan)!==Number(t.colSpan)) return false;
+    }
+    for(const id of (info.removedIds||[]).map(String)) if(sm.has(id)) return false;
+    return true;
+  }catch(_e){ return false; }
+}
+async function livePreviewWaitForNativeStoredLayout(context,current,info,{attempts=12,delayMs=100}={}){
+  let last=null;
+  for(let i=0;i<attempts;i++){
+    try{
+      last=await fetchTemporaryPreviewLayoutDoc(context);
+      if(last&&livePreviewStoredLayoutMatchesTransaction(last,current,info)) return last;
+    }catch(_e){}
+    await new Promise(resolve=>setTimeout(resolve,delayMs));
+  }
+  return last;
+}
+
 async function syncLivePreviewNow(reason="Layout edit"){
   if(!livePreviewSyncActive()||State.previewLiveSyncBusy) return false;
   if(State.previewLayoutWatchBusy){ scheduleLivePreviewSync(reason,120); return false; }
@@ -6244,32 +7639,111 @@ async function syncLivePreviewNow(reason="Layout edit"){
   State.previewLiveSyncBusy=true;
   try{
     const prepared=await livePreviewPreparePayloadForExistingWindow(current,info);
-    const context=await postTemporaryPreviewLayout(prepared.payload,{silent:true,useCachedContext:true});
-    const patch=livePreviewRuntimePatch(before,current,prepared.payload,info,{devicesChanged:prepared.devicesChanged});
-    // Hubitat can normalize layout JSON as it stores it. Use an immediate readback
-    // as the Preview-side watcher baseline so Hubitat's own normalization is never
-    // mistaken for a user edit on the next watcher pass. Keep live-sync busy until
-    // the readback completes so the periodic watcher cannot race this baseline.
+    // Hubitat's native ADD_TILE / DELETE_TILE path already persists the running
+    // layout. Do not POST the same structural edit from DLS at the same time: the
+    // two saves race and Hubitat's 2-second save throttle can overwrite a complete
+    // cluster with an intermediate one-tile state. Authorization changes still
+    // require DLS to prepare/post the temporary dashboard before the runtime patch.
+    const useNativeStructuralSave=!!(info.structural&&!prepared.devicesChanged);
+    let context=null;
+    if(!useNativeStructuralSave){
+      const structuralFreshContext=!!prepared.devicesChanged;
+      context=await postTemporaryPreviewLayout(prepared.payload,{silent:true,useCachedContext:!structuralFreshContext});
+    }else{
+      const td=temporaryDashboardState();
+      context=(td.lastLayoutUrl)?{layoutUrl:td.lastLayoutUrl,dashUrl:td.lastDashUrl||dashboardPageUrlForMeta(td.meta)}:await resolveDashboardLayoutContext(td.meta);
+    }
+    const patch=await livePreviewRuntimePatch(before,current,prepared.payload,info,{devicesChanged:prepared.devicesChanged});
+    // Read back the layout actually stored by Hubitat. Structural native saves are
+    // polled briefly until the complete DLS transaction is visible so the watcher
+    // baseline can never advance on an intermediate throttled save.
     let storedPayload=null;
-    try{ storedPayload=await fetchTemporaryPreviewLayoutDoc(context); }
+    try{
+      storedPayload=useNativeStructuralSave
+        ? await livePreviewWaitForNativeStoredLayout(context,current,info)
+        : await fetchTemporaryPreviewLayoutDoc(context);
+    }
     catch(e){ trace(`Live Preview post-save baseline readback failed; using the sent payload: ${e&&e.message?e.message:e}`,null,"err"); }
     const watcherBaseline=storedPayload||prepared.payload;
     State.previewLayoutBaseline=livePreviewClone(watcherBaseline);
     State.previewLayoutLastSeen=livePreviewClone(watcherBaseline);
-    State.previewDlsBaseline=livePreviewClone(current);
+    // previewDlsBaseline is the last layout that the *running Preview runtime* is
+    // known to mirror, not merely the last JSON posted to the temporary dashboard.
+    // Do not advance it after a partial structural add or after a geometry/content
+    // edit that failed to update Hubitat's authoritative in-memory layout state.
+    const runtimeMirrored=(!info.structural||!!(patch.membership&&patch.membership.applied)||!!patch.renderPending)
+      &&(!(info.geometryIds.length||info.contentIds.length||info.gridChanged)||!!patch.authoritativeApplied);
+    State.previewDlsBaseline=livePreviewClone(runtimeMirrored?current:before);
     State.previewLayoutPending=null;
     State.previewBackgroundTouched=false;
     State.previewLiveSyncLastMode=patch.mode;
+    if(runtimeMirrored){
+      State.previewLiveRetryCount=0;
+      if(State.previewLiveRetryTimer){ clearTimeout(State.previewLiveRetryTimer); State.previewLiveRetryTimer=null; }
+    }
     try{ authorizeTrackedPreviewWindow(State.previewWindowRef,previewWindowRecord(State.previewWindowId,"open")); }catch(_e){}
+    if(patch.renderPending){
+      status("Preview layout synchronized; Hubitat is finishing the live tile render.");
+      const pendingCurrent=livePreviewClone(current),pendingInfo=livePreviewClone(info);
+      setTimeout(async()=>{
+        try{
+          if(!livePreviewSyncActive()||!State.previewWindowRef||State.previewWindowRef.closed) return;
+          const membership=await livePreviewVerifyTileMembership(State.previewWindowRef,pendingCurrent,pendingInfo,{delayMs:0,timeoutMs:2800,pollMs:50});
+          if(membership.applied){
+            const ids=[...(pendingInfo.addedIds||[]),...(pendingInfo.geometryIds||[])];
+            if(ids.length) livePreviewPatchTileGeometry(State.previewWindowRef,pendingCurrent,ids);
+            if(pendingInfo.orderChanged) livePreviewPatchTileOrder(State.previewWindowRef,pendingCurrent);
+            trace("Preview live tile rendering caught up with the synchronized layout.",null,"ok");
+          }else{
+            trace(`Preview authoritative layout is synchronized, but rendered membership is still incomplete (missing: ${(membership.missingAdded||[]).join(", ")||"none"}; lingering: ${(membership.lingeringRemoved||[]).join(", ")||"none"}).`,null,"err");
+          }
+        }catch(_e){}
+      },25);
+    }
+    if(info.structural&&patch.membership&&!patch.membership.applied&&!patch.requiresRefresh&&!patch.renderPending){
+      const missing=(patch.membership.missingAdded||[]).join(", ");
+      if(patch.nativeAddLearning){
+        status(`Preview live structural sync is waiting for a native full-layout recipe${missing?` for tile${patch.membership.missingAdded.length===1?"":"s"} ${missing}`:""}. In Preview, open Advanced and apply one small Layout JSON change so DLS can learn Hubitat's native full-layout action.`);
+        trace("Live Preview full-layout learning is active. In Preview, use Advanced → Layout JSON to make and apply one small layout change. DLS will log [DLS Live Preview] Learned native full-layout action when a replayable Vuex action is identified.",null,"ok");
+      }else{
+        status(`Preview live tile creation is still pending${missing?` for tile${patch.membership.missingAdded.length===1?"":"s"} ${missing}`:""}; DLS will retry the same layout transaction without reloading Preview.`);
+        trace(`Live Preview structural add did not instantiate in place. Component path: ${patch.componentPatch&&patch.componentPatch.path||"none"}; component reason: ${patch.componentPatch&&patch.componentPatch.reason||""}; native reason: ${patch.nativePatch&&patch.nativePatch.reason||""}; Vuex reason: ${patch.storePatch&&patch.storePatch.reason||""}.`,null,"err");
+        if((patch.membership.missingAdded||[]).length&&State.previewLiveRetryCount<6){
+          State.previewLiveRetryCount++;
+          const retryDelay=Math.min(900,90+State.previewLiveRetryCount*120);
+          if(State.previewLiveRetryTimer) clearTimeout(State.previewLiveRetryTimer);
+          State.previewLiveRetryTimer=setTimeout(()=>{
+            State.previewLiveRetryTimer=null;
+            if(livePreviewSyncActive()) scheduleLivePreviewSync(`Retry missing Preview tile membership (${State.previewLiveRetryCount})`,40);
+          },retryDelay);
+        }
+      }
+    }
+    if(!info.structural&&(info.geometryIds.length||info.contentIds.length||info.gridChanged)&&!patch.authoritativeApplied&&!patch.requiresRefresh){
+      status("Preview presentation updated, but Hubitat's authoritative live layout has not caught up yet; DLS will retry without refreshing.");
+      if(State.previewLiveRetryCount<4){
+        State.previewLiveRetryCount++;
+        if(State.previewLiveRetryTimer) clearTimeout(State.previewLiveRetryTimer);
+        State.previewLiveRetryTimer=setTimeout(()=>{ State.previewLiveRetryTimer=null; if(livePreviewSyncActive()) scheduleLivePreviewSync("Retry authoritative Preview layout state",40); },120+State.previewLiveRetryCount*120);
+      }
+    }
     if(patch.requiresRefresh){
       const reasons=[];
       if(prepared.devicesChanged) reasons.push("device/variable authorization changed");
       if(info.hardRefresh) reasons.push("customHTML/customJS changed");
-      if((info.structural||info.contentIds.length||info.gridChanged)&&!patch.vueApplied) reasons.push("Hubitat live layout model was not available for this change");
+      if(info.structural&&patch.membership&&!patch.membership.applied){
+        if(patch.membership.missingAdded&&patch.membership.missingAdded.length) reasons.push(`new tile${patch.membership.missingAdded.length===1?"":"s"} ${patch.membership.missingAdded.join(", ")} did not instantiate in the running dashboard`);
+        if(patch.membership.lingeringRemoved&&patch.membership.lingeringRemoved.length) reasons.push(`removed tile${patch.membership.lingeringRemoved.length===1?"":"s"} ${patch.membership.lingeringRemoved.join(", ")} remained in the running dashboard`);
+      }
+      if((info.contentIds.length||info.gridChanged)&&!patch.vueApplied) reasons.push("Hubitat live layout model was not available for this change");
       if(info.orderChanged&&patch.order&&!patch.order.applied&&!patch.vueApplied) reasons.push("the running dashboard tile order could not be changed in place");
       if(info.cssChanged&&!patch.cssApplied) reasons.push("the active dashboard customCSS style could not be replaced in place");
-      livePreviewReloadWindow(reasons.join("; "));
-      status("Preview synchronized. This change required the Preview dashboard to refresh.");
+      const structuralFresh=!!(info.structural||patch.structuralFreshRuntime);
+      const refreshed=structuralFresh
+        ? await livePreviewFreshNavigateWindow(reasons.join("; ")||"tile membership changed",{devicesChanged:prepared.devicesChanged,dashUrl:context&&context.dashUrl||""})
+        : livePreviewReloadWindow(reasons.join("; "));
+      if(!refreshed) throw new Error(structuralFresh?"the Preview could not start a fresh dashboard runtime":"the Preview dashboard could not be refreshed");
+      status(structuralFresh?"Preview synchronized. Tile membership changed, so Preview started a fresh dashboard runtime.":"Preview synchronized. This change required the Preview dashboard to refresh.");
     }else{
       trace(`Live Preview synchronized without a page reload (${patch.mode}${patch.vueApplied&&patch.vueProbe&&patch.vueProbe.candidate?`, Vue ${patch.vueProbe.candidate.path}`:""}).`,context&&context.layoutUrl||null,"ok");
     }
@@ -6307,6 +7781,7 @@ function installPreviewWindowHeartbeat(win,record){
     if(!themeMeta){ themeMeta=doc.createElement("meta"); themeMeta.setAttribute("name","theme-color"); (doc.head||doc.documentElement).appendChild(themeMeta); }
     themeMeta.setAttribute("content",previewTheme==="light"?"#f4f7fb":"#0b1220");
     authorizeTrackedPreviewWindow(win,record);
+    try{ livePreviewProbeAndAttachVuexSniffer(win); }catch(_e){}
     if(win.__DLS_PREVIEW_MONITOR__&&win.__DLS_PREVIEW_MONITOR__.previewId===record.previewId) return true;
     const data=JSON.stringify({protocol:PREVIEW_PROTOCOL,previewId:record.previewId,ownerWindowId:record.ownerWindowId,windowName:record.windowName||previewWindowNameForId(record.previewId),sourceLabel:record.sourceLabel,dashboardId:record.dashboardId});
     const code=`(()=>{try{const base=${data};const key=${JSON.stringify(PREVIEW_BUSY_KEY)};const eventKey=${JSON.stringify(PREVIEW_COORD_EVENT_KEY)};const channelName="dashboard-layout-studio-preview-v1";const expire=${PREVIEW_EXPIRE_MS};const fresh=rec=>!!(rec&&rec.protocol===${JSON.stringify(PREVIEW_PROTOCOL)}&&rec.previewId&&Number(rec.heartbeatAt||0)>0&&Date.now()-Number(rec.heartbeatAt||0)<expire);const current=()=>{try{return JSON.parse(localStorage.getItem(key)||"null");}catch(_e){return null;}};const send=msg=>{try{localStorage.setItem(eventKey,JSON.stringify({...msg,nonce:String(Date.now())}));}catch(_e){}try{window.__DLS_PREVIEW_BC__?.postMessage(msg);}catch(_e){}};const beat=()=>{const active=current();if(fresh(active)&&active.previewId!==base.previewId)return false;const rec={...base,heartbeatAt:Date.now(),expiresAt:Date.now()+expire};try{localStorage.setItem(key,JSON.stringify(rec));}catch(_e){}send({protocol:${JSON.stringify(PREVIEW_PROTOCOL)},action:"heartbeat",record:rec});return true;};const release=()=>{const active=current();if(!active||active.previewId===base.previewId){try{localStorage.removeItem(key);}catch(_e){}send({protocol:${JSON.stringify(PREVIEW_PROTOCOL)},action:"closed",previewId:base.previewId});}};try{window.__DLS_PREVIEW_BC__=new BroadcastChannel(channelName);window.__DLS_PREVIEW_BC__.onmessage=e=>{const m=e.data;if(m&&m.protocol===${JSON.stringify(PREVIEW_PROTOCOL)}&&m.action==="probe")beat();else if(m&&m.protocol===${JSON.stringify(PREVIEW_PROTOCOL)}&&m.action==="focus-client"&&(!m.previewId||m.previewId===base.previewId)){try{window.focus();}catch(_e){}setTimeout(()=>send({protocol:${JSON.stringify(PREVIEW_PROTOCOL)},action:"focus-result",previewId:base.previewId,requestWindowId:m.requestWindowId||"",focused:!!document.hasFocus()}),120);}};}catch(_e){}if(window.__DLS_PREVIEW_MONITOR__&&window.__DLS_PREVIEW_MONITOR__.timer)clearInterval(window.__DLS_PREVIEW_MONITOR__.timer);const start=()=>{if(window.__DLS_PREVIEW_MONITOR__.timer)clearInterval(window.__DLS_PREVIEW_MONITOR__.timer);beat();window.__DLS_PREVIEW_MONITOR__.timer=setInterval(beat,${PREVIEW_HEARTBEAT_MS});};window.__DLS_PREVIEW_MONITOR__={previewId:base.previewId,timer:null};window.addEventListener("pageshow",start);window.addEventListener("pagehide",()=>{if(window.__DLS_PREVIEW_MONITOR__.timer)clearInterval(window.__DLS_PREVIEW_MONITOR__.timer);window.__DLS_PREVIEW_MONITOR__.timer=null;if(!window.__DLS_CONTROLLED_PREVIEW_RELOAD__)release();});start();}catch(_e){}})();`;
@@ -6327,12 +7802,16 @@ function stopOwnedPreviewTracking(previewId,{announce=true,clear=true}={}){
   if(previewId&&State.previewWindowId&&State.previewWindowId!==previewId) return;
   if(State.previewHeartbeatTimer){ clearInterval(State.previewHeartbeatTimer); State.previewHeartbeatTimer=null; }
   stopPreviewLayoutWatcher();
+  stopPreviewVuexSniffer();
   if(State.previewLiveSyncTimer){ clearTimeout(State.previewLiveSyncTimer); State.previewLiveSyncTimer=null; }
+  if(State.previewLiveRetryTimer){ clearTimeout(State.previewLiveRetryTimer); State.previewLiveRetryTimer=null; }
+  State.previewLiveRetryCount=0;
   State.previewLiveSyncBusy=false;
   State.previewLiveSyncQueued=false;
   State.previewDlsBaseline=null;
   State.previewLiveSyncLastMode="";
   State.previewInboundSessionChoice="";
+  State.previewFullAuthorizationActive=false;
   State.previewLayoutPromptActive=false;
   const id=previewId||State.previewWindowId;
   try{ State.previewWindowRef?.__DLS_PREVIEW_WARNING_OBSERVER__?.disconnect(); }catch(_e){}
@@ -6390,6 +7869,7 @@ function beginPreviewWindowTracking(win,previewId){
   State.previewReservationPhase="open";
   const record=previewWindowRecord(previewId,"open");
   storePreviewBusyRecord(record,{announce:true});
+  startPreviewVuexSniffer(win,{durationMs:10000});
   const tick=()=>{
     if(!State.previewWindowRef||State.previewWindowRef.closed){
       if(previewInboundChecksEnabled()) checkPreviewLayoutForChanges({prompt:true,force:true}).finally(()=>stopOwnedPreviewTracking(previewId,{announce:true,clear:true}));
@@ -7914,18 +9394,70 @@ async function forceTemporaryDashboardNavigationOff(dashboardId,deviceIds){
   trace("temporary dashboard definition verified with showNavigation=false",null,"ok");
   return true;
 }
+function temporaryDashboardParseDeviceSignature(signature){
+  const text=String(signature||"");
+  const marker="::vars::";
+  const at=text.indexOf(marker);
+  const devPart=at>=0?text.slice(0,at):text;
+  const varPart=at>=0?text.slice(at+marker.length):"";
+  const ids=new Set(devPart.split(",").map(v=>normalizeDeviceId(v)).filter(v=>v!=null));
+  const variableNames=new Set(varPart.split("|").map(normalizeHubVariableName).filter(Boolean));
+  return {ids,variableNames};
+}
+async function temporaryDashboardAuthorizationRequirements(doc,opts={}){
+  let ids=temporaryDashboardDeviceIds(doc);
+  let variableNames=[...layoutHubVariableNames(doc)];
+  let full=false;
+  // While a Preview is open, never shrink its authorization set merely because a
+  // tile was deleted or reassigned. Removing authorization can force Hubitat to
+  // rebuild the dashboard runtime and provides no benefit during the session.
+  if(opts.preserveSignature){
+    const prior=temporaryDashboardParseDeviceSignature(opts.preserveSignature);
+    const mergedIds=new Set(ids); for(const id of prior.ids) mergedIds.add(id); ids=mergedIds;
+    const mergedVars=new Set(variableNames.map(normalizeHubVariableName).filter(Boolean));
+    for(const name of prior.variableNames) mergedVars.add(name);
+    variableNames=[...mergedVars];
+  }
+  if(opts.authorizeAll){
+    full=true;
+    const mergedIds=new Set(ids);
+    for(const d of allHubDevicesForAudit()){
+      const id=normalizeDeviceId(d&&d.id);
+      if(id!=null) mergedIds.add(id);
+    }
+    ids=mergedIds;
+    try{
+      const allVars=await loadAllHubVariablesForDashboardManager(!!opts.refreshVariableInventory);
+      const mergedVars=new Set(variableNames.map(normalizeHubVariableName).filter(Boolean));
+      for(const v of allVars||[]){
+        const name=normalizeHubVariableName(v&&v.name);
+        if(name) mergedVars.add(name);
+      }
+      variableNames=[...mergedVars];
+    }catch(e){
+      trace(`Two Way Preview could not enumerate all Hub Variables; authorizing the discoverable/used set only: ${e&&e.message?e.message:e}`,null,"err");
+    }
+  }
+  const signature=temporaryDashboardDeviceSignature(ids,variableNames);
+  return {ids,variableNames,signature,full};
+}
 async function synchronizeTemporaryDashboardDevices(doc,opts={}){
   const td=temporaryDashboardState();
   if(!temporaryDashboardReady()) throw new Error("temporary preview dashboard is not ready");
-  const ids=temporaryDashboardDeviceIds(doc);
-  const variableNames=[...layoutHubVariableNames(doc)];
-  const signature=temporaryDashboardDeviceSignature(ids,variableNames);
-  if(td.deviceSignature===signature && !opts.force) return ids.size;
+  const requirements=await temporaryDashboardAuthorizationRequirements(doc,opts);
+  const ids=requirements.ids;
+  const variableNames=requirements.variableNames;
+  const signature=requirements.signature;
+  if(td.deviceSignature===signature && !opts.force){
+    if(opts.previewSession) State.previewFullAuthorizationActive=!!requirements.full;
+    return ids.size;
+  }
   setSnapshotRefreshStatus("Updating preview dashboard devices and variables…",true);
   status("Updating temporary preview dashboard devices and Hub Variables…",true);
   await configureTemporaryDashboardChild(td.meta.id,ids,{variableNames});
   await forceTemporaryDashboardNavigationOff(td.meta.id,ids);
   td.deviceSignature=signature;
+  if(opts.previewSession) State.previewFullAuthorizationActive=!!requirements.full;
   return ids.size;
 }
 function dashboardPageUrlForMeta(meta){
@@ -15195,7 +16727,12 @@ function buildConfiguredTileRaw(existing,form,rect,id){
   if(t==="links"&&String(form.linkName||"").trim()) raw.linkName=String(form.linkName);
   return raw;
 }
-function nextAddTileId(){ return State.tiles.length?Math.max(...State.tiles.map(t=>Number(t.id)||0))+1:0; }
+function nextAddTileId(){
+  let id=State.tiles.length?Math.max(...State.tiles.map(t=>Number(t.id)||0))+1:0;
+  const reserved=previewReservedTileIdsForAllocation();
+  while(reserved.has(Number(id))) id++;
+  return id;
+}
 function setAddTileDialogBusy(busy,label=""){
   const modal=document.getElementById("addTileModal"),d=State.addTileDialog;if(!modal||!d)return;
   d.busy=!!busy;
@@ -19091,6 +20628,7 @@ function completeMove(dest){
 function nextIdState(destTiles, reservedIds){
   const used=new Set(destTiles.map(t=>Number(t.id)));
   if(reservedIds) for(const x of reservedIds) used.add(Number(x));
+  for(const x of previewReservedTileIdsForAllocation()) used.add(Number(x));
   let nextId = used.size ? Math.max(...used)+1 : 1;
   return {used, nextId};
 }
@@ -19999,7 +21537,7 @@ function completePasteBuf(cell){
   // tile-id referenced in the DESTINATION customCSS). The SOURCE/buffer CSS ids
   // are NOT reserved — they get remapped to the new destination ids anyway.
   const reserved = tileIdsInCss(cssSourceForTileDuplication());      // destination CSS only
-  const used=new Set([...existing, ...reserved]);
+  const used=new Set([...existing, ...reserved, ...previewReservedTileIdsForAllocation()]);
   let nextId = used.size ? Math.max(...used)+1 : 1;
   const copies=[];
   for(const t of b.tiles){
@@ -22266,6 +23804,7 @@ function undoAll(event){
       markLayoutClean();
       const refreshStarted=refreshRenderedViewAfterHubRestore();
       render();
+      scheduleLivePreviewSync("Undo All",40);
       if(refreshStarted){
         status("Restored original hub-loaded layout. Refreshing Rendered View… Use Undo to return to the previous working layout.", true);
       }else{
@@ -22773,8 +24312,24 @@ function addTemporaryPreviewAccessWarning(payload){
     used.add(id);
     return id;
   };
-  const tileId=nextTileId();
-  const cornerTileIds=[nextTileId(),nextTileId(),nextTileId(),nextTileId()];
+  // Keep the guard id block stable for the lifetime of a Preview session. The
+  // old implementation regenerated it from max(real tile id)+1 on every live
+  // structural edit. DLS also allocates real tile ids from max+1, so the first
+  // copied/added tile could take the *previous* warning-tile id while the old
+  // MutationObserver was still deleting that id from the visible Preview.
+  // Reuse the current five ids whenever they remain collision-free; otherwise
+  // allocate a fresh block and the live-sync path will rebind the observer
+  // before applying the new layout.
+  const priorGuardIds=[State.previewWarningTileId,...(State.previewRecoveryTileIds||[])].map(Number).filter(Number.isFinite);
+  const canReuse=priorGuardIds.length===5&&new Set(priorGuardIds).size===5&&priorGuardIds.every(id=>!used.has(id));
+  let tileId,cornerTileIds;
+  if(canReuse){
+    [tileId,...cornerTileIds]=priorGuardIds;
+    for(const id of priorGuardIds) used.add(id);
+  }else{
+    tileId=nextTileId();
+    cornerTileIds=[nextTileId(),nextTileId(),nextTileId(),nextTileId()];
+  }
   payload.tiles.push({
     rowSpan:1,
     template:"texttile",
@@ -23057,13 +24612,14 @@ async function openCurrentDashboardPreview(){
         hubOperationStep(op,"devices","active",devicesActive);
         updatePreviewLaunchProgress(previewWindow,"devices","active",devicesActive);
         const invalidDevices=await sanitizeTemporaryPreviewInvalidDeviceAssignments(payload);
-        const deviceCount=await synchronizeTemporaryDashboardDevices(payload,{force:true});
+        const fullPreviewAuthorization=previewFullAuthorizationDesired();
+        const deviceCount=await synchronizeTemporaryDashboardDevices(payload,{force:true,authorizeAll:fullPreviewAuthorization,previewSession:true,refreshVariableInventory:fullPreviewAuthorization});
         checkHubOperationAbort(op);
         if(previewWindow.closed) throw new Error("the Preview working window was closed while preparation was in progress");
         const invalidNote=invalidDevices.assignmentCount
           ? ` ${invalidDevices.assignmentCount} invalid tile device assignment${invalidDevices.assignmentCount===1?" was":"s were"} changed to device 0 in the preview copy.`
           : "";
-        const devicesDetail=`${deviceCount} device${deviceCount===1?"":"s"} authorized.${invalidNote}`;
+        const devicesDetail=`${deviceCount} device${deviceCount===1?"":"s"} authorized${State.previewFullAuthorizationActive?" for Two Way live editing":""}.${invalidNote}`;
         hubOperationStep(op,"devices","done",devicesDetail);
         updatePreviewLaunchProgress(previewWindow,"devices","done",devicesDetail);
 
@@ -27596,6 +29152,7 @@ Install the current stable release now, or keep the current installed version un
     storeLiveLinkedPreviewPreference(next);
     saveConn();
     if(next===LIVE_LINKED_PREVIEW_DISABLED){
+      State.previewFullAuthorizationActive=false;
       stopPreviewLayoutWatcher();
       if(State.previewLiveSyncTimer){ clearTimeout(State.previewLiveSyncTimer); State.previewLiveSyncTimer=null; }
       State.previewLiveSyncQueued=false;
@@ -27605,6 +29162,20 @@ Install the current stable release now, or keep the current installed version un
       return;
     }
     if(State.previewWindowRef&&State.previewWindowId&&!State.previewWindowRef.closed&&previewWindowIsExpectedDashboard(State.previewWindowRef,State.previewWindowId)){
+      if(next===LIVE_LINKED_PREVIEW_TWO_WAY){
+        try{
+          const auth=await ensurePreviewFullAuthorizationForLinkedSession({reloadRuntime:true});
+          if(auth.changed) status(`Two Way Live Linked Preview authorized all ${auth.count} currently discoverable hub devices plus Hub Variables and reloaded Preview once to initialize them.`);
+        }catch(authError){
+          trace(`Could not expand Two Way Preview authorization: ${authError&&authError.message?authError.message:authError}`,null,"err");
+          toast(`Two Way Preview authorization could not be fully prepared: ${authError&&authError.message?authError.message:authError}`,"err");
+        }
+      }else{
+        // Do not force a de-authorization/reload when leaving Two Way. The current
+        // Preview may retain its broader authorization until it closes, but future
+        // One Way/Disabled sessions return to layout-scoped authorization.
+        State.previewFullAuthorizationActive=false;
+      }
       // Re-enabling linkage reconciles everything that happened while Disabled
       // from the last common checkpoints. Disabled suspends synchronization; it
       // does not redefine the two divergent layouts as a new common baseline.

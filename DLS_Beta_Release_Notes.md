@@ -1,6 +1,15 @@
 # Dashboard Layout Studio — Beta Release Notes
 
 ---
+
+## 1.12.626
+
+- Fixed: Two-way sync failed.  Often.
+- Fixed: Adding / Copying single tiles failed to show in Preview.
+- Fixed: Undo All disconnected Preview.
+- Fixed: Background changes failed to sync with Preview
+- Bug fixes and UX improvements.
+
 ## 1.12.604
 
 - First 1.12 beta release.
