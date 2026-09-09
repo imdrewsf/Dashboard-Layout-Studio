@@ -1,6 +1,12 @@
 # Dashboard Layout Studio — Beta Release Notes
 
----
+# 1.12.654
+
+- Changed: Background Settings UX reworked
+- Added: multiple image-use methods: Hubitat URL, embedded background, managed CSS import, and CSS image extraction.
+- Added: Grid opacity controls and a bottom-bar Grid visibility toggle.
+- Fixed: Preview/DLS JSON synchronization did not include dashboard settings changes made in preview.
+- Bug fixes and UX improvements
 
 ## 1.12.626
 

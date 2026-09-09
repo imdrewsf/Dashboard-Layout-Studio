@@ -1,5 +1,11 @@
 # Dashboard Layout Studio — Stable Release Notes
 
+
+## 1.8.655
+
+- Reworked Background Settings UX
+- Bug fixes and UX improvements.
+
 ---
 
 ## 1.8.605
