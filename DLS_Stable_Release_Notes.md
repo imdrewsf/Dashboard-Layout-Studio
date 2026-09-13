@@ -1,5 +1,9 @@
 # Dashboard Layout Studio — Stable Release Notes
 
+## 1.8.656
+
+- Fixed: Tile info tab did not include count of rules in external style sheets.
+
 
 ## 1.8.655
 

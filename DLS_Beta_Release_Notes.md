@@ -1,6 +1,11 @@
 # Dashboard Layout Studio — Beta Release Notes
 
-# 1.12.654
+## 1.12.657
+
+- Fixed: Tile info tab did not include count of rules in external style sheets.
+
+
+## 1.12.654
 
 - Changed: Background Settings UX reworked
 - Added: multiple image-use methods: Hubitat URL, embedded background, managed CSS import, and CSS image extraction.
