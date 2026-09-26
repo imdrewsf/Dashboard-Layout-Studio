@@ -1,4 +1,5 @@
 /**
+ *
  * Dashboard Layout Studio Launcher
  *
  * Installs the latest stable Dashboard Layout Studio HTML release into
@@ -7,6 +8,7 @@
  *
  * Version: 1.0.13
  * Build: 014
+ *
  */
 
 import groovy.transform.Field
