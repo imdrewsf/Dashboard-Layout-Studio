@@ -2,10 +2,10 @@
   "packageName": "Dashboard Layout Studio",
   "minimumHEVersion": "2.3.9",
   "author": "Andrew Peck",
-  "version": "1.0.12",
-  "dateReleased": "2026-07-14",
+  "version": "1.0.13",
+  "dateReleased": "2026-09-25",
   "documentationLink": "https://github.com/imdrewsf/Dashboard-Layout-Studio",
-  "releaseNotes": "Fixes to launch/remove.",
+  "releaseNotes": "Launcher UI cleanup: removes duplicate page heading and excess spacing, consolidates status and actions, removes redundant success banners, and uses a compact inline removal confirmation while preserving asynchronous install/remove behavior.",
   "apps": [
     {
       "id": "b716e857-dc24-427d-aba7-1cc429b33f26",
