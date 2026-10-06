@@ -1,5 +1,17 @@
 # Dashboard Layout Studio — Beta Release Notes
 
+## 1.13.678
+
+- First 1.13 beta release.
+- Added: Arrow-key movement of selected tiles with Warn/Allow overlap handling, Shift-Push, and Ctrl active-tile movement.
+- Added: Selection pane z-index warnings for overlapping tiles with missing or duplicate explicit z-index values, including warning indicators and an issues-only filter.
+- Added: Cluster header actions to highlight cluster tiles, preserve collapse state, and right-click to deselect an entire cluster.
+- Changed: Expert Import File and Download File actions now operate on the currently selected Full JSON, `customCSS`, `customHTML`, or `customJS` editor tab.
+- Fixed: Z-index conflict detection now uses effective explicit z-index values from tile, template/class, and imported CSS rules.
+- Fixed: Rapid overlap-stack layer cycling no longer triggers Tile Information as a double-click.
+- Bug fixes and UX improvements.
+
+
 ## 1.12.657
 
 - Fixed: Tile info tab did not include count of rules in external style sheets.

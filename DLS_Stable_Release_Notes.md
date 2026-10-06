@@ -1,5 +1,13 @@
 # Dashboard Layout Studio — Stable Release Notes
 
+## 1.8.662
+
+- Changed: Expert Import File and Download File actions now operate on the currently selected Full JSON, `customCSS`, `customHTML`, or `customJS` editor tab.
+- Fixed: Z-index conflict detection now identifies overlapping tiles sharing the same effective explicit z-index, including template/class and imported CSS rules.
+- Improved Reports panel tab visibility and active-state contrast.
+- Bug fixes and UX improvements.
+
+
 ## 1.8.656
 
 - Fixed: Tile info tab did not include count of rules in external style sheets.

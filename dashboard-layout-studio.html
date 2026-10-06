@@ -678,12 +678,20 @@
   /* printable tile reports */
   .reports-modal{width:min(900px,96vw);max-height:90vh;}
   .reports-intro{margin:0 0 10px;color:var(--muted);font-size:.78rem;line-height:1.45;}
-  .reports-tabs{display:flex;align-items:center;gap:6px;margin:0 0 10px;padding:4px;border:1px solid var(--border);border-radius:10px;background:rgba(0,0,0,.14);}
-  .reports-tab{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:105px;padding:7px 12px;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--muted);font-family:var(--sans);font-size:.75rem;font-weight:700;cursor:pointer;}
-  .reports-tab:hover{color:var(--text);background:rgba(255,255,255,.045);}
-  .reports-tab.active{border-color:rgba(103,232,249,.42);background:rgba(103,232,249,.11);color:var(--text);box-shadow:inset 0 0 0 1px rgba(103,232,249,.08);}
-  .reports-tab-count{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:18px;padding:0 5px;border-radius:999px;background:rgba(103,232,249,.14);color:var(--accent);font-family:var(--mono);font-size:.63rem;line-height:1;}
-  .reports-tab-count.empty{background:rgba(239,68,68,.13);color:#fca5a5;}
+  .reports-tabs{display:flex;align-items:flex-end;gap:2px;margin:0 0 10px;padding:0;border:0;border-bottom:1px solid var(--border);border-radius:0;background:transparent;}
+  .reports-tab{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:105px;padding:7px 12px;margin:0 0 -1px;border:1px solid var(--border);border-bottom-color:var(--border);border-radius:7px 7px 0 0;background:var(--panel-2);color:var(--text);font-family:var(--sans);font-size:.75rem;font-weight:700;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.035);}
+  .reports-tab:hover{color:var(--text);background:color-mix(in srgb,var(--panel-2) 82%,var(--accent) 18%);border-color:var(--border-2);}
+  .reports-tab.active{border-color:var(--accent);border-bottom-color:var(--panel);background:var(--panel);color:var(--accent);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--accent) 22%,transparent);}
+  .reports-tab-count{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:18px;padding:0 5px;border:1px solid color-mix(in srgb,var(--accent) 28%,var(--border));border-radius:999px;background:color-mix(in srgb,var(--accent) 13%,var(--panel-2));color:var(--accent);font-family:var(--mono);font-size:.63rem;line-height:1;}
+  .reports-tab.active .reports-tab-count{border-color:color-mix(in srgb,var(--accent) 55%,var(--border));background:color-mix(in srgb,var(--accent) 18%,var(--panel));color:var(--accent);}
+  .reports-tab-count.empty{background:rgba(239,68,68,.13);border-color:rgba(239,68,68,.32);color:#fca5a5;}
+  html[data-theme="light"] .reports-tabs{border-bottom-color:#8997a8;}
+  html[data-theme="light"] .reports-tab{color:#334155;border-color:#8997a8;background:#e9eef5;box-shadow:inset 0 1px 0 #fff;}
+  html[data-theme="light"] .reports-tab:hover{background:#f6f8fb;color:#172033;border-color:#64748b;}
+  html[data-theme="light"] .reports-tab.active{background:#263d63;color:#fff;border-color:#0d1a38;border-bottom-color:#263d63;box-shadow:inset 0 1px 0 rgba(255,255,255,.18);}
+  html[data-theme="light"] .reports-tab-count{background:#d8e2ec;color:#24586a;border-color:#94a3b8;}
+  html[data-theme="light"] .reports-tab.active .reports-tab-count{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.36);}
+  html[data-theme="light"] .reports-tab-count.empty{background:#fee2e2;color:#b91c1c;border-color:#fca5a5;}
   .reports-tab-panel.hidden{display:none!important;}
   .reports-section{border:1px solid var(--border);border-radius:10px;background:rgba(0,0,0,.12);padding:12px;min-width:0;}
   .reports-section h4{margin:0 0 9px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);}
@@ -3794,7 +3802,7 @@
   </div>
 </div>
 <div class="shell" id="shell">
-  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.8.656">1.8.656</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
+  <div class="brand"><div class="mark"></div><h1><span class="brand-title-stack"><span class="brand-title">Dashboard Layout Studio</span><small id="brandSub">For Hubitat Dashboards</small></span><span class="brand-version-stack"><span class="brand-version" id="brandVersion" title="Version 1.8.662">1.8.662</span><span class="brand-beta" id="brandChannel" hidden></span></span></h1></div>
 
   <div class="topbar">
     <button class="icon-btn" id="btnToggleSide" title="Hide left pane" aria-label="Hide left pane">
@@ -4419,7 +4427,7 @@
 </div>
 <div class="help-content">
 <section class="help-pane active" id="helpOverview">
-<div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual editor for Hubitat Dashboard v1 layouts. It can add original tiles, edit supported tile configuration, rearrange, resize, duplicate, remove, and reassign tiles, and change supported presentation details through custom CSS. Dashboard creation and advanced Hubitat-specific configuration remain in the native Hubitat interface.</p><p><b>Interface theme:</b> New installations start in Light mode. Preferences can switch Dashboard Layout Studio between Light and Dark themes, and the saved choice is restored before the interface is displayed. The Reset Settings button restores all saved preferences to their defaults, re-enables notifications dismissed with a don't-show-again option, and leaves hub credentials and the current dashboard layout unchanged.</p><div class="help-callout"><b>Stable 1.8:</b> This is Stable 1.8.656. The current Beta line is 1.12. Live Linked Previews remains beta-only; the redesigned Dashboard Background tools are included in Stable.</div><div class="help-callout"><b>New tile workflow:</b> The Add button is its own toolbar group immediately before Info. Click Add, drag the tile rectangle, then complete Tile Configuration. The button changes to Cancel, all other toolbar controls are disabled, and overlap is temporarily allowed until the tile is added or cancelled. See <b>Add Tile</b> for the full workflow.</div><div class="help-callout"><b>Preview dashboards:</b> Preview opens a compact working window that mirrors the DLS preparation checklist and automatically changes to the temporary dashboard when ready. The deep-red <b>Preview Open</b> pill shows when that window owns the shared preview dashboard; click the pill to switch focus to the open Preview window. If the browser blocks the focus request, DLS reports that limitation rather than claiming the switch succeeded. See <b>Preview Dashboards</b> for the complete lifecycle and safeguards.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>Add Tile supports the native template catalog and the basic parameters exposed by DLS. Advanced or firmware-specific options not recognized by DLS may still require Hubitat's editor.</li><li>Changing a tile template preserves unknown properties when possible, but incompatible template-specific settings are replaced by the newly selected template configuration.</li></ul><h5>Template-property limits</h5><ul><li>Tile Configuration supports common properties such as device, template-specific values, a searchable Hubitat and Material icon chooser, background images, links, refresh intervals, and unit display. Advanced or firmware-specific properties that DLS does not recognize may still require Hubitat's editor.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
+<div class="help-pages"><article class="help-page active" data-help-title="Scope and limitations"><div class="help-page-kicker">Overview</div><p>Dashboard Layout Studio is a visual editor for Hubitat Dashboard v1 layouts. It can add original tiles, edit supported tile configuration, rearrange, resize, duplicate, remove, and reassign tiles, and change supported presentation details through custom CSS. Dashboard creation and advanced Hubitat-specific configuration remain in the native Hubitat interface.</p><p><b>Interface theme:</b> New installations start in Light mode. Preferences can switch Dashboard Layout Studio between Light and Dark themes, and the saved choice is restored before the interface is displayed. The Reset Settings button restores all saved preferences to their defaults, re-enables notifications dismissed with a don't-show-again option, and leaves hub credentials and the current dashboard layout unchanged.</p><div class="help-callout"><b>Stable 1.8:</b> This is Stable 1.8.662. The current Beta line is 1.12. Live Linked Previews remains beta-only; the redesigned Dashboard Background tools are included in Stable.</div><div class="help-callout"><b>New tile workflow:</b> The Add button is its own toolbar group immediately before Info. Click Add, drag the tile rectangle, then complete Tile Configuration. The button changes to Cancel, all other toolbar controls are disabled, and overlap is temporarily allowed until the tile is added or cancelled. See <b>Add Tile</b> for the full workflow.</div><div class="help-callout"><b>Preview dashboards:</b> Preview opens a compact working window that mirrors the DLS preparation checklist and automatically changes to the temporary dashboard when ready. The deep-red <b>Preview Open</b> pill shows when that window owns the shared preview dashboard; click the pill to switch focus to the open Preview window. If the browser blocks the focus request, DLS reports that limitation rather than claiming the switch succeeded. See <b>Preview Dashboards</b> for the complete lifecycle and safeguards.</div><h5>Dashboard and tile creation limits</h5><ul><li>Dashboard Layout Studio cannot create a new dashboard. The dashboard must first be created in Hubitat.</li><li>Add Tile supports the native template catalog and the basic parameters exposed by DLS. Advanced or firmware-specific options not recognized by DLS may still require Hubitat's editor.</li><li>Changing a tile template preserves unknown properties when possible, but incompatible template-specific settings are replaced by the newly selected template configuration.</li></ul><h5>Template-property limits</h5><ul><li>Tile Configuration supports common properties such as device, template-specific values, a searchable Hubitat and Material icon chooser, background images, links, refresh intervals, and unit display. Advanced or firmware-specific properties that DLS does not recognize may still require Hubitat's editor.</li><li>CSS can alter how a tile is displayed, but it does not change the tile's underlying Hubitat template or template configuration.</li><li>Properties that require the native Hubitat dashboard editor must be changed there, then the dashboard should be reloaded in Dashboard Layout Studio.</li></ul></article></div><div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpLoadSave">
 <div class="help-pages"><article class="help-page active" data-help-title="Opening layouts"><div class="help-page-kicker">Load &amp; Save</div><h4>Opening layouts</h4><p>Dashboard Layout Studio can work with layouts that were loaded directly from the hub or with layouts opened from a local file or pasted JSON. In the help text, <b>online</b> and <b>offline</b> describe how the active layout was loaded, not whether the browser or computer is connected to the internet.</p><p><b>Online mode</b> means the layout was loaded directly from the Hubitat hub. It keeps a hub save target and enables hub-only checks such as device names and selected dashboard devices. When DLS itself is hosted from the hub's <span class="help-key">/local/</span> file area, the initial Rendered View capture comes directly from the dashboard being loaded. Later refreshes can use the temporary preview dashboard for unsaved working changes.</p><div class="help-callout"><b>Beta 1.11 — load checklist shortcuts:</b> During a normal hub dashboard load, the <b>Validating selected dashboard devices</b> and <b>Rendering tiles</b> checklist rows include small <b>Skip</b> buttons. A pending skip is remembered until that step is reached. Skipping validation bypasses the load-time selected-device audit; skipping rendering cancels the initial Rendered View capture and completes the load in Simple View. When resuming a recovery, DLS does not repeat selected-device validation because it was already completed in the original session; it still reloads the hub device-name context and rebuilds Rendered View as needed.</div><p><b>Offline mode</b> means the layout was opened from a file or pasted JSON. Offline layouts can be edited, downloaded, or copied to the clipboard, but they do not have a normal hub save target. When the temporary preview dashboard is enabled and ready, an offline working layout can still be uploaded there solely for Rendered View capture.</p><div class="help-callout"><b>Beta 1.11 — crash recovery:</b> DLS checkpoints unsaved working layouts in browser-local IndexedDB. After an accidental window close, browser crash, or machine restart, startup lists all recoverable sessions whose dashboards are not currently active in another DLS window. Select a recovery to resume it, load the current hub copy while keeping the recovery, remove it, or ignore the records for now. Reloading the current DLS tab with F5, Ctrl+R, or Cmd+R automatically resumes the exact recovery checkpoint that belonged to that tab, even when other recovery records exist, instead of showing the chooser. Hub-originated recovery reconnects and reloads the dashboard first so the normal save target and hub-change conflict checks are preserved. The recovery record retains the Hub layout baseline from the original editing session; the current Hub layout fetched during resume does not replace that baseline. Older recovery records that lack the dedicated Hub-baseline field fall back to their stored original clean layout before using the freshly fetched Hub copy. If the dashboard was changed externally after the original session began, the normal pre-save verification therefore still detects the mismatch and warns before overwrite. Selected-dashboard-device validation is not repeated during recovery resume because it was already completed when the original session was established. If a dashboard has more than one stored recovery when you open it from the dashboard list, DLS opens the same recovery manager used at startup but filters it to that dashboard. In this sidebar context, Ignore for Now continues loading the hub-saved dashboard while keeping the recovery records available; Remove Selected, Load Hub — Keep Recovery, and Resume Selected remain available as well. If only one recovery exists, DLS keeps the compact Cancel / Ignore Recovery / Discard Unsaved / Load Recovery dialog. If you choose Ignore Recovery and then edit the hub-saved copy, DLS checkpoints those new edits as a separate recovery branch; after an abnormal exit both the earlier recovery and the later hub-copy edits remain available independently. When several recovery records for the same dashboard descend from the same saved/load baseline, DLS presents them as Branch 1, Branch 2, and so on in creation order and shows the shared origin separately; a lone record is simply Recovery. Once any version of that dashboard is successfully saved back to the hub, DLS treats that save as the new authoritative version and removes every recovery record and branch for that dashboard. Within the same browser and DLS origin, dashboards with stored recovery records display a REC badge in the dashboard list (with a count when more than one record exists), and a dashboard that is already open in another DLS window remains visible with an OPEN badge. Clicking it does not attempt an unreliable cross-tab switch; instead DLS flashes the owning tab/window title so it can be located without creating a duplicate editor. Preferences can disable recovery, omit undo history, or clear stored recovery data. Beta Recovery preferences are stored separately from Stable preferences, so switching to Stable 1.7.580 cannot silently disable Recovery when Beta is opened again.</div><p><b>Preview / Launch button:</b> When the temporary preview dashboard is enabled, Preview is the normal short-click action for a hub-loaded dashboard; hold the corner-menu button for Launch Saved. When Preview is disabled in Preferences, this becomes a regular <b>Launch Saved</b> button with no hold menu or Preview action. Holding Shift temporarily makes Launch the default. Preview uses the DLS Temporary Dashboard to show the current working layout without saving over the dashboard being edited. The working window displays the same preparation checklist shown in DLS and opens the temporary dashboard automatically when ready. See <b>Preview Dashboards</b> for status indicators, multi-window locking, direct-open protection, navigation behavior, and cleanup.</p><div class="help-callout"><b>No cloud connection:</b> DLS does not use the Hubitat cloud. Hub load, save, device checks, temporary preview, and Rendered View capture are performed on the local network against the local hub.</div><h5>Mode feature grid</h5><table class="help-mode-grid"><thead><tr><th>Feature</th><th>Online layout<br>(loaded from hub)</th><th>Offline layout<br>(file or pasted JSON)</th></tr></thead><tbody><tr><td>Open source</td><td>Dashboard list from the local hub.</td><td>File load or pasted dashboard JSON.</td></tr><tr><td>Save target</td><td>Can save directly back to the attached hub dashboard.</td><td>Download file or copy JSON to the clipboard.</td></tr><tr><td>View mode</td><td>Simple View and Rendered View when hosted from the hub.</td><td>Simple View; Rendered View is also available when the temporary preview dashboard is enabled and ready.</td></tr><tr><td>Hub device names</td><td>Available after hub device data loads.</td><td>Not available.</td></tr><tr><td>Selected dashboard devices / variables</td><td>Can validate, add, remove, and update selected dashboard devices and Hub Variables.</td><td>Not available.</td></tr><tr><td>Invalid-device tools</td><td>Can show invalid hub-device assignments and use Unassign Invalid.</td><td>Device IDs can be edited, but hub validity cannot be checked.</td></tr><tr><td>Layout editing</td><td>Add Tile, move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Add Tile temporarily allows overlap while the new tile rectangle is drawn, then opens Tile Configuration.</td><td>Add Tile for static tiles and manually entered device IDs, plus move, copy, resize, spacing, CSS, JSON, undo/redo, file, and clipboard tools. Hub templates, variables, attributes, and device validation require an online layout.</td></tr></tbody></table></article><article class="help-page" data-help-title="Connecting to the hub"><div class="help-page-kicker">Load &amp; Save</div><h4>Connecting to the hub</h4><div class="help-grid">
@@ -4533,7 +4541,7 @@
 <div class="help-pages"><article class="help-page active" data-help-title="Config and Expert tools"><div class="help-page-kicker">Config &amp; Expert</div><h4>Dashboard Configuration and Expert tools</h4><h5>Configuration and advanced editor views</h5><div class="help-grid">
 <div class="k">Config button</div><div class="v">Opens Dashboard Configuration. Background, Tile Devices, and Dashboard Devices are grouped here because they are ordinary dashboard setup functions that non-expert users may need.</div>
 <div class="k">Expert button</div><div class="v">Opens the advanced editor for Full JSON, customCSS, customHTML, and customJS. It supports direct edits, cut/copy/paste, formatting, downloading, copying, and loading a JSON file into the editor text area. The Copy button copies the visible editor pane as formatted plain text so line breaks and indentation paste correctly into tools such as Notepad.</div>
-<div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Edits sync back into the full JSON when you switch views, format, copy, download, or apply. The <b>Automatically Format</b> checkbox at the right of the tabs is remembered separately for Full JSON, customCSS, customHTML, and customJS. On customCSS, <b>Use Compact Format</b> appears directly beneath it and is remembered separately; that setting controls both automatic formatting and Validate / Format.</div>
+<div class="k">custom field views</div><div class="v">The customCSS, customHTML, and customJS buttons switch the editor to only that field. Import File and Download File operate on the tab currently shown: Full JSON uses .json, customCSS uses .css, customHTML uses .html, and customJS uses .js. Edits sync back into the full JSON when you switch views, format, copy, download, or apply. The <b>Automatically Format</b> checkbox at the right of the tabs is remembered separately for Full JSON, customCSS, customHTML, and customJS. On customCSS, <b>Use Compact Format</b> appears directly beneath it and is remembered separately; that setting controls both automatic formatting and Validate / Format.</div>
 <div class="k">Config → Tile Devices</div><div class="v">Lists every tile by ID, its grid location and size, any tile-scoped CSS content that may supply an alternate title, and its assigned device or Hub Variable. Online layouts allow both physical-device and native Hub Variable assignments to be changed from the corresponding dropdown; each picker contains only assignments currently selected for the dashboard, plus Unassigned. Native Hub Variable tiles show their variable name instead of being reported as Unassigned. Location and size are shown as row/column followed by size in parentheses. The first choice is Unassigned for blank assignments. Device dropdowns are sorted by device name with the device number shown in parentheses. Offline layouts allow numeric or blank physical device IDs. In online mode, tiles with a nonblank, nonzero device ID that has no matching hub device are treated as unknown-device tiles and highlighted in red, except system, the native <code>global-variable</code> Hub Variable template, navigation, and static templates such as HSM, Mode, Text Tile, Dashboard, Link, Image, HTML, Frame, Blank, Clock, and Date because those device fields are not regular hub-device assignments. The <code>variable-*</code> templates are device-backed and are validated like other physical or virtual devices. Tile-device rows for valid hub devices that are not selected for the dashboard are highlighted in yellow and remain unselected until you explicitly add them in Dashboard Devices. A Preferences option can skip this save-time device validation while leaving the editor review tools available. Show Invalid and Unassign Invalid are online-only tools. Unassign Invalid clears every non-exempt tile device assignment whose device ID does not exist on the hub after confirmation.</div>
 <div class="k">Config → Dashboard Devices</div><div class="v">Online only. Manages both physical devices and Hub Variables authorized for the Hubitat dashboard. In-use selected assignments are locked; in-use assignments that are not currently selected are highlighted yellow and remain unchecked until explicitly selected. Assign all, Remove all unused, filters, and Apply All Changes operate on both devices and Hub Variables.</div>
 </div><h5>Applying editor changes</h5><p><b>Apply changes</b> validates and replaces the current working layout. JSON editor commits are normal edits and create an Undo checkpoint before the layout is replaced.</p><div class="help-card-grid">
@@ -4597,7 +4605,7 @@
 <div class="help-page-nav"></div>
 </section>
 <section class="help-pane" id="helpAbout">
-<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.8.656 (Stable channel)</div><div class="k">Current Stable baseline</div><div class="v">1.8.656</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><p class="hint" style="margin:14px 0 0"><b>Copyright © 2026 Andrew Peck.</b> Licensed under the MIT License.</p><div class="help-callout"><b>Stable 1.8.656 includes:</b> the mature 1.11-era feature set plus the redesigned Dashboard Background workflow, image URL/embed/CSS handling, CSS image extraction, grid opacity controls, and current Background panel UX.</div><h5>Beta-only feature</h5><ul><li><b>Live Linked Previews:</b> the control remains visible for interface parity but is disabled in Stable 1.8. Use the Beta channel to test live DLS-to-Preview and Two Way synchronization.</li></ul><div class="help-callout"><b>Stable channel:</b> Stable 1.8 includes the current Background tools while keeping Live Linked Previews beta-only.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
+<div class="help-pages"><article class="help-page active" data-help-title="About Dashboard Layout Studio"><div class="help-page-kicker">About</div><h4>Dashboard Layout Studio</h4><p>Dashboard Layout Studio is an independent visual editor for Hubitat Dashboard v1 layouts. It is not affiliated with or endorsed by Hubitat, Inc.</p><div class="help-grid"><div class="k">Version</div><div class="v">1.8.662 (Stable channel)</div><div class="k">Current Stable baseline</div><div class="v">1.8.662</div><div class="k">Project source</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio" target="_blank" rel="noopener noreferrer">Dashboard Layout Studio on GitHub</a></div><div class="k">GitHub releases</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/releases" target="_blank" rel="noopener noreferrer">Published releases and downloadable assets</a></div><div class="k">Issues</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/issues" target="_blank" rel="noopener noreferrer">Report a problem or review open issues</a></div><div class="k">Stable release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Stable_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Stable Release Notes</a></div><div class="k">Beta release notes</div><div class="v"><a href="https://github.com/imdrewsf/Dashboard-Layout-Studio/blob/main/DLS_Beta_Release_Notes.md" target="_blank" rel="noopener noreferrer">DLS Beta Release Notes</a></div></div><p class="hint" style="margin:14px 0 0"><b>Copyright © 2026 Andrew Peck.</b> Licensed under the MIT License.</p><div class="help-callout"><b>Stable 1.8.662 includes:</b> the mature 1.11-era feature set plus the redesigned Dashboard Background workflow, image URL/embed/CSS handling, CSS image extraction, grid opacity controls, and current Background panel UX.</div><h5>Beta-only feature</h5><ul><li><b>Live Linked Previews:</b> the control remains visible for interface parity but is disabled in Stable 1.8. Use the Beta channel to test live DLS-to-Preview and Two Way synchronization.</li></ul><div class="help-callout"><b>Stable channel:</b> Stable 1.8 includes the current Background tools while keeping Live Linked Previews beta-only.</div><div style="margin-top:14px"><button class="btn ghost" id="aboutLicenseBtn" type="button" style="width:auto">View MIT License</button></div></article></div>
 <div class="help-page-nav"></div>
 </section>
 </div>
@@ -5443,8 +5451,8 @@ SOFTWARE.</pre></div>
    Dashboard Layout Studio — logic
    Copyright (c) 2026 Andrew Peck. MIT License.
    ============================================================ */
-const BUILD = "v656";
-const APP_VERSION = "1.8.656";
+const BUILD = "v658";
+const APP_VERSION = "1.8.662";
 const VERSION_CHECK_URL = "https://raw.githubusercontent.com/imdrewsf/Dashboard-Layout-Studio/main/version.json";
 const VERSION_SKIP_KEY = "dls.skipVersion";
 const STABLE_APP_FILENAME = "dashboard-layout-studio.html";
@@ -5534,10 +5542,10 @@ const DLS_TEMPLATE_EXTRA_LABELS = Object.freeze({
 
 // BETA RELEASE MAINTENANCE: Review this list for every beta build. Include only
 // major features that are unavailable in the current supported stable release.
-// Stable 1.8.656 includes the mature 1.11-era feature set and the current
+// Stable 1.8.662 includes the mature 1.11-era feature set and the current
 // Dashboard Background workflow. Live Linked Previews remains beta-only.
-const STABLE_BASELINE_VERSION = "1.8.656";
-const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.8.656";
+const STABLE_BASELINE_VERSION = "1.8.662";
+const STABLE_DOWNGRADE_FEATURES_REVIEWED_FOR = "1.8.662";
 const STABLE_DOWNGRADE_FEATURES = Object.freeze([]);
 function defaultUpdateReleaseModeForBuild(){ return IS_BETA_BUILD ? UPDATE_RELEASE_MODE_BETA : UPDATE_RELEASE_MODE_STABLE; }
 const DLS_PROJECT_URL = "https://github.com/imdrewsf/Dashboard-Layout-Studio";
@@ -15706,10 +15714,43 @@ function buildOrderPreservingZIndexPlan(component,explicit){
   }
   return component.map(id=>({id,z:proposedById.get(id)}));
 }
+function collectExplicitTemplateZIndexMap(css){
+  const map=new Map(); let order=0;
+  function scan(text,atPath=[]){
+    for(const node of parseCssNodes(String(text||""))){
+      if(node.kind!=="block") continue;
+      const pre=String(node.prelude||"").trim();
+      if(!pre) continue;
+      if(pre.startsWith("@")){ scan(node.body||"",[...atPath,pre]); continue; }
+      let zRec=null;
+      for(const part of splitCssDeclarationsForProblems(node.body||"")){
+        const d=parseCssDeclarationForProblems(part);
+        if(!d||d.prop!=="z-index") continue;
+        const m=String(d.value||"").match(/^\s*(-?\d+)\b/i);
+        if(m) zRec={z:parseInt(m[1],10),value:d.value};
+      }
+      if(!zRec) continue;
+      for(const selector of splitSelectorList(pre)){
+        const mm=String(selector||"").trim().match(/^\.tile\.([\w-]+)\s*$/);
+        if(mm) map.set(mm[1],{template:mm[1],z:zRec.z,value:zRec.value,selector:String(selector||"").trim(),atPath:[...atPath],order:order++});
+      }
+    }
+  }
+  scan(css||""); return map;
+}
 function collectOverlappingExplicitZIndexConflicts(css,tiles=State.tiles||[]){
-  const explicit=collectExplicitTileZIndexMap(css||"");
+  const tileExplicit=collectExplicitTileZIndexMap(css||"");
+  const templateExplicit=collectExplicitTemplateZIndexMap(css||"");
   const byId=new Map((tiles||[]).map(t=>[Number(t.id),t]));
-  const ids=[...explicit.keys()].filter(id=>byId.has(id)).sort((a,b)=>a-b);
+  const explicit=new Map();
+  for(const [id,t] of byId){
+    if(tileExplicit.has(id)){
+      const rec=tileExplicit.get(id); explicit.set(id,{...rec,source:"tile"});
+    }else if(t&&templateExplicit.has(t.template)){
+      const rec=templateExplicit.get(t.template); explicit.set(id,{...rec,id,source:"template"});
+    }
+  }
+  const ids=[...explicit.keys()].sort((a,b)=>a-b);
   const adj=new Map(ids.map(id=>[id,new Set()]));
   for(let i=0;i<ids.length;i++) for(let j=i+1;j<ids.length;j++){
     const a=ids[i],b=ids[j]; if(!overlaps(byId.get(a),byId.get(b))) continue;
@@ -15728,7 +15769,7 @@ function collectOverlappingExplicitZIndexConflicts(css,tiles=State.tiles||[]){
     if(!equalPair) continue;
     component.sort((a,b)=>a-b);
     const proposed=buildOrderPreservingZIndexPlan(component,explicit);
-    groups.push({key:`zindex:${component.join(",")}`,tileIds:component,current:component.map(id=>({id,z:explicit.get(id).z})),proposed,base:Math.min(...proposed.map(item=>item.z))});
+    groups.push({key:`zindex:${component.join(",")}`,tileIds:component,current:component.map(id=>({id,z:explicit.get(id).z,source:explicit.get(id).source,selector:explicit.get(id).selector||""})),proposed,base:Math.min(...proposed.map(item=>item.z))});
   }
   return groups;
 }
@@ -26819,6 +26860,12 @@ function updateJsonEditorActionVisibility(){
   const setVisible=(id,on)=>{const el=document.getElementById(id);if(el)el.classList.toggle("hidden",!on);};
   setVisible("jsonLoadFile",textMode); setVisible("jsonCopy",textMode); setVisible("jsonDownload",textMode); setVisible("jsonFormatWrap",textMode); setVisible("jsonFormat",textMode);
   setVisible("jsonRestore",true); setVisible("jsonApply",true);
+  const spec=jsonEditorFileSpec(mode),load=document.getElementById("jsonLoadFile"),download=document.getElementById("jsonDownload"),input=document.getElementById("jsonEditorFileInput");
+  if(spec){
+    if(load) load.title=`Import a ${spec.extension} file into the ${spec.label} editor`;
+    if(download) download.title=`Download the current ${spec.label} editor as ${spec.extension}`;
+    if(input) input.accept=spec.accept;
+  }
 }
 function updateJsonEditorModeButtons(){
   document.querySelectorAll(".json-mode-btn").forEach(btn=>{
@@ -28516,6 +28563,24 @@ function formatJsonEditor(options={}){
   showJsonEditorMode("json","start");
   toast("JSON formatted.","ok");
 }
+function jsonEditorFileSpec(mode=JsonEditorState.mode){
+  const specs={
+    json:{label:"Full JSON",suffix:"",extension:".json",accept:".json,application/json",mime:"application/json"},
+    customCSS:{label:"customCSS",suffix:"_customCSS",extension:".css",accept:".css,text/css",mime:"text/css"},
+    customHTML:{label:"customHTML",suffix:"_customHTML",extension:".html",accept:".html,.htm,text/html",mime:"text/html"},
+    customJS:{label:"customJS",suffix:"_customJS",extension:".js",accept:".js,text/javascript,application/javascript",mime:"text/javascript"}
+  };
+  return specs[mode]||null;
+}
+function jsonEditorDownloadBaseName(){
+  return State.active&&State.active.label?State.active.label.replace(/[^\w-]+/g,"_"):"dashboard";
+}
+function prepareJsonEditorFileImport(){
+  const input=document.getElementById("jsonEditorFileInput"),spec=jsonEditorFileSpec();
+  if(!input||!spec) return;
+  input.accept=spec.accept;
+  input.click();
+}
 function loadJsonFileIntoEditor(file){
   if(!file||!file.name.match(/\.json$/i)){ toast("Please select a .json file.","err"); return; }
   const r=new FileReader();
@@ -28528,10 +28593,49 @@ function loadJsonFileIntoEditor(file){
       markFullJsonReplacementLikely(`loaded ${file.name}`);
       showJsonEditorMode("json","start");
       updateJsonEditorDirtyState();
-      toast(`Loaded ${file.name} into the JSON editor. Click Apply changes to use it.`,"ok");
+      toast(`Loaded ${file.name} into the Full JSON editor. Click Apply changes to use it.`,"ok");
     }catch(ex){ setJsonEditorError(`Could not parse ${file.name}: ${ex.message}`); }
   };
   r.readAsText(file);
+}
+function loadExpertFileIntoCurrentTab(file){
+  const mode=JsonEditorState.mode,spec=jsonEditorFileSpec(mode);
+  if(!file||!spec) return;
+  if(mode==="json"){ loadJsonFileIntoEditor(file); return; }
+  if(!JSON_EDITOR_FIELD_MODES.has(mode)) return;
+  const acceptedExts={customCSS:/\.css$/i,customHTML:/\.html?$/i,customJS:/\.js$/i};
+  if(acceptedExts[mode]&&!acceptedExts[mode].test(file.name||"")){
+    toast(`Please select a ${spec.extension} file for ${spec.label}.`,"err");
+    return;
+  }
+  const r=new FileReader();
+  r.onload=e=>{
+    const text=String(e.target.result==null?"":e.target.result);
+    clearJsonEditorAutoFormatDisplay();
+    JsonEditorState.tabUserEdited[mode]=true;
+    setJsonEditorText(text,"start");
+    updateJsonEditorDirtyState();
+    const issues=validateCustomField(mode,text);
+    if(issues.length) setJsonEditorError(fieldValidationMessage(mode,issues));
+    else setJsonEditorError("");
+    toast(`Loaded ${file.name} into the ${spec.label} editor. Click Apply changes to use it.`,issues.length?"err":"ok");
+  };
+  r.onerror=()=>setJsonEditorError(`Could not read ${file.name}.`);
+  r.readAsText(file);
+}
+function downloadCurrentExpertEditorFile(){
+  const mode=JsonEditorState.mode,spec=jsonEditorFileSpec(mode),ed=document.getElementById("jsonEditor");
+  if(!spec||!ed) return;
+  if(mode==="json"){
+    let data;
+    try{ data=parseJsonEditor({promptDiscard:true}); }
+    catch(e){ return; }
+    const compact=JSON.stringify(data);
+    downloadText(compact, jsonEditorDownloadBaseName()+spec.extension, spec.mime);
+    return;
+  }
+  if(!syncJsonEditorView({promptDiscard:true})) return;
+  downloadText(ed.value, jsonEditorDownloadBaseName()+spec.suffix+spec.extension, spec.mime);
 }
 
 /* ---------- wiring ---------- */
@@ -31208,8 +31312,8 @@ Install the current stable release now, or keep the current installed version un
   document.getElementById("jsonCompactFormat")?.addEventListener("change",e=>setJsonCssCompactFormat(!!e.currentTarget.checked));
   document.getElementById("jsonRestore").addEventListener("click",undoJsonEditorTabChanges);
   document.getElementById("jsonFormat").addEventListener("click",()=>formatJsonEditor());
-  document.getElementById("jsonLoadFile").addEventListener("click",()=>document.getElementById("jsonEditorFileInput").click());
-  document.getElementById("jsonEditorFileInput").addEventListener("change",e=>{ if(e.target.files[0]) loadJsonFileIntoEditor(e.target.files[0]); e.target.value=""; });
+  document.getElementById("jsonLoadFile").addEventListener("click",prepareJsonEditorFileImport);
+  document.getElementById("jsonEditorFileInput").addEventListener("change",e=>{ if(e.target.files[0]) loadExpertFileIntoCurrentTab(e.target.files[0]); e.target.value=""; });
   document.getElementById("jsonEditor").addEventListener("beforeinput",e=>{
     if(JsonEditorState.mode!=="json") return;
     const type=String(e.inputType||"");
@@ -31245,14 +31349,7 @@ Install the current stable release now, or keep the current installed version un
     // it copies that field's visible text only.
     copyText(ed.value, JsonEditorState.mode==="json" ? "Formatted JSON copied." : `${JsonEditorState.mode} copied.`);
   });
-  document.getElementById("jsonDownload").addEventListener("click",()=>{
-    let data;
-    try{ data=parseJsonEditor({promptDiscard:true}); }
-    catch(e){ return; }
-    const compact=JSON.stringify(data);
-    const name=(State.active&&State.active.label?State.active.label.replace(/[^\w-]+/g,"_"):"dashboard")+".json";
-    downloadText(compact, name, "application/json");
-  });
+  document.getElementById("jsonDownload").addEventListener("click",downloadCurrentExpertEditorFile);
   document.getElementById("btnSave").addEventListener("click",e=>{
     e.stopPropagation();
     updateSaveHubState();

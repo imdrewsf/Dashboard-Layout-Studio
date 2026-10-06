@@ -1,18 +1,18 @@
 {
-    "version":  "v1.8.656",
+    "version":  "v1.8.662",
     "releaseUrl":  "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio.html",
-    "sha256":  "d0d02bae9154625cf0fc67a79b3feef56aab1ef10379733adef16867a0193fe7",
-    "size":  2051034,
+    "sha256":  "25c68a225b625e8981f428834b143d2c7d2e5c12de0cf18bbb3a973bd97a89b3",
+    "size":  2056827,
     "stable":  {
-                   "version":  "v1.8.656",
+                   "version":  "v1.8.662",
                    "releaseUrl":  "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio.html",
-                   "sha256":  "d0d02bae9154625cf0fc67a79b3feef56aab1ef10379733adef16867a0193fe7",
-                   "size":  2051034
+                   "sha256":  "25c68a225b625e8981f428834b143d2c7d2e5c12de0cf18bbb3a973bd97a89b3",
+                   "size":  2056827
                },
     "beta":  {
-                 "version":  "v1.12.657",
+                 "version":  "v1.13.678",
                  "releaseUrl":  "https://github.com/imdrewsf/Dashboard-Layout-Studio/releases/latest/download/dashboard-layout-studio-beta.html",
-                 "sha256":  "61a219b1bee80b1b039b2577fd214b9daf0add2609565633ad2f0e56bfe59f06",
-                 "size":  2051227
+                 "sha256":  "27ade0917c8bffe60408692a44408cff613e2827ffc218c8b576a76b2623a5eb",
+                 "size":  2082940
              }
 }
